@@ -1,0 +1,33 @@
+[workspace]
+
+resolver = "2"
+
+members = []
+
+[workspace.package]
+version = "0.0.1"
+edition = "2021"
+license = "MIT OR Apache-2.0"
+authors = ["Movement Labs"]
+repository = "www.github.com/movementlabsxyz/ffs"
+homepage = "www.github.com/movementlabsxyz/ffs"
+publish = false
+rust-version = "1.79"
+
+[workspace.dependencies]
+
+
+[workspace.lints.clippy]
+debug_assert_with_mut_call = "deny"
+inefficient_to_string = "deny"
+map_flatten = "deny"
+manual_ok_or = "deny"
+doc_link_with_quotes = "deny"
+match_same_arms = "deny"
+semicolon_if_nothing_returned = "deny"
+
+[profile.dev]
+panic = "unwind"
+
+[profile.release.build-override]
+opt-level = 3
