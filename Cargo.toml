@@ -3,6 +3,8 @@
 resolver = "2"
 
 members = [
+  "protocol-units/mcr/util/*",
+  "protocol-units/mcr/clients/*",
   "protocol-units/mcr/client",
   "protocol-units/mcr/manager",
   "protocol-units/post-confirmations/*",
@@ -64,6 +66,9 @@ tokio = { version = "1.35.1", features = ["full", "tracing"] }
 tokio-stream = "0.1.15"
 
 # internal
+## mcr
+mcr-types = { path = "protocol-units/mcr/util/types" }
+mcr-client-util = { path = "protocol-units/mcr/clients/util" }
 mcr-settlement-client = { path = "protocol-units/mcr/client" }
 
 [workspace.lints.clippy]

@@ -1960,6 +1960,60 @@ dependencies = [
 ]
 
 [[package]]
+name = "mcr-client-eth"
+version = "0.0.1"
+dependencies = [
+ "alloy",
+ "alloy-contract",
+ "alloy-network",
+ "alloy-primitives 0.7.7",
+ "alloy-provider",
+ "alloy-rpc-types",
+ "alloy-signer",
+ "alloy-sol-types",
+ "alloy-transport",
+ "alloy-transport-ws",
+ "anyhow",
+ "async-stream",
+ "async-trait",
+ "futures",
+ "mcr-types",
+ "serde",
+ "serde_json",
+ "thiserror 1.0.69",
+ "tokio",
+ "tokio-stream",
+ "tracing",
+ "tracing-subscriber",
+]
+
+[[package]]
+name = "mcr-client-mock"
+version = "0.0.1"
+dependencies = [
+ "anyhow",
+ "futures",
+ "mcr-client-util",
+ "mcr-types",
+ "serde",
+ "thiserror 1.0.69",
+ "tokio",
+ "tokio-stream",
+ "tracing",
+]
+
+[[package]]
+name = "mcr-client-util"
+version = "0.0.1"
+dependencies = [
+ "mcr-types",
+ "serde",
+ "thiserror 1.0.69",
+ "tokio",
+ "tokio-stream",
+]
+
+[[package]]
 name = "mcr-settlement-client"
 version = "0.0.1"
 dependencies = [
@@ -1998,6 +2052,13 @@ dependencies = [
  "serde_json",
  "tokio",
  "tokio-stream",
+]
+
+[[package]]
+name = "mcr-types"
+version = "0.0.1"
+dependencies = [
+ "serde",
 ]
 
 [[package]]
