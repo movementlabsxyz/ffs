@@ -4,12 +4,12 @@ use alloy_network::EthereumWallet;
 use alloy_primitives::Address;
 use alloy_primitives::U256;
 use anyhow::Context;
-use godfig::{backend::config_file::ConfigFile, Godfig};
+use ffs_environment::{backend::config_file::ConfigFile, ffs_environment};
+use mcr_config::Config;
 use mcr_settlement_client::eth_client::Client;
 use mcr_settlement_client::eth_client::{MOVEToken, MovementStaking, MCR};
 use mcr_settlement_client::McrSettlementClientOperations;
-use mcr_settlement_config::Config;
-use movement_types::block::{BlockCommitment, Commitment, Id};
+use mcr_types::block_commitment::{BlockCommitment, Commitment, Id};
 use std::str::FromStr;
 use tokio_stream::StreamExt;
 use tracing::info;
@@ -219,10 +219,10 @@ pub async fn main() -> Result<(), anyhow::Error> {
 	let dot_movement = dot_movement::DotMovement::try_from_env()?;
 	let config_file = dot_movement.try_get_or_create_config_file().await?;
 
-	// get a matching godfig object
-	let godfig: Godfig<Config, ConfigFile> =
-		Godfig::new(ConfigFile::new(config_file), vec!["mcr_settlement".to_string()]);
-	let config: Config = godfig.try_wait_for_ready().await?;
+	// get a matching ffs_environment object
+	let ffs_environment: ffs_environment<Config, ConfigFile> =
+		ffs_environment::new(ConfigFile::new(config_file), vec!["mcr_settlement".to_string()]);
+	let config: Config = ffs_environment.try_wait_for_ready().await?;
 	let rpc_url = config.eth_rpc_connection_url();
 
 	let testing_config = config.testing.as_ref().context("Testing config not defined.")?;
@@ -239,7 +239,7 @@ pub async fn main() -> Result<(), anyhow::Error> {
 	// Build client 1 and send the first commitment.
 	//let settlement_config =
 	let config1 = Config {
-		settle: mcr_settlement_config::common::settlement::Config {
+		settle: mcr_config::common::settlement::Config {
 			signer_private_key: testing_config
 				.well_known_account_private_keys
 				.get(1)
@@ -265,7 +265,7 @@ pub async fn main() -> Result<(), anyhow::Error> {
 
 	// Build client 2 and send the second commitment.
 	let config2 = Config {
-		settle: mcr_settlement_config::common::settlement::Config {
+		settle: mcr_config::common::settlement::Config {
 			signer_private_key: testing_config
 				.well_known_account_private_keys
 				.get(2)

@@ -10,6 +10,8 @@ members = [
   "protocol-units/post-confirmations/*",
   "protocol-units/fast-confirmations/*",
   "protocol-units/ffs/*",
+  "util/signing/eth",
+  "util/environment",
 ]
 
 [workspace.package]
@@ -65,11 +67,19 @@ tracing-test = "0.2.5"
 tokio = { version = "1.35.1", features = ["full", "tracing"] }
 tokio-stream = "0.1.15"
 
+# secure-signing
+secure-signer = { git = "https://github.com/movementlabsxyz/secure-signing.git", rev = "62d9ae5fd098d2c0d2a2da2004ada91681e0df53" }
+secure-signer-loader = { git = "https://github.com/movementlabsxyz/secure-signing.git", rev = "62d9ae5fd098d2c0d2a2da2004ada91681e0df53"  }
+secure-signer-aws-kms = { git = "https://github.com/movementlabsxyz/secure-signing.git", rev = "62d9ae5fd098d2c0d2a2da2004ada91681e0df53"  }
+
 # internal
 ## mcr
 mcr-types = { path = "protocol-units/mcr/util/types" }
+mcr-config = { path = "protocol-units/mcr/util/config" }
 mcr-client-util = { path = "protocol-units/mcr/clients/util" }
 mcr-settlement-client = { path = "protocol-units/mcr/client" }
+secure-signing-eth = { path = "util/signing/eth" }
+ffs-environment = { path = "util/environment" }
 
 [workspace.lints.clippy]
 debug_assert_with_mut_call = "deny"

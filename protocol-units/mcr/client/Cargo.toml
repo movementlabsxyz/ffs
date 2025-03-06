@@ -43,11 +43,16 @@ tokio = { workspace = true }
 tokio-stream = { workspace = true }
 tracing = { workspace = true }
 serde = { workspace = true }
-
+secure-signer = { workspace = true }
+secure-signer-loader = { workspace = true }
+secure-signing-eth = { workspace = true }
 
 alloy-rpc-types = { workspace = true }
 futures = { workspace = true }
 tracing-subscriber = { workspace = true }
+
+mcr-types = { workspace = true }
+mcr-config = { workspace = true }
 
 [features]
 default = ["eth"]

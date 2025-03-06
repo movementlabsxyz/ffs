@@ -1,4 +1,4 @@
-use movement_types::block::BlockCommitment;
+use mcr_types::block_commitment::BlockCommitment;
 use tokio_stream::Stream;
 pub mod mock;
 

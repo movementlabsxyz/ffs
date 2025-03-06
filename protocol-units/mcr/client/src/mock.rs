@@ -1,6 +1,6 @@
 use crate::{CommitmentStream, McrSettlementClientOperations};
-use mcr_settlement_config::Config;
-use movement_types::block::BlockCommitment;
+use mcr_config::Config;
+use mcr_types::block_commitment::BlockCommitment;
 use std::collections::BTreeMap;
 use std::sync::{Arc, Mutex};
 use tokio::sync::{mpsc, RwLock};
@@ -153,7 +153,7 @@ impl McrSettlementClientOperations for McrSettlementClient {
 pub mod test {
 
 	use super::*;
-	use movement_types::block::Commitment;
+	use mcr_types::block_commitment::Commitment;
 
 	use futures::future;
 	use tokio::select;
