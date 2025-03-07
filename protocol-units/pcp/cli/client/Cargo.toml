@@ -1,5 +1,5 @@
 [package]
-name = "pcp-client-cli"
+name = "pcp-protocol-client-cli"
 version = { workspace = true }
 edition = { workspace = true }
 license = { workspace = true }

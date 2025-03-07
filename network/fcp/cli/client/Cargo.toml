@@ -1,5 +1,5 @@
 [package]
-name = "ffs-protocol-client-cli"
+name = "fcp-network-client-cli"
 version = { workspace = true }
 edition = { workspace = true }
 license = { workspace = true }
