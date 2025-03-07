@@ -3,13 +3,38 @@
 resolver = "2"
 
 members = [
+
+  # mcr
   "protocol/mcr/util/*",
   "protocol/mcr/clients/*",
   "protocol/mcr/client",
   "protocol/mcr/manager",
-  "protocol/post-confirmations/*",
-  "protocol/fast-confirmations/*",
-  "protocol/ffs/*",
+
+  # pcp
+  ## protocol
+  "protocol/pcp/cli/*",
+  ## node
+  "node/pcp/cli/*",
+  ## network
+  "network/pcp/cli/*",
+
+  # fcp
+  ## protocol
+  "protocol/fcp/cli/*",
+  ## node
+  "node/fcp/cli/*",
+  ## network
+  "network/fcp/cli/*",
+
+  # ffs
+  ## protocol
+  "protocol/ffs/cli/*",
+  ## node
+  "node/ffs/cli/*",
+  ## network
+  "network/ffs/cli/*",
+
+  # util
   "util/signing/eth",
   "util/environment",
 ]

@@ -1760,6 +1760,94 @@ dependencies = [
 ]
 
 [[package]]
+name = "fcp-network-cli"
+version = "0.0.1"
+dependencies = [
+ "mcr-types",
+ "serde",
+ "thiserror 1.0.69",
+ "tokio",
+ "tokio-stream",
+]
+
+[[package]]
+name = "fcp-network-client-cli"
+version = "0.0.1"
+dependencies = [
+ "mcr-types",
+ "serde",
+ "thiserror 1.0.69",
+ "tokio",
+ "tokio-stream",
+]
+
+[[package]]
+name = "fcp-network-coordinator-cli"
+version = "0.0.1"
+dependencies = [
+ "mcr-types",
+ "serde",
+ "thiserror 1.0.69",
+ "tokio",
+ "tokio-stream",
+]
+
+[[package]]
+name = "fcp-node-cli"
+version = "0.0.1"
+dependencies = [
+ "mcr-types",
+ "serde",
+ "thiserror 1.0.69",
+ "tokio",
+ "tokio-stream",
+]
+
+[[package]]
+name = "fcp-node-client-cli"
+version = "0.0.1"
+dependencies = [
+ "mcr-types",
+ "serde",
+ "thiserror 1.0.69",
+ "tokio",
+ "tokio-stream",
+]
+
+[[package]]
+name = "fcp-node-service-cli"
+version = "0.0.1"
+dependencies = [
+ "mcr-types",
+ "serde",
+ "thiserror 1.0.69",
+ "tokio",
+ "tokio-stream",
+]
+
+[[package]]
+name = "fcp-protocol-cli"
+version = "0.0.1"
+dependencies = [
+ "mcr-types",
+ "serde",
+ "thiserror 1.0.69",
+ "tokio",
+ "tokio-stream",
+]
+
+[[package]]
+name = "fcp-protocol-client-cli"
+version = "0.0.1"
+dependencies = [
+ "mcr-types",
+ "serde",
+ "thiserror 1.0.69",
+ "tokio",
+ "tokio-stream",
+]
+
+[[package]]
 name = "ff"
 version = "0.13.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1772,6 +1860,83 @@ dependencies = [
 [[package]]
 name = "ffs-environment"
 version = "0.0.1"
+
+[[package]]
+name = "ffs-network-cli"
+version = "0.0.1"
+dependencies = [
+ "mcr-types",
+ "serde",
+ "thiserror 1.0.69",
+ "tokio",
+ "tokio-stream",
+]
+
+[[package]]
+name = "ffs-network-client-cli"
+version = "0.0.1"
+dependencies = [
+ "mcr-types",
+ "serde",
+ "thiserror 1.0.69",
+ "tokio",
+ "tokio-stream",
+]
+
+[[package]]
+name = "ffs-network-coordinator-cli"
+version = "0.0.1"
+dependencies = [
+ "mcr-types",
+ "serde",
+ "thiserror 1.0.69",
+ "tokio",
+ "tokio-stream",
+]
+
+[[package]]
+name = "ffs-node-cli"
+version = "0.0.1"
+dependencies = [
+ "mcr-types",
+ "serde",
+ "thiserror 1.0.69",
+ "tokio",
+ "tokio-stream",
+]
+
+[[package]]
+name = "ffs-node-client-cli"
+version = "0.0.1"
+dependencies = [
+ "mcr-types",
+ "serde",
+ "thiserror 1.0.69",
+ "tokio",
+ "tokio-stream",
+]
+
+[[package]]
+name = "ffs-node-service-cli"
+version = "0.0.1"
+dependencies = [
+ "mcr-types",
+ "serde",
+ "thiserror 1.0.69",
+ "tokio",
+ "tokio-stream",
+]
+
+[[package]]
+name = "ffs-protocol-client-cli"
+version = "0.0.1"
+dependencies = [
+ "mcr-types",
+ "serde",
+ "thiserror 1.0.69",
+ "tokio",
+ "tokio-stream",
+]
 
 [[package]]
 name = "fiat-crypto"
@@ -2631,6 +2796,28 @@ dependencies = [
 ]
 
 [[package]]
+name = "mcr-network-cli"
+version = "0.0.1"
+dependencies = [
+ "mcr-types",
+ "serde",
+ "thiserror 1.0.69",
+ "tokio",
+ "tokio-stream",
+]
+
+[[package]]
+name = "mcr-network-client-cli"
+version = "0.0.1"
+dependencies = [
+ "mcr-types",
+ "serde",
+ "thiserror 1.0.69",
+ "tokio",
+ "tokio-stream",
+]
+
+[[package]]
 name = "mcr-settlement-client"
 version = "0.0.1"
 dependencies = [
@@ -2969,6 +3156,72 @@ checksum = "f8ed6a7761f76e3b9f92dfb0a60a6a6477c61024b775147ff0973a02653abaf2"
 dependencies = [
  "digest 0.10.7",
  "hmac",
+]
+
+[[package]]
+name = "pcp-network-coordinator-cli"
+version = "0.0.1"
+dependencies = [
+ "mcr-types",
+ "serde",
+ "thiserror 1.0.69",
+ "tokio",
+ "tokio-stream",
+]
+
+[[package]]
+name = "pcp-node-cli"
+version = "0.0.1"
+dependencies = [
+ "mcr-types",
+ "serde",
+ "thiserror 1.0.69",
+ "tokio",
+ "tokio-stream",
+]
+
+[[package]]
+name = "pcp-node-client-cli"
+version = "0.0.1"
+dependencies = [
+ "mcr-types",
+ "serde",
+ "thiserror 1.0.69",
+ "tokio",
+ "tokio-stream",
+]
+
+[[package]]
+name = "pcp-node-service-cli"
+version = "0.0.1"
+dependencies = [
+ "mcr-types",
+ "serde",
+ "thiserror 1.0.69",
+ "tokio",
+ "tokio-stream",
+]
+
+[[package]]
+name = "pcp-protocol-cli"
+version = "0.0.1"
+dependencies = [
+ "mcr-types",
+ "serde",
+ "thiserror 1.0.69",
+ "tokio",
+ "tokio-stream",
+]
+
+[[package]]
+name = "pcp-protocol-client-cli"
+version = "0.0.1"
+dependencies = [
+ "mcr-types",
+ "serde",
+ "thiserror 1.0.69",
+ "tokio",
+ "tokio-stream",
 ]
 
 [[package]]
