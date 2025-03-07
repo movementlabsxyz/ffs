@@ -1,0 +1,32 @@
+[package]
+name = "post-confirmationssettlement-runner"
+description = "An Anvil runner for the MCR Settlement"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+homepage.workspace = true
+publish.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+post-confirmationsconfig = { workspace = true }
+post-confirmationssettlement-client = { workspace = true }
+post-confirmationssettlement-setup = { workspace = true }
+dot-movement = { workspace = true }
+commander = { workspace = true }
+
+alloy-primitives = { workspace = true }
+
+anyhow = { workspace = true }
+k256 = { workspace = true }
+rand = { workspace = true }
+serde_json = { workspace = true }
+tokio = { workspace = true }
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true }
+ffs-environment = { workspace = true }
+
+[lints]
+workspace = true
