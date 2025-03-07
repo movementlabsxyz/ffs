@@ -2,11 +2,11 @@ use clap::Parser;
 
 #[derive(Parser)]
 #[clap(rename_all = "kebab-case")]
-pub enum FfsDev {}
+pub enum FfsClient {}
 
-impl FfsDev {
+impl FfsClient {
 	pub async fn run(&self) -> Result<(), anyhow::Error> {
-		println!("ffs-dev is under development. Please check back later.");
+		println!("ffs-client is under development. Please check back later.");
 
 		Ok(())
 	}
