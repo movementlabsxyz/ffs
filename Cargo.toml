@@ -3,13 +3,13 @@
 resolver = "2"
 
 members = [
-  "protocol-units/mcr/util/*",
-  "protocol-units/mcr/clients/*",
-  "protocol-units/mcr/client",
-  "protocol-units/mcr/manager",
-  "protocol-units/post-confirmations/*",
-  "protocol-units/fast-confirmations/*",
-  "protocol-units/ffs/*",
+  "protocol/mcr/util/*",
+  "protocol/mcr/clients/*",
+  "protocol/mcr/client",
+  "protocol/mcr/manager",
+  "protocol/post-confirmations/*",
+  "protocol/fast-confirmations/*",
+  "protocol/ffs/*",
   "util/signing/eth",
   "util/environment",
 ]
@@ -74,10 +74,10 @@ secure-signer-aws-kms = { git = "https://github.com/movementlabsxyz/secure-signi
 
 # internal
 ## mcr
-mcr-types = { path = "protocol-units/mcr/util/types" }
-mcr-config = { path = "protocol-units/mcr/util/config" }
-mcr-client-util = { path = "protocol-units/mcr/clients/util" }
-mcr-settlement-client = { path = "protocol-units/mcr/client" }
+mcr-types = { path = "protocol/mcr/util/types" }
+mcr-config = { path = "protocol/mcr/util/config" }
+mcr-client-util = { path = "protocol/mcr/clients/util" }
+mcr-settlement-client = { path = "protocol/mcr/client" }
 secure-signing-eth = { path = "util/signing/eth" }
 ffs-environment = { path = "util/environment" }
 
