@@ -1,11 +1,14 @@
-# ffs
-```
+<div align="center">
+  <pre>
           ------------
 f ------ |            |
 f ------ | 5e771e3e47 |
 5 ------ |            |
           ------------
-```
+  </pre>
+</div>
+
+# ffs
 
 > FFS, just take a vote.
 
