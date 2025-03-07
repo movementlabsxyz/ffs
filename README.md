@@ -14,6 +14,9 @@ f ------ | 5e771e3e47 |
 
 Movement Labs' Fast Finality Settlement is a proof of stake settlement system. 
 
+## Getting started
+We're working on getting this into a user-ready state. Check back soon!
+
 ## Contributing
 
 | Task | Description |
