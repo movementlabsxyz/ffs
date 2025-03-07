@@ -1,5 +1,5 @@
 [package]
-name = "pcp-network-coordinator-cli"
+name = "ffs"
 version = { workspace = true }
 edition = { workspace = true }
 license = { workspace = true }
