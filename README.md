@@ -1,4 +1,7 @@
 # ffs
+
+> FFS, just take a vote.
+
 Movement Labs' Fast Finality Settlement is a proof of stake settlement system. 
 
 | Task | Description |
