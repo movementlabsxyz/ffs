@@ -14,6 +14,7 @@ serde = { workspace = true, features = ["derive"] }
 clap = { workspace = true}
 dotenv = { workspace = true }
 anyhow = { workspace = true }
+mcr-protocol-client = { workspace = true }
 
 [lints]
 workspace = true

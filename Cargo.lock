@@ -1977,6 +1977,7 @@ dependencies = [
  "anyhow",
  "clap",
  "dotenv",
+ "mcr-protocol-client",
  "serde",
  "tokio",
 ]
@@ -2990,6 +2991,7 @@ dependencies = [
  "anyhow",
  "clap",
  "dotenv",
+ "mcr-protocol-client",
  "serde",
  "tokio",
 ]

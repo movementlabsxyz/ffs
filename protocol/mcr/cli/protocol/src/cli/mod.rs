@@ -1,4 +1,5 @@
 use clap::{Parser, Subcommand};
+use mcr_protocol_client::cli::McrProtocolClientSubcommand;
 
 /// The `mcr-protocol` CLI.
 #[derive(Parser)]
@@ -13,6 +14,8 @@ pub struct McrProtocol {
 #[clap(rename_all = "kebab-case")]
 pub enum McrProtocolSubcommand {
 	Run,
+	#[clap(subcommand)]
+	Client(McrProtocolClientSubcommand),
 }
 
 /// Implement the `From` trait for `McrProtocol` to convert it into a `McrProtocolSubcommand`.
@@ -37,6 +40,9 @@ impl McrProtocolSubcommand {
 		match self {
 			McrProtocolSubcommand::Run => {
 				println!("mcr-protocol is under development. Please check back later.");
+			}
+			McrProtocolSubcommand::Client(client) => {
+				client.execute().await?;
 			}
 		}
 		Ok(())
