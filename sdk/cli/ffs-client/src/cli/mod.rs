@@ -10,7 +10,11 @@ pub enum FfsClient {
 
 impl FfsClient {
 	pub async fn execute(&self) -> Result<(), anyhow::Error> {
-		println!("ffs-client is under development. Please check back later.");
+		match self {
+			FfsClient::Protocol(protocol) => {
+				protocol.execute().await?;
+			}
+		}
 
 		Ok(())
 	}
