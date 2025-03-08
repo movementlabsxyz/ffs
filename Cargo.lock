@@ -2984,6 +2984,28 @@ dependencies = [
 ]
 
 [[package]]
+name = "mcr-protocol"
+version = "0.0.1"
+dependencies = [
+ "anyhow",
+ "clap",
+ "dotenv",
+ "serde",
+ "tokio",
+]
+
+[[package]]
+name = "mcr-protocol-client"
+version = "0.0.1"
+dependencies = [
+ "anyhow",
+ "clap",
+ "dotenv",
+ "serde",
+ "tokio",
+]
+
+[[package]]
 name = "mcr-settlement-client"
 version = "0.0.1"
 dependencies = [

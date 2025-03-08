@@ -9,6 +9,7 @@ members = [
   "protocol/mcr/clients/*",
   "protocol/mcr/client",
   "protocol/mcr/manager",
+  "protocol/mcr/cli/*",
 
   # pcp
   ## protocol
@@ -108,6 +109,8 @@ mcr-types = { path = "protocol/mcr/util/types" }
 mcr-config = { path = "protocol/mcr/util/config" }
 mcr-client-util = { path = "protocol/mcr/clients/util" }
 mcr-settlement-client = { path = "protocol/mcr/client" }
+mcr-protocol-client = { path = "protocol/mcr/cli/client" }
+mcr-protocol = { path = "protocol/mcr/cli"}
 ### network
 mcr-network-client = { path = "network/mcr/cli/client" }
 mcr-network-coordinator = { path = "network/mcr/cli/coordinator" }
