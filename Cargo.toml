@@ -103,10 +103,17 @@ secure-signer-aws-kms = { git = "https://github.com/movementlabsxyz/secure-signi
 
 # internal
 ## mcr
+### protocol
 mcr-types = { path = "protocol/mcr/util/types" }
 mcr-config = { path = "protocol/mcr/util/config" }
 mcr-client-util = { path = "protocol/mcr/clients/util" }
 mcr-settlement-client = { path = "protocol/mcr/client" }
+### network
+mcr-network-client = { path = "network/mcr/cli/client" }
+mcr-network-coordinator = { path = "network/mcr/cli/coordinator" }
+mcr-network = { path = "network/mcr/cli/network" }
+
+# util
 secure-signing-eth = { path = "util/signing/eth" }
 ffs-environment = { path = "util/environment" }
 

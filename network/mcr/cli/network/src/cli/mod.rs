@@ -1,4 +1,6 @@
 use clap::{Parser, Subcommand};
+use mcr_network_client::cli::McrNetworkClientSubcommand;
+use mcr_network_coordinator::cli::McrNetworkCoordinatorSubcommand;
 
 /// The `mcr-network` CLI.
 #[derive(Parser)]
@@ -13,6 +15,10 @@ pub struct McrNetwork {
 #[clap(rename_all = "kebab-case")]
 pub enum McrNetworkSubcommand {
 	Run,
+	#[clap(subcommand)]
+	Client(McrNetworkClientSubcommand),
+	#[clap(subcommand)]
+	Coordinator(McrNetworkCoordinatorSubcommand),
 }
 
 /// Implement the `From` trait for `McrNetwork` to convert it into a `McrNetworkSubcommand`.
@@ -36,7 +42,13 @@ impl McrNetworkSubcommand {
 	pub async fn execute(&self) -> Result<(), anyhow::Error> {
 		match self {
 			McrNetworkSubcommand::Run => {
-				println!("mcr-network is under development. Please check back later.");
+				println!("Welcome to the mcr-network CLI!");
+			}
+			McrNetworkSubcommand::Client(client) => {
+				client.execute().await?;
+			}
+			McrNetworkSubcommand::Coordinator(coordinator) => {
+				coordinator.execute().await?;
 			}
 		}
 		Ok(())
