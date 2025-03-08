@@ -5,7 +5,7 @@ use clap::Parser;
 pub enum FfsDev {}
 
 impl FfsDev {
-	pub async fn run(&self) -> Result<(), anyhow::Error> {
+	pub async fn execute(&self) -> Result<(), anyhow::Error> {
 		println!("ffs-dev is under development. Please check back later.");
 
 		Ok(())

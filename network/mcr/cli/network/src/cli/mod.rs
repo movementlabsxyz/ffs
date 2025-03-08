@@ -2,11 +2,11 @@ use clap::Parser;
 
 #[derive(Parser)]
 #[clap(rename_all = "kebab-case")]
-pub enum FfsClient {}
+pub enum McrNetwork {}
 
-impl FfsClient {
+impl McrNetwork {
 	pub async fn execute(&self) -> Result<(), anyhow::Error> {
-		println!("ffs-client is under development. Please check back later.");
+		println!("mcr-network is under development. Please check back later.");
 
 		Ok(())
 	}

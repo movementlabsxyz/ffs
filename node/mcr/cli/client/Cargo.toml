@@ -1,5 +1,5 @@
 [package]
-name = "mcr-node-client-cli"
+name = "mcr-node-client"
 version = { workspace = true }
 edition = { workspace = true }
 license = { workspace = true }

@@ -1,5 +1,5 @@
 [package]
-name = "fcp-node-client-cli"
+name = "fcp-node-client"
 version = { workspace = true }
 edition = { workspace = true }
 license = { workspace = true }

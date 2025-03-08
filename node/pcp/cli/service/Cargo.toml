@@ -1,5 +1,5 @@
 [package]
-name = "pcp-node-service-cli"
+name = "pcp-node-service"
 version = { workspace = true }
 edition = { workspace = true }
 license = { workspace = true }

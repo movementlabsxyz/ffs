@@ -9,6 +9,6 @@ async fn main() -> Result<(), anyhow::Error> {
 
 	// Run the CLI.
 	let ffs = cli::Ffs::parse();
-	ffs.run().await?;
+	ffs.execute().await?;
 	Ok(())
 }

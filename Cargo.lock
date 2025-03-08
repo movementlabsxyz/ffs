@@ -1862,7 +1862,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "fcp-network-cli"
+name = "fcp-network"
 version = "0.0.1"
 dependencies = [
  "anyhow",
@@ -1873,7 +1873,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "fcp-network-client-cli"
+name = "fcp-network-client"
 version = "0.0.1"
 dependencies = [
  "anyhow",
@@ -1884,7 +1884,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "fcp-network-coordinator-cli"
+name = "fcp-network-coordinator"
 version = "0.0.1"
 dependencies = [
  "anyhow",
@@ -1895,7 +1895,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "fcp-node-cli"
+name = "fcp-node"
 version = "0.0.1"
 dependencies = [
  "anyhow",
@@ -1906,7 +1906,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "fcp-node-client-cli"
+name = "fcp-node-client"
 version = "0.0.1"
 dependencies = [
  "anyhow",
@@ -1917,7 +1917,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "fcp-node-service-cli"
+name = "fcp-node-service"
 version = "0.0.1"
 dependencies = [
  "anyhow",
@@ -1928,7 +1928,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "fcp-protocol-cli"
+name = "fcp-protocol"
 version = "0.0.1"
 dependencies = [
  "anyhow",
@@ -1939,7 +1939,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "fcp-protocol-client-cli"
+name = "fcp-protocol-client"
 version = "0.0.1"
 dependencies = [
  "anyhow",
@@ -1997,7 +1997,7 @@ name = "ffs-environment"
 version = "0.0.1"
 
 [[package]]
-name = "ffs-network-cli"
+name = "ffs-network"
 version = "0.0.1"
 dependencies = [
  "anyhow",
@@ -2008,7 +2008,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "ffs-network-client-cli"
+name = "ffs-network-client"
 version = "0.0.1"
 dependencies = [
  "anyhow",
@@ -2019,7 +2019,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "ffs-network-coordinator-cli"
+name = "ffs-network-coordinator"
 version = "0.0.1"
 dependencies = [
  "anyhow",
@@ -2030,7 +2030,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "ffs-node-cli"
+name = "ffs-node"
 version = "0.0.1"
 dependencies = [
  "anyhow",
@@ -2041,7 +2041,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "ffs-node-client-cli"
+name = "ffs-node-client"
 version = "0.0.1"
 dependencies = [
  "anyhow",
@@ -2052,7 +2052,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "ffs-node-service-cli"
+name = "ffs-node-service"
 version = "0.0.1"
 dependencies = [
  "anyhow",
@@ -2063,7 +2063,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "ffs-protocol-cli"
+name = "ffs-protocol"
 version = "0.0.1"
 dependencies = [
  "anyhow",
@@ -2074,7 +2074,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "ffs-protocol-client-cli"
+name = "ffs-protocol-client"
 version = "0.0.1"
 dependencies = [
  "anyhow",
@@ -2948,7 +2948,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "mcr-network-cli"
+name = "mcr-network"
 version = "0.0.1"
 dependencies = [
  "anyhow",
@@ -2959,7 +2959,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "mcr-network-client-cli"
+name = "mcr-network-client"
 version = "0.0.1"
 dependencies = [
  "anyhow",
@@ -3311,7 +3311,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "pcp-network-coordinator-cli"
+name = "pcp-network-coordinator"
 version = "0.0.1"
 dependencies = [
  "anyhow",
@@ -3322,7 +3322,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "pcp-node-cli"
+name = "pcp-node"
 version = "0.0.1"
 dependencies = [
  "anyhow",
@@ -3333,7 +3333,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "pcp-node-client-cli"
+name = "pcp-node-client"
 version = "0.0.1"
 dependencies = [
  "anyhow",
@@ -3344,7 +3344,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "pcp-node-service-cli"
+name = "pcp-node-service"
 version = "0.0.1"
 dependencies = [
  "anyhow",
@@ -3355,7 +3355,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "pcp-protocol-cli"
+name = "pcp-protocol"
 version = "0.0.1"
 dependencies = [
  "anyhow",
@@ -3366,7 +3366,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "pcp-protocol-client-cli"
+name = "pcp-protocol-client"
 version = "0.0.1"
 dependencies = [
  "anyhow",

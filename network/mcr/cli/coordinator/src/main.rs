@@ -1,6 +1,6 @@
 use clap::*;
 use dotenv::dotenv;
-use ffs_dev::cli;
+use mcr_network_coordinator::cli;
 
 #[tokio::main]
 async fn main() -> Result<(), anyhow::Error> {
@@ -8,7 +8,7 @@ async fn main() -> Result<(), anyhow::Error> {
 	dotenv().ok();
 
 	// Run the CLI.
-	let ffs_dev = cli::FfsDev::parse();
-	ffs_dev.execute().await?;
+	let mcr_network_coordinator = cli::McrNetworkCoordinator::parse();
+	mcr_network_coordinator.execute().await?;
 	Ok(())
 }

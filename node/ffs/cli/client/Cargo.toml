@@ -1,5 +1,5 @@
 [package]
-name = "ffs-node-client-cli"
+name = "ffs-node-client"
 version = { workspace = true }
 edition = { workspace = true }
 license = { workspace = true }

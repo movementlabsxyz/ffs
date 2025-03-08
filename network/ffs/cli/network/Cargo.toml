@@ -1,5 +1,5 @@
 [package]
-name = "ffs-network-cli"
+name = "ffs-network"
 version = { workspace = true }
 edition = { workspace = true }
 license = { workspace = true }

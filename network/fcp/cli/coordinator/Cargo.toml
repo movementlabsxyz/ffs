@@ -1,5 +1,5 @@
 [package]
-name = "fcp-network-coordinator-cli"
+name = "fcp-network-coordinator"
 version = { workspace = true }
 edition = { workspace = true }
 license = { workspace = true }
