@@ -1,22 +1,24 @@
 use alloy_consensus::SignableTransaction;
 use alloy_primitives::{hex, Address, ChainId, B256};
-use alloy_signer::{sign_transaction_with_chain_id, Result, Signature as AlloySignature, Signer};
+use alloy_signer::{
+	sign_transaction_with_chain_id, Result, Signature as AlloySignature, Signer as AlloySigner,
+};
 use k256::ecdsa::{self, VerifyingKey};
 use secure_signer::cryptography::secp256k1::{self, Secp256k1};
 use secure_signer::SignerError;
 use secure_signer::Signing;
 use std::fmt;
 
-pub struct HsmSigner<S: Signing<Secp256k1> + Sync + Send> {
+pub struct Signer<S: Signing<Secp256k1> + Sync + Send> {
 	kms: S,
 	pubkey: VerifyingKey,
 	address: Address,
 	chain_id: Option<ChainId>,
 }
 
-impl<S: Signing<Secp256k1> + Sync + Send> fmt::Debug for HsmSigner<S> {
+impl<S: Signing<Secp256k1> + Sync + Send> fmt::Debug for Signer<S> {
 	fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-		f.debug_struct("HsmSigner")
+		f.debug_struct("Signer")
 			.field("chain_id", &self.chain_id)
 			.field("pubkey", &hex::encode(self.pubkey.to_sec1_bytes()))
 			.field("address", &self.address)
@@ -25,7 +27,7 @@ impl<S: Signing<Secp256k1> + Sync + Send> fmt::Debug for HsmSigner<S> {
 }
 
 #[async_trait::async_trait]
-impl<S: Signing<Secp256k1> + Sync + Send> alloy_network::TxSigner<AlloySignature> for HsmSigner<S> {
+impl<S: Signing<Secp256k1> + Sync + Send> alloy_network::TxSigner<AlloySignature> for Signer<S> {
 	fn address(&self) -> Address {
 		self.address
 	}
@@ -39,7 +41,7 @@ impl<S: Signing<Secp256k1> + Sync + Send> alloy_network::TxSigner<AlloySignature
 }
 
 #[async_trait::async_trait]
-impl<S: Signing<Secp256k1> + Sync + Send> Signer for HsmSigner<S> {
+impl<S: Signing<Secp256k1> + Sync + Send> AlloySigner for Signer<S> {
 	async fn sign_hash(&self, hash: &B256) -> Result<AlloySignature> {
 		self.sign_digest(hash)
 			.await
@@ -63,11 +65,11 @@ impl<S: Signing<Secp256k1> + Sync + Send> Signer for HsmSigner<S> {
 	}
 }
 
-impl<S: Signing<Secp256k1> + Sync + Send> HsmSigner<S> {
+impl<S: Signing<Secp256k1> + Sync + Send> Signer<S> {
 	/// Instantiate a new signer from an existing `Client` and key ID.
 	///
 	/// Retrieves the public key from HMS and calculates the Ethereum address.
-	pub async fn try_new(kms: S, chain_id: Option<ChainId>) -> Result<HsmSigner<S>, SignerError> {
+	pub async fn try_new(kms: S, chain_id: Option<ChainId>) -> Result<Signer<S>, SignerError> {
 		let resp = request_get_pubkey(&kms).await?;
 		let pubkey = decode_pubkey(resp)?;
 		let address = alloy_signer::utils::public_key_to_address(&pubkey);

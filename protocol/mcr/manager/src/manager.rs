@@ -1,11 +1,10 @@
-use crate::{BlockCommitmentEvent, CommitmentEventStream, McrSettlementManagerOperations};
-
+use crate::{BlockCommitmentEvent, CommitmentEventStream, McrManagerOperations};
 use mcr_config::Config;
-use mcr_settlement_client::McrSettlementClientOperations;
+use mcr_protocol_client_core_util::McrClientError;
+use mcr_protocol_client_core_util::McrClientOperations;
 use mcr_types::block_commitment::{BlockCommitment, BlockCommitmentRejectionReason};
 
 use async_stream::stream;
-use async_trait::async_trait;
 use futures::future::{self, Either};
 use tokio::sync::mpsc;
 use tokio::time;
@@ -26,7 +25,7 @@ impl Manager {
 	/// Returns the handle with the public API and the stream to receive commitment events.
 	/// The stream needs to be polled to drive the MCR settlement client and
 	/// process the commitments.
-	pub fn new<C: McrSettlementClientOperations + Send + 'static>(
+	pub fn new<C: McrClientOperations + Send + 'static>(
 		client: C,
 		config: &Config,
 	) -> (Self, CommitmentEventStream) {
@@ -37,18 +36,19 @@ impl Manager {
 	}
 }
 
-#[async_trait]
-impl McrSettlementManagerOperations for Manager {
+impl McrManagerOperations for Manager {
 	async fn post_block_commitment(
 		&self,
 		block_commitment: BlockCommitment,
-	) -> Result<(), anyhow::Error> {
-		self.sender.send(block_commitment).await?;
+	) -> Result<(), McrClientError> {
+		self.sender.send(block_commitment).await.map_err(|_| {
+			McrClientError::Internal("failed to send block commitment to manager".into())
+		})?;
 		Ok(())
 	}
 }
 
-fn process_commitments<C: McrSettlementClientOperations + Send + 'static>(
+fn process_commitments<C: McrClientOperations + Send + 'static>(
 	mut receiver: mpsc::Receiver<BlockCommitment>,
 	client: C,
 	batch_timeout: Duration,
@@ -146,13 +146,13 @@ fn process_commitments<C: McrSettlementClientOperations + Send + 'static>(
 #[cfg(test)]
 mod tests {
 	use super::*;
-	use mcr_settlement_client::mock::McrSettlementClient;
+	use mcr_protocol_client_core_mock::Client;
 	use mcr_types::block_commitment::{BlockCommitment, Commitment};
 
 	#[tokio::test]
 	async fn test_block_commitment_accepted() -> Result<(), anyhow::Error> {
 		let config = Config::default();
-		let mut client = McrSettlementClient::new();
+		let mut client = Client::new();
 		client.block_lead_tolerance = 1;
 		let (manager, mut event_stream) = Manager::new(client.clone(), &config);
 		let commitment = BlockCommitment::new(1, Default::default(), Commitment::new([1; 32]));
@@ -169,7 +169,7 @@ mod tests {
 	#[tokio::test]
 	async fn test_block_commitment_rejected() -> Result<(), anyhow::Error> {
 		let config = Config::default();
-		let mut client = McrSettlementClient::new();
+		let mut client = Client::new();
 		client.block_lead_tolerance = 1;
 		let (manager, mut event_stream) = Manager::new(client.clone(), &config);
 		let commitment = BlockCommitment::new(1, Default::default(), Commitment::new([1; 32]));
@@ -199,7 +199,7 @@ mod tests {
 	#[tokio::test]
 	async fn test_back_pressure() -> Result<(), anyhow::Error> {
 		let config = Config::default();
-		let mut client = McrSettlementClient::new();
+		let mut client = Client::new();
 		client.block_lead_tolerance = 2;
 		client.pause_after(2).await;
 		let (manager, mut event_stream) = Manager::new(client.clone(), &config);
@@ -240,7 +240,7 @@ mod tests {
 	async fn test_batch_timeout() -> Result<(), anyhow::Error> {
 		let mut config = Config::default();
 		config.transactions.batch_timeout = 100;
-		let client = McrSettlementClient::new();
+		let client = Client::new();
 		let (manager, mut event_stream) = Manager::new(client.clone(), &config);
 
 		let commitment1 = BlockCommitment::new(1, Default::default(), Commitment::new([1; 32]));
