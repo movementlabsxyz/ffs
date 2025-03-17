@@ -40,14 +40,14 @@ sol!(
 );
 
 pub struct Client<P> {
-	run_commitment_admin_mode: bool,
-	rpc_provider: P,
-	ws_provider: RootProvider<PubSubFrontend>,
-	pub signer_address: Address,
-	contract_address: Address,
-	send_transaction_error_rules: Vec<Box<dyn VerifyRule>>,
-	gas_limit: u64,
-	send_transaction_retries: u32,
+	pub(crate) run_commitment_admin_mode: bool,
+	pub(crate) rpc_provider: P,
+	pub(crate) ws_provider: RootProvider<PubSubFrontend>,
+	pub(crate) signer_address: Address,
+	pub(crate) contract_address: Address,
+	pub(crate) send_transaction_error_rules: Vec<Box<dyn VerifyRule>>,
+	pub(crate) gas_limit: u64,
+	pub(crate) send_transaction_retries: u32,
 }
 
 impl<P> McrClientOperations for Client<P>

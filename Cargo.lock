@@ -3012,7 +3012,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "mcr-settlement-manager"
+name = "mcr-protocol-deployer-core-anvil"
 version = "0.0.1"
 dependencies = [
  "anyhow",
