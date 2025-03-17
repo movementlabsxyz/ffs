@@ -2949,6 +2949,9 @@ dependencies = [
  "anyhow",
  "clap",
  "dotenv",
+ "mcr-protocol-client-core-eth",
+ "mcr-protocol-client-core-util",
+ "mcr-types",
  "serde",
  "tokio",
 ]
@@ -2970,6 +2973,7 @@ dependencies = [
  "anyhow",
  "async-stream",
  "async-trait",
+ "clap",
  "futures",
  "mcr-protocol-client-core-util",
  "mcr-types",

@@ -1,3 +1,4 @@
+pub mod eth;
 use clap::{Parser, Subcommand};
 
 /// The `mcr-protocol-client` CLI.
@@ -13,6 +14,8 @@ pub struct McrProtocolClient {
 #[clap(rename_all = "kebab-case")]
 pub enum McrProtocolClientSubcommand {
 	Run,
+	#[clap(subcommand)]
+	Eth(eth::Eth),
 }
 
 /// Implement the `From` trait for `McrProtocolClient` to convert it into a `McrProtocolClientSubcommand`.
@@ -38,6 +41,7 @@ impl McrProtocolClientSubcommand {
 			McrProtocolClientSubcommand::Run => {
 				println!("mcr-protocol-client is under development. Please check back later.");
 			}
+			McrProtocolClientSubcommand::Eth(eth) => eth.execute().await?,
 		}
 		Ok(())
 	}

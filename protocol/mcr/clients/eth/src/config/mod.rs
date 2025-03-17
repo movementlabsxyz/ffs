@@ -17,13 +17,15 @@ use alloy_primitives::Address;
 use alloy_transport::BoxTransport;
 use alloy_transport_ws::WsConnect;
 use anyhow::Context;
+use clap::Parser;
 use secure_signer::cryptography::secp256k1::Secp256k1;
+use secure_signer::key::TryFromCanonicalString;
 use secure_signer_eth::Signer;
 use secure_signer_loader::{identifiers::SignerIdentifier, Load};
 use serde::{Deserialize, Serialize};
 use tracing::info;
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Parser, Debug, Serialize, Deserialize, Clone)]
 pub struct Config {
 	/// The address of the MCR settlement contract.
 	pub mcr_contract_address: String,
@@ -34,6 +36,7 @@ pub struct Config {
 	/// The Ethereum chain ID.
 	pub chain_id: u64,
 	/// The signer identifier.
+	#[arg(value_parser = SignerIdentifier::try_from_canonical_string)]
 	pub signer_identifier: SignerIdentifier,
 	/// Whether to run in settlement admin mode.
 	pub run_commitment_admin_mode: bool,
