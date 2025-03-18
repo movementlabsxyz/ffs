@@ -25,7 +25,7 @@ use pcp_types::block_commitment::{Commitment, Id, SuperBlockCommitment};
 use secure_signer::cryptography::secp256k1::Secp256k1;
 use secure_signer_loader::Load;
 // use secure_signing_eth::HsmSigner;
-use secure_signer_eth::HsmSigner;
+use secure_signer_eth::Signer as HsmSigner;
 use serde_json::Value as JsonValue;
 use std::array::TryFromSliceError;
 use std::fs;

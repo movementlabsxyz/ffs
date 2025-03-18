@@ -1,6 +1,6 @@
 use clap::Subcommand;
 use mcr_protocol_client::cli::McrProtocolClientSubcommand;
-use postconfirmationssettlement_client::cli::PcpProtocolClientSubcommand;
+use pcp_protocol_client::cli::PcpProtocolClientSubcommand;
 
 #[derive(Subcommand)]
 #[clap(rename_all = "kebab-case")]

@@ -20,6 +20,8 @@ secure-signer = { workspace = true }
 secure-signer-eth = { workspace = true }
 pcp-types = { workspace = true }
 pcp-config = { workspace = true }
+pcp-protocol-client-core-util = { workspace = true }
+pcp-protocol-client-core-eth = { workspace = true }
 
 alloy = { workspace = true, features = [
     "node-bindings",

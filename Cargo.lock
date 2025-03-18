@@ -3436,6 +3436,8 @@ dependencies = [
  "ffs-environment",
  "futures",
  "pcp-config",
+ "pcp-protocol-client-core-eth",
+ "pcp-protocol-client-core-util",
  "pcp-types",
  "secure-signer",
  "secure-signer-eth",
@@ -3447,6 +3449,50 @@ dependencies = [
  "tokio-stream",
  "tracing",
  "tracing-subscriber",
+]
+
+[[package]]
+name = "pcp-protocol-client-core-eth"
+version = "0.0.1"
+dependencies = [
+ "alloy",
+ "alloy-contract",
+ "alloy-network",
+ "alloy-primitives 0.7.7",
+ "alloy-provider",
+ "alloy-rpc-types",
+ "alloy-signer",
+ "alloy-sol-types",
+ "alloy-transport",
+ "alloy-transport-ws",
+ "anyhow",
+ "async-stream",
+ "async-trait",
+ "clap",
+ "futures",
+ "pcp-protocol-client-core-util",
+ "pcp-types",
+ "secure-signer",
+ "secure-signer-eth",
+ "secure-signer-loader",
+ "serde",
+ "serde_json",
+ "thiserror 1.0.69",
+ "tokio",
+ "tokio-stream",
+ "tracing",
+ "tracing-subscriber",
+]
+
+[[package]]
+name = "pcp-protocol-client-core-util"
+version = "0.0.1"
+dependencies = [
+ "pcp-types",
+ "serde",
+ "thiserror 1.0.69",
+ "tokio",
+ "tokio-stream",
 ]
 
 [[package]]

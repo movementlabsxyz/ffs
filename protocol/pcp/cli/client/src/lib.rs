@@ -7,6 +7,7 @@ pub mod mock;
 // pub use mock::*;
 
 pub mod eth_client;
+pub mod cli;
 
 #[cfg(feature = "eth")]
 pub use eth_client::PcpSettlementClient;
