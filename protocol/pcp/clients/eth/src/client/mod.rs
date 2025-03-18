@@ -1,5 +1,5 @@
 use crate::util::send_eth_transaction::send_transaction;
-use crate::util::send_eth_transaction::McrEthConnectorError;
+use crate::util::send_eth_transaction::PcpEthConnectorError;
 use crate::util::send_eth_transaction::VerifyRule;
 use alloy::providers::{Provider, RootProvider};
 use alloy::pubsub::PubSubFrontend;
@@ -7,7 +7,7 @@ use alloy_primitives::Address;
 use alloy_primitives::U256;
 use alloy_sol_types::sol;
 use anyhow::Context;
-use pcp_protocol_client_core_util::{CommitmentStream, McrClientError, McrClientOperations};
+use pcp_protocol_client_core_util::{CommitmentStream, PcpClientError, PcpClientOperations};
 use pcp_types::block_commitment::{SuperBlockCommitment, Commitment, Id};
 use serde_json::Value as JsonValue;
 use std::array::TryFromSliceError;
@@ -50,14 +50,14 @@ pub struct Client<P> {
 	pub(crate) send_transaction_retries: u32,
 }
 
-impl<P> McrClientOperations for Client<P>
+impl<P> PcpClientOperations for Client<P>
 where
 	P: Provider + Clone,
 {
 	async fn post_block_commitment(
 		&self,
 		block_commitment: SuperBlockCommitment,
-	) -> Result<(), McrClientError> {
+	) -> Result<(), PcpClientError> {
 		let contract = PCP::new(self.contract_address, &self.rpc_provider);
 
 		let eth_block_commitment = PCP::SuperBlockCommitment {
@@ -93,7 +93,7 @@ where
 	async fn post_block_commitment_batch(
 		&self,
 		block_commitments: Vec<SuperBlockCommitment>,
-	) -> Result<(), McrClientError> {
+	) -> Result<(), PcpClientError> {
 		let contract = PCP::new(self.contract_address, &self.rpc_provider);
 
 		let eth_block_commitment: Vec<_> = block_commitments
@@ -111,7 +111,7 @@ where
 				})
 			})
 			.collect::<Result<Vec<_>, TryFromSliceError>>()
-			.map_err(|e| McrClientError::Internal(Box::new(e)))?;
+			.map_err(|e| PcpClientError::Internal(Box::new(e)))?;
 
 		let call_builder = contract.submitBatchSuperBlockCommitment(eth_block_commitment);
 
@@ -127,7 +127,7 @@ where
 	async fn force_block_commitment(
 		&self,
 		block_commitment: SuperBlockCommitment,
-	) -> Result<(), McrClientError> {
+	) -> Result<(), PcpClientError> {
 		let contract = PCP::new(self.contract_address, &self.rpc_provider);
 
 		let eth_block_commitment = PCP::SuperBlockCommitment {
@@ -149,15 +149,15 @@ where
 		.await
 	}
 
-	async fn stream_block_commitments(&self) -> Result<CommitmentStream, McrClientError> {
+	async fn stream_block_commitments(&self) -> Result<CommitmentStream, PcpClientError> {
 		// Register to contract BlockCommitmentSubmitted event
 
 		let contract = PCP::new(self.contract_address, &self.ws_provider);
 		let event_filter = contract
-			.SuperBlockAccepted_filter()
+			.SuperBlockPostconfirmed_filter()
 			.watch()
 			.await
-			.map_err(|e| McrClientError::StreamBlockCommitments(Box::new(e)))?;
+			.map_err(|e| PcpClientError::StreamBlockCommitments(Box::new(e)))?;
 
 		let stream = event_filter.into_stream().map(|event| {
 			event
@@ -173,7 +173,7 @@ where
 						Commitment::new(commitment.stateCommitment.0),
 					))
 				})
-				.map_err(|err| McrEthConnectorError::EventNotificationError(err).into())
+				.map_err(|err| PcpEthConnectorError::EventNotificationError(err).into())
 		});
 		Ok(Box::pin(stream) as CommitmentStream)
 	}
@@ -181,26 +181,26 @@ where
 	async fn get_commitment_at_height(
 		&self,
 		height: u64,
-	) -> Result<Option<SuperBlockCommitment>, McrClientError> {
+	) -> Result<Option<SuperBlockCommitment>, PcpClientError> {
 		let contract = PCP::new(self.contract_address, &self.ws_provider);
-		let PCP::getAcceptedCommitmentAtBlockHeightReturn { _0: commitment } = contract
+		let PCP::getPostconfirmedCommitmentReturn { _0: commitment } = contract
 			.getPostconfirmedCommitment(U256::from(height))
 			.call()
 			.await
-			.map_err(|e| McrClientError::Internal(Box::new(e)))?;
+			.map_err(|e| PcpClientError::Internal(Box::new(e)))?;
 
 		let return_height: u64 = commitment
 			.height
 			.try_into()
 			.context("failed to convert the commitment height from U256 to u64")
-			.map_err(|e| McrClientError::Internal(e.into()))?;
+			.map_err(|e| PcpClientError::Internal(e.into()))?;
 		// Commitment with height 0 mean not found
 		Ok((return_height != 0).then_some(SuperBlockCommitment::new(
 			commitment
 				.height
 				.try_into()
 				.context("failed to convert the commitment height from U256 to u64")
-				.map_err(|e| McrClientError::Internal(e.into()))?,
+				.map_err(|e| PcpClientError::Internal(e.into()))?,
 			Id::new(commitment.blockId.into()),
 			Commitment::new(commitment.commitment.into()),
 		)))
@@ -209,42 +209,42 @@ where
 	async fn get_posted_commitment_at_height(
 		&self,
 		height: u64,
-	) -> Result<Option<SuperBlockCommitment>, McrClientError> {
+	) -> Result<Option<SuperBlockCommitment>, PcpClientError> {
 		let contract = PCP::new(self.contract_address, &self.ws_provider);
 		let PCP::getValidatorCommitmentAtSuperBlockHeightReturn { _0: commitment } = contract
 			.getValidatorCommitmentAtSuperBlockHeight(U256::from(height), self.signer_address)
 			.call()
 			.await
-			.map_err(|e| McrClientError::Internal(Box::new(e)))?;
+			.map_err(|e| PcpClientError::Internal(Box::new(e)))?;
 
 		let return_height: u64 = commitment
 			.height
 			.try_into()
 			.context("failed to convert the commitment height from U256 to u64")
-			.map_err(|e| McrClientError::Internal(e.into()))?;
+			.map_err(|e| PcpClientError::Internal(e.into()))?;
 
 		Ok((return_height != 0).then_some(SuperBlockCommitment::new(
 			commitment
 				.height
 				.try_into()
 				.context("failed to convert the commitment height from U256 to u64")
-				.map_err(|e| McrClientError::Internal(e.into()))?,
+				.map_err(|e| PcpClientError::Internal(e.into()))?,
 			Id::new(commitment.blockId.into()),
 			Commitment::new(commitment.commitment.into()),
 		)))
 	}
 
-	async fn get_max_tolerable_block_height(&self) -> Result<u64, McrClientError> {
+	async fn get_max_tolerable_block_height(&self) -> Result<u64, PcpClientError> {
 		let contract = PCP::new(self.contract_address, &self.ws_provider);
 		let PCP::getMaxTolerableSuperBlockHeightReturn { _0: block_height } = contract
 			.getMaxTolerableSuperBlockHeight()
 			.call()
 			.await
-			.map_err(|e| McrClientError::Internal(Box::new(e)))?;
+			.map_err(|e| PcpClientError::Internal(Box::new(e)))?;
 		Ok(block_height
 			.try_into()
 			.context("Failed to convert the max tolerable block height from U256 to u64")
-			.map_err(|e| McrClientError::Internal(e.into()))?)
+			.map_err(|e| PcpClientError::Internal(e.into()))?)
 	}
 }
 
@@ -256,12 +256,12 @@ pub struct AnvilAddressEntry {
 /// Read the Anvil config file keys and return all address/private keys.
 pub fn read_anvil_json_file_addresses<P: AsRef<Path>>(
 	anvil_conf_path: P,
-) -> Result<Vec<AnvilAddressEntry>, McrClientError> {
+) -> Result<Vec<AnvilAddressEntry>, PcpClientError> {
 	let file_content =
-		fs::read_to_string(anvil_conf_path).map_err(|e| McrClientError::Internal(Box::new(e)))?;
+		fs::read_to_string(anvil_conf_path).map_err(|e| PcpClientError::Internal(Box::new(e)))?;
 
 	let json_value: JsonValue =
-		serde_json::from_str(&file_content).map_err(|e| McrClientError::Internal(Box::new(e)))?;
+		serde_json::from_str(&file_content).map_err(|e| PcpClientError::Internal(Box::new(e)))?;
 
 	// Extract the available_accounts and private_keys fields.
 	let available_accounts_iter = json_value["available_accounts"]

@@ -2,9 +2,9 @@ use pcp_types::block_commitment::SuperBlockCommitment;
 use std::future::Future;
 use tokio_stream::Stream;
 
-/// Errors thrown by the McrClient.
+/// Errors thrown by the PcpClient.
 #[derive(Debug, thiserror::Error)]
-pub enum McrClientError {
+pub enum PcpClientError {
 	#[error("PCP Client failed to post block commitment: {0}")]
 	PostBlockCommitment(#[source] Box<dyn std::error::Error + Send + Sync>),
 	#[error("PCP client failed to invoke admin function: {0}")]
@@ -19,47 +19,47 @@ pub enum McrClientError {
 
 /// Stream of block commitments from the settlement client.
 pub type CommitmentStream =
-	std::pin::Pin<Box<dyn Stream<Item = Result<SuperBlockCommitment, McrClientError>> + Send>>;
+	std::pin::Pin<Box<dyn Stream<Item = Result<SuperBlockCommitment, PcpClientError>> + Send>>;
 
-pub trait McrClientOperations {
+pub trait PcpClientOperations {
 	/// Posts a block commitment to the settlement client.
 	fn post_block_commitment(
 		&self,
 		block_commitment: SuperBlockCommitment,
-	) -> impl Future<Output = Result<(), McrClientError>> + Send;
+	) -> impl Future<Output = Result<(), PcpClientError>> + Send;
 
 	/// Posts a batch of block commitments to the settlement client.
 	fn post_block_commitment_batch(
 		&self,
 		block_commitment: Vec<SuperBlockCommitment>,
-	) -> impl Future<Output = Result<(), McrClientError>> + Send;
+	) -> impl Future<Output = Result<(), PcpClientError>> + Send;
 
 	/// Forces a block commitment
 	/// This will only work in admin mode
 	fn force_block_commitment(
 		&self,
 		block_commitment: SuperBlockCommitment,
-	) -> impl Future<Output = Result<(), McrClientError>> + Send;
+	) -> impl Future<Output = Result<(), PcpClientError>> + Send;
 
 	/// Streams block commitments from the settlement client.
 	fn stream_block_commitments(
 		&self,
-	) -> impl Future<Output = Result<CommitmentStream, McrClientError>> + Send;
+	) -> impl Future<Output = Result<CommitmentStream, PcpClientError>> + Send;
 
 	/// Gets the accepted commitment at the given height.
 	fn get_commitment_at_height(
 		&self,
 		height: u64,
-	) -> impl Future<Output = Result<Option<SuperBlockCommitment>, McrClientError>> + Send;
+	) -> impl Future<Output = Result<Option<SuperBlockCommitment>, PcpClientError>> + Send;
 
 	/// Gets the commitment this validator has made at a given height
 	fn get_posted_commitment_at_height(
 		&self,
 		height: u64,
-	) -> impl Future<Output = Result<Option<SuperBlockCommitment>, McrClientError>> + Send;
+	) -> impl Future<Output = Result<Option<SuperBlockCommitment>, PcpClientError>> + Send;
 
 	/// Gets the max tolerable block height.
 	fn get_max_tolerable_block_height(
 		&self,
-	) -> impl Future<Output = Result<u64, McrClientError>> + Send;
+	) -> impl Future<Output = Result<u64, PcpClientError>> + Send;
 }

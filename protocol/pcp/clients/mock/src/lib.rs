@@ -1,4 +1,4 @@
-use pcp_protocol_client_core_util::{CommitmentStream, McrClientError, McrClientOperations};
+use pcp_protocol_client_core_util::{CommitmentStream, PcpClientError, PcpClientOperations};
 use pcp_types::block_commitment::BlockCommitment;
 use std::collections::BTreeMap;
 use std::sync::{Arc, Mutex};
@@ -8,8 +8,8 @@ use tokio_stream::wrappers::ReceiverStream;
 #[derive(Clone)]
 pub struct Client {
 	commitments: Arc<RwLock<BTreeMap<u64, BlockCommitment>>>,
-	stream_sender: mpsc::Sender<Result<BlockCommitment, McrClientError>>,
-	stream_receiver: Arc<Mutex<Option<mpsc::Receiver<Result<BlockCommitment, McrClientError>>>>>,
+	stream_sender: mpsc::Sender<Result<BlockCommitment, PcpClientError>>,
+	stream_receiver: Arc<Mutex<Option<mpsc::Receiver<Result<BlockCommitment, PcpClientError>>>>>,
 	pub current_height: Arc<RwLock<u64>>,
 	pub block_lead_tolerance: u64,
 	paused_at_height: Arc<RwLock<Option<u64>>>,
@@ -31,7 +31,7 @@ impl Client {
 	/// Overrides the commitment to settle on at given height.
 	///
 	/// To have effect, this method needs to be called before a commitment is
-	/// posted for this height with the `McrClientOperations` API.
+	/// posted for this height with the `PcpClientOperations` API.
 	pub async fn override_block_commitment(&self, commitment: BlockCommitment) {
 		let mut commitments = self.commitments.write().await;
 		commitments.insert(commitment.height(), commitment);
@@ -63,11 +63,11 @@ impl Client {
 	}
 }
 
-impl McrClientOperations for Client {
+impl PcpClientOperations for Client {
 	async fn post_block_commitment(
 		&self,
 		block_commitment: BlockCommitment,
-	) -> Result<(), McrClientError> {
+	) -> Result<(), PcpClientError> {
 		let height = block_commitment.height();
 
 		let settled = {
@@ -82,7 +82,7 @@ impl McrClientOperations for Client {
 					self.stream_sender
 						.send(Ok(settled))
 						.await
-						.map_err(|e| McrClientError::Internal(Box::new(e)))?;
+						.map_err(|e| PcpClientError::Internal(Box::new(e)))?;
 				}
 			}
 		}
@@ -100,7 +100,7 @@ impl McrClientOperations for Client {
 	async fn post_block_commitment_batch(
 		&self,
 		block_commitment: Vec<BlockCommitment>,
-	) -> Result<(), McrClientError> {
+	) -> Result<(), PcpClientError> {
 		for commitment in block_commitment {
 			self.post_block_commitment(commitment).await?;
 		}
@@ -110,18 +110,18 @@ impl McrClientOperations for Client {
 	async fn force_block_commitment(
 		&self,
 		_block_commitment: BlockCommitment,
-	) -> Result<(), McrClientError> {
+	) -> Result<(), PcpClientError> {
 		unimplemented!()
 	}
 
 	async fn get_posted_commitment_at_height(
 		&self,
 		_height: u64,
-	) -> Result<Option<BlockCommitment>, McrClientError> {
+	) -> Result<Option<BlockCommitment>, PcpClientError> {
 		unimplemented!();
 	}
 
-	async fn stream_block_commitments(&self) -> Result<CommitmentStream, McrClientError> {
+	async fn stream_block_commitments(&self) -> Result<CommitmentStream, PcpClientError> {
 		let receiver = self
 			.stream_receiver
 			.lock()
@@ -134,12 +134,12 @@ impl McrClientOperations for Client {
 	async fn get_commitment_at_height(
 		&self,
 		height: u64,
-	) -> Result<Option<BlockCommitment>, McrClientError> {
+	) -> Result<Option<BlockCommitment>, PcpClientError> {
 		let guard = self.commitments.read().await;
 		Ok(guard.get(&height).cloned())
 	}
 
-	async fn get_max_tolerable_block_height(&self) -> Result<u64, McrClientError> {
+	async fn get_max_tolerable_block_height(&self) -> Result<u64, PcpClientError> {
 		Ok(*self.current_height.read().await + self.block_lead_tolerance)
 	}
 }
@@ -155,7 +155,7 @@ pub mod test {
 	use tokio_stream::StreamExt;
 
 	#[tokio::test]
-	async fn test_post_block_commitment() -> Result<(), McrClientError> {
+	async fn test_post_block_commitment() -> Result<(), PcpClientError> {
 		let client = Client::new();
 		let commitment = BlockCommitment::new(1, Default::default(), Commitment::test());
 		client.post_block_commitment(commitment.clone()).await.unwrap();
@@ -169,7 +169,7 @@ pub mod test {
 	}
 
 	#[tokio::test]
-	async fn test_post_block_commitment_batch() -> Result<(), McrClientError> {
+	async fn test_post_block_commitment_batch() -> Result<(), PcpClientError> {
 		let client = Client::new();
 		let commitment = BlockCommitment::new(1, Default::default(), Commitment::test());
 		let commitment2 = BlockCommitment::new(1, Default::default(), Commitment::test());
@@ -184,7 +184,7 @@ pub mod test {
 	}
 
 	#[tokio::test]
-	async fn test_stream_block_commitments() -> Result<(), McrClientError> {
+	async fn test_stream_block_commitments() -> Result<(), PcpClientError> {
 		let client = Client::new();
 		let commitment = BlockCommitment::new(1, Default::default(), Commitment::test());
 		client.post_block_commitment(commitment.clone()).await.unwrap();
@@ -194,7 +194,7 @@ pub mod test {
 	}
 
 	#[tokio::test]
-	async fn test_override_block_commitments() -> Result<(), McrClientError> {
+	async fn test_override_block_commitments() -> Result<(), PcpClientError> {
 		let client = Client::new();
 		let commitment = BlockCommitment::new(2, Default::default(), Commitment::test());
 		client.override_block_commitment(commitment.clone()).await;
@@ -208,7 +208,7 @@ pub mod test {
 	}
 
 	#[tokio::test]
-	async fn test_pause() -> Result<(), McrClientError> {
+	async fn test_pause() -> Result<(), PcpClientError> {
 		let client = Client::new();
 		let commitment = BlockCommitment::new(2, Default::default(), Commitment::test());
 		client.pause_after(1).await;
@@ -226,7 +226,7 @@ pub mod test {
 	}
 
 	#[tokio::test]
-	async fn test_resume() -> Result<(), McrClientError> {
+	async fn test_resume() -> Result<(), PcpClientError> {
 		let client = Client::new();
 		let commitment = BlockCommitment::new(2, Default::default(), Commitment::test());
 		client.pause_after(1).await;
