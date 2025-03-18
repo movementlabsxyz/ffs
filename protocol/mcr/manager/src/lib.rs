@@ -1,18 +1,18 @@
+mod manager;
+pub use manager::Manager;
+
+use mcr_protocol_client_core_util::McrClientError;
 use mcr_types::block_commitment::{BlockCommitment, BlockCommitmentEvent};
+use std::future::Future;
 use tokio_stream::Stream;
 
-mod manager;
-
-pub use manager::Manager as McrSettlementManager;
-
 pub type CommitmentEventStream =
-	std::pin::Pin<Box<dyn Stream<Item = Result<BlockCommitmentEvent, anyhow::Error>> + Send>>;
+	std::pin::Pin<Box<dyn Stream<Item = Result<BlockCommitmentEvent, McrClientError>> + Send>>;
 
-#[async_trait::async_trait]
-pub trait McrSettlementManagerOperations {
+pub trait McrManagerOperations {
 	/// Adds a block commitment to the manager queue.
-	async fn post_block_commitment(
+	fn post_block_commitment(
 		&self,
 		block_commitment: BlockCommitment,
-	) -> Result<(), anyhow::Error>;
+	) -> impl Future<Output = Result<(), McrClientError>>;
 }

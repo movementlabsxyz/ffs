@@ -1,5 +1,5 @@
 [package]
-name = "mcr-client-eth"
+name = "mcr-protocol-client-core-eth"
 version = { workspace = true }
 edition = { workspace = true }
 license = { workspace = true }
@@ -7,12 +7,6 @@ authors = { workspace = true }
 homepage = { workspace = true }
 publish = { workspace = true }
 rust-version = { workspace = true }
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-# [[bin]]
-# name = "test-mcr-settlement-client"
-# path = "src/bin/e2e/test_client_settlement.rs"
-
 
 [dependencies]
 alloy = { workspace = true, features = [
@@ -37,6 +31,7 @@ alloy-transport-ws = { workspace = true }
 anyhow = { workspace = true }
 async-stream = { workspace = true }
 async-trait = { workspace = true }
+clap = { workspace = true }
 serde_json = { workspace = true }
 thiserror = { workspace = true }
 tokio = { workspace = true }
@@ -44,17 +39,14 @@ tokio-stream = { workspace = true }
 tracing = { workspace = true }
 serde = { workspace = true }
 
-
 alloy-rpc-types = { workspace = true }
 futures = { workspace = true }
 tracing-subscriber = { workspace = true }
 mcr-types = { workspace = true }
-
-[features]
-default = ["eth"]
-e2e = ["eth"]
-eth = []
-mock = []
+mcr-protocol-client-core-util = { workspace = true }
+secure-signer = { workspace = true }
+secure-signer-loader = { workspace = true }
+secure-signer-eth = { workspace = true }
 
 [lints]
 workspace = true

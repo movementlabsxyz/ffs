@@ -1,5 +1,5 @@
 [package]
-name = "secure-signing-eth"
+name = "secure-signer-eth"
 version.workspace = true
 edition.workspace = true
 license.workspace = true

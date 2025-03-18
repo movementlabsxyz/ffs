@@ -1,4 +1,4 @@
-use mcr_client_util::{CommitmentStream, McrClientError, McrClientOperations};
+use mcr_protocol_client_core_util::{CommitmentStream, McrClientError, McrClientOperations};
 use mcr_types::block_commitment::BlockCommitment;
 use std::collections::BTreeMap;
 use std::sync::{Arc, Mutex};
@@ -6,7 +6,7 @@ use tokio::sync::{mpsc, RwLock};
 use tokio_stream::wrappers::ReceiverStream;
 
 #[derive(Clone)]
-pub struct McrSettlementClient {
+pub struct Client {
 	commitments: Arc<RwLock<BTreeMap<u64, BlockCommitment>>>,
 	stream_sender: mpsc::Sender<Result<BlockCommitment, McrClientError>>,
 	stream_receiver: Arc<Mutex<Option<mpsc::Receiver<Result<BlockCommitment, McrClientError>>>>>,
@@ -15,10 +15,10 @@ pub struct McrSettlementClient {
 	paused_at_height: Arc<RwLock<Option<u64>>>,
 }
 
-impl McrSettlementClient {
+impl Client {
 	pub fn new() -> Self {
 		let (stream_sender, receiver) = mpsc::channel(10);
-		McrSettlementClient {
+		Client {
 			commitments: Arc::new(RwLock::new(BTreeMap::new())),
 			stream_sender,
 			stream_receiver: Arc::new(Mutex::new(Some(receiver))),
@@ -63,7 +63,7 @@ impl McrSettlementClient {
 	}
 }
 
-impl McrClientOperations for McrSettlementClient {
+impl McrClientOperations for Client {
 	async fn post_block_commitment(
 		&self,
 		block_commitment: BlockCommitment,
@@ -156,7 +156,7 @@ pub mod test {
 
 	#[tokio::test]
 	async fn test_post_block_commitment() -> Result<(), McrClientError> {
-		let client = McrSettlementClient::new();
+		let client = Client::new();
 		let commitment = BlockCommitment::new(1, Default::default(), Commitment::test());
 		client.post_block_commitment(commitment.clone()).await.unwrap();
 		let guard = client.commitments.write().await;
@@ -170,7 +170,7 @@ pub mod test {
 
 	#[tokio::test]
 	async fn test_post_block_commitment_batch() -> Result<(), McrClientError> {
-		let client = McrSettlementClient::new();
+		let client = Client::new();
 		let commitment = BlockCommitment::new(1, Default::default(), Commitment::test());
 		let commitment2 = BlockCommitment::new(1, Default::default(), Commitment::test());
 		client
@@ -185,7 +185,7 @@ pub mod test {
 
 	#[tokio::test]
 	async fn test_stream_block_commitments() -> Result<(), McrClientError> {
-		let client = McrSettlementClient::new();
+		let client = Client::new();
 		let commitment = BlockCommitment::new(1, Default::default(), Commitment::test());
 		client.post_block_commitment(commitment.clone()).await.unwrap();
 		let mut stream = client.stream_block_commitments().await?;
@@ -195,7 +195,7 @@ pub mod test {
 
 	#[tokio::test]
 	async fn test_override_block_commitments() -> Result<(), McrClientError> {
-		let client = McrSettlementClient::new();
+		let client = Client::new();
 		let commitment = BlockCommitment::new(2, Default::default(), Commitment::test());
 		client.override_block_commitment(commitment.clone()).await;
 		client
@@ -209,7 +209,7 @@ pub mod test {
 
 	#[tokio::test]
 	async fn test_pause() -> Result<(), McrClientError> {
-		let client = McrSettlementClient::new();
+		let client = Client::new();
 		let commitment = BlockCommitment::new(2, Default::default(), Commitment::test());
 		client.pause_after(1).await;
 		client.post_block_commitment(commitment.clone()).await?;
@@ -227,7 +227,7 @@ pub mod test {
 
 	#[tokio::test]
 	async fn test_resume() -> Result<(), McrClientError> {
-		let client = McrSettlementClient::new();
+		let client = Client::new();
 		let commitment = BlockCommitment::new(2, Default::default(), Commitment::test());
 		client.pause_after(1).await;
 		client.post_block_commitment(commitment.clone()).await?;

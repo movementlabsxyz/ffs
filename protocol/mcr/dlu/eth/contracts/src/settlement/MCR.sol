@@ -12,10 +12,10 @@ import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 
 contract MCR is Initializable, BaseSettlement, MCRStorage, IMCR {
 
-    // A role for setting commitments
+    /** @dev The role for commitment admin */
     bytes32 public constant COMMITMENT_ADMIN = keccak256("COMMITMENT_ADMIN");
 
-    // Trusted attesters admin
+    /** @dev The role for trusted attester */
     bytes32 public constant TRUSTED_ATTESTER = keccak256("TRUSTED_ATTESTER");
 
     function initialize(

@@ -2884,60 +2884,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "mcr-client-eth"
-version = "0.0.1"
-dependencies = [
- "alloy",
- "alloy-contract",
- "alloy-network",
- "alloy-primitives 0.7.7",
- "alloy-provider",
- "alloy-rpc-types",
- "alloy-signer",
- "alloy-sol-types",
- "alloy-transport",
- "alloy-transport-ws",
- "anyhow",
- "async-stream",
- "async-trait",
- "futures",
- "mcr-types",
- "serde",
- "serde_json",
- "thiserror 1.0.69",
- "tokio",
- "tokio-stream",
- "tracing",
- "tracing-subscriber",
-]
-
-[[package]]
-name = "mcr-client-mock"
-version = "0.0.1"
-dependencies = [
- "anyhow",
- "futures",
- "mcr-client-util",
- "mcr-types",
- "serde",
- "thiserror 1.0.69",
- "tokio",
- "tokio-stream",
- "tracing",
-]
-
-[[package]]
-name = "mcr-client-util"
-version = "0.0.1"
-dependencies = [
- "mcr-types",
- "serde",
- "thiserror 1.0.69",
- "tokio",
- "tokio-stream",
-]
-
-[[package]]
 name = "mcr-config"
 version = "0.0.1"
 dependencies = [
@@ -3003,12 +2949,15 @@ dependencies = [
  "anyhow",
  "clap",
  "dotenv",
+ "mcr-protocol-client-core-eth",
+ "mcr-protocol-client-core-util",
+ "mcr-types",
  "serde",
  "tokio",
 ]
 
 [[package]]
-name = "mcr-settlement-client"
+name = "mcr-protocol-client-core-eth"
 version = "0.0.1"
 dependencies = [
  "alloy",
@@ -3024,12 +2973,13 @@ dependencies = [
  "anyhow",
  "async-stream",
  "async-trait",
+ "clap",
  "futures",
- "mcr-config",
+ "mcr-protocol-client-core-util",
  "mcr-types",
  "secure-signer",
+ "secure-signer-eth",
  "secure-signer-loader",
- "secure-signing-eth",
  "serde",
  "serde_json",
  "thiserror 1.0.69",
@@ -3040,7 +2990,33 @@ dependencies = [
 ]
 
 [[package]]
-name = "mcr-settlement-manager"
+name = "mcr-protocol-client-core-mock"
+version = "0.0.1"
+dependencies = [
+ "anyhow",
+ "futures",
+ "mcr-protocol-client-core-util",
+ "mcr-types",
+ "serde",
+ "thiserror 1.0.69",
+ "tokio",
+ "tokio-stream",
+ "tracing",
+]
+
+[[package]]
+name = "mcr-protocol-client-core-util"
+version = "0.0.1"
+dependencies = [
+ "mcr-types",
+ "serde",
+ "thiserror 1.0.69",
+ "tokio",
+ "tokio-stream",
+]
+
+[[package]]
+name = "mcr-protocol-deployer-core-anvil"
 version = "0.0.1"
 dependencies = [
  "anyhow",
@@ -3048,7 +3024,8 @@ dependencies = [
  "async-trait",
  "futures",
  "mcr-config",
- "mcr-settlement-client",
+ "mcr-protocol-client-core-mock",
+ "mcr-protocol-client-core-util",
  "mcr-types",
  "serde_json",
  "tokio",
@@ -4184,6 +4161,21 @@ dependencies = [
 ]
 
 [[package]]
+name = "secure-signer-eth"
+version = "0.0.1"
+dependencies = [
+ "alloy-consensus",
+ "alloy-network",
+ "alloy-primitives 0.7.7",
+ "alloy-signer",
+ "alloy-transport-http",
+ "async-trait",
+ "k256",
+ "secure-signer",
+ "secure-signer-aws-kms",
+]
+
+[[package]]
 name = "secure-signer-hashicorp-vault"
 version = "0.0.2"
 source = "git+https://github.com/movementlabsxyz/secure-signing.git?rev=62d9ae5fd098d2c0d2a2da2004ada91681e0df53#62d9ae5fd098d2c0d2a2da2004ada91681e0df53"
@@ -4228,21 +4220,6 @@ dependencies = [
  "k256",
  "rand",
  "secure-signer",
-]
-
-[[package]]
-name = "secure-signing-eth"
-version = "0.0.1"
-dependencies = [
- "alloy-consensus",
- "alloy-network",
- "alloy-primitives 0.7.7",
- "alloy-signer",
- "alloy-transport-http",
- "async-trait",
- "k256",
- "secure-signer",
- "secure-signer-aws-kms",
 ]
 
 [[package]]
