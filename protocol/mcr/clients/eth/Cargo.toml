@@ -1,0 +1,52 @@
+[package]
+name = "mcr-protocol-client-core-eth"
+version = { workspace = true }
+edition = { workspace = true }
+license = { workspace = true }
+authors = { workspace = true }
+homepage = { workspace = true }
+publish = { workspace = true }
+rust-version = { workspace = true }
+
+[dependencies]
+alloy = { workspace = true, features = [
+    "node-bindings",
+    "rpc-types-trace",
+    "json-rpc",
+    "rpc-client",
+    "signers",
+    "signer-yubihsm",
+    "pubsub",
+    "providers",
+] }
+alloy-contract = { workspace = true }
+alloy-network = { workspace = true }
+alloy-primitives = { workspace = true }
+alloy-provider = { workspace = true, features = [] }
+alloy-signer = { workspace = true }
+alloy-sol-types = { workspace = true }
+alloy-transport = { workspace = true }
+alloy-transport-ws = { workspace = true }
+
+anyhow = { workspace = true }
+async-stream = { workspace = true }
+async-trait = { workspace = true }
+clap = { workspace = true }
+serde_json = { workspace = true }
+thiserror = { workspace = true }
+tokio = { workspace = true }
+tokio-stream = { workspace = true }
+tracing = { workspace = true }
+serde = { workspace = true }
+
+alloy-rpc-types = { workspace = true }
+futures = { workspace = true }
+tracing-subscriber = { workspace = true }
+mcr-types = { workspace = true }
+mcr-protocol-client-core-util = { workspace = true }
+secure-signer = { workspace = true }
+secure-signer-loader = { workspace = true }
+secure-signer-eth = { workspace = true }
+
+[lints]
+workspace = true

@@ -3,13 +3,40 @@
 resolver = "2"
 
 members = [
-  "protocol-units/mcr/util/*",
-  "protocol-units/mcr/clients/*",
-  "protocol-units/mcr/client",
-  "protocol-units/mcr/manager",
-  "protocol-units/pcp/*",
-  "protocol-units/fast-confirmations/*",
-  "protocol-units/ffs/*",
+
+  # mcr
+  "protocol/mcr/util/*",
+  "protocol/mcr/clients/*",
+  "protocol/mcr/manager",
+  "protocol/mcr/cli/*",
+
+  # pcp
+  ## protocol
+  "protocol/pcp/cli/*",
+  ## node
+  "node/pcp/cli/*",
+  ## network
+  "network/pcp/cli/*",
+
+  # fcp
+  ## protocol
+  "protocol/fcp/cli/*",
+  ## node
+  "node/fcp/cli/*",
+  ## network
+  "network/fcp/cli/*",
+
+  # ffs
+  ## protocol
+  "protocol/ffs/cli/*",
+  ## node
+  "node/ffs/cli/*",
+  ## network
+  "network/ffs/cli/*",
+  ## sdk
+  "sdk/cli/*",
+
+  # util
   "util/signing/eth",
   "util/environment",
 ]
@@ -55,6 +82,8 @@ alloy-transport-ws = { git = "https://github.com/alloy-rs/alloy.git", rev = "833
 anyhow = "1.0"
 async-stream = "0.3.0"
 async-trait = "0.1.71"
+clap = { version = "4.4.10", features = ["derive"] }
+dotenv = "0.15.0"
 futures = "0.3.17"
 serde = "1.0"
 serde_json = "1.0"
@@ -67,6 +96,9 @@ tracing-test = "0.2.5"
 tokio = { version = "1.35.1", features = ["full", "tracing"] }
 tokio-stream = "0.1.15"
 
+# model checking and verification
+
+
 # secure-signing
 secure-signer = { git = "https://github.com/movementlabsxyz/secure-signing.git", rev = "62d9ae5fd098d2c0d2a2da2004ada91681e0df53" }
 secure-signer-loader = { git = "https://github.com/movementlabsxyz/secure-signing.git", rev = "62d9ae5fd098d2c0d2a2da2004ada91681e0df53"  }
@@ -74,11 +106,21 @@ secure-signer-aws-kms = { git = "https://github.com/movementlabsxyz/secure-signi
 
 # internal
 ## mcr
-mcr-types = { path = "protocol-units/mcr/util/types" }
-mcr-config = { path = "protocol-units/mcr/util/config" }
-mcr-client-util = { path = "protocol-units/mcr/clients/util" }
-mcr-settlement-client = { path = "protocol-units/mcr/client" }
-secure-signing-eth = { path = "util/signing/eth" }
+### protocol
+mcr-types = { path = "protocol/mcr/util/types" }
+mcr-config = { path = "protocol/mcr/util/config" }
+mcr-protocol-client-core-util = { path = "protocol/mcr/clients/util" }
+mcr-protocol-client-core-eth = { path = "protocol/mcr/clients/eth" }
+mcr-protocol-client-core-mock = { path = "protocol/mcr/clients/mock" }
+mcr-protocol-client = { path = "protocol/mcr/cli/client" }
+mcr-protocol = { path = "protocol/mcr/cli"}
+### network
+mcr-network-client = { path = "network/mcr/cli/client" }
+mcr-network-coordinator = { path = "network/mcr/cli/coordinator" }
+mcr-network = { path = "network/mcr/cli/network" }
+
+# util
+secure-signer-eth = { path = "util/signing/eth" }
 ffs-environment = { path = "util/environment" }
 
 [workspace.lints.clippy]
