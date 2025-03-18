@@ -123,6 +123,15 @@ mcr-network = { path = "network/mcr/cli/network" }
 secure-signer-eth = { path = "util/signing/eth" }
 ffs-environment = { path = "util/environment" }
 
+# Movement dependencies
+dot-movement = { git = "https://github.com/movementlabsxyz/movement.git", branch = "main" }
+movement-types = { git = "https://github.com/movementlabsxyz/movement.git", branch = "main" }  # Using same source as dot-movement
+
+## pcp
+### protocol
+# postconfirmationssettlement-client = { path = "protocol/pcp/cli/client" }
+# postconfirmationsconfig = { path = "protocol/pcp/util/config" }
+
 [workspace.lints.clippy]
 debug_assert_with_mut_call = "deny"
 inefficient_to_string = "deny"

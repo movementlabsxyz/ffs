@@ -3403,17 +3403,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "pcp-protocol-client"
-version = "0.0.1"
-dependencies = [
- "anyhow",
- "clap",
- "dotenv",
- "serde",
- "tokio",
-]
-
-[[package]]
 name = "percent-encoding"
 version = "2.3.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3487,6 +3476,38 @@ name = "pkg-config"
 version = "0.3.31"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "953ec861398dccce10c670dfeaf3ec4911ca479e9c02154b3a215178c5f566f2"
+
+[[package]]
+name = "postconfirmationssettlement-client"
+version = "0.0.1"
+dependencies = [
+ "alloy",
+ "alloy-contract",
+ "alloy-network",
+ "alloy-primitives 0.7.7",
+ "alloy-provider",
+ "alloy-rpc-types",
+ "alloy-signer",
+ "alloy-sol-types",
+ "alloy-transport",
+ "alloy-transport-ws",
+ "anyhow",
+ "async-stream",
+ "async-trait",
+ "clap",
+ "ffs-environment",
+ "futures",
+ "secure-signer",
+ "secure-signer-eth",
+ "secure-signer-loader",
+ "serde",
+ "serde_json",
+ "thiserror 1.0.69",
+ "tokio",
+ "tokio-stream",
+ "tracing",
+ "tracing-subscriber",
+]
 
 [[package]]
 name = "powerfmt"

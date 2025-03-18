@@ -1,5 +1,6 @@
 use clap::Subcommand;
 use mcr_protocol_client::cli::McrProtocolClientSubcommand;
+// use postconfirmationssettlement_client::cli::PcpProtocolClientSubcommand;
 
 #[derive(Subcommand)]
 #[clap(rename_all = "kebab-case")]
@@ -7,6 +8,10 @@ pub enum Protocol {
 	/// MCR protocol commands
 	#[clap(subcommand)]
 	Mcr(McrProtocolClientSubcommand),
+	
+	// /// PCP protocol commands
+	// #[clap(subcommand)]
+	// Pcp(PcpProtocolClientSubcommand),
 }
 
 impl Protocol {
@@ -15,6 +20,9 @@ impl Protocol {
 			Protocol::Mcr(client) => {
 				client.execute().await?;
 			}
+			// Protocol::Pcp(client) => {
+			// 	client.execute().await?;
+			// }
 		}
 
 		Ok(())

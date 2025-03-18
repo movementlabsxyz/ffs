@@ -15,6 +15,7 @@ clap = { workspace = true}
 dotenv = { workspace = true }
 anyhow = { workspace = true }
 mcr-protocol-client = { workspace = true }
+# postconfirmationssettlement-client = { workspace = true }
 
 [lints]
 workspace = true
