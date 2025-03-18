@@ -4,6 +4,7 @@ use mcr_protocol_client::cli::McrProtocolClientSubcommand;
 #[derive(Subcommand)]
 #[clap(rename_all = "kebab-case")]
 pub enum Protocol {
+	/// MCR protocol commands
 	#[clap(subcommand)]
 	Mcr(McrProtocolClientSubcommand),
 }
