@@ -1,5 +1,5 @@
 use ffs_environment::{backend::config_file::ConfigFile, ffs_environment};
-use postconfirmations_config::Config;
+use pcp_config::Config;
 use postconfirmations_settlement_setup::Setup;
 
 #[tokio::main]

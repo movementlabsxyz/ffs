@@ -1,4 +1,4 @@
-use postconfirmations_types::block_commitment::SuperBlockCommitment;
+use pcp_types::block_commitment::SuperBlockCommitment;
 use tokio_stream::Stream;
 pub mod mock;
 

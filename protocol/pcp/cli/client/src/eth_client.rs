@@ -20,11 +20,12 @@ use alloy_sol_types::sol;
 use alloy_transport::BoxTransport;
 use alloy_transport_ws::WsConnect;
 use anyhow::Context;
-use postconfirmations_config::Config;
-use postconfirmations_types::block_commitment::{Commitment, Id, SuperBlockCommitment};
+use pcp_config::Config;
+use pcp_types::block_commitment::{Commitment, Id, SuperBlockCommitment};
 use secure_signer::cryptography::secp256k1::Secp256k1;
 use secure_signer_loader::Load;
-use secure_signing_eth::HsmSigner;
+// use secure_signing_eth::HsmSigner;
+use secure_signer_eth::HsmSigner;
 use serde_json::Value as JsonValue;
 use std::array::TryFromSliceError;
 use std::fs;
@@ -113,7 +114,7 @@ impl
 		info!("Signer address: {}", signer_address);
 		let contract_address = config
 			.settle
-			.postconfirmations_contract_address
+			.pcp_contract_address
 			.parse()
 			.context("Failed to parse the contract address for the PCP settlement client")?;
 		let rpc_url = config.eth_rpc_connection_url();
