@@ -2,11 +2,11 @@ import { ethers, type Wallet } from "ethers";
 import { ethers as hreEthers } from "hardhat";
 import * as fs from 'fs';
 import * as path from 'path';
-import { IMovementStaking, MCR } from "../typechain-types";  // Make sure types are generated
+import { IMovementStaking, PCP } from "../typechain-types";  // Make sure types are generated
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20";  // Add at top with other imports
 import { AccessControl } from "@openzeppelin/contracts/access/AccessControl";
-import { IMCR } from "../typechain-types";  // Make sure types are generated
-import { MCRStorage } from "../typechain-types";  // Add MCRStorage import
+import { IPCP } from "../typechain-types";  // Make sure types are generated
+import { PCPStorage } from "../typechain-types";  // Add PCPStorage import
 
 
 
@@ -26,8 +26,8 @@ async function main() {
     // Setup contracts
     const moveToken = await hreEthers.getContractAt("MintableToken", deployments.MoveToken.proxy) as unknown as IERC20;
     const staking = await hreEthers.getContractAt("MovementStaking", deployments.MovementStaking.proxy) as unknown as IMovementStaking & AccessControl;
-    const mcrContract = await hreEthers.getContractAt("MCR", deployments.MCR.proxy) as unknown as MCR;
-    const mcr = await hreEthers.getContractAt("MCR", deployments.MCR.proxy) as unknown as IMCR;
+    const pcpContract = await hreEthers.getContractAt("PCP", deployments.PCP.proxy) as unknown as PCP;
+    const pcp = await hreEthers.getContractAt("PCP", deployments.PCP.proxy) as unknown as IPCP;
     const { deployer, staker } = await setupAccounts();
     // await testEthTransfers(staker as unknown as ethers.Wallet);
     
@@ -38,10 +38,10 @@ async function main() {
     console.log("Staker MOVE balance:", ethers.formatEther(await moveToken.balanceOf(staker.address)));
     // await testMoveTransfers(moveToken, staker as unknown as ethers.Wallet);
     
-    // Test Staking and MCR
-    await testStaking(staking, moveToken, deployments.MCR.proxy, staker as unknown as ethers.Wallet);
-    await testMCR(mcr, mcrContract, moveToken, staker as unknown as ethers.Wallet, deployer);
-    await testUnstaking(staking, moveToken, deployments.MCR.proxy, staker as unknown as ethers.Wallet, mcr);
+    // Test Staking and PCP
+    await testStaking(staking, moveToken, deployments.PCP.proxy, staker as unknown as ethers.Wallet);
+    await testPCP(pcp, pcpContract, moveToken, staker as unknown as ethers.Wallet, deployer);
+    await testUnstaking(staking, moveToken, deployments.PCP.proxy, staker as unknown as ethers.Wallet, pcp);
 
 
     console.log("\n=== Verification Complete ===");
@@ -108,7 +108,7 @@ async function testMoveTransfers(moveToken: IERC20, staker: ethers.Wallet) {
 async function testStaking(
   staking: IMovementStaking & AccessControl,
   moveToken: IERC20,
-  mcrAddress: string,
+  pcpAddress: string,
   staker: ethers.Wallet
 ) {
   console.log("\n=== Testing Staking Functionality ===");
@@ -129,40 +129,40 @@ async function testStaking(
   }
   
   // Stake and verify
-  const txStake = await staking.connect(staker).stake(mcrAddress, moveToken.target, stakeAmount);
+  const txStake = await staking.connect(staker).stake(pcpAddress, moveToken.target, stakeAmount);
   await txStake.wait();
-  if (await staking.getAttesterStakeForAcceptingEpoch(mcrAddress, staker.address) !== stakeAmount) {
+  if (await staking.getAttesterStakeForAcceptingEpoch(pcpAddress, staker.address) !== stakeAmount) {
     throw new Error("Staking failed");
   }
   
   console.log("Staking successful - amount:", ethers.formatEther(stakeAmount));
 
-  const registeredAttesters = await staking.getRegisteredAttesters(mcrAddress);
+  const registeredAttesters = await staking.getRegisteredAttesters(pcpAddress);
   console.log("Registered Attesters:", registeredAttesters);
-  const stakedAttesters = await staking.getStakedAttestersForAcceptingEpoch(mcrAddress);
+  const stakedAttesters = await staking.getStakedAttestersForAcceptingEpoch(pcpAddress);
   console.log("Staked Attesters:", stakedAttesters);
 }
 
-// This function tests the MCR functionality
-async function testMCR(
-  mcr: IMCR,
-  mcrContract: MCR,
+// This function tests the PCP functionality
+async function testPCP(
+  pcp: IPCP,
+  pcpContract: PCP,
   moveToken: IERC20, 
   staker: ethers.Wallet,
   deployer: ethers.Wallet
 ) {
-  console.log("\n=== Testing MCR Functionality ===");
+  console.log("\n=== Testing PCP Functionality ===");
 
   // Grant COMMITMENT_ADMIN role to deployer
-  const COMMITMENT_ADMIN = await mcrContract.COMMITMENT_ADMIN();
-  const txGrantAdminRole = await mcrContract.grantRole(COMMITMENT_ADMIN, deployer.address);
+  const COMMITMENT_ADMIN = await pcpContract.COMMITMENT_ADMIN();
+  const txGrantAdminRole = await pcpContract.grantRole(COMMITMENT_ADMIN, deployer.address);
   await txGrantAdminRole.wait();
   console.log("Commitment admin role granted to deployer");
 
-  const TRUSTED_ATTESTER = await mcrContract.TRUSTED_ATTESTER();
-  const txGrantRole = await mcrContract.grantRole(TRUSTED_ATTESTER, staker.address);
+  const TRUSTED_ATTESTER = await pcpContract.TRUSTED_ATTESTER();
+  const txGrantRole = await pcpContract.grantRole(TRUSTED_ATTESTER, staker.address);
   await txGrantRole.wait();
-  const hasRole = await mcrContract.hasRole(TRUSTED_ATTESTER, staker.address);
+  const hasRole = await pcpContract.hasRole(TRUSTED_ATTESTER, staker.address);
   if (!hasRole) {
     throw new Error("TRUSTED_ATTESTER role not granted");
   }
@@ -170,58 +170,58 @@ async function testMCR(
   const stakerBalance = await moveToken.balanceOf(staker.address);
   console.log("Staker balance:", ethers.formatEther(stakerBalance));
 
-  const epochDuration = await mcr.connect(staker).getEpochDuration();
+  const epochDuration = await pcp.connect(staker).getEpochDuration();
   console.log("Epoch duration (seconds):", Number(epochDuration));
-  const acceptingEpoch = await mcr.connect(staker).getAcceptingEpoch();
+  const acceptingEpoch = await pcp.connect(staker).getAcceptingEpoch();
   console.log("Accepting epoch:", acceptingEpoch);
-  // mcr contract should set the accepting epoch to the present epoch
-  const presentEpoch = await mcr.connect(deployer).getPresentEpoch();
+  // pcp contract should set the accepting epoch to the present epoch
+  const presentEpoch = await pcp.connect(deployer).getPresentEpoch();
   console.log("Present epoch:", presentEpoch);
-  const txSetAcceptingEpoch = await mcr.connect(deployer).setAcceptingEpoch(presentEpoch - 2n);
+  const txSetAcceptingEpoch = await pcp.connect(deployer).setAcceptingEpoch(presentEpoch - 2n);
   await txSetAcceptingEpoch.wait();
-  const acceptingEpoch2 = await mcr.connect(staker).getAcceptingEpoch();
+  const acceptingEpoch2 = await pcp.connect(staker).getAcceptingEpoch();
   console.log("Accepting epoch after setting to present epoch:", acceptingEpoch2);
   if (presentEpoch > acceptingEpoch) {
     console.log("Present epoch is greater than accepting epoch, so rollover should update the accepting epoch.");
   }
 
   // rollover the epoch
-  const txRollover = await mcr.connect(staker).postconfirmSuperBlocksAndRollover();
+  const txRollover = await pcp.connect(staker).postconfirmSuperBlocksAndRollover();
   await txRollover.wait();
-  const acceptingEpoch3 = await mcr.connect(staker).getAcceptingEpoch();
+  const acceptingEpoch3 = await pcp.connect(staker).getAcceptingEpoch();
   console.log("New accepting epoch after rollover:", acceptingEpoch3);
 
   // submit a dummy commitment
-  const initialPostconfirmedSuperblockHeight = await mcr.getLastPostconfirmedSuperBlockHeight();
+  const initialPostconfirmedSuperblockHeight = await pcp.getLastPostconfirmedSuperBlockHeight();
   console.log("Initial postconfirmed superblock height:", initialPostconfirmedSuperblockHeight);
   const dummyCommitment = {
     height: initialPostconfirmedSuperblockHeight + 1n,
     commitment: ethers.randomBytes(32),
     blockId: ethers.randomBytes(32)
   } as const;  
-  const txCommit = await mcr.connect(staker).submitSuperBlockCommitment(dummyCommitment);
+  const txCommit = await pcp.connect(staker).submitSuperBlockCommitment(dummyCommitment);
   await txCommit.wait();
-  const lastPostconfirmedSuperblockHeight = await mcr.getLastPostconfirmedSuperBlockHeight();
+  const lastPostconfirmedSuperblockHeight = await pcp.getLastPostconfirmedSuperBlockHeight();
   console.log("Last postconfirmed superblock height:", lastPostconfirmedSuperblockHeight);
-  const newAcceptingEpoch = await mcr.getAcceptingEpoch();
+  const newAcceptingEpoch = await pcp.getAcceptingEpoch();
   console.log("Accepting epoch:", newAcceptingEpoch);
 
   // postconfirm
-  const txPostconfirm = await mcr.connect(staker).postconfirmSuperBlocksAndRollover();
+  const txPostconfirm = await pcp.connect(staker).postconfirmSuperBlocksAndRollover();
   await txPostconfirm.wait();
-  const newPostconfirmedSuperblockHeight = await mcr.getLastPostconfirmedSuperBlockHeight();
+  const newPostconfirmedSuperblockHeight = await pcp.getLastPostconfirmedSuperBlockHeight();
   if (newPostconfirmedSuperblockHeight !== dummyCommitment.height) {
     throw new Error("Last postconfirmed superblock height mismatch");
   }
   console.log("Last postconfirmed superblock height:", newPostconfirmedSuperblockHeight);
-  const newAcceptingEpoch2 = await mcr.getAcceptingEpoch();
+  const newAcceptingEpoch2 = await pcp.getAcceptingEpoch();
   console.log("Accepting epoch:", newAcceptingEpoch2);
   const newStakerBalance = await moveToken.balanceOf(staker.address);
   console.log("Staker balance:", ethers.formatEther(newStakerBalance));
 
   // wait for the epoch duration time to ensure at least one rollover
   await new Promise(resolve => setTimeout(resolve, Number(epochDuration)));
-  const txRollOverEpoch = await mcr.connect(staker).postconfirmSuperBlocksAndRollover();
+  const txRollOverEpoch = await pcp.connect(staker).postconfirmSuperBlocksAndRollover();
   await txRollOverEpoch.wait();
   const newStakerBalance3 = await moveToken.balanceOf(staker.address);
   console.log("Staker balance (latest point where it should be rewarded):", ethers.formatEther(newStakerBalance3));
@@ -232,41 +232,41 @@ async function testMCR(
 async function testUnstaking(
   staking: IMovementStaking & AccessControl, 
   moveToken: IERC20, 
-  mcrAddress: string, 
+  pcpAddress: string, 
   staker: ethers.Wallet, 
-  mcr: IMCR
+  pcp: IPCP
 ) {
   console.log("\n=== Testing Unstaking Functionality ===");
 
   // initial list of active attesters
-  const initialActiveAttesters = await staking.getStakedAttestersForAcceptingEpoch(mcrAddress);
+  const initialActiveAttesters = await staking.getStakedAttestersForAcceptingEpoch(pcpAddress);
   console.log("Initial active attesters:", initialActiveAttesters);
 
   // get stake amount
-  const stakeAmount = await staking.getAttesterStakeForAcceptingEpoch(mcrAddress, staker.address);
+  const stakeAmount = await staking.getAttesterStakeForAcceptingEpoch(pcpAddress, staker.address);
   console.log("Stake amount:", ethers.formatEther(stakeAmount));
 
   // unstake
-  const txUnstake = await staking.connect(staker).unstake(mcrAddress, moveToken.target, stakeAmount);
+  const txUnstake = await staking.connect(staker).unstake(pcpAddress, moveToken.target, stakeAmount);
   await txUnstake.wait();
-  if (await staking.getAttesterStakeForAcceptingEpoch(mcrAddress, staker.address) !== 0n) {
+  if (await staking.getAttesterStakeForAcceptingEpoch(pcpAddress, staker.address) !== 0n) {
     throw new Error("Unstaking failed");
   }
   console.log("Unstaking successful");
 
   // warp time into next epoch
-  const epochDuration = await mcr.getEpochDuration();
+  const epochDuration = await pcp.getEpochDuration();
   await new Promise(resolve => setTimeout(resolve, Number(epochDuration)));
-  const txRollOverEpoch2 = await mcr.connect(staker).postconfirmSuperBlocksAndRollover();
+  const txRollOverEpoch2 = await pcp.connect(staker).postconfirmSuperBlocksAndRollover();
   await txRollOverEpoch2.wait();
-  if (await mcr.getAcceptingEpoch() !== 3n) {
+  if (await pcp.getAcceptingEpoch() !== 3n) {
     throw new Error("Epoch rollover failed");
   }
   const stakerBalance4 = await moveToken.balanceOf(staker.address);
   console.log("Staker balance:", ethers.formatEther(stakerBalance4));
 
   // check that the staker is removed from the active attesters list
-  const activeAttesters = await staking.getStakedAttestersForAcceptingEpoch(mcrAddress);
+  const activeAttesters = await staking.getStakedAttestersForAcceptingEpoch(pcpAddress);
   console.log("Active attesters:", activeAttesters);
   if (activeAttesters.includes(staker.address)) {
     throw new Error("Staker is still in the active attesters list");

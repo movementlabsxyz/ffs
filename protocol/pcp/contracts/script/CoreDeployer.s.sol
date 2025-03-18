@@ -3,16 +3,16 @@ pragma solidity ^0.8.13;
 import "forge-std/Script.sol";
 import {MOVEToken} from "../src/token/MOVEToken.sol";
 import { Helper } from "./helpers/Helper.sol";
-import { MCRDeployer } from "./MCRDeployer.s.sol";
+import { PCPDeployer } from "./PCPDeployer.s.sol";
 import { MovementStakingDeployer } from "./MovementStakingDeployer.s.sol";
 import { StlMoveDeployer } from "./StlMoveDeployer.s.sol";
 import { MOVETokenDeployer } from "./MOVETokenDeployer.s.sol";
 import {TransparentUpgradeableProxy} from "@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol";
 import {TimelockController} from "@openzeppelin/contracts/governance/TimelockController.sol";
 
-contract CoreDeployer is MCRDeployer, MovementStakingDeployer, StlMoveDeployer, MOVETokenDeployer {
+contract CoreDeployer is PCPDeployer, MovementStakingDeployer, StlMoveDeployer, MOVETokenDeployer {
 
-    function run() external override(MCRDeployer, MovementStakingDeployer, StlMoveDeployer, MOVETokenDeployer) {
+    function run() external override(PCPDeployer, MovementStakingDeployer, StlMoveDeployer, MOVETokenDeployer) {
 
         // load config and deployments data
         _loadExternalData();
@@ -42,10 +42,10 @@ contract CoreDeployer is MCRDeployer, MovementStakingDeployer, StlMoveDeployer, 
                 _upgradeStlMove() : revert("STL: both admin and proxy should be registered");
 
         // requires staking and move to be deployed
-        deployment.mcrAdmin == ZERO && deployment.mcr == ZERO && deployment.move != ZERO && deployment.staking != ZERO ?
-            _deployMCR() : deployment.mcrAdmin != ZERO && deployment.mcr != ZERO ?
-                // if mcr is already deployed, upgrade it
-                _upgradeMCR() : revert("MCR: both admin and proxy should be registered");
+        deployment.pcpAdmin == ZERO && deployment.pcp == ZERO && deployment.move != ZERO && deployment.staking != ZERO ?
+            _deployPCP() : deployment.pcpAdmin != ZERO && deployment.pcp != ZERO ?
+                // if pcp is already deployed, upgrade it
+                _upgradePCP() : revert("PCP: both admin and proxy should be registered");
 
         // Only write to file if chainid is not running a foundry local chain and if broadcasting
         if (block.chainid == foundryChainId) {
@@ -53,7 +53,7 @@ contract CoreDeployer is MCRDeployer, MovementStakingDeployer, StlMoveDeployer, 
             _upgradeMove();
             _upgradeStaking();
             _upgradeStlMove();
-            _upgradeMCR();
+            _upgradePCP();
         } else {
             if (vm.isContext(VmSafe.ForgeContext.ScriptBroadcast)) {
                 _writeDeployments();

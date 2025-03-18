@@ -1,7 +1,7 @@
-use crate::{CommitmentEventStream, McrSettlementManagerOperations, SuperBlockCommitmentEvent};
+use crate::{CommitmentEventStream, PcpSettlementManagerOperations, SuperBlockCommitmentEvent};
 
 use postconfirmations_config::Config;
-use postconfirmations_settlement_client::McrSettlementClientOperations;
+use postconfirmations_settlement_client::PcpSettlementClientOperations;
 use postconfirmations_types::block_commitment::{
 	SuperBlockCommitment, SuperBlockCommitmentRejectionReason,
 };
@@ -17,18 +17,18 @@ use std::collections::BTreeMap;
 use std::mem;
 use std::time::Duration;
 
-/// Public handle for the MCR settlement manager.
+/// Public handle for the PCP settlement manager.
 pub struct Manager {
 	sender: mpsc::Sender<SuperBlockCommitment>,
 }
 
 impl Manager {
-	/// Creates a new MCR settlement manager.
+	/// Creates a new PCP settlement manager.
 	///
 	/// Returns the handle with the public API and the stream to receive commitment events.
-	/// The stream needs to be polled to drive the MCR settlement client and
+	/// The stream needs to be polled to drive the PCP settlement client and
 	/// process the commitments.
-	pub fn new<C: McrSettlementClientOperations + Send + 'static>(
+	pub fn new<C: PcpSettlementClientOperations + Send + 'static>(
 		client: C,
 		config: &Config,
 	) -> (Self, CommitmentEventStream) {
@@ -40,7 +40,7 @@ impl Manager {
 }
 
 #[async_trait]
-impl McrSettlementManagerOperations for Manager {
+impl PcpSettlementManagerOperations for Manager {
 	async fn post_block_commitment(
 		&self,
 		block_commitment: SuperBlockCommitment,
@@ -50,7 +50,7 @@ impl McrSettlementManagerOperations for Manager {
 	}
 }
 
-fn process_commitments<C: McrSettlementClientOperations + Send + 'static>(
+fn process_commitments<C: PcpSettlementClientOperations + Send + 'static>(
 	mut receiver: mpsc::Receiver<SuperBlockCommitment>,
 	client: C,
 	batch_timeout: Duration,
@@ -148,13 +148,13 @@ fn process_commitments<C: McrSettlementClientOperations + Send + 'static>(
 #[cfg(test)]
 mod tests {
 	use super::*;
-	use postconfirmations_settlement_client::mock::McrSettlementClient;
+	use postconfirmations_settlement_client::mock::PcpSettlementClient;
 	use postconfirmations_types::block_commitment::{Commitment, SuperBlockCommitment};
 
 	#[tokio::test]
 	async fn test_block_commitment_accepted() -> Result<(), anyhow::Error> {
 		let config = Config::default();
-		let mut client = McrSettlementClient::new();
+		let mut client = PcpSettlementClient::new();
 		client.block_lead_tolerance = 1;
 		let (manager, mut event_stream) = Manager::new(client.clone(), &config);
 		let commitment = SuperBlockCommitment::new(1, Default::default(), Commitment::new([1; 32]));
@@ -172,7 +172,7 @@ mod tests {
 	#[tokio::test]
 	async fn test_block_commitment_rejected() -> Result<(), anyhow::Error> {
 		let config = Config::default();
-		let mut client = McrSettlementClient::new();
+		let mut client = PcpSettlementClient::new();
 		client.block_lead_tolerance = 1;
 		let (manager, mut event_stream) = Manager::new(client.clone(), &config);
 		let commitment = SuperBlockCommitment::new(1, Default::default(), Commitment::new([1; 32]));
@@ -203,7 +203,7 @@ mod tests {
 	#[tokio::test]
 	async fn test_back_pressure() -> Result<(), anyhow::Error> {
 		let config = Config::default();
-		let mut client = McrSettlementClient::new();
+		let mut client = PcpSettlementClient::new();
 		client.block_lead_tolerance = 2;
 		client.pause_after(2).await;
 		let (manager, mut event_stream) = Manager::new(client.clone(), &config);
@@ -249,7 +249,7 @@ mod tests {
 	async fn test_batch_timeout() -> Result<(), anyhow::Error> {
 		let mut config = Config::default();
 		config.transactions.batch_timeout = 100;
-		let client = McrSettlementClient::new();
+		let client = PcpSettlementClient::new();
 		let (manager, mut event_stream) = Manager::new(client.clone(), &config);
 
 		let commitment1 =

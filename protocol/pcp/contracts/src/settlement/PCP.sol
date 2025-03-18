@@ -4,12 +4,12 @@ pragma solidity ^0.8.13;
 import {EnumerableSet} from "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
 import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import {MovementStaking, IMovementStaking} from "../staking/MovementStaking.sol";
-import {MCRStorage} from "./MCRStorage.sol";
+import {PCPStorage} from "./PCPStorage.sol";
 import {BaseSettlement} from "./settlement/BaseSettlement.sol";
-import {IMCR} from "./interfaces/IMCR.sol";
+import {IPCP} from "./interfaces/IPCP.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 
-contract MCR is Initializable, BaseSettlement, MCRStorage, IMCR {
+contract PCP is Initializable, BaseSettlement, PCPStorage, IPCP {
 
     // A role for setting commitments
     bytes32 public constant COMMITMENT_ADMIN = keccak256("COMMITMENT_ADMIN");
@@ -212,7 +212,7 @@ contract MCR is Initializable, BaseSettlement, MCRStorage, IMCR {
     /// @notice Sets the accepting epoch to a new value (must be higher than current)
     /// @param newEpoch The new accepting epoch value
     function setAcceptingEpoch(uint256 newEpoch) external onlyRole(COMMITMENT_ADMIN) {
-        // the domain which is the mcr contract must make the call to set the accepting epoch
+        // the domain which is the pcp contract must make the call to set the accepting epoch
         stakingContract.setAcceptingEpoch(address(this), newEpoch);
     }
 
@@ -441,7 +441,7 @@ contract MCR is Initializable, BaseSettlement, MCRStorage, IMCR {
                 // TODO: make this configurable and set it on instance creation
                 uint256 reward = attesterRewardPoints[acceptingEpoch][attesters[i]] * rewardPerAttestationPoint * getAttesterStakeForAcceptingEpoch(attesters[i]);
                 // the staking contract is the custodian
-                // rewards are currently paid out from the mcr domain
+                // rewards are currently paid out from the pcp domain
                 stakingContract.rewardFromDomain(attesters[i], reward, moveTokenAddress);
                 // TODO : check if we really have to keep attesterRewardPoints per epoch, or whether we could simply delete the points here for a given attester.
             }

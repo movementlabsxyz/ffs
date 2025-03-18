@@ -1,4 +1,4 @@
-use crate::eth_client::McrEthConnectorError;
+use crate::eth_client::PcpEthConnectorError;
 use alloy::providers::Provider;
 use alloy_contract::CallBuilder;
 use alloy_contract::CallDecoder;
@@ -9,10 +9,10 @@ use tracing::info;
 
 // Define a rule to verify the error generated when a transaction is send to determine if:
 // * the Transaction must me resend with more gas: return Ok(true)
-// * a specific error must be return: return Err(McrEthConnectorError::xxx);
+// * a specific error must be return: return Err(PcpEthConnectorError::xxx);
 // * the rule doesn't apply: return Ok(false)
 pub trait VerifyRule: Sync + Send {
-	fn verify(&self, error: &alloy_contract::Error) -> Result<bool, McrEthConnectorError>;
+	fn verify(&self, error: &alloy_contract::Error) -> Result<bool, PcpEthConnectorError>;
 }
 
 pub struct SendTransactionErrorRule<Kind> {
@@ -30,7 +30,7 @@ pub struct UnderPriced;
 pub struct InsufficentFunds;
 
 impl VerifyRule for SendTransactionErrorRule<UnderPriced> {
-	fn verify(&self, error: &alloy_contract::Error) -> Result<bool, McrEthConnectorError> {
+	fn verify(&self, error: &alloy_contract::Error) -> Result<bool, PcpEthConnectorError> {
 		let alloy_contract::Error::TransportError(TransportError::ErrorResp(payload)) = error
 		else {
 			return Ok(false);
@@ -45,14 +45,14 @@ impl VerifyRule for SendTransactionErrorRule<UnderPriced> {
 }
 
 impl VerifyRule for SendTransactionErrorRule<InsufficentFunds> {
-	fn verify(&self, error: &alloy_contract::Error) -> Result<bool, McrEthConnectorError> {
+	fn verify(&self, error: &alloy_contract::Error) -> Result<bool, PcpEthConnectorError> {
 		let alloy_contract::Error::TransportError(TransportError::ErrorResp(payload)) = error
 		else {
 			return Ok(false);
 		};
 
 		if payload.code == -32000 && payload.message.contains("insufficient funds") {
-			Err(McrEthConnectorError::InsufficientFunds(payload.message.clone()))
+			Err(PcpEthConnectorError::InsufficientFunds(payload.message.clone()))
 		} else {
 			Ok(false)
 		}
@@ -87,7 +87,7 @@ pub async fn send_transaction<
 		let gas_price = call_builder.provider.get_gas_price().await?;
 		let transaction_fee_wei = estimate_gas * gas_price;
 		if transaction_fee_wei > gas_limit {
-			return Err(McrEthConnectorError::GasLimitExceed(transaction_fee_wei, gas_limit).into());
+			return Err(PcpEthConnectorError::GasLimitExceed(transaction_fee_wei, gas_limit).into());
 		}
 
 		info!("Sending transaction with gas: {}", estimate_gas);
@@ -108,7 +108,7 @@ pub async fn send_transaction<
 					}
 				}
 
-				return Err(McrEthConnectorError::from(err).into());
+				return Err(PcpEthConnectorError::from(err).into());
 			}
 		};
 
@@ -127,7 +127,7 @@ pub async fn send_transaction<
 					estimate_gas += (estimate_gas * 30) / 100;
 					continue;
 				} else {
-					return Err(McrEthConnectorError::RpcTransactionExecution(format!(
+					return Err(PcpEthConnectorError::RpcTransactionExecution(format!(
 						"Send commitment Transaction fail, abort Transaction, receipt:{transaction_receipt:?}"
 					))
 					.into());
@@ -135,13 +135,13 @@ pub async fn send_transaction<
 			}
 			Ok(_) => return Ok(()),
 			Err(err) => {
-				return Err(McrEthConnectorError::RpcTransactionExecution(err.to_string()).into())
+				return Err(PcpEthConnectorError::RpcTransactionExecution(err.to_string()).into())
 			}
 		};
 	}
 
 	//Max retry exceed
-	Err(McrEthConnectorError::RpcTransactionExecution(
+	Err(PcpEthConnectorError::RpcTransactionExecution(
 		"Send commitment Transaction fail because of exceed max retry".to_string(),
 	)
 	.into())

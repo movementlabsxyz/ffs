@@ -2,7 +2,7 @@ use crate::send_eth_transaction::InsufficentFunds;
 use crate::send_eth_transaction::SendTransactionErrorRule;
 use crate::send_eth_transaction::UnderPriced;
 use crate::send_eth_transaction::VerifyRule;
-use crate::{CommitmentStream, McrSettlementClientOperations};
+use crate::{CommitmentStream, PcpSettlementClientOperations};
 use alloy::providers::fillers::ChainIdFiller;
 use alloy::providers::fillers::FillProvider;
 use alloy::providers::fillers::GasFiller;
@@ -34,20 +34,20 @@ use tokio_stream::StreamExt;
 use tracing::info;
 
 #[derive(Error, Debug)]
-pub enum McrEthConnectorError {
+pub enum PcpEthConnectorError {
 	#[error(
-		"MCR Settlement Transaction fails because gas estimation is too high. Estimated gas:{0} gas limit:{1}"
+		"PCP Settlement Transaction fails because gas estimation is too high. Estimated gas:{0} gas limit:{1}"
 	)]
 	GasLimitExceed(u128, u128),
-	#[error("MCR Settlement Transaction fails because account funds are insufficient. error:{0}")]
+	#[error("PCP Settlement Transaction fails because account funds are insufficient. error:{0}")]
 	InsufficientFunds(String),
-	#[error("MCR Settlement Transaction send failed because :{0}")]
+	#[error("PCP Settlement Transaction send failed because :{0}")]
 	SendTransactionError(#[from] alloy_contract::Error),
-	#[error("MCR Settlement Transaction send failed during its execution :{0}")]
+	#[error("PCP Settlement Transaction send failed during its execution :{0}")]
 	RpcTransactionExecution(String),
-	#[error("MCR Settlement SuperBlockPostconfirmed event notification error :{0}")]
+	#[error("PCP Settlement SuperBlockPostconfirmed event notification error :{0}")]
 	EventNotificationError(#[from] alloy_sol_types::Error),
-	#[error("MCR Settlement SuperBlockPostconfirmed event notification stream close")]
+	#[error("PCP Settlement SuperBlockPostconfirmed event notification stream close")]
 	EventNotificationStreamClosed,
 }
 
@@ -55,8 +55,8 @@ pub enum McrEthConnectorError {
 sol!(
 	#[allow(missing_docs)]
 	#[sol(rpc)]
-	MCR,
-	"abis/MCR.json"
+	PCP,
+	"abis/PCP.json"
 );
 
 // Note: we prefer using the ABI because the [`sol!`](alloy_sol_types::sol) macro, when used with smart contract code directly, will not handle inheritance.
@@ -75,7 +75,7 @@ sol!(
 	"abis/MOVEToken.json"
 );
 
-pub struct McrSettlementClient<P> {
+pub struct PcpSettlementClient<P> {
 	run_commitment_admin_mode: bool,
 	rpc_provider: P,
 	ws_provider: RootProvider<PubSubFrontend>,
@@ -87,7 +87,7 @@ pub struct McrSettlementClient<P> {
 }
 
 impl
-	McrSettlementClient<
+	PcpSettlementClient<
 		FillProvider<
 			JoinFill<
 				JoinFill<
@@ -115,7 +115,7 @@ impl
 			.settle
 			.postconfirmations_contract_address
 			.parse()
-			.context("Failed to parse the contract address for the MCR settlement client")?;
+			.context("Failed to parse the contract address for the PCP settlement client")?;
 		let rpc_url = config.eth_rpc_connection_url();
 		let ws_url = config.eth_ws_connection_url();
 		let rpc_provider = ProviderBuilder::new()
@@ -123,9 +123,9 @@ impl
 			.wallet(EthereumWallet::from(signer))
 			.on_builtin(&rpc_url)
 			.await
-			.context("Failed to create the RPC provider for the MCR settlement client")?;
+			.context("Failed to create the RPC provider for the PCP settlement client")?;
 
-		let client = McrSettlementClient::build_with_provider(
+		let client = PcpSettlementClient::build_with_provider(
 			config.settle.settlement_admin_mode,
 			rpc_provider,
 			ws_url,
@@ -136,13 +136,13 @@ impl
 		)
 		.await
 		.context(
-			"Failed to create the MCR settlement client with the RPC provider and contract address",
+			"Failed to create the PCP settlement client with the RPC provider and contract address",
 		)?;
 		Ok(client)
 	}
 }
 
-impl<P> McrSettlementClient<P> {
+impl<P> PcpSettlementClient<P> {
 	async fn build_with_provider<S>(
 		run_commitment_admin_mode: bool,
 		rpc_provider: P,
@@ -161,14 +161,14 @@ impl<P> McrSettlementClient<P> {
 		let ws_provider = ProviderBuilder::new()
 			.on_ws(ws)
 			.await
-			.context("Failed to create the WebSocket provider for the MCR settlement client")?;
+			.context("Failed to create the WebSocket provider for the PCP settlement client")?;
 
 		let rule1: Box<dyn VerifyRule> = Box::new(SendTransactionErrorRule::<UnderPriced>::new());
 		let rule2: Box<dyn VerifyRule> =
 			Box::new(SendTransactionErrorRule::<InsufficentFunds>::new());
 		let send_transaction_error_rules = vec![rule1, rule2];
 
-		Ok(McrSettlementClient {
+		Ok(PcpSettlementClient {
 			run_commitment_admin_mode,
 			rpc_provider,
 			ws_provider,
@@ -182,7 +182,7 @@ impl<P> McrSettlementClient<P> {
 }
 
 #[async_trait::async_trait]
-impl<P> McrSettlementClientOperations for McrSettlementClient<P>
+impl<P> PcpSettlementClientOperations for PcpSettlementClient<P>
 where
 	P: Provider + Clone,
 {
@@ -190,9 +190,9 @@ where
 		&self,
 		block_commitment: SuperBlockCommitment,
 	) -> Result<(), anyhow::Error> {
-		let contract = MCR::new(self.contract_address, &self.rpc_provider);
+		let contract = PCP::new(self.contract_address, &self.rpc_provider);
 
-		let eth_block_commitment = MCR::SuperBlockCommitment {
+		let eth_block_commitment = PCP::SuperBlockCommitment {
 			// Currently, to simplify the API, we'll say 0 is uncommitted all other numbers are legitimate heights
 			height: U256::from(block_commitment.height()),
 			commitment: alloy_primitives::FixedBytes(
@@ -226,12 +226,12 @@ where
 		&self,
 		block_commitments: Vec<SuperBlockCommitment>,
 	) -> Result<(), anyhow::Error> {
-		let contract = MCR::new(self.contract_address, &self.rpc_provider);
+		let contract = PCP::new(self.contract_address, &self.rpc_provider);
 
 		let eth_block_commitment: Vec<_> = block_commitments
 			.into_iter()
 			.map(|block_commitment| {
-				Ok(MCR::SuperBlockCommitment {
+				Ok(PCP::SuperBlockCommitment {
 					// Currently, to simplify the API, we'll say 0 is uncommitted all other numbers are legitimate heights
 					height: U256::from(block_commitment.height()),
 					commitment: alloy_primitives::FixedBytes(
@@ -259,9 +259,9 @@ where
 		&self,
 		block_commitment: SuperBlockCommitment,
 	) -> Result<(), anyhow::Error> {
-		let contract = MCR::new(self.contract_address, &self.rpc_provider);
+		let contract = PCP::new(self.contract_address, &self.rpc_provider);
 
-		let eth_block_commitment = MCR::SuperBlockCommitment {
+		let eth_block_commitment = PCP::SuperBlockCommitment {
 			// Currently, to simplify the API, we'll say 0 is uncommitted all other numbers are legitimate heights
 			height: U256::from(block_commitment.height()),
 			commitment: alloy_primitives::FixedBytes(
@@ -283,7 +283,7 @@ where
 	async fn stream_block_commitments(&self) -> Result<CommitmentStream, anyhow::Error> {
 		// Register to contract BlockCommitmentSubmitted event
 
-		let contract = MCR::new(self.contract_address, &self.ws_provider);
+		let contract = PCP::new(self.contract_address, &self.ws_provider);
 		let event_filter = contract.SuperBlockPostconfirmed_filter().watch().await?;
 
 		let stream = event_filter.into_stream().map(|event| {
@@ -300,7 +300,7 @@ where
 						Commitment::new(commitment.stateCommitment.0),
 					))
 				})
-				.map_err(|err| McrEthConnectorError::EventNotificationError(err).into())
+				.map_err(|err| PcpEthConnectorError::EventNotificationError(err).into())
 		});
 		Ok(Box::pin(stream) as CommitmentStream)
 	}
@@ -309,8 +309,8 @@ where
 		&self,
 		height: u64,
 	) -> Result<Option<SuperBlockCommitment>, anyhow::Error> {
-		let contract = MCR::new(self.contract_address, &self.ws_provider);
-		let MCR::getPostconfirmedCommitmentReturn { _0: commitment } =
+		let contract = PCP::new(self.contract_address, &self.ws_provider);
+		let PCP::getPostconfirmedCommitmentReturn { _0: commitment } =
 			contract.getPostconfirmedCommitment(U256::from(height)).call().await?;
 
 		let return_height: u64 = commitment
@@ -332,8 +332,8 @@ where
 		&self,
 		height: u64,
 	) -> Result<Option<SuperBlockCommitment>, anyhow::Error> {
-		let contract = MCR::new(self.contract_address, &self.ws_provider);
-		let MCR::getValidatorCommitmentAtSuperBlockHeightReturn { _0: commitment } = contract
+		let contract = PCP::new(self.contract_address, &self.ws_provider);
+		let PCP::getValidatorCommitmentAtSuperBlockHeightReturn { _0: commitment } = contract
 			.getValidatorCommitmentAtSuperBlockHeight(U256::from(height), self.signer_address)
 			.call()
 			.await?;
@@ -354,8 +354,8 @@ where
 	}
 
 	async fn get_max_tolerable_block_height(&self) -> Result<u64, anyhow::Error> {
-		let contract = MCR::new(self.contract_address, &self.ws_provider);
-		let MCR::getMaxTolerableSuperBlockHeightReturn { _0: block_height } =
+		let contract = PCP::new(self.contract_address, &self.ws_provider);
+		let PCP::getMaxTolerableSuperBlockHeightReturn { _0: block_height } =
 			contract.getMaxTolerableSuperBlockHeight().call().await?;
 		Ok(block_height
 			.try_into()

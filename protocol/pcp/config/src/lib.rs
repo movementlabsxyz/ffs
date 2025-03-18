@@ -1,4 +1,4 @@
-//! This crate provides configuration parameters for the MCR settlement
+//! This crate provides configuration parameters for the PCP settlement
 //! component of a Movement node.
 use serde::{Deserialize, Serialize};
 pub mod common;

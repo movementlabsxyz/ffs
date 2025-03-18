@@ -3,13 +3,13 @@ use tokio_stream::Stream;
 
 mod manager;
 
-pub use manager::Manager as McrSettlementManager;
+pub use manager::Manager as PcpSettlementManager;
 
 pub type CommitmentEventStream =
 	std::pin::Pin<Box<dyn Stream<Item = Result<SuperBlockCommitmentEvent, anyhow::Error>> + Send>>;
 
 #[async_trait::async_trait]
-pub trait McrSettlementManagerOperations {
+pub trait PcpSettlementManagerOperations {
 	/// Adds a block commitment to the manager queue.
 	async fn post_block_commitment(
 		&self,

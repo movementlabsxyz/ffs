@@ -1,6 +1,6 @@
 [package]
 name = "postconfirmationsconfig"
-description = "Configuration of the MCR settlement client"
+description = "Configuration of the PCP settlement client"
 version.workspace = true
 edition.workspace = true
 license.workspace = true

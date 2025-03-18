@@ -1,6 +1,6 @@
-# MCR - L1 contract
+# PCP - L1 contract
 
-- **RFC**: [RFC MCR](https://github.com/movementlabsxyz/rfcs/pulls)
+- **RFC**: [RFC PCP](https://github.com/movementlabsxyz/rfcs/pulls)
 - **MIP**: [MIP-37](https://github.com/movementlabsxyz/MIP/blob/mip/postconfirmation/MIP/mip-37/README.md)
 
 This directory contains the implementation of the MRC settlement smart contract. To test the contract, run:
@@ -15,7 +15,7 @@ There is a long-running test covering over 50 epochs. It will likely take a few 
 
 ### Description
 
-For a given block height, MCR selects the earliest block commitment that matches the supermajority of stake for a given epoch by:
+For a given block height, PCP selects the earliest block commitment that matches the supermajority of stake for a given epoch by:
 
 1. Fixing the stake parameters for the epoch; all stake changes apply to the next epoch.
 2. Tracking commitments for each block height until one exceeds the supermajority of stake.
@@ -34,4 +34,4 @@ $$
 S(C',i) > \frac{2}{3} TotalStake = \frac{2}{3} \times \sum_{u \in V} s(u),
 $$
 
-If $S(C', i)$ satisfies the condition, and $S(C',i-1)$ does not, then $c_i$ is returned by MCR. Due to the non-decreasing nature of $S$ with $i$, $c_i$ is the earliest commitment that can be returned.
+If $S(C', i)$ satisfies the condition, and $S(C',i-1)$ does not, then $c_i$ is returned by PCP. Due to the non-decreasing nature of $S$ with $i$, $c_i$ is the earliest commitment that can be returned.

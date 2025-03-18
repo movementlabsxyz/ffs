@@ -4,21 +4,21 @@ pragma solidity ^0.8.19;
 import "forge-std/Test.sol";
 import "../../src/staking/MovementStaking.sol";
 import "../../src/token/MOVETokenDev.sol";
-import "../../src/settlement/MCR.sol";
-import "../../src/settlement/MCRStorage.sol";
-import "../../src/settlement/interfaces/IMCR.sol";
+import "../../src/settlement/PCP.sol";
+import "../../src/settlement/PCPStorage.sol";
+import "../../src/settlement/interfaces/IPCP.sol";
 import {TransparentUpgradeableProxy} from "@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol";
 import {ProxyAdmin} from "@openzeppelin/contracts/proxy/transparent/ProxyAdmin.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 
-contract MCRTest is Test {
+contract PCPTest is Test {
     MOVETokenDev public moveToken;
     MovementStaking public staking;
-    MCR public mcr;
+    PCP public pcp;
     ProxyAdmin public admin;
     string public moveSignature = "initialize(address)";
     string public stakingSignature = "initialize(address)";
-    string public mcrSignature = "initialize(address,uint256,uint256,uint256,address[],uint256,address)";
+    string public pcpSignature = "initialize(address,uint256,uint256,uint256,address[],uint256,address)";
     uint256 epochDuration = 7200 seconds;
     uint256 postconfirmerDuration = epochDuration/4;
     bytes32 honestCommitmentTemplate = keccak256(abi.encodePacked(uint256(1), uint256(2), uint256(3)));
@@ -27,8 +27,8 @@ contract MCRTest is Test {
     bytes32 dishonestBlockIdTemplate = keccak256(abi.encodePacked(uint256(3), uint256(2), uint256(1)));
     
     // make an honest commitment
-    function makeHonestCommitment(uint256 height) internal view returns (MCRStorage.SuperBlockCommitment memory) {
-        return MCRStorage.SuperBlockCommitment({
+    function makeHonestCommitment(uint256 height) internal view returns (PCPStorage.SuperBlockCommitment memory) {
+        return PCPStorage.SuperBlockCommitment({
             height: height,
             commitment: honestCommitmentTemplate,
             blockId: honestBlockIdTemplate
@@ -36,8 +36,8 @@ contract MCRTest is Test {
     }
        
     // make a dishonest commitment
-    function makeDishonestCommitment(uint256 height) internal view returns (MCRStorage.SuperBlockCommitment memory) {
-        return MCRStorage.SuperBlockCommitment({
+    function makeDishonestCommitment(uint256 height) internal view returns (PCPStorage.SuperBlockCommitment memory) {
+        return PCPStorage.SuperBlockCommitment({
             height: height,
             commitment: dishonestCommitmentTemplate,
             blockId: dishonestBlockIdTemplate
@@ -52,9 +52,9 @@ contract MCRTest is Test {
     function setUp() public {
         MOVETokenDev moveTokenImplementation = new MOVETokenDev();
         MovementStaking stakingImplementation = new MovementStaking();
-        MCR mcrImplementation = new MCR();
+        PCP pcpImplementation = new PCP();
 
-        // Contract MCRTest is the admin
+        // Contract PCPTest is the admin
         admin = new ProxyAdmin(address(this));
 
         // Deploy proxies
@@ -80,8 +80,8 @@ contract MCRTest is Test {
         // TODO while this works it is hard to access that this is the moveToken. We should not rely on the custodian array
         custodians[0] = address(moveProxy);  
 
-        bytes memory mcrInitData = abi.encodeWithSignature(
-            mcrSignature, 
+        bytes memory pcpInitData = abi.encodeWithSignature(
+            pcpSignature, 
             stakingProxy,               // _stakingContract, address of staking contract
             0,                          // _lastPostconfirmedSuperBlockHeight, start from genesis
             5,                          // _leadingSuperBlockTolerance, max blocks ahead of last confirmed
@@ -91,29 +91,29 @@ contract MCRTest is Test {
             // TODO can we replace the following line with the moveToken address?
             address(moveProxy)          // _moveTokenAddress, the primary custodian for rewards in the staking contract
         );
-        TransparentUpgradeableProxy mcrProxy = new TransparentUpgradeableProxy(
-            address(mcrImplementation),
+        TransparentUpgradeableProxy pcpProxy = new TransparentUpgradeableProxy(
+            address(pcpImplementation),
             address(admin),
-            mcrInitData
+            pcpInitData
         );
 
-        mcr = MCR(address(mcrProxy));
-        mcr.setOpenAttestationEnabled(true);
+        pcp = PCP(address(pcpProxy));
+        pcp.setOpenAttestationEnabled(true);
 
-        assertEq(staking.getEpochDuration(address(mcr)), epochDuration, "Epoch duration not set correctly");
+        assertEq(staking.getEpochDuration(address(pcp)), epochDuration, "Epoch duration not set correctly");
         // set the min commitment age for postconfirmation to 0 to make the tests easier
-        mcr.setMinCommitmentAgeForPostconfirmation(0);
-        assertEq(mcr.getMinCommitmentAgeForPostconfirmation(), 0, "The default min commitment age for tests is set to 0");
+        pcp.setMinCommitmentAgeForPostconfirmation(0);
+        assertEq(pcp.getMinCommitmentAgeForPostconfirmation(), 0, "The default min commitment age for tests is set to 0");
         // set the max postconfirmer non-reactivity time to 0 to make the tests easier
-        mcr.setPostconfirmerPrivilegeDuration(0);
-        assertEq(mcr.getPostconfirmerPrivilegeDuration(), 0, "The default max postconfirmer non-reactivity time for tests is set to 0");
+        pcp.setPostconfirmerPrivilegeDuration(0);
+        assertEq(pcp.getPostconfirmerPrivilegeDuration(), 0, "The default max postconfirmer non-reactivity time for tests is set to 0");
     }
 
     // Helper function to setup genesis with 1 attester and their stake
     function setupGenesisWithOneAttester(uint256 stakeAmount) internal returns (address attester) {
-        moveToken.mint(address(mcr), stakeAmount*100); // MCR needs tokens to pay rewards
-        // MCR needs to approve staking contract to spend its tokens
-        vm.prank(address(mcr));
+        moveToken.mint(address(pcp), stakeAmount*100); // PCP needs tokens to pay rewards
+        // PCP needs to approve staking contract to spend its tokens
+        vm.prank(address(pcp));
         moveToken.approve(address(staking), type(uint256).max);
         
         attester = payable(vm.addr(1));
@@ -122,9 +122,9 @@ contract MCRTest is Test {
         vm.prank(attester);
         moveToken.approve(address(staking), stakeAmount);
         vm.prank(attester);
-        staking.stake(address(mcr), moveToken, stakeAmount);
-        assertEq(mcr.getStakeForAcceptingEpoch(address(moveToken), attester), stakeAmount);
-        assertEq(mcr.getTotalStakeForAcceptingEpoch(), stakeAmount);
+        staking.stake(address(pcp), moveToken, stakeAmount);
+        assertEq(pcp.getStakeForAcceptingEpoch(address(moveToken), attester), stakeAmount);
+        assertEq(pcp.getTotalStakeForAcceptingEpoch(), stakeAmount);
 
         // TODO check why the registering did not work in the setup function
         // setup the epoch duration
@@ -133,18 +133,18 @@ contract MCRTest is Test {
         staking.registerDomain(epochDuration, custodians);
 
         // TODO this seems odd that we need to do this here.. check for correctnes of this approach
-        mcr.grantRole(mcr.DEFAULT_ADMIN_ROLE(), address(mcr));
+        pcp.grantRole(pcp.DEFAULT_ADMIN_ROLE(), address(pcp));
 
         // attempt genesis when L1 chain has already advanced into the future
         // vm.warp(3*epochDuration);
 
         // End genesis ceremony
-        vm.prank(address(mcr));
-        mcr.acceptGenesisCeremony();
+        vm.prank(address(pcp));
+        pcp.acceptGenesisCeremony();
 
         // Verify stakes
-        assertEq(mcr.getStakeForAcceptingEpoch(address(moveToken), attester), stakeAmount, "Alice's stake not correct");
-        assertEq(mcr.getTotalStakeForAcceptingEpoch(), stakeAmount, "Total stake not correct");
+        assertEq(pcp.getStakeForAcceptingEpoch(address(moveToken), attester), stakeAmount, "Alice's stake not correct");
+        assertEq(pcp.getTotalStakeForAcceptingEpoch(), stakeAmount, "Total stake not correct");
     }
 
 
@@ -156,9 +156,9 @@ contract MCRTest is Test {
     ) internal returns (address alice, address bob, address carol) {
         uint256 totalStakeAmount = aliceStakeAmount + bobStakeAmount + carolStakeAmount;
 
-        moveToken.mint(address(mcr), totalStakeAmount*100); // MCR needs tokens to pay rewards
-        // MCR needs to approve staking contract to spend its tokens
-        vm.prank(address(mcr));
+        moveToken.mint(address(pcp), totalStakeAmount*100); // PCP needs tokens to pay rewards
+        // PCP needs to approve staking contract to spend its tokens
+        vm.prank(address(pcp));
         moveToken.approve(address(staking), type(uint256).max);
 
         // Create attesters
@@ -180,17 +180,17 @@ contract MCRTest is Test {
 
         // Stake
         vm.prank(alice);
-        staking.stake(address(mcr), moveToken, aliceStakeAmount);
+        staking.stake(address(pcp), moveToken, aliceStakeAmount);
         vm.prank(bob);
-        staking.stake(address(mcr), moveToken, bobStakeAmount);
+        staking.stake(address(pcp), moveToken, bobStakeAmount);
         vm.prank(carol);
-        staking.stake(address(mcr), moveToken, carolStakeAmount);
+        staking.stake(address(pcp), moveToken, carolStakeAmount);
 
         // Verify stakes
-        assertEq(mcr.getStakeForAcceptingEpoch(address(moveToken), alice), aliceStakeAmount, "Alice's stake not correct");
-        assertEq(mcr.getStakeForAcceptingEpoch(address(moveToken), bob), bobStakeAmount, "Bob's stake not correct");
-        assertEq(mcr.getStakeForAcceptingEpoch(address(moveToken), carol), carolStakeAmount, "Carol's stake not correct");
-        assertEq(mcr.getTotalStakeForAcceptingEpoch(), totalStakeAmount, "Total stake not correct");
+        assertEq(pcp.getStakeForAcceptingEpoch(address(moveToken), alice), aliceStakeAmount, "Alice's stake not correct");
+        assertEq(pcp.getStakeForAcceptingEpoch(address(moveToken), bob), bobStakeAmount, "Bob's stake not correct");
+        assertEq(pcp.getStakeForAcceptingEpoch(address(moveToken), carol), carolStakeAmount, "Carol's stake not correct");
+        assertEq(pcp.getTotalStakeForAcceptingEpoch(), totalStakeAmount, "Total stake not correct");
 
         // TODO check why the registering did not work in the setup function
         // setup the epoch duration
@@ -199,20 +199,20 @@ contract MCRTest is Test {
         staking.registerDomain(epochDuration, custodians);
 
         // TODO this seems odd that we need to do this here.. check for correctnes of this approach
-        mcr.grantRole(mcr.DEFAULT_ADMIN_ROLE(), address(mcr));
+        pcp.grantRole(pcp.DEFAULT_ADMIN_ROLE(), address(pcp));
 
         // attempt genesis when L1 chain has already advanced into the future
         // vm.warp(3*epochDuration);
 
         // End genesis ceremony
-        vm.prank(address(mcr));
-        mcr.acceptGenesisCeremony();
+        vm.prank(address(pcp));
+        pcp.acceptGenesisCeremony();
 
         // Verify stakes
-        assertEq(mcr.getStakeForAcceptingEpoch(address(moveToken), alice), aliceStakeAmount, "Alice's stake not correct");
-        assertEq(mcr.getStakeForAcceptingEpoch(address(moveToken), bob), bobStakeAmount, "Bob's stake not correct");
-        assertEq(mcr.getStakeForAcceptingEpoch(address(moveToken), carol), carolStakeAmount, "Carol's stake not correct");
-        assertEq(mcr.getTotalStakeForAcceptingEpoch(), totalStakeAmount, "Total stake not correct");
+        assertEq(pcp.getStakeForAcceptingEpoch(address(moveToken), alice), aliceStakeAmount, "Alice's stake not correct");
+        assertEq(pcp.getStakeForAcceptingEpoch(address(moveToken), bob), bobStakeAmount, "Bob's stake not correct");
+        assertEq(pcp.getStakeForAcceptingEpoch(address(moveToken), carol), carolStakeAmount, "Carol's stake not correct");
+        assertEq(pcp.getTotalStakeForAcceptingEpoch(), totalStakeAmount, "Total stake not correct");
     } 
 
     /// @notice Helper function to setup a new signer with staking
@@ -226,8 +226,8 @@ contract MCRTest is Test {
         vm.prank(newAttester);
         moveToken.approve(address(staking), stakeAmount);
         vm.prank(newAttester);
-        staking.stake(address(mcr), moveToken, stakeAmount);        
-        assert(mcr.getStakeForAcceptingEpoch(address(moveToken), newAttester) == stakeAmount);
+        staking.stake(address(pcp), moveToken, stakeAmount);        
+        assert(pcp.getStakeForAcceptingEpoch(address(moveToken), newAttester) == stakeAmount);
 
         return newAttester;
     }
@@ -250,13 +250,13 @@ contract MCRTest is Test {
         // calculate the honest attesters stake
         uint256 honestStake = 0;
         for (uint256 k = 0; k < _honestAttesters.length; k++) {
-            honestStake += mcr.getStakeForAcceptingEpoch(address(moveToken), _honestAttesters[k]);
+            honestStake += pcp.getStakeForAcceptingEpoch(address(moveToken), _honestAttesters[k]);
         }
 
         // calculate the dishonest attesters stake
         uint256 dishonestStake = 0;
         for (uint256 k = 0; k < _dishonestAttesters.length; k++) {
-            dishonestStake += mcr.getStakeForAcceptingEpoch(address(moveToken), _dishonestAttesters[k]);
+            dishonestStake += pcp.getStakeForAcceptingEpoch(address(moveToken), _dishonestAttesters[k]);
         }
         
         uint256 supermajorityStake = 2 * (honestStake + dishonestStake) / 3 + 1;
@@ -266,7 +266,7 @@ contract MCRTest is Test {
     // remove an attester from the attesters array
     function removeAttester(address attester, address[] storage attesters, uint256 attesterStake) internal {
         vm.prank(attester);
-        staking.unstake(address(mcr), address(moveToken), attesterStake);
+        staking.unstake(address(pcp), address(moveToken), attesterStake);
         
         // Find and remove attester from array using swap and pop
         for (uint i = 0; i < attesters.length; i++) {
@@ -287,29 +287,29 @@ contract MCRTest is Test {
         custodians[0] = address(moveToken);
         // Attempt to initialize again should fail
         vm.expectRevert(bytes4(0xf92ee8a9));
-        mcr.initialize(staking, 0, 5, 10 seconds, custodians,120 seconds, address(moveToken));
+        pcp.initialize(staking, 0, 5, 10 seconds, custodians,120 seconds, address(moveToken));
     }
 
     function testSetAcceptingEpochOnlyDomain() public {
         address alice = setupGenesisWithOneAttester(1000);
-        vm.warp(mcr.getEpochDuration()*2);
+        vm.warp(pcp.getEpochDuration()*2);
 
         // Try to set accepting epoch from a non-domain address
         vm.prank(alice);
-        assertEq(mcr.hasRole(mcr.COMMITMENT_ADMIN(), alice), false);
+        assertEq(pcp.hasRole(pcp.COMMITMENT_ADMIN(), alice), false);
         vm.prank(alice);
         vm.expectRevert("UNAUTHORIZED");
-        staking.setAcceptingEpoch(address(mcr), 1);
+        staking.setAcceptingEpoch(address(pcp), 1);
         console.log("Unauthorized attempt failed as expected");
 
-        // Ensure the MCR contract has the COMMITMENT_ADMIN role
-        uint256 presentEpoch = mcr.getPresentEpoch();
-        assertEq(mcr.hasRole(mcr.COMMITMENT_ADMIN(), address(this)), true);
-        mcr.grantRole(mcr.COMMITMENT_ADMIN(), address(this));
-        // check that mcr has the COMMITMENT_ADMIN role
-        assertEq(mcr.hasRole(mcr.COMMITMENT_ADMIN(), address(this)), true);
-        mcr.setAcceptingEpoch(presentEpoch - 1);
-        assertEq(staking.getAcceptingEpoch(address(mcr)), presentEpoch - 1);
+        // Ensure the PCP contract has the COMMITMENT_ADMIN role
+        uint256 presentEpoch = pcp.getPresentEpoch();
+        assertEq(pcp.hasRole(pcp.COMMITMENT_ADMIN(), address(this)), true);
+        pcp.grantRole(pcp.COMMITMENT_ADMIN(), address(this));
+        // check that pcp has the COMMITMENT_ADMIN role
+        assertEq(pcp.hasRole(pcp.COMMITMENT_ADMIN(), address(this)), true);
+        pcp.setAcceptingEpoch(presentEpoch - 1);
+        assertEq(staking.getAcceptingEpoch(address(pcp)), presentEpoch - 1);
     }
 
     /// @notice Test that an attester cannot submit multiple commitments for the same height
@@ -319,12 +319,12 @@ contract MCRTest is Test {
 
         // carol will be dishonest
         vm.prank(carol);
-        mcr.submitSuperBlockCommitment(makeDishonestCommitment(1));
+        pcp.submitSuperBlockCommitment(makeDishonestCommitment(1));
 
         // carol will try to sign again
         vm.prank(carol);
-        vm.expectRevert(IMCR.AttesterAlreadyCommitted.selector);
-        mcr.submitSuperBlockCommitment(makeDishonestCommitment(1));
+        vm.expectRevert(IPCP.AttesterAlreadyCommitted.selector);
+        pcp.submitSuperBlockCommitment(makeDishonestCommitment(1));
     }
 
     /// @notice Test that honest supermajority succeeds despite dishonest attesters
@@ -334,20 +334,20 @@ contract MCRTest is Test {
 
         // Dishonest carol submits first
         vm.prank(carol);
-        mcr.submitSuperBlockCommitment(makeDishonestCommitment(1));
+        pcp.submitSuperBlockCommitment(makeDishonestCommitment(1));
 
         // Honest majority submits
         vm.prank(alice);
-        mcr.submitSuperBlockCommitment(makeHonestCommitment(1));
+        pcp.submitSuperBlockCommitment(makeHonestCommitment(1));
         vm.prank(bob); 
-        mcr.submitSuperBlockCommitment(makeHonestCommitment(1));
+        pcp.submitSuperBlockCommitment(makeHonestCommitment(1));
 
         // Trigger postconfirmation with majority
         vm.prank(alice);
-        mcr.postconfirmSuperBlocksAndRollover();
+        pcp.postconfirmSuperBlocksAndRollover();
 
         // Verify honest commitment was postconfirmed
-        MCRStorage.SuperBlockCommitment memory retrievedCommitment = mcr.getPostconfirmedCommitment(1);
+        PCPStorage.SuperBlockCommitment memory retrievedCommitment = pcp.getPostconfirmedCommitment(1);
         assertEq(retrievedCommitment.commitment, honestCommitmentTemplate);
         assertEq(retrievedCommitment.blockId, honestBlockIdTemplate);
         assertEq(retrievedCommitment.height, 1);
@@ -361,18 +361,18 @@ contract MCRTest is Test {
 
         // Honnest commitments
         vm.prank(alice);
-        mcr.submitSuperBlockCommitment(makeHonestCommitment(1));
+        pcp.submitSuperBlockCommitment(makeHonestCommitment(1));
         vm.prank(bob);
-        mcr.submitSuperBlockCommitment(makeHonestCommitment(1));
+        pcp.submitSuperBlockCommitment(makeHonestCommitment(1));
         // Dishonest commitment
         vm.prank(carol);
-        mcr.submitSuperBlockCommitment(makeDishonestCommitment(1));
+        pcp.submitSuperBlockCommitment(makeDishonestCommitment(1));
 
         vm.prank(alice);
-        mcr.postconfirmSuperBlocksAndRollover();
-        assertEq(mcr.getLastPostconfirmedSuperBlockHeight(), 0, "Height should not advance - Alice");
+        pcp.postconfirmSuperBlocksAndRollover();
+        assertEq(pcp.getLastPostconfirmedSuperBlockHeight(), 0, "Height should not advance - Alice");
         // Verify no commitment was postconfirmed
-        MCRStorage.SuperBlockCommitment memory retrievedCommitment = mcr.getPostconfirmedCommitment(1);
+        PCPStorage.SuperBlockCommitment memory retrievedCommitment = pcp.getPostconfirmedCommitment(1);
         assertEq(retrievedCommitment.height, 0, "No commitment should be postconfirmed");
         assertEq(retrievedCommitment.commitment, bytes32(0), "No commitment should be postconfirmed");
     }
@@ -386,27 +386,27 @@ contract MCRTest is Test {
 
         // dishonest carol
         vm.prank(carol);
-        mcr.submitSuperBlockCommitment(makeDishonestCommitment(1));
+        pcp.submitSuperBlockCommitment(makeDishonestCommitment(1));
 
         // honest majority
         vm.prank(alice);
-        mcr.submitSuperBlockCommitment(makeHonestCommitment(1));
+        pcp.submitSuperBlockCommitment(makeHonestCommitment(1));
         vm.prank(bob);
-        mcr.submitSuperBlockCommitment(makeHonestCommitment(1));
+        pcp.submitSuperBlockCommitment(makeHonestCommitment(1));
 
         // now we move to next epoch
         vm.warp(L1BlockTimeStart + epochDuration);
 
         // postconfirm and rollover
         vm.prank(alice);
-        mcr.postconfirmSuperBlocksAndRollover();
+        pcp.postconfirmSuperBlocksAndRollover();
 
         // check that roll over happened
-        assertEq(mcr.getAcceptingEpoch(), mcr.getPresentEpoch());
-        assertEq(mcr.getStakeForAcceptingEpoch(address(moveToken), alice), 2);
-        assertEq(mcr.getStakeForAcceptingEpoch(address(moveToken), bob), 1);
-        assertEq(mcr.getStakeForAcceptingEpoch(address(moveToken), carol), 1);
-        MCRStorage.SuperBlockCommitment memory retrievedCommitment = mcr.getPostconfirmedCommitment(1);
+        assertEq(pcp.getAcceptingEpoch(), pcp.getPresentEpoch());
+        assertEq(pcp.getStakeForAcceptingEpoch(address(moveToken), alice), 2);
+        assertEq(pcp.getStakeForAcceptingEpoch(address(moveToken), bob), 1);
+        assertEq(pcp.getStakeForAcceptingEpoch(address(moveToken), carol), 1);
+        PCPStorage.SuperBlockCommitment memory retrievedCommitment = pcp.getPostconfirmedCommitment(1);
         assert(retrievedCommitment.commitment == honestCommitmentTemplate);
         assert(retrievedCommitment.blockId == honestBlockIdTemplate);
         assert(retrievedCommitment.height == 1);
@@ -417,7 +417,7 @@ contract MCRTest is Test {
     address[] honestAttesters = new address[](0);
     address[] dishonestAttesters = new address[](0);
 
-    /// @notice Tests the MCR system's resilience with changing Attester sets by:
+    /// @notice Tests the PCP system's resilience with changing Attester sets by:
     /// 1. Starting with honest majority (2/3 honest, 1/3 dishonest)
     /// 2. Adding new attester periodically
     /// 3. Removing attester periodically
@@ -435,7 +435,7 @@ contract MCRTest is Test {
 
         // alice needs to have attesterStake + 1 so we reach supermajority
         (address alice, address bob, address carol) = setupGenesisWithThreeAttesters(attesterStake+1, attesterStake, attesterStake);
-        moveToken.mint(address(mcr), 100); // MCR needs tokens to pay rewards
+        moveToken.mint(address(pcp), 100); // PCP needs tokens to pay rewards
 
         // honest attesters
         honestAttesters.push(alice);
@@ -452,34 +452,34 @@ contract MCRTest is Test {
                 vm.warp(L1BlockTime);
                 // alice triggers rollover
                 vm.prank(alice);
-                mcr.postconfirmSuperBlocksAndRollover();
+                pcp.postconfirmSuperBlocksAndRollover();
 
                 // get the assigned epoch for the superblock height
                 // commit roughly half of dishones attesters 
-                MCRStorage.SuperBlockCommitment memory dishonestCommitment = makeDishonestCommitment(superBlockHeightNow);
+                PCPStorage.SuperBlockCommitment memory dishonestCommitment = makeDishonestCommitment(superBlockHeightNow);
                 for (uint256 k = 0; k < dishonestAttesters.length / 2; k++) {
                     vm.prank(dishonestAttesters[k]);
-                    mcr.submitSuperBlockCommitment(dishonestCommitment);
+                    pcp.submitSuperBlockCommitment(dishonestCommitment);
                 }
 
                 // commit honestly
-                MCRStorage.SuperBlockCommitment memory honestCommitment = makeHonestCommitment(superBlockHeightNow);
+                PCPStorage.SuperBlockCommitment memory honestCommitment = makeHonestCommitment(superBlockHeightNow);
                 for (uint256 k = 0; k < honestAttesters.length; k++) {
                     vm.prank(honestAttesters[k]);
-                    mcr.submitSuperBlockCommitment(honestCommitment);
+                    pcp.submitSuperBlockCommitment(honestCommitment);
                 }
 
                 // TODO: The following does not serve any purpose, as enough attesters are already committed
                 // commit dishonestly the rest
                 // for (uint256 k = dishonestAttesters.length / 2; k < dishonestAttesters.length; k++) {
                 //     vm.prank(dishonestAttesters[k]);
-                //     mcr.submitSuperBlockCommitment(dishonestCommitment);
+                //     pcp.submitSuperBlockCommitment(dishonestCommitment);
                 // }
 
                 vm.prank(alice);
-                mcr.postconfirmSuperBlocksAndRollover();
+                pcp.postconfirmSuperBlocksAndRollover();
 
-                MCRStorage.SuperBlockCommitment memory retrievedCommitment = mcr.getPostconfirmedCommitment(superBlockHeightNow);
+                PCPStorage.SuperBlockCommitment memory retrievedCommitment = pcp.getPostconfirmedCommitment(superBlockHeightNow);
                 assert(retrievedCommitment.commitment == honestCommitment.commitment);
                 assert(retrievedCommitment.blockId == honestCommitment.blockId);
                 assert(retrievedCommitment.height == superBlockHeightNow);
@@ -500,16 +500,16 @@ contract MCRTest is Test {
             vm.prank(newAttester);
             moveToken.approve(address(staking), attesterStake);
             vm.prank(newAttester);
-            staking.stake(address(mcr), moveToken, attesterStake);
+            staking.stake(address(pcp), moveToken, attesterStake);
 
             L1BlockTime += epochDuration;
             vm.warp(L1BlockTime);
 
             // Force rollover by having alice (who has majority stake) call postconfirmSuperBlocksAndRollover
             vm.prank(alice);  // alice has attesterStake+1 from setup
-            mcr.postconfirmSuperBlocksAndRollover();
+            pcp.postconfirmSuperBlocksAndRollover();
             // confirm that the new attester has stake
-            assert(mcr.getStakeForAcceptingEpoch(address(moveToken), newAttester) == attesterStake);
+            assert(pcp.getStakeForAcceptingEpoch(address(moveToken), newAttester) == attesterStake);
 
             // push every third signer to dishonest attesters. If pushed earlier we fail a super majority test.
             if (i % 3 == 2) {
@@ -539,7 +539,7 @@ contract MCRTest is Test {
             // assert the time here
             assertEq(L1BlockTime, L1BlockTimeStart + (i+1) * (commitmentHeights + 1) * epochDuration);
         }
-        assertEq(mcr.getLastPostconfirmedSuperBlockHeight(), changingAttesterSetEvents * commitmentHeights);
+        assertEq(pcp.getLastPostconfirmedSuperBlockHeight(), changingAttesterSetEvents * commitmentHeights);
     }
 
     function testForcedAttestation() public {
@@ -549,11 +549,11 @@ contract MCRTest is Test {
         vm.warp(blockTime);
 
         // default signer should be able to force commitment
-        MCRStorage.SuperBlockCommitment memory forcedCommitment = makeDishonestCommitment(1);
-        mcr.forceLatestCommitment(forcedCommitment);
+        PCPStorage.SuperBlockCommitment memory forcedCommitment = makeDishonestCommitment(1);
+        pcp.forceLatestCommitment(forcedCommitment);
 
         // get the latest commitment
-        MCRStorage.SuperBlockCommitment memory retrievedCommitment = mcr.getPostconfirmedCommitment(1);
+        PCPStorage.SuperBlockCommitment memory retrievedCommitment = pcp.getPostconfirmedCommitment(1);
         assertEq(retrievedCommitment.blockId, forcedCommitment.blockId);
         assertEq(retrievedCommitment.commitment, forcedCommitment.commitment);
         assertEq(retrievedCommitment.height, forcedCommitment.height);
@@ -562,14 +562,14 @@ contract MCRTest is Test {
         address payable alice = payable(vm.addr(1));
 
         // try to force a different commitment with unauthorized user
-        MCRStorage.SuperBlockCommitment memory badForcedCommitment = makeHonestCommitment(1);
+        PCPStorage.SuperBlockCommitment memory badForcedCommitment = makeHonestCommitment(1);
         
         // Alice should not have COMMITMENT_ADMIN role
-        assertEq(mcr.hasRole(mcr.COMMITMENT_ADMIN(), alice), false);
+        assertEq(pcp.hasRole(pcp.COMMITMENT_ADMIN(), alice), false);
         
         vm.prank(alice);
         vm.expectRevert("FORCE_LATEST_COMMITMENT_IS_COMMITMENT_ADMIN_ONLY");
-        mcr.forceLatestCommitment(badForcedCommitment);
+        pcp.forceLatestCommitment(badForcedCommitment);
     }
 
     /// @notice Test that a confirmation and postconfirmation by single attester works
@@ -583,18 +583,18 @@ contract MCRTest is Test {
         vm.prank(alice);
         moveToken.approve(address(staking), 100);
         vm.prank(alice);
-        staking.stake(address(mcr), moveToken, 100);
+        staking.stake(address(pcp), moveToken, 100);
         
         // End genesis ceremony
-        // vm.prank(address(mcr)); // TODO is this needed?
-        mcr.acceptGenesisCeremony();
+        // vm.prank(address(pcp)); // TODO is this needed?
+        pcp.acceptGenesisCeremony();
         
         // confirm current superblock height
-        uint256 currentHeight = mcr.getLastPostconfirmedSuperBlockHeight();
+        uint256 currentHeight = pcp.getLastPostconfirmedSuperBlockHeight();
 
         // Create and submit commitment
         uint256 targetHeight = 1;
-        MCRStorage.SuperBlockCommitment memory commitment = MCRStorage.SuperBlockCommitment({
+        PCPStorage.SuperBlockCommitment memory commitment = PCPStorage.SuperBlockCommitment({
             height: targetHeight,
             commitment: keccak256(abi.encodePacked(uint256(1))),
             blockId: keccak256(abi.encodePacked(uint256(1)))
@@ -602,22 +602,22 @@ contract MCRTest is Test {
 
         // Submit commitment
         vm.prank(alice);
-        mcr.submitSuperBlockCommitment(commitment);
+        pcp.submitSuperBlockCommitment(commitment);
         
         // Verify commitment was stored
-        MCRStorage.SuperBlockCommitment memory stored = mcr.getCommitmentByAttester(targetHeight, alice);
+        PCPStorage.SuperBlockCommitment memory stored = pcp.getCommitmentByAttester(targetHeight, alice);
         assert(stored.commitment == commitment.commitment);
         
         // Attempt postconfirmation
         vm.prank(alice);
-        mcr.postconfirmSuperBlocksAndRollover();
+        pcp.postconfirmSuperBlocksAndRollover();
         
         // Verify postconfirmation worked
-        MCRStorage.SuperBlockCommitment memory postconfirmed = mcr.getPostconfirmedCommitment(targetHeight);
+        PCPStorage.SuperBlockCommitment memory postconfirmed = pcp.getPostconfirmedCommitment(targetHeight);
         assert(postconfirmed.commitment == commitment.commitment);
 
         // confirm current superblock height
-        uint256 currentHeightNew = mcr.getLastPostconfirmedSuperBlockHeight();
+        uint256 currentHeightNew = pcp.getLastPostconfirmedSuperBlockHeight();
         assertEq(currentHeightNew, currentHeight + 1);
 
     }
@@ -631,32 +631,32 @@ contract MCRTest is Test {
         // Create commitment for height 1
         uint256 targetHeight = 1;
         
-        MCRStorage.SuperBlockCommitment memory commitment = makeHonestCommitment(targetHeight);
+        PCPStorage.SuperBlockCommitment memory commitment = makeHonestCommitment(targetHeight);
 
         // Submit commitments
         vm.prank(alice);
-        mcr.submitSuperBlockCommitment(commitment);
+        pcp.submitSuperBlockCommitment(commitment);
         vm.prank(bob);
-        mcr.submitSuperBlockCommitment(commitment);
+        pcp.submitSuperBlockCommitment(commitment);
 
         // Verify commitments were stored
-        MCRStorage.SuperBlockCommitment memory aliceCommitment = mcr.getCommitmentByAttester(targetHeight, alice);
-        MCRStorage.SuperBlockCommitment memory bobCommitment = mcr.getCommitmentByAttester(targetHeight, bob);
+        PCPStorage.SuperBlockCommitment memory aliceCommitment = pcp.getCommitmentByAttester(targetHeight, alice);
+        PCPStorage.SuperBlockCommitment memory bobCommitment = pcp.getCommitmentByAttester(targetHeight, bob);
         assert(aliceCommitment.commitment == commitment.commitment);
         assert(bobCommitment.commitment == commitment.commitment);
 
         // Verify postconfirmer state
-        assert(mcr.isWithinPostconfirmerPrivilegeDuration(commitment));
-        assertEq(mcr.getSuperBlockHeightAssignedEpoch(targetHeight), mcr.getAcceptingEpoch());
+        assert(pcp.isWithinPostconfirmerPrivilegeDuration(commitment));
+        assertEq(pcp.getSuperBlockHeightAssignedEpoch(targetHeight), pcp.getAcceptingEpoch());
 
         // Attempt postconfirmation
         vm.prank(alice);
-        mcr.postconfirmSuperBlocksAndRollover();
+        pcp.postconfirmSuperBlocksAndRollover();
 
         // Verify postconfirmation
-        MCRStorage.SuperBlockCommitment memory postconfirmed = mcr.getPostconfirmedCommitment(targetHeight);
+        PCPStorage.SuperBlockCommitment memory postconfirmed = pcp.getPostconfirmedCommitment(targetHeight);
         assert(postconfirmed.commitment == commitment.commitment);
-        assertEq(mcr.getLastPostconfirmedSuperBlockHeight(), targetHeight);
+        assertEq(pcp.getLastPostconfirmedSuperBlockHeight(), targetHeight);
     }
 
     /// @notice Test that a confirmation and postconfirmation by single attester fails if they have majority stake
@@ -667,30 +667,30 @@ contract MCRTest is Test {
         // Create commitment for height 1
         uint256 targetHeight = 1;
         
-        MCRStorage.SuperBlockCommitment memory commitment = makeHonestCommitment(targetHeight);
+        PCPStorage.SuperBlockCommitment memory commitment = makeHonestCommitment(targetHeight);
 
         // Submit commitments
         vm.prank(alice);
-        mcr.submitSuperBlockCommitment(commitment);
+        pcp.submitSuperBlockCommitment(commitment);
         vm.prank(bob);
-        mcr.submitSuperBlockCommitment(commitment);
+        pcp.submitSuperBlockCommitment(commitment);
 
         // Verify commitments were stored
-        MCRStorage.SuperBlockCommitment memory aliceCommitment = mcr.getCommitmentByAttester(targetHeight, alice);
-        MCRStorage.SuperBlockCommitment memory bobCommitment = mcr.getCommitmentByAttester(targetHeight, bob);
+        PCPStorage.SuperBlockCommitment memory aliceCommitment = pcp.getCommitmentByAttester(targetHeight, alice);
+        PCPStorage.SuperBlockCommitment memory bobCommitment = pcp.getCommitmentByAttester(targetHeight, bob);
         assert(aliceCommitment.commitment == commitment.commitment);
         assert(bobCommitment.commitment == commitment.commitment);
 
         // Verify postconfirmer state
-        assert(mcr.isWithinPostconfirmerPrivilegeDuration(commitment));
-        assertEq(mcr.getSuperBlockHeightAssignedEpoch(targetHeight), mcr.getAcceptingEpoch());
+        assert(pcp.isWithinPostconfirmerPrivilegeDuration(commitment));
+        assertEq(pcp.getSuperBlockHeightAssignedEpoch(targetHeight), pcp.getAcceptingEpoch());
 
         // Attempt postconfirmation - this should fail because there's no supermajority
         vm.prank(alice);
-        mcr.postconfirmSuperBlocksAndRollover();
+        pcp.postconfirmSuperBlocksAndRollover();
 
         // Verify height hasn't changed (postconfirmation didn't succeed)
-        assertEq(mcr.getLastPostconfirmedSuperBlockHeight(), 0);
+        assertEq(pcp.getLastPostconfirmedSuperBlockHeight(), 0);
     }
 
     /// @notice Test that stake activation and postconfirmation works away from the Genesis. 
@@ -700,83 +700,83 @@ contract MCRTest is Test {
         (address alice, address bob, address carol) = setupGenesisWithThreeAttesters(1, 1, 0);
 
         // Create commitment for height 1 by the only stable attester
-        MCRStorage.SuperBlockCommitment memory commitment = makeHonestCommitment(1);
+        PCPStorage.SuperBlockCommitment memory commitment = makeHonestCommitment(1);
         vm.prank(bob);
-        mcr.submitSuperBlockCommitment(commitment);
+        pcp.submitSuperBlockCommitment(commitment);
 
         vm.prank(alice);
-        mcr.postconfirmSuperBlocksAndRollover();
-        assertEq(mcr.getLastPostconfirmedSuperBlockHeight(), 0, "Last postconfirmed superblock height should be 0, as no supermajority was reached (2/3 < threshold)");
-        assertEq(mcr.getAcceptingEpoch(),0, "Accepting epoch should be 0");
+        pcp.postconfirmSuperBlocksAndRollover();
+        assertEq(pcp.getLastPostconfirmedSuperBlockHeight(), 0, "Last postconfirmed superblock height should be 0, as no supermajority was reached (2/3 < threshold)");
+        assertEq(pcp.getAcceptingEpoch(),0, "Accepting epoch should be 0");
 
         vm.warp(epochDuration);
-        assertEq(mcr.getPresentEpoch(),1, "Present epoch should be 1");
+        assertEq(pcp.getPresentEpoch(),1, "Present epoch should be 1");
         vm.prank(alice);
-        mcr.postconfirmSuperBlocksAndRollover();
-        assertEq(mcr.getAcceptingEpoch(),1, "Accepting epoch should be 1");
+        pcp.postconfirmSuperBlocksAndRollover();
+        assertEq(pcp.getAcceptingEpoch(),1, "Accepting epoch should be 1");
 
         vm.prank(carol);
-        staking.stake(address(mcr), moveToken, 1);
-        assertEq(mcr.getStakeForAcceptingEpoch(address(moveToken), carol), 0, "Carol's stake is still 0.");
+        staking.stake(address(pcp), moveToken, 1);
+        assertEq(pcp.getStakeForAcceptingEpoch(address(moveToken), carol), 0, "Carol's stake is still 0.");
         // Alice unstakes so her commitment is not counted in the next accepting epoch
         vm.prank(alice);
-        staking.unstake(address(mcr), address(moveToken), 1);
-        assertEq(mcr.getStakeForAcceptingEpoch(address(moveToken), alice), 1, "Alice's stake should still be 1");
-        assertEq(staking.getUnstake(address(mcr), 2, address(moveToken), alice), 1, "Alice's unstake in epoch 2 should be 1");
+        staking.unstake(address(pcp), address(moveToken), 1);
+        assertEq(pcp.getStakeForAcceptingEpoch(address(moveToken), alice), 1, "Alice's stake should still be 1");
+        assertEq(staking.getUnstake(address(pcp), 2, address(moveToken), alice), 1, "Alice's unstake in epoch 2 should be 1");
 
         // Warp to next epoch 
         vm.warp(2*epochDuration);
-        assertEq(mcr.getPresentEpoch(), 2, "Present epoch should be 2");
-        assertEq(mcr.getAcceptingEpoch(), 1, "Accepting epoch should be 1");
+        assertEq(pcp.getPresentEpoch(), 2, "Present epoch should be 2");
+        assertEq(pcp.getAcceptingEpoch(), 1, "Accepting epoch should be 1");
 
         vm.prank(alice);
-        mcr.postconfirmSuperBlocksAndRollover();
-        assertEq(mcr.getAcceptingEpoch(), 2, "Accepting epoch should be 2");
+        pcp.postconfirmSuperBlocksAndRollover();
+        assertEq(pcp.getAcceptingEpoch(), 2, "Accepting epoch should be 2");
 
-        assertEq(mcr.getStakeForAcceptingEpoch(address(moveToken), carol), 1, "Carol's stake should already be active");
-        assertEq(mcr.getStakeForAcceptingEpoch(address(moveToken), alice), 0, "Alice's stake should be 0");
+        assertEq(pcp.getStakeForAcceptingEpoch(address(moveToken), carol), 1, "Carol's stake should already be active");
+        assertEq(pcp.getStakeForAcceptingEpoch(address(moveToken), alice), 0, "Alice's stake should be 0");
         assertEq(moveToken.balanceOf(alice), 2, "Alice's balance should be 2");
 
         // Carol commits to height 1
         vm.prank(carol);
-        mcr.submitSuperBlockCommitment(commitment);
+        pcp.submitSuperBlockCommitment(commitment);
 
         // perform postconfirmation
         vm.prank(carol);
-        mcr.postconfirmSuperBlocksAndRollover();
-        assertEq(mcr.getLastPostconfirmedSuperBlockHeight(), 1, "Last postconfirmed superblock height should be 1, as supermajority was reached (2/2 > threshold)");
+        pcp.postconfirmSuperBlocksAndRollover();
+        assertEq(pcp.getLastPostconfirmedSuperBlockHeight(), 1, "Last postconfirmed superblock height should be 1, as supermajority was reached (2/2 > threshold)");
     }
 
     function testSetMinCommitmentAge() public {
         // Set min commitment age to a too long value
-        vm.expectRevert(MCR.minCommitmentAgeForPostconfirmationTooLong.selector);
-        mcr.setMinCommitmentAgeForPostconfirmation(epochDuration);
+        vm.expectRevert(PCP.minCommitmentAgeForPostconfirmationTooLong.selector);
+        pcp.setMinCommitmentAgeForPostconfirmation(epochDuration);
 
         // Set min commitment age to 1/10 of epochDuration
         uint256 minAge = epochDuration/10;
-        mcr.setMinCommitmentAgeForPostconfirmation(minAge);
-        assertEq(mcr.minCommitmentAgeForPostconfirmation(), minAge, "Min commitment age should be updated to 1/10 of epochDuration");
+        pcp.setMinCommitmentAgeForPostconfirmation(minAge);
+        assertEq(pcp.minCommitmentAgeForPostconfirmation(), minAge, "Min commitment age should be updated to 1/10 of epochDuration");
     }
 
     function testMinCommitmentAge() public {
         // Setup with Alice having supermajority stake
         address alice = setupGenesisWithOneAttester(1);
-        assertEq(mcr.getMinCommitmentAgeForPostconfirmation(), 0, "The unset min commitment age should be 0");
+        assertEq(pcp.getMinCommitmentAgeForPostconfirmation(), 0, "The unset min commitment age should be 0");
         uint256 minAge = 1 minutes;
-        mcr.setMinCommitmentAgeForPostconfirmation(minAge);
-        assertEq(mcr.getMinCommitmentAgeForPostconfirmation(), minAge, "Min commitment age should be updated to 1 minutes");
+        pcp.setMinCommitmentAgeForPostconfirmation(minAge);
+        assertEq(pcp.getMinCommitmentAgeForPostconfirmation(), minAge, "Min commitment age should be updated to 1 minutes");
         
         vm.prank(alice);
-        mcr.submitSuperBlockCommitment(makeHonestCommitment(1));
+        pcp.submitSuperBlockCommitment(makeHonestCommitment(1));
         vm.prank(alice);
-        mcr.postconfirmSuperBlocksAndRollover();
-        assertEq(mcr.getLastPostconfirmedSuperBlockHeight(), 0, "Immediate postconfirmation should fail.");
+        pcp.postconfirmSuperBlocksAndRollover();
+        assertEq(pcp.getLastPostconfirmedSuperBlockHeight(), 0, "Immediate postconfirmation should fail.");
         
         vm.warp(block.timestamp + minAge);  // note that time starts at 1, not 0
         // Now postconfirmation should succeed
         vm.prank(alice);
-        mcr.postconfirmSuperBlocksAndRollover();
-        assertEq(mcr.getLastPostconfirmedSuperBlockHeight(), 1);
+        pcp.postconfirmSuperBlocksAndRollover();
+        assertEq(pcp.getLastPostconfirmedSuperBlockHeight(), 1);
     }
 
 
@@ -788,45 +788,45 @@ contract MCRTest is Test {
     function testPostconfirmerStartTime() public {
         // Test at block 0
         assertEq(block.timestamp, 1, "Current time should be 1"); // TODO why is it 1? and not 0?
-        assertEq(postconfirmerDuration, mcr.getPostconfirmerDuration(), "Postconfirmer term should be correctly set");
-        assertEq(mcr.getPostconfirmerStartTime(), 0, "Postconfirmer term should start at (1) time 0");
+        assertEq(postconfirmerDuration, pcp.getPostconfirmerDuration(), "Postconfirmer term should be correctly set");
+        assertEq(pcp.getPostconfirmerStartTime(), 0, "Postconfirmer term should start at (1) time 0");
 
         // Test at half an postconfirmer term
         vm.warp(postconfirmerDuration-1);
-        assertEq(mcr.getPostconfirmerStartTime(), 0, "Postconfirmer term should start at (2) time 0");
+        assertEq(pcp.getPostconfirmerStartTime(), 0, "Postconfirmer term should start at (2) time 0");
 
         // Test at an postconfirmer term boundary
         vm.warp(postconfirmerDuration);
-        assertEq(mcr.getPostconfirmerStartTime(), postconfirmerDuration, "Postconfirmer term should start at (3) time postconfirmerDuration");
+        assertEq(pcp.getPostconfirmerStartTime(), postconfirmerDuration, "Postconfirmer term should start at (3) time postconfirmerDuration");
 
         // Test at an postconfirmer term boundary
         vm.warp(postconfirmerDuration+1);
-        assertEq(mcr.getPostconfirmerStartTime(), postconfirmerDuration, "Postconfirmer term should start at (4) time postconfirmerDuration");
+        assertEq(pcp.getPostconfirmerStartTime(), postconfirmerDuration, "Postconfirmer term should start at (4) time postconfirmerDuration");
 
         // Test at 1.5 postconfirmer terms
         vm.warp(2 * postconfirmerDuration );
-        assertEq(mcr.getPostconfirmerStartTime(), 2 * postconfirmerDuration, "Postconfirmer term should start at (5) time 2 * postconfirmerDuration");        
+        assertEq(pcp.getPostconfirmerStartTime(), 2 * postconfirmerDuration, "Postconfirmer term should start at (5) time 2 * postconfirmerDuration");        
     }
 
     /// @notice Test setting postconfirmer duration with validation
     function testSetPostconfirmerDuration() public {
         // Check the epoch duration is set correctly
-        assertEq(epochDuration, staking.getEpochDuration(address(mcr)));        
+        assertEq(epochDuration, staking.getEpochDuration(address(pcp)));        
         // Test valid duration (less than half epoch duration)
         uint256 validDuration = epochDuration / 2 - 1;
-        mcr.setPostconfirmerDuration(validDuration);
-        assertEq(mcr.getPostconfirmerDuration(), validDuration, "Duration should be updated to valid value");
+        pcp.setPostconfirmerDuration(validDuration);
+        assertEq(pcp.getPostconfirmerDuration(), validDuration, "Duration should be updated to valid value");
 
         // Test duration too long compared to epoch (>= epochDuration/2)
         uint256 invalidDuration = epochDuration / 2;
-        vm.expectRevert(MCR.PostconfirmerDurationTooLongForEpoch.selector);
-        mcr.setPostconfirmerDuration(invalidDuration);
-        assertEq(mcr.getPostconfirmerDuration(), validDuration, "Duration should remain at previous valid value");
+        vm.expectRevert(PCP.PostconfirmerDurationTooLongForEpoch.selector);
+        pcp.setPostconfirmerDuration(invalidDuration);
+        assertEq(pcp.getPostconfirmerDuration(), validDuration, "Duration should remain at previous valid value");
 
         // Test duration equal to epoch duration (should fail)
-        vm.expectRevert(MCR.PostconfirmerDurationTooLongForEpoch.selector);
-        mcr.setPostconfirmerDuration(epochDuration);
-        assertEq(mcr.getPostconfirmerDuration(), validDuration, "Duration should remain at previous valid value");
+        vm.expectRevert(PCP.PostconfirmerDurationTooLongForEpoch.selector);
+        pcp.setPostconfirmerDuration(epochDuration);
+        assertEq(pcp.getPostconfirmerDuration(), validDuration, "Duration should remain at previous valid value");
     }
 
     /// @notice Test that getPostconfirmer correctly selects an postconfirmer based on block hash
@@ -834,19 +834,19 @@ contract MCRTest is Test {
         // Setup with three attesters with equal stakes
         (, address bob, address carol) = setupGenesisWithThreeAttesters(1, 1, 1);
         uint256 myPostconfirmerDuration = 13;
-        mcr.setPostconfirmerDuration(myPostconfirmerDuration);
-        assertEq(myPostconfirmerDuration,mcr.getPostconfirmerDuration(),"Postconfirmer duration not set correctly");
+        pcp.setPostconfirmerDuration(myPostconfirmerDuration);
+        assertEq(myPostconfirmerDuration,pcp.getPostconfirmerDuration(),"Postconfirmer duration not set correctly");
 
-        address initialPostconfirmer = mcr.getPostconfirmer();
+        address initialPostconfirmer = pcp.getPostconfirmer();
         assertEq(initialPostconfirmer, bob, "Postconfirmer should be bob");
 
         vm.warp(myPostconfirmerDuration-1); 
-        assertEq(mcr.getPostconfirmer(), initialPostconfirmer, "Postconfirmer should not change within term");
+        assertEq(pcp.getPostconfirmer(), initialPostconfirmer, "Postconfirmer should not change within term");
 
         // Move two postconfirmer terms (moving one resulted still in bob as postconfirmer with current randomness)
         vm.warp(2*myPostconfirmerDuration); 
-        address newPostconfirmer = mcr.getPostconfirmer();
-        assertEq(mcr.getPostconfirmerStartTime(),2*myPostconfirmerDuration,"Postconfirmer start time should be myPostconfirmerDuration");
+        address newPostconfirmer = pcp.getPostconfirmer();
+        assertEq(pcp.getPostconfirmerStartTime(),2*myPostconfirmerDuration,"Postconfirmer start time should be myPostconfirmerDuration");
         assertEq(newPostconfirmer, carol, "New postconfirmer should be Carol");
     }
 
@@ -861,57 +861,57 @@ contract MCRTest is Test {
         uint256 aliceInitialBalance = moveToken.balanceOf(alice);
         uint256 bobInitialBalance = moveToken.balanceOf(bob);
         uint256 carolInitialBalance = moveToken.balanceOf(carol);
-        mcr.setRewardPerPostconfirmationPoint(0);
+        pcp.setRewardPerPostconfirmationPoint(0);
 
         // Exit genesis epoch
         vm.warp(epochDuration);
         vm.prank(alice);
-        mcr.postconfirmSuperBlocksAndRollover();
-        assertEq(mcr.getAcceptingEpoch(), 1, "Should have exited genesis");
+        pcp.postconfirmSuperBlocksAndRollover();
+        assertEq(pcp.getAcceptingEpoch(), 1, "Should have exited genesis");
 
         // Submit commitments for height 1 honestly (Alice and Bob > 2/3)
         vm.prank(alice);
-        mcr.submitSuperBlockCommitment(makeHonestCommitment(1));
+        pcp.submitSuperBlockCommitment(makeHonestCommitment(1));
         vm.prank(bob);
-        mcr.submitSuperBlockCommitment(makeHonestCommitment(1));
+        pcp.submitSuperBlockCommitment(makeHonestCommitment(1));
         vm.prank(carol);
-        mcr.submitSuperBlockCommitment(makeDishonestCommitment(1));
+        pcp.submitSuperBlockCommitment(makeDishonestCommitment(1));
 
         // Check initial reward points
-        assertEq(mcr.getAttesterRewardPoints(mcr.getAcceptingEpoch(), alice), 0, "Alice should have no points yet");
-        assertEq(mcr.getAttesterRewardPoints(mcr.getAcceptingEpoch(), bob), 0, "Bob should have no points yet");
-        assertEq(mcr.getAttesterRewardPoints(mcr.getAcceptingEpoch(), carol), 0, "Carol should have no points yet");
+        assertEq(pcp.getAttesterRewardPoints(pcp.getAcceptingEpoch(), alice), 0, "Alice should have no points yet");
+        assertEq(pcp.getAttesterRewardPoints(pcp.getAcceptingEpoch(), bob), 0, "Bob should have no points yet");
+        assertEq(pcp.getAttesterRewardPoints(pcp.getAcceptingEpoch(), carol), 0, "Carol should have no points yet");
 
         // Trigger postconfirmation
         vm.prank(alice);
-        mcr.postconfirmSuperBlocksAndRollover();
+        pcp.postconfirmSuperBlocksAndRollover();
 
         // New reward points
-        assertEq(mcr.getAttesterRewardPoints(mcr.getAcceptingEpoch(), alice), 1, "Alice should have 1 points");
-        assertEq(mcr.getAttesterRewardPoints(mcr.getAcceptingEpoch(), bob), 1, "Bob should have 1 point");
-        assertEq(mcr.getAttesterRewardPoints(mcr.getAcceptingEpoch(), carol), 0, "Carol should have 0 point");
+        assertEq(pcp.getAttesterRewardPoints(pcp.getAcceptingEpoch(), alice), 1, "Alice should have 1 points");
+        assertEq(pcp.getAttesterRewardPoints(pcp.getAcceptingEpoch(), bob), 1, "Bob should have 1 point");
+        assertEq(pcp.getAttesterRewardPoints(pcp.getAcceptingEpoch(), carol), 0, "Carol should have 0 point");
 
         // Alice and Carol commit to height 2 honestly (Alice + Carol > 2/3)
         vm.prank(alice);
-        mcr.submitSuperBlockCommitment(makeHonestCommitment(2));
+        pcp.submitSuperBlockCommitment(makeHonestCommitment(2));
         vm.prank(bob);
-        mcr.submitSuperBlockCommitment(makeDishonestCommitment(2));
+        pcp.submitSuperBlockCommitment(makeDishonestCommitment(2));
         vm.prank(carol);
-        mcr.submitSuperBlockCommitment(makeHonestCommitment(2));
+        pcp.submitSuperBlockCommitment(makeHonestCommitment(2));
 
         // Trigger postconfirmation, reward distribution by rolling over to next epoch
         vm.warp(2*epochDuration);
         vm.prank(alice);
-        mcr.postconfirmSuperBlocksAndRollover();
-        assertEq(mcr.getAcceptingEpoch(), 2, "Should be in epoch 2");
+        pcp.postconfirmSuperBlocksAndRollover();
+        assertEq(pcp.getAcceptingEpoch(), 2, "Should be in epoch 2");
 
         // Verify rewards were distributed and points were cleared
-        assertEq(mcr.attesterRewardPoints(mcr.getAcceptingEpoch(), alice), 0, "Alice's points should be cleared");
-        assertEq(mcr.attesterRewardPoints(mcr.getAcceptingEpoch(), bob), 0, "Bob's points should be cleared");
-        assertEq(mcr.attesterRewardPoints(mcr.getAcceptingEpoch(), carol), 0, "Carol's points should be cleared");
-        assertEq(moveToken.balanceOf(alice), aliceInitialBalance + mcr.getStakeForAcceptingEpoch(address(moveToken), alice) * 2, "Alice reward not correct.");
-        assertEq(moveToken.balanceOf(bob), bobInitialBalance + mcr.getStakeForAcceptingEpoch(address(moveToken), bob), "Bob reward not correct.");
-        assertEq(moveToken.balanceOf(carol), carolInitialBalance + mcr.getStakeForAcceptingEpoch(address(moveToken), carol), "Carol reward not correct.");
+        assertEq(pcp.attesterRewardPoints(pcp.getAcceptingEpoch(), alice), 0, "Alice's points should be cleared");
+        assertEq(pcp.attesterRewardPoints(pcp.getAcceptingEpoch(), bob), 0, "Bob's points should be cleared");
+        assertEq(pcp.attesterRewardPoints(pcp.getAcceptingEpoch(), carol), 0, "Carol's points should be cleared");
+        assertEq(moveToken.balanceOf(alice), aliceInitialBalance + pcp.getStakeForAcceptingEpoch(address(moveToken), alice) * 2, "Alice reward not correct.");
+        assertEq(moveToken.balanceOf(bob), bobInitialBalance + pcp.getStakeForAcceptingEpoch(address(moveToken), bob), "Bob reward not correct.");
+        assertEq(moveToken.balanceOf(carol), carolInitialBalance + pcp.getStakeForAcceptingEpoch(address(moveToken), carol), "Carol reward not correct.");
     }
 
     /// @notice Test that postconfirmation rewards are distributed correctly when the postconfirmer is live
@@ -924,32 +924,32 @@ contract MCRTest is Test {
         uint256 aliceInitialBalance = moveToken.balanceOf(alice);
         uint256 bobInitialBalance = moveToken.balanceOf(bob);
         // set the max postconfirmer non-reactivity time to 1/4 epochDuration        
-        mcr.setPostconfirmerPrivilegeDuration(epochDuration/4);
+        pcp.setPostconfirmerPrivilegeDuration(epochDuration/4);
 
         vm.prank(alice);
-        mcr.submitSuperBlockCommitment(makeHonestCommitment(1));
+        pcp.submitSuperBlockCommitment(makeHonestCommitment(1));
         // check that the first seen timestamp is set
-        assertGt(mcr.getCommitmentFirstSeenAt(makeHonestCommitment(1)), 0, "Commitment first seen at should be set");
+        assertGt(pcp.getCommitmentFirstSeenAt(makeHonestCommitment(1)), 0, "Commitment first seen at should be set");
 
-        assertEq(mcr.getPostconfirmer(), bob, "Bob should be the postconfirmer but its not");
-        assertEq(mcr.isWithinPostconfirmerPrivilegeDuration(makeHonestCommitment(1)), true, "Postconfirmer should be live");
+        assertEq(pcp.getPostconfirmer(), bob, "Bob should be the postconfirmer but its not");
+        assertEq(pcp.isWithinPostconfirmerPrivilegeDuration(makeHonestCommitment(1)), true, "Postconfirmer should be live");
 
         // postconfirmer postconfirms while postconfirmer is live
         vm.prank(bob);
-        mcr.postconfirmSuperBlocksAndRollover();
-        assertEq(mcr.getAcceptingEpoch(), 0, "Should be in epoch 0");
-        assertEq(mcr.getLastPostconfirmedSuperBlockHeight(), 1, "Last postconfirmed superblock height should be 1");
-        assertEq(mcr.getAttesterRewardPoints(mcr.getAcceptingEpoch(), alice), 1, "Alice should have 1 attester points");
-        assertEq(mcr.getPostconfirmerRewardPoints(mcr.getAcceptingEpoch(), bob), 1, "Bob should have 1 postconfirmer points");
+        pcp.postconfirmSuperBlocksAndRollover();
+        assertEq(pcp.getAcceptingEpoch(), 0, "Should be in epoch 0");
+        assertEq(pcp.getLastPostconfirmedSuperBlockHeight(), 1, "Last postconfirmed superblock height should be 1");
+        assertEq(pcp.getAttesterRewardPoints(pcp.getAcceptingEpoch(), alice), 1, "Alice should have 1 attester points");
+        assertEq(pcp.getPostconfirmerRewardPoints(pcp.getAcceptingEpoch(), bob), 1, "Bob should have 1 postconfirmer points");
         assertEq(moveToken.balanceOf(alice), aliceInitialBalance, "Alice should have not received any rewards yet");
         assertEq(moveToken.balanceOf(bob), bobInitialBalance, "Bob should not have received any rewards yet");
 
         // warp to next epoch
         vm.warp(epochDuration);
         vm.prank(alice);
-        mcr.postconfirmSuperBlocksAndRollover();
-        assertEq(mcr.getLastPostconfirmedSuperBlockHeight(), 1);
-        assertEq(mcr.getAcceptingEpoch(), 1, "Should be in epoch 1");
+        pcp.postconfirmSuperBlocksAndRollover();
+        assertEq(pcp.getLastPostconfirmedSuperBlockHeight(), 1);
+        assertEq(pcp.getAcceptingEpoch(), 1, "Should be in epoch 1");
 
         // Verify rewards:
         assertEq(moveToken.balanceOf(alice), aliceInitialBalance + aliceStake, "Alice should have received the rewards");
@@ -966,26 +966,26 @@ contract MCRTest is Test {
         uint256 bobInitialBalance = moveToken.balanceOf(bob);
 
         vm.prank(alice);
-        mcr.submitSuperBlockCommitment(makeHonestCommitment(1));
+        pcp.submitSuperBlockCommitment(makeHonestCommitment(1));
 
-        assertEq(mcr.getPostconfirmer(), alice, "Alice should be the postconfirmer since it is the only staked attester.");
-        assertEq(mcr.isWithinPostconfirmerPrivilegeDuration(makeHonestCommitment(1)), true, "Postconfirmer should be live");
+        assertEq(pcp.getPostconfirmer(), alice, "Alice should be the postconfirmer since it is the only staked attester.");
+        assertEq(pcp.isWithinPostconfirmerPrivilegeDuration(makeHonestCommitment(1)), true, "Postconfirmer should be live");
 
         // volunteer postconfirmer postconfirms while postconfirmer is live
         vm.prank(bob);
-        mcr.postconfirmSuperBlocksAndRollover();
-        assertEq(mcr.getLastPostconfirmedSuperBlockHeight(), 1);
+        pcp.postconfirmSuperBlocksAndRollover();
+        assertEq(pcp.getLastPostconfirmedSuperBlockHeight(), 1);
 
         // bob should not get any postconfirmer rewards
         assertEq(moveToken.balanceOf(bob), bobInitialBalance, "Bob should not have received any rewards");
-        assertEq(mcr.getPostconfirmerRewardPoints(mcr.getAcceptingEpoch(), bob), 0, "Bob should have 0 postconfirmer points");
-        assertEq(mcr.getAttesterRewardPoints(mcr.getAcceptingEpoch(), alice), 1, "Alice should have 1 attester points");
-        assertEq(mcr.getPostconfirmerRewardPoints(mcr.getAcceptingEpoch(), alice), 0, "Alice should have 0 postconfirmer points");
+        assertEq(pcp.getPostconfirmerRewardPoints(pcp.getAcceptingEpoch(), bob), 0, "Bob should have 0 postconfirmer points");
+        assertEq(pcp.getAttesterRewardPoints(pcp.getAcceptingEpoch(), alice), 1, "Alice should have 1 attester points");
+        assertEq(pcp.getPostconfirmerRewardPoints(pcp.getAcceptingEpoch(), alice), 0, "Alice should have 0 postconfirmer points");
 
         vm.warp(epochDuration);
         vm.prank(alice);
-        mcr.postconfirmSuperBlocksAndRollover();
-        assertEq(mcr.getAcceptingEpoch(), 1, "Should be in epoch 1");
+        pcp.postconfirmSuperBlocksAndRollover();
+        assertEq(pcp.getAcceptingEpoch(), 1, "Should be in epoch 1");
 
         // alice should get the postconfirmer rewards
         assertEq(moveToken.balanceOf(bob), bobInitialBalance, "Bob should not have received any rewards");
@@ -1002,36 +1002,36 @@ contract MCRTest is Test {
         (address alice, address bob, ) = setupGenesisWithThreeAttesters(aliceStake, bobStake, 0);
         uint256 aliceInitialBalance = moveToken.balanceOf(alice);
         uint256 bobInitialBalance = moveToken.balanceOf(bob);
-        uint256 thisPostconfirmerDuration = mcr.getPostconfirmerDuration();
+        uint256 thisPostconfirmerDuration = pcp.getPostconfirmerDuration();
 
         // set the time windows
-        assertEq(mcr.getMinCommitmentAgeForPostconfirmation(), 0, "Min commitment age should be 0"); 
+        assertEq(pcp.getMinCommitmentAgeForPostconfirmation(), 0, "Min commitment age should be 0"); 
         uint256 thisPostconfirmerPriviledgeWindow = epochDuration/100;
-        mcr.setPostconfirmerPrivilegeDuration(thisPostconfirmerPriviledgeWindow); 
-        assertEq(mcr.getPostconfirmerPrivilegeDuration(), thisPostconfirmerPriviledgeWindow, "Max postconfirmer non-reactivity time should be 1/100 epochDuration");        
+        pcp.setPostconfirmerPrivilegeDuration(thisPostconfirmerPriviledgeWindow); 
+        assertEq(pcp.getPostconfirmerPrivilegeDuration(), thisPostconfirmerPriviledgeWindow, "Max postconfirmer non-reactivity time should be 1/100 epochDuration");        
         assertGt(thisPostconfirmerDuration, thisPostconfirmerPriviledgeWindow, "Postconfirmer term should be greater than thisPostconfirmerPriviledgeWindow");
 
         vm.prank(alice);
-        mcr.submitSuperBlockCommitment(makeHonestCommitment(1));
+        pcp.submitSuperBlockCommitment(makeHonestCommitment(1));
 
-        assertEq(mcr.getPostconfirmer(), bob, "bob should be the postconfirmer");
-        assertEq(mcr.isWithinPostconfirmerPrivilegeDuration(makeHonestCommitment(1)), true, "Postconfirmer should be live");
+        assertEq(pcp.getPostconfirmer(), bob, "bob should be the postconfirmer");
+        assertEq(pcp.isWithinPostconfirmerPrivilegeDuration(makeHonestCommitment(1)), true, "Postconfirmer should be live");
 
         // warp out of postconfirmer privilege window
         vm.warp(block.timestamp + thisPostconfirmerPriviledgeWindow + 1 ); // TODO check why + 1 is needed
-        assertEq(mcr.isWithinPostconfirmerPrivilegeDuration(makeHonestCommitment(1)), false, "Postconfirmer should not be live");
+        assertEq(pcp.isWithinPostconfirmerPrivilegeDuration(makeHonestCommitment(1)), false, "Postconfirmer should not be live");
         vm.prank(alice);
-        mcr.postconfirmSuperBlocksAndRollover();
-        assertEq(mcr.getAcceptingEpoch(), 0, "Should be in epoch 0");
-        assertEq(mcr.getLastPostconfirmedSuperBlockHeight(), 1, "Last postconfirmed superblock height should be 1");
-        assertEq(mcr.getAttesterRewardPoints(mcr.getAcceptingEpoch(), alice), 1, "Alice should have 1 attester points");
-        assertEq(mcr.getPostconfirmerRewardPoints(mcr.getAcceptingEpoch(), alice), 1, "Alice should have 1 postconfirmer points");
+        pcp.postconfirmSuperBlocksAndRollover();
+        assertEq(pcp.getAcceptingEpoch(), 0, "Should be in epoch 0");
+        assertEq(pcp.getLastPostconfirmedSuperBlockHeight(), 1, "Last postconfirmed superblock height should be 1");
+        assertEq(pcp.getAttesterRewardPoints(pcp.getAcceptingEpoch(), alice), 1, "Alice should have 1 attester points");
+        assertEq(pcp.getPostconfirmerRewardPoints(pcp.getAcceptingEpoch(), alice), 1, "Alice should have 1 postconfirmer points");
 
         // warp to next epoch
         vm.warp(epochDuration);
         vm.prank(bob);
-        mcr.postconfirmSuperBlocksAndRollover();
-        assertEq(mcr.getAcceptingEpoch(), 1, "Should be in epoch 1");
+        pcp.postconfirmSuperBlocksAndRollover();
+        assertEq(pcp.getAcceptingEpoch(), 1, "Should be in epoch 1");
 
         assertEq(moveToken.balanceOf(alice), aliceInitialBalance + aliceStake + aliceStake, "Alice should have received the attester and postconfirmer rewards");
         assertEq(moveToken.balanceOf(bob), bobInitialBalance, "Bob should have received no rewards");
@@ -1046,38 +1046,38 @@ contract MCRTest is Test {
     // TODO reward logic is not yet implemented
     function testPostconfirmerRewards() public {
         (address alice, address bob, ) = setupGenesisWithThreeAttesters(1, 1, 0);
-        assertEq(mcr.getPostconfirmer(), bob, "Bob should be the postconfirmer");
+        assertEq(pcp.getPostconfirmer(), bob, "Bob should be the postconfirmer");
 
         // make superBlock commitments
-        MCRStorage.SuperBlockCommitment memory initCommitment = makeHonestCommitment(1);
+        PCPStorage.SuperBlockCommitment memory initCommitment = makeHonestCommitment(1);
         vm.prank(alice);
-        mcr.submitSuperBlockCommitment(initCommitment);
+        pcp.submitSuperBlockCommitment(initCommitment);
         vm.prank(bob);
-        mcr.submitSuperBlockCommitment(initCommitment);
+        pcp.submitSuperBlockCommitment(initCommitment);
 
         // bob postconfirms and gets a reward
         vm.prank(bob);
-        mcr.postconfirmSuperBlocksAndRollover();
-        assertEq(mcr.getLastPostconfirmedSuperBlockHeight(), 1);
+        pcp.postconfirmSuperBlocksAndRollover();
+        assertEq(pcp.getLastPostconfirmedSuperBlockHeight(), 1);
 
         // make second superblock commitment
-        MCRStorage.SuperBlockCommitment memory secondCommitment = makeHonestCommitment(2);
+        PCPStorage.SuperBlockCommitment memory secondCommitment = makeHonestCommitment(2);
         vm.prank(alice);
-        mcr.submitSuperBlockCommitment(secondCommitment);
+        pcp.submitSuperBlockCommitment(secondCommitment);
         vm.prank(bob);
-        mcr.submitSuperBlockCommitment(secondCommitment);
+        pcp.submitSuperBlockCommitment(secondCommitment);
 
         // alice can postconfirm, but does not get the reward
         // TODO check that bob did not get the reward
         vm.prank(alice);
-        mcr.postconfirmSuperBlocksAndRollover();
-        assertEq(mcr.getLastPostconfirmedSuperBlockHeight(), 2);
+        pcp.postconfirmSuperBlocksAndRollover();
+        assertEq(pcp.getLastPostconfirmedSuperBlockHeight(), 2);
 
         // bob tries to postconfirm, but already done by alice
         // TODO: bob should still get the reward
         vm.prank(bob);
-        mcr.postconfirmSuperBlocksAndRollover();
-        assertEq(mcr.getLastPostconfirmedSuperBlockHeight(), 2);
+        pcp.postconfirmSuperBlocksAndRollover();
+        assertEq(pcp.getLastPostconfirmedSuperBlockHeight(), 2);
     }
 
 

@@ -1,6 +1,6 @@
 [package]
 name = "postconfirmationssettlement-runner"
-description = "An Anvil runner for the MCR Settlement"
+description = "An Anvil runner for the PCP Settlement"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
