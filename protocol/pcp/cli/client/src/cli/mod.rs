@@ -64,41 +64,60 @@ impl PcpProtocolClientSubcommand {
 			}
 			PcpProtocolClientSubcommand::Eth(eth) => eth.execute().await?,
 			PcpProtocolClientSubcommand::PostCommitment(args) => {
-				let commitment = if let Some(hex) = &args.commitment_hex {
-					// Parse hex commitment
-					let bytes = hex::decode(hex)?;
-					SuperBlockCommitment::new(
-						0, // height
-						Id::new([0; 32]), // block id
-						Commitment::new(bytes.try_into().map_err(|_| anyhow::anyhow!("Invalid commitment length. Expected 32 bytes (64 hex characters)."))?),
-					)
-				} else if let Some(preimage) = &args.preimage_string {
-					// Hash preimage to get commitment
-					let mut hasher = Keccak256::new();
-					hasher.update(preimage.as_bytes());
-					let result = hasher.finalize();
-					SuperBlockCommitment::new(
-						0, // height
-						Id::new([0; 32]), // block id
-						Commitment::new(result.into()),
-					)
-				} else {
-					unreachable!("clap ensures one option is present")
-				};
-
-				// Get config and post commitment
-				let config = get_config()?;
-				println!("Config: {:?}", config);
-				let client = config.build().await?;
-				println!("Starting post commitment process...");
-				client.post_block_commitment(commitment).await?;
-				println!("Successfully posted commitment");
+				self.handle_post_commitment(args).await?;
 			}
 		}
 		Ok(())
 	}
+
+	/// Handle the post commitment command.
+	async fn handle_post_commitment(&self, args: &PostCommitmentArgs) -> Result<(), anyhow::Error> {
+		let commitment = self.create_commitment(args)?;
+		
+		// Get config and post commitment
+		let config = get_config()?;
+		println!("Config: {:?}", config);
+		let client = config.build().await?;
+		println!("Starting post commitment process...");
+		client.post_block_commitment(commitment).await?;
+		println!("Successfully posted commitment");
+		
+		Ok(())
+	}
+
+	/// Create a commitment from the given arguments.
+	fn create_commitment(&self, args: &PostCommitmentArgs) -> Result<SuperBlockCommitment, anyhow::Error> {
+		if let Some(hex) = &args.commitment_hex {
+			// Parse hex commitment
+			let bytes = hex::decode(hex)?;
+			let bytes_len = bytes.len();
+			Ok(SuperBlockCommitment::new(
+				0, // height
+				Id::new([0; 32]), // block id
+				Commitment::new(bytes.try_into()
+					.map_err(|_| anyhow::anyhow!(
+						"Invalid commitment length. Expected 32 bytes (64 hex characters), got {} bytes ({} hex characters)",
+						bytes_len,
+						bytes_len * 2
+					))?)
+			))
+		} else if let Some(preimage) = &args.preimage_string {
+			// Hash preimage to get commitment
+			let mut hasher = Keccak256::new();
+			hasher.update(preimage.as_bytes());
+			let result = hasher.finalize();
+			Ok(SuperBlockCommitment::new(
+				0, // height
+				Id::new([0; 32]), // block id
+				Commitment::new(result.into()),
+			))
+		} else {
+			unreachable!("clap ensures one option is present")
+		}
+	}
 }
 
+/// Get the config for the PCP client.
 fn get_config() -> Result<Config, anyhow::Error> {
 	let config = Config::new(
 		"0x1234567890123456789012345678901234567890".to_string(),  // PCP contract address
