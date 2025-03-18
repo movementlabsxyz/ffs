@@ -1,8 +1,8 @@
 use crate::{CommitmentEventStream, McrSettlementManagerOperations, SuperBlockCommitmentEvent};
 
-use post_confirmations_config::Config;
-use post_confirmations_settlement_client::McrSettlementClientOperations;
-use post_confirmations_types::block_commitment::{
+use postconfirmations_config::Config;
+use postconfirmations_settlement_client::McrSettlementClientOperations;
+use postconfirmations_types::block_commitment::{
 	SuperBlockCommitment, SuperBlockCommitmentRejectionReason,
 };
 
@@ -148,8 +148,8 @@ fn process_commitments<C: McrSettlementClientOperations + Send + 'static>(
 #[cfg(test)]
 mod tests {
 	use super::*;
-	use post_confirmations_settlement_client::mock::McrSettlementClient;
-	use post_confirmations_types::block_commitment::{Commitment, SuperBlockCommitment};
+	use postconfirmations_settlement_client::mock::McrSettlementClient;
+	use postconfirmations_types::block_commitment::{Commitment, SuperBlockCommitment};
 
 	#[tokio::test]
 	async fn test_block_commitment_accepted() -> Result<(), anyhow::Error> {

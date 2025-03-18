@@ -4,7 +4,7 @@ use secure_signer_loader::identifiers::{local::Local, SignerIdentifier};
 use serde::{Deserialize, Serialize};
 use std::env;
 
-const DEFAULT_post_confirmations_CONTRACT_ADDRESS: &str = "0x5fc8d32690cc91d4c39d9d3abcbd16989f875707";
+const DEFAULT_postconfirmations_CONTRACT_ADDRESS: &str = "0x5fc8d32690cc91d4c39d9d3abcbd16989f875707";
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Config {
@@ -12,8 +12,8 @@ pub struct Config {
 	pub should_settle: bool,
 	#[serde(default = "default_signer_identifier")]
 	pub signer_identifier: SignerIdentifier,
-	#[serde(default = "default_post_confirmations_contract_address")]
-	pub post_confirmations_contract_address: String,
+	#[serde(default = "default_postconfirmations_contract_address")]
+	pub postconfirmations_contract_address: String,
 	#[serde(default = "default_settlement_super_block_size")]
 	pub settlement_super_block_size: u64,
 	#[serde(default = "default_settlement_admin_mode")]
@@ -28,15 +28,15 @@ pub fn default_signer_identifier() -> SignerIdentifier {
 }
 
 env_default!(
-	default_post_confirmations_contract_address,
-	"post_confirmations_CONTRACT_ADDRESS",
+	default_postconfirmations_contract_address,
+	"postconfirmations_CONTRACT_ADDRESS",
 	String,
-	DEFAULT_post_confirmations_CONTRACT_ADDRESS.to_string()
+	DEFAULT_postconfirmations_CONTRACT_ADDRESS.to_string()
 );
 
-env_default!(default_settlement_admin_mode, "post_confirmations_SETTLEMENT_ADMIN_MODE", bool, false);
+env_default!(default_settlement_admin_mode, "postconfirmations_SETTLEMENT_ADMIN_MODE", bool, false);
 
-env_default!(default_settlement_super_block_size, "post_confirmations_SETTLEMENT_SUPER_BLOCK_SIZE", u64, 1);
+env_default!(default_settlement_super_block_size, "postconfirmations_SETTLEMENT_SUPER_BLOCK_SIZE", u64, 1);
 
 pub fn default_should_settle() -> bool {
 	env::var("ETH_SIGNER_PRIVATE_KEY").is_ok()
@@ -47,7 +47,7 @@ impl Default for Config {
 		Config {
 			should_settle: default_should_settle(),
 			signer_identifier: default_signer_identifier(),
-			post_confirmations_contract_address: default_post_confirmations_contract_address(),
+			postconfirmations_contract_address: default_postconfirmations_contract_address(),
 			settlement_admin_mode: default_settlement_admin_mode(),
 			settlement_super_block_size: default_settlement_super_block_size(),
 		}

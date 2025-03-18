@@ -1,4 +1,4 @@
-use post_confirmations_types::block_commitment::{SuperBlockCommitment, SuperBlockCommitmentEvent};
+use postconfirmations_types::block_commitment::{SuperBlockCommitment, SuperBlockCommitmentEvent};
 use tokio_stream::Stream;
 
 mod manager;

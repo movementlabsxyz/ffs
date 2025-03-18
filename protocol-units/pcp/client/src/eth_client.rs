@@ -20,8 +20,8 @@ use alloy_sol_types::sol;
 use alloy_transport::BoxTransport;
 use alloy_transport_ws::WsConnect;
 use anyhow::Context;
-use post_confirmations_config::Config;
-use post_confirmations_types::block_commitment::{Commitment, Id, SuperBlockCommitment};
+use postconfirmations_config::Config;
+use postconfirmations_types::block_commitment::{Commitment, Id, SuperBlockCommitment};
 use secure_signer::cryptography::secp256k1::Secp256k1;
 use secure_signer_loader::Load;
 use secure_signing_eth::HsmSigner;
@@ -113,7 +113,7 @@ impl
 		info!("Signer address: {}", signer_address);
 		let contract_address = config
 			.settle
-			.post_confirmations_contract_address
+			.postconfirmations_contract_address
 			.parse()
 			.context("Failed to parse the contract address for the MCR settlement client")?;
 		let rpc_url = config.eth_rpc_connection_url();

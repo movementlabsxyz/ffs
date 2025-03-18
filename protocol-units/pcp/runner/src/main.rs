@@ -1,6 +1,6 @@
 use ffs_environment::{backend::config_file::ConfigFile, ffs_environment};
-use post_confirmations_config::Config;
-use post_confirmations_settlement_setup::Setup;
+use postconfirmations_config::Config;
+use postconfirmations_settlement_setup::Setup;
 
 #[tokio::main]
 async fn main() -> Result<(), anyhow::Error> {
@@ -19,7 +19,7 @@ async fn main() -> Result<(), anyhow::Error> {
 	// get a matching ffs_environment object
 	let ffs_environment: ffs_environment<Config, ConfigFile> = ffs_environment::new(
 		ConfigFile::new(config_file),
-		vec!["post_confirmations_settlement".to_string()],
+		vec!["postconfirmations_settlement".to_string()],
 	);
 
 	// Apply all of the setup steps

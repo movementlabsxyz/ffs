@@ -1,14 +1,20 @@
 # ffs
 
-Movement Labs' Fast Finality Settlement is a proof of stake settlement system.
+Movement Labs' Fast Finality Settlement is a Proof-of-Stake (PoS) settlement system.
 
-## Protocol Units
+The directory is structured as follows.
 
-**Postconfirmation protocol (PCP)**
-See [postconfirmation/README.md](protocol-units/postconfirmation/README.md).
+- [Node](./node/README.md)
+is an independent service which is prepared to manage a fast-finality settlement connection for a given user.
 
-**Multi-Commit Rollup (MCR)**
-See [mcr/README.md](protocol-units/mcr/README.md).
+- [Protocol-units](./protocol-units/README.md)
+are used to collect runnable and composable units for interacting with the `ffs` protocol. We store contracts within protocol units, for example.
 
-**Fastconfirmation protocol (FCP)**
-See [fcp/README.md](protocol-units/fcp/README.md).
+- [FFS SDK](./sdk/README.md)
+is a set of tools for building FFS services. It is generally the entrypoint for researching and building with FFS.
+
+- [Spec](./spec/README.md)
+contains formalizations of the FFS protocol and its components.
+
+- [Util](./util/README.md)
+collects miscellaneous software utilities maintained by the FFS team.

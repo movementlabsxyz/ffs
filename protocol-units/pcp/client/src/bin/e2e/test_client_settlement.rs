@@ -5,11 +5,11 @@ use alloy_primitives::Address;
 use alloy_primitives::U256;
 use anyhow::Context;
 use ffs_environment::{backend::config_file::ConfigFile, ffs_environment};
-use post_confirmations_settlement_client::eth_client::Client;
-use post_confirmations_settlement_client::eth_client::{MOVEToken, MovementStaking, MCR};
-use post_confirmations_settlement_client::McrSettlementClientOperations;
-use post_confirmations_config::Config;
-use post_confirmations_types::block_commitment::{BlockCommitment, Commitment, Id};
+use postconfirmations_settlement_client::eth_client::Client;
+use postconfirmations_settlement_client::eth_client::{MOVEToken, MovementStaking, MCR};
+use postconfirmations_settlement_client::McrSettlementClientOperations;
+use postconfirmations_config::Config;
+use postconfirmations_types::block_commitment::{BlockCommitment, Commitment, Id};
 use std::str::FromStr;
 use tokio_stream::StreamExt;
 use tracing::info;
@@ -20,7 +20,7 @@ async fn run_genesis_ceremony(
 	rpc_url: &str,
 	move_token_address: Address,
 	staking_address: Address,
-	post_confirmations_address: Address,
+	postconfirmations_address: Address,
 ) -> Result<(), anyhow::Error> {
 	// Build alice client for MOVEToken, MCR, and staking
 	info!("Creating alice client");
@@ -68,7 +68,7 @@ async fn run_genesis_ceremony(
 		.on_builtin(&rpc_url)
 		.await?;
 	let governor_token = MOVEToken::new(move_token_address, &governor_rpc_provider);
-	let governor_mcr = MCR::new(post_confirmations_address, &governor_rpc_provider);
+	let governor_mcr = MCR::new(postconfirmations_address, &governor_rpc_provider);
 	let governor_staking = MovementStaking::new(staking_address, &governor_rpc_provider);
 
 	// Allow Alice and Bod to stake by adding to white list.
@@ -140,7 +140,7 @@ async fn run_genesis_ceremony(
 		.await
 		.context("Alice failed to approve MCR")?;
 	info!("Alice move approve");
-	let callbuilder = alice_staking.stake(post_confirmations_address, move_token_address, U256::from(100));
+	let callbuilder = alice_staking.stake(postconfirmations_address, move_token_address, U256::from(100));
 	let rc = callbuilder.send().await;
 	match rc {
 		Ok(rc) => {
@@ -179,7 +179,7 @@ async fn run_genesis_ceremony(
 		.context("Bob failed to approve MCR")?;
 	info!("Bob move approve");
 	bob_staking
-		.stake(post_confirmations_address, move_token_address, U256::from(100))
+		.stake(postconfirmations_address, move_token_address, U256::from(100))
 		.send()
 		.await?
 		.watch()
@@ -188,7 +188,7 @@ async fn run_genesis_ceremony(
 	info!("Bob move staking");
 
 	// let domain_time = governor_staking
-	// .epochDurationByDomain(post_confirmations_address.clone())
+	// .epochDurationByDomain(postconfirmations_address.clone())
 	// .call()
 	// .await.context("Failed to get domain registration time")?;
 	// info!("Domain registration time in MCR {:?}", domain_time);
@@ -221,25 +221,25 @@ pub async fn main() -> Result<(), anyhow::Error> {
 
 	// get a matching ffs_environment object
 	let ffs_environment: ffs_environment<Config, ConfigFile> =
-		ffs_environment::new(ConfigFile::new(config_file), vec!["post_confirmations_settlement".to_string()]);
+		ffs_environment::new(ConfigFile::new(config_file), vec!["postconfirmations_settlement".to_string()]);
 	let config: Config = ffs_environment.try_wait_for_ready().await?;
 	let rpc_url = config.eth_rpc_connection_url();
 
 	let testing_config = config.testing.as_ref().context("Testing config not defined.")?;
 	run_genesis_ceremony(
 		&config,
-		PrivateKeySigner::from_str(&testing_config.post_confirmations_testing_admin_account_private_key)?,
+		PrivateKeySigner::from_str(&testing_config.postconfirmations_testing_admin_account_private_key)?,
 		&rpc_url,
 		Address::from_str(&testing_config.move_token_contract_address)?,
 		Address::from_str(&testing_config.movement_staking_contract_address)?,
-		Address::from_str(&config.settle.post_confirmations_contract_address)?,
+		Address::from_str(&config.settle.postconfirmations_contract_address)?,
 	)
 	.await?;
 
 	// Build client 1 and send the first commitment.
 	//let settlement_config =
 	let config1 = Config {
-		settle: post_confirmations_config::common::settlement::Config {
+		settle: postconfirmations_config::common::settlement::Config {
 			signer_private_key: testing_config
 				.well_known_account_private_keys
 				.get(1)
@@ -265,7 +265,7 @@ pub async fn main() -> Result<(), anyhow::Error> {
 
 	// Build client 2 and send the second commitment.
 	let config2 = Config {
-		settle: post_confirmations_config::common::settlement::Config {
+		settle: postconfirmations_config::common::settlement::Config {
 			signer_private_key: testing_config
 				.well_known_account_private_keys
 				.get(2)

@@ -1,2 +1,2 @@
-# Post-confirmations
-Post-confirmations were originally proposed in [MIP-37](https://github.com/movementlabsxyz/MIP/pull/37) as a sub-protocol of FFS, [MIP-34](https://github.com/movementlabsxyz/MIP/pull/34). It is a protocol for committing on the "base-chain" in a side-chain system. 
+# Postconfirmations
+Postconfirmations were originally proposed in [MIP-37](https://github.com/movementlabsxyz/MIP/pull/37) as a sub-protocol of FFS, [MIP-34](https://github.com/movementlabsxyz/MIP/pull/34). It is a protocol for committing on the "base-chain" in a side-chain system. 

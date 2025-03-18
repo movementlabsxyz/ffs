@@ -7,7 +7,7 @@ members = [
   "protocol-units/mcr/clients/*",
   "protocol-units/mcr/client",
   "protocol-units/mcr/manager",
-  "protocol-units/post-confirmations/*",
+  "protocol-units/pcp/*",
   "protocol-units/fast-confirmations/*",
   "protocol-units/ffs/*",
   "util/signing/eth",

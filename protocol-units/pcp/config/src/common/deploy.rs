@@ -6,30 +6,30 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Config {
-	#[serde(default = "post_confirmations_deployment_working_directory")]
-	pub post_confirmations_deployment_working_directory: String,
+	#[serde(default = "postconfirmations_deployment_working_directory")]
+	pub postconfirmations_deployment_working_directory: String,
 	#[serde(default = "default_signer_identifier")]
 	pub signer_identifier: SignerIdentifier,
 }
 
 env_short_default!(
-	post_confirmations_deployment_working_directory,
+	postconfirmations_deployment_working_directory,
 	String,
 	"protocol-units/settlement/mcr/contracts"
 );
 
 env_short_default!(
-	post_confirmations_local_anvil_account_private_key,
+	postconfirmations_local_anvil_account_private_key,
 	String,
 	PrivateKeySigner::random().to_bytes().to_string()
 );
 
 pub fn default_signer_identifier() -> SignerIdentifier {
-	match std::env::var("post_confirmations_SIGNER_IDENTIFIER") {
+	match std::env::var("postconfirmations_SIGNER_IDENTIFIER") {
 		Ok(str_value) => SignerIdentifier::try_from_canonical_string(&str_value).unwrap(),
 		Err(_) => SignerIdentifier::Local(Local {
 			// todo: validate this is a valid private key
-			private_key_hex_bytes: post_confirmations_local_anvil_account_private_key(),
+			private_key_hex_bytes: postconfirmations_local_anvil_account_private_key(),
 		}),
 	}
 }
@@ -53,7 +53,7 @@ pub fn maybe_deploy() -> Option<Config> {
 impl Default for Config {
 	fn default() -> Self {
 		Config {
-			post_confirmations_deployment_working_directory: post_confirmations_deployment_working_directory(),
+			postconfirmations_deployment_working_directory: postconfirmations_deployment_working_directory(),
 			signer_identifier: default_signer_identifier(),
 		}
 	}

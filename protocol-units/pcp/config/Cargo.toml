@@ -1,5 +1,5 @@
 [package]
-name = "post-confirmationsconfig"
+name = "postconfirmationsconfig"
 description = "Configuration of the MCR settlement client"
 version.workspace = true
 edition.workspace = true

@@ -1,6 +1,6 @@
 use crate::{CommitmentStream, McrSettlementClientOperations};
-use post_confirmations_config::Config;
-use post_confirmations_types::block_commitment::SuperBlockCommitment;
+use postconfirmations_config::Config;
+use postconfirmations_types::block_commitment::SuperBlockCommitment;
 use std::collections::BTreeMap;
 use std::sync::{Arc, Mutex};
 use tokio::sync::{mpsc, RwLock};
@@ -153,7 +153,7 @@ impl McrSettlementClientOperations for McrSettlementClient {
 pub mod test {
 
 	use super::*;
-	use post_confirmations_types::block_commitment::Commitment;
+	use postconfirmations_types::block_commitment::Commitment;
 
 	use futures::future;
 	use tokio::select;
