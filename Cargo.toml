@@ -141,6 +141,9 @@ ffs-environment = { path = "util/environment" }
 dot-movement = { git = "https://github.com/movementlabsxyz/movement.git", branch = "main" }
 movement-types = { git = "https://github.com/movementlabsxyz/movement.git", branch = "main" }
 
+hex = "0.4"
+sha3 = "0.10"
+
 [workspace.lints.clippy]
 debug_assert_with_mut_call = "deny"
 inefficient_to_string = "deny"
