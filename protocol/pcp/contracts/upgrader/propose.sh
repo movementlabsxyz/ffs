@@ -56,7 +56,7 @@ chain_id_hex=$(echo $response | jq -r '.result')
 # Convert the hex chain ID to decimal
 chain_id_dec=$(printf "%d\n" $chain_id_hex)
 
-if $contract == "MCR" then
+if $contract == "PCP" then
   path="settlement"
 else if $contract == "MovementStaking" then
   path="staking"

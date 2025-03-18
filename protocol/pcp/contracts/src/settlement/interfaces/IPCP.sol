@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.13;
 
-import {MCRStorage} from "../MCRStorage.sol";
+import {PCPStorage} from "../PCPStorage.sol";
 
-interface IMCR {
+interface IPCP {
 
     event SuperBlockPostconfirmed(
         bytes32 indexed blockHash,
@@ -28,7 +28,7 @@ interface IMCR {
     function getPostconfirmer() external view returns (address);
 
     /// @notice submit a superblock commitment
-    function submitSuperBlockCommitment(MCRStorage.SuperBlockCommitment memory commitment) external;
+    function submitSuperBlockCommitment(PCPStorage.SuperBlockCommitment memory commitment) external;
 
     /// @notice get the last postconfirmed superblock height
     function getLastPostconfirmedSuperBlockHeight() external view returns (uint256);
@@ -40,7 +40,7 @@ interface IMCR {
     function getPresentEpoch() external view returns (uint256);
 
     /// @notice get the postconfirmed commitment for a given height
-    function getPostconfirmedCommitment(uint256 height) external view returns (MCRStorage.SuperBlockCommitment memory);
+    function getPostconfirmedCommitment(uint256 height) external view returns (PCPStorage.SuperBlockCommitment memory);
 
     /// @notice postconfirm superblocks and rollover
     function postconfirmSuperBlocksAndRollover() external;

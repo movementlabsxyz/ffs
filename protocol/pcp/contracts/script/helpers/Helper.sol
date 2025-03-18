@@ -22,11 +22,11 @@ contract Helper is Script {
     TransparentUpgradeableProxy public moveProxy;
     TransparentUpgradeableProxy public stlMoveProxy;
     TransparentUpgradeableProxy public stakingProxy;
-    TransparentUpgradeableProxy public mcrProxy;
+    TransparentUpgradeableProxy public pcpProxy;
     TimelockController public timelock;
     // CREATE3 exists across all major chains, we only enforce it on the same address if not deployed yet
     CREATE3Factory public create3 = CREATE3Factory(0x2Dfcc7415D89af828cbef005F0d072D8b3F23183);
-    string public mcrSignature = "initialize(address,uint256,uint256,uint256,address[])";
+    string public pcpSignature = "initialize(address,uint256,uint256,uint256,address[])";
     string public stakingSignature = "initialize(address)";
     string public stlMoveSignature = "initialize(string,string,address)";
     string public moveSignature = "initialize(address,address)";
@@ -56,8 +56,8 @@ contract Helper is Script {
     Deployment public deployment;
 
     struct Deployment {
-        address mcr;
-        address mcrAdmin;
+        address pcp;
+        address pcpAdmin;
         address move;
         address moveAdmin;
         address movementAnchorage;
@@ -260,8 +260,8 @@ contract Helper is Script {
     }
 
     function _serializer(string memory json, Deployment memory memoryDeployment) internal returns (string memory) {
-        json.serialize("mcr", memoryDeployment.mcr);
-        json.serialize("mcrAdmin", memoryDeployment.mcrAdmin);
+        json.serialize("pcp", memoryDeployment.pcp);
+        json.serialize("pcpAdmin", memoryDeployment.pcpAdmin);
         json.serialize("move", memoryDeployment.move);
         json.serialize("moveAdmin", memoryDeployment.moveAdmin);
         json.serialize("movementAnchorage", memoryDeployment.movementAnchorage);

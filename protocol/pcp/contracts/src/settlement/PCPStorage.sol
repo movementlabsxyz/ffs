@@ -3,7 +3,7 @@ pragma solidity ^0.8.13;
 import {EnumerableSet} from "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
 import {MovementStaking, IMovementStaking} from "../staking/MovementStaking.sol";
 
-contract MCRStorage {
+contract PCPStorage {
 
     IMovementStaking public stakingContract;
 

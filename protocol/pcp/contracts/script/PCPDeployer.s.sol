@@ -1,12 +1,12 @@
 pragma solidity ^0.8.13;
 
 import "forge-std/Script.sol";
-import {MCR} from "../src/settlement/MCR.sol";
+import {PCP} from "../src/settlement/PCP.sol";
 import {TransparentUpgradeableProxy} from "@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol";
 import {TimelockController} from "@openzeppelin/contracts/governance/TimelockController.sol";
 import { Helper } from "./helpers/Helper.sol";
 
-contract MCRDeployer is Helper {
+contract PCPDeployer is Helper {
 
     function run() external virtual {
         
@@ -19,9 +19,9 @@ contract MCRDeployer is Helper {
         // Deploy CREATE3Factory, Safes and Timelock if not deployed
         _deployDependencies();
 
-        deployment.mcrAdmin == ZERO && deployment.mcr == ZERO && deployment.move != ZERO && deployment.staking != ZERO ?
-            _deployMCR() : deployment.mcrAdmin != ZERO && deployment.mcr != ZERO ?
-                _upgradeMCR() : revert("MCR: both admin and proxy should be registered");
+        deployment.pcpAdmin == ZERO && deployment.pcp == ZERO && deployment.move != ZERO && deployment.staking != ZERO ?
+            _deployPCP() : deployment.pcpAdmin != ZERO && deployment.pcp != ZERO ?
+                _upgradePCP() : revert("PCP: both admin and proxy should be registered");
 
         vm.stopBroadcast();
 
@@ -34,15 +34,15 @@ contract MCRDeployer is Helper {
     // •☽────✧˖°˖DANGER ZONE˖°˖✧────☾•
 // Modifications to the following functions have to be throughly tested
 
-    function _deployMCR() internal {
-        console.log("MCR: deploying");
-        MCR mcrImplementation = new MCR();
+    function _deployPCP() internal {
+        console.log("PCP: deploying");
+        PCP pcpImplementation = new PCP();
         vm.recordLogs();
-        mcrProxy = new TransparentUpgradeableProxy(
-            address(mcrImplementation),
+        pcpProxy = new TransparentUpgradeableProxy(
+            address(pcpImplementation),
             address(timelock),
             abi.encodeWithSignature(
-                mcrSignature,
+                pcpSignature,
                 address(stakingProxy),
                 128,
                 100 ether,
@@ -50,31 +50,31 @@ contract MCRDeployer is Helper {
                 config.signersLabs
             )
         );
-        console.log("MCR deployment records:");
-        console.log("proxy", address(mcrProxy));
-        deployment.mcr = address(mcrProxy);
-        deployment.mcrAdmin = _storeAdminDeployment();
+        console.log("PCP deployment records:");
+        console.log("proxy", address(pcpProxy));
+        deployment.pcp = address(pcpProxy);
+        deployment.pcpAdmin = _storeAdminDeployment();
     }
 
-    function _upgradeMCR() internal {
-        console.log("MCR: upgrading");
-        MCR newMCRImplementation = new MCR();
-        _checkBytecodeDifference(address(newMCRImplementation), deployment.mcr);
+    function _upgradePCP() internal {
+        console.log("PCP: upgrading");
+        PCP newPCPImplementation = new PCP();
+        _checkBytecodeDifference(address(newPCPImplementation), deployment.pcp);
         bytes memory data = abi.encodeWithSignature(
             "schedule(address,uint256,bytes,bytes32,bytes32,uint256)",
-            address(deployment.mcrAdmin),
+            address(deployment.pcpAdmin),
             0,
             abi.encodeWithSignature(
                 "upgradeAndCall(address,address,bytes)",
-                address(mcrProxy),
-                address(newMCRImplementation),
+                address(pcpProxy),
+                address(newPCPImplementation),
                 ""
             ),
             bytes32(0),
             bytes32(0),
             config.minDelay
         );
-        _proposeUpgrade(data, "mcr.json");
+        _proposeUpgrade(data, "pcp.json");
     }
 
 }

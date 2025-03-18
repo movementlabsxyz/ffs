@@ -4,7 +4,7 @@ import * as path from 'path';
 
 async function main() {
   try {
-    console.log("Starting MCR Dev deployment...");
+    console.log("Starting PCP Dev deployment...");
     const [deployer] = await ethers.getSigners();
     console.log("Deploying contracts with account:", deployer.address);
 
@@ -12,7 +12,7 @@ async function main() {
       ProxyAdmin: "",
       MoveToken: { implementation: "", proxy: "" },
       MovementStaking: { implementation: "", proxy: "" },
-      MCR: { implementation: "", proxy: "" }
+      PCP: { implementation: "", proxy: "" }
     };
 
     // Deploy ProxyAdmin
@@ -32,7 +32,7 @@ async function main() {
 
     // Deploy other implementations
     const MovementStaking = await ethers.getContractFactory("MovementStaking");
-    const MCR = await ethers.getContractFactory("MCR");
+    const PCP = await ethers.getContractFactory("PCP");
     const TransparentProxy = await ethers.getContractFactory("TransparentUpgradeableProxy");
 
     const stakingImpl = await MovementStaking.deploy();
@@ -40,10 +40,10 @@ async function main() {
     console.log("Deployed MovementStaking implementation at:", await stakingImpl.getAddress());
     deployments.MovementStaking.implementation = await stakingImpl.getAddress();
 
-    const mcrImpl = await MCR.deploy();
-    await mcrImpl.waitForDeployment();
-    console.log("Deployed MCR implementation at:", await mcrImpl.getAddress());
-    deployments.MCR.implementation = await mcrImpl.getAddress();
+    const pcpImpl = await PCP.deploy();
+    await pcpImpl.waitForDeployment();
+    console.log("Deployed PCP implementation at:", await pcpImpl.getAddress());
+    deployments.PCP.implementation = await pcpImpl.getAddress();
 
     // Prepare MOVE token proxy deployment
     console.log("Preparing MOVE token proxy deployment...");
@@ -82,12 +82,12 @@ async function main() {
     console.log("Deployed staking proxy at:", await stakingProxy.getAddress());
     deployments.MovementStaking.proxy = await stakingProxy.getAddress();
 
-    // Deploy MCR proxy
-    console.log("Deploying MCR proxy...");
+    // Deploy PCP proxy
+    console.log("Deploying PCP proxy...");
     const custodians = [await moveTokenProxy.getAddress()];
     console.log("Custodian Address:", custodians[0]); // Debugging output
 
-    const mcrData = MCR.interface.encodeFunctionData(
+    const pcpData = PCP.interface.encodeFunctionData(
       "initialize(address,uint256,uint256,uint256,address[],uint256,address)",
       [
       await stakingProxy.getAddress(),  // stakingContract
@@ -100,38 +100,38 @@ async function main() {
       ]
     );
 
-    const mcrProxy = await TransparentProxy.deploy(
-      await mcrImpl.getAddress(),
+    const pcpProxy = await TransparentProxy.deploy(
+      await pcpImpl.getAddress(),
       await proxyAdmin.getAddress(),
-      mcrData
+      pcpData
     );
-    await mcrProxy.waitForDeployment();
-    console.log("Deployed MCR proxy at:", await mcrProxy.getAddress());
-    deployments.MCR.proxy = await mcrProxy.getAddress();
+    await pcpProxy.waitForDeployment();
+    console.log("Deployed PCP proxy at:", await pcpProxy.getAddress());
+    deployments.PCP.proxy = await pcpProxy.getAddress();
 
     // Set up roles and initial token distribution
     console.log("Setting up roles and minting initial tokens...");
     const moveToken = MoveToken.attach(await moveTokenProxy.getAddress());
-    const mcr = MCR.attach(await mcrProxy.getAddress());
+    const pcp = PCP.attach(await pcpProxy.getAddress());
 
     // Mint initial tokens and set up roles
     await moveToken.mint(deployer.address, ethers.parseEther("100000"));
     await moveToken.grantMinterRole(deployer.address);
     await moveToken.grantMinterRole(await stakingProxy.getAddress());
-    await mcr.grantCommitmentAdmin(deployer.address);
+    await pcp.grantCommitmentAdmin(deployer.address);
 
     // Log deployment addresses and configuration
     console.log("\n=== Deployment Complete ===");
     console.log("MOVE Token Proxy:", await moveTokenProxy.getAddress());
     console.log("Staking Proxy:", await stakingProxy.getAddress());
-    console.log("MCR Proxy:", await mcrProxy.getAddress());
+    console.log("PCP Proxy:", await pcpProxy.getAddress());
 
     // Verify deployment
     const deployerBalance = await moveToken.balanceOf(deployer.address);
     console.log("\n=== Verification ===");
     console.log("Deployer MOVE Balance:", ethers.formatEther(deployerBalance));
-    console.log("Epoch Duration:", await mcr.getEpochDuration());
-    console.log("Postconfirmer Duration:", await mcr.getPostconfirmerDuration());
+    console.log("Epoch Duration:", await pcp.getEpochDuration());
+    console.log("Postconfirmer Duration:", await pcp.getPostconfirmerDuration());
 
     // Save deployments
     const deploymentsPath = path.join(__dirname, '../deployments/local.json');

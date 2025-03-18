@@ -9,7 +9,7 @@ pub mod mock;
 pub mod eth_client;
 
 #[cfg(feature = "eth")]
-pub use eth_client::McrSettlementClient;
+pub use eth_client::PcpSettlementClient;
 
 pub mod send_eth_transaction;
 
@@ -17,7 +17,7 @@ type CommitmentStream =
 	std::pin::Pin<Box<dyn Stream<Item = Result<SuperBlockCommitment, anyhow::Error>> + Send>>;
 
 #[async_trait::async_trait]
-pub trait McrSettlementClientOperations {
+pub trait PcpSettlementClientOperations {
 	/// Posts a block commitment to the settlement client.
 	async fn post_block_commitment(
 		&self,

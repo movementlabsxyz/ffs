@@ -31,7 +31,7 @@ env_short_default!(default_movement_staking_contract_address, String, "0x0");
 // );
 
 pub fn maybe_testing() -> Option<Config> {
-	std::env::var("MAYBE_TESTING_MCR").ok().map(|_| Config::default())
+	std::env::var("MAYBE_TESTING_PCP").ok().map(|_| Config::default())
 }
 
 impl Default for Config {

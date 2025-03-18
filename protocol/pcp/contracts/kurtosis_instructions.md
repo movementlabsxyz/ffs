@@ -1,6 +1,6 @@
-# Testing the MCR Contract with Kurtosis
+# Testing the PCP Contract with Kurtosis
 
-This guide provides step-by-step instructions for setting up and testing the MCR contract using Kurtosis.
+This guide provides step-by-step instructions for setting up and testing the PCP contract using Kurtosis.
 
 ## 1. Prerequisites
 - [Docker](https://docs.docker.com/get-docker/)
@@ -24,7 +24,7 @@ docker image ls
 ### 2.2 Install Development Dependencies
 ```sh
 # Initialize Foundry
-cd mcr/contracts
+cd pcp/contracts
 forge init --force --no-git
 
 # Install dependencies
@@ -147,7 +147,7 @@ npx hardhat run scripts/test-deployment.ts --network localnet
 **Setup**
 First, ensure Foundry is initialized. You may have to run the following.
 ```sh
-cd mcr/contracts
+cd protocol/pcp/contracts
 forge init --force --no-git
 ```
 
@@ -155,6 +155,12 @@ Then install dependencies using the provided script:
 ```sh
 chmod +x script/install-deps.sh
 ./script/install-deps.sh
+```
+
+It may be that this causes an error and requires some dependencies to be installed manually. (Remove this comment once this is resolved). Such as:
+```sh
+forge install safe-global/safe-smart-account --no-commit
+forge install transmissions11/solmate --no-commit
 ```
 
 Install npm dependencies using the provided package.json:
@@ -170,7 +176,7 @@ The following files are required for deployment and need to be updated when depl
 
 **Deployment**
 ```sh
-forge script script/DeployMCRDev.s.sol:DeployMCRDev \
+forge script script/DeployPCPDev.s.sol:DeployPCPDev \
   --rpc-url http://127.0.0.1:<RPC_PORT> \
   --private-key <PREFUNDED_PRIVATE_KEY> \
   --broadcast
@@ -179,8 +185,8 @@ forge script script/DeployMCRDev.s.sol:DeployMCRDev \
 Run the automated verification script:
 
 ```sh
-chmod +x script/verify-mcr.sh
-./script/verify-mcr.sh
+chmod +x script/verify-pcp.sh
+./script/verify-pcp.sh
 ```
 
 #### 4.3 Option C: Production Deployment (with `forge`)
@@ -189,8 +195,8 @@ Production-like Deployment (Optional, requires Safe contracts):
 
 ```sh
 # Only attempt this after testing with the development deployment
-# This deploys MCR using previously deployed Safe contracts
-forge script script/DeployMCR.s.sol:DeployMCR \
+# This deploys PCP using previously deployed Safe contracts
+forge script script/DeployPCP.s.sol:DeployPCP \
   --rpc-url http://127.0.0.1:<YOUR_RPC_PORT> \
   --private-key <PREFUNDED_PRIVATE_KEY> \
   --broadcast
@@ -200,23 +206,23 @@ forge script script/DeployMCR.s.sol:DeployMCR \
 
 ### 5.1 Deploy Safe Contracts
 
-The MCR deployment requires Safe contracts for governance. Deploy them using the provided script:
+The PCP deployment requires Safe contracts for governance. Deploy them using the provided script:
 
 ```sh
-cd mcr/contracts
+cd pcp/contracts
 chmod +x script/deploy-safe.sh
 ./script/deploy-safe.sh http://127.0.0.1:<RPC_PORT> <PREFUNDED_PRIVATE_KEY>
 ```
 
 This will deploy all required Safe contracts and save their addresses to `script/helpers/safe-deployments.json`.
 
-Note: Keep track of the deployed addresses as they'll be needed for the MCR deployment.
+Note: Keep track of the deployed addresses as they'll be needed for the PCP deployment.
 
 ### 5.2 Verify Deployment
 
 ```sh
-chmod +x script/verify-mcr.sh
-./script/verify-mcr.sh
+chmod +x script/verify-pcp.sh
+./script/verify-pcp.sh
 ```
 
 ## 5. Advanced Configuration (Optional)

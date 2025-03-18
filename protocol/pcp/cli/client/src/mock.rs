@@ -1,4 +1,4 @@
-use crate::{CommitmentStream, McrSettlementClientOperations};
+use crate::{CommitmentStream, PcpSettlementClientOperations};
 use postconfirmations_config::Config;
 use postconfirmations_types::block_commitment::SuperBlockCommitment;
 use std::collections::BTreeMap;
@@ -8,7 +8,7 @@ use tokio_stream::wrappers::ReceiverStream;
 use tracing::info;
 
 #[derive(Clone)]
-pub struct McrSettlementClient {
+pub struct PcpSettlementClient {
 	commitments: Arc<RwLock<BTreeMap<u64, SuperBlockCommitment>>>,
 	stream_sender: mpsc::Sender<Result<SuperBlockCommitment, anyhow::Error>>,
 	stream_receiver: Arc<Mutex<Option<mpsc::Receiver<Result<SuperBlockCommitment, anyhow::Error>>>>>,
@@ -17,10 +17,10 @@ pub struct McrSettlementClient {
 	paused_at_height: Arc<RwLock<Option<u64>>>,
 }
 
-impl McrSettlementClient {
+impl PcpSettlementClient {
 	pub fn new() -> Self {
 		let (stream_sender, receiver) = mpsc::channel(10);
-		McrSettlementClient {
+		PcpSettlementClient {
 			commitments: Arc::new(RwLock::new(BTreeMap::new())),
 			stream_sender,
 			stream_receiver: Arc::new(Mutex::new(Some(receiver))),
@@ -38,7 +38,7 @@ impl McrSettlementClient {
 	/// Overrides the commitment to settle on at given height.
 	///
 	/// To have effect, this method needs to be called before a commitment is
-	/// posted for this height with the `McrSettlementClientOperations` API.
+	/// posted for this height with the `PcpSettlementClientOperations` API.
 	pub async fn override_block_commitment(&self, commitment: SuperBlockCommitment) {
 		let mut commitments = self.commitments.write().await;
 		commitments.insert(commitment.height(), commitment);
@@ -71,7 +71,7 @@ impl McrSettlementClient {
 }
 
 #[async_trait::async_trait]
-impl McrSettlementClientOperations for McrSettlementClient {
+impl PcpSettlementClientOperations for PcpSettlementClient {
 	async fn post_block_commitment(
 		&self,
 		block_commitment: SuperBlockCommitment,
@@ -161,7 +161,7 @@ pub mod test {
 
 	#[tokio::test]
 	async fn test_post_block_commitment() -> Result<(), anyhow::Error> {
-		let client = McrSettlementClient::new();
+		let client = PcpSettlementClient::new();
 		let commitment = SuperBlockCommitment::new(1, Default::default(), Commitment::test());
 		client.post_block_commitment(commitment.clone()).await.unwrap();
 		let guard = client.commitments.write().await;
@@ -175,7 +175,7 @@ pub mod test {
 
 	#[tokio::test]
 	async fn test_post_block_commitment_batch() -> Result<(), anyhow::Error> {
-		let client = McrSettlementClient::new();
+		let client = PcpSettlementClient::new();
 		let commitment = SuperBlockCommitment::new(1, Default::default(), Commitment::test());
 		let commitment2 = SuperBlockCommitment::new(1, Default::default(), Commitment::test());
 		client
@@ -190,7 +190,7 @@ pub mod test {
 
 	#[tokio::test]
 	async fn test_stream_block_commitments() -> Result<(), anyhow::Error> {
-		let client = McrSettlementClient::new();
+		let client = PcpSettlementClient::new();
 		let commitment = SuperBlockCommitment::new(1, Default::default(), Commitment::test());
 		client.post_block_commitment(commitment.clone()).await.unwrap();
 		let mut stream = client.stream_block_commitments().await?;
@@ -200,7 +200,7 @@ pub mod test {
 
 	#[tokio::test]
 	async fn test_override_block_commitments() -> Result<(), anyhow::Error> {
-		let client = McrSettlementClient::new();
+		let client = PcpSettlementClient::new();
 		let commitment = SuperBlockCommitment::new(2, Default::default(), Commitment::test());
 		client.override_block_commitment(commitment.clone()).await;
 		client
@@ -214,7 +214,7 @@ pub mod test {
 
 	#[tokio::test]
 	async fn test_pause() -> Result<(), anyhow::Error> {
-		let client = McrSettlementClient::new();
+		let client = PcpSettlementClient::new();
 		let commitment = SuperBlockCommitment::new(2, Default::default(), Commitment::test());
 		client.pause_after(1).await;
 		client.post_block_commitment(commitment.clone()).await?;
@@ -232,7 +232,7 @@ pub mod test {
 
 	#[tokio::test]
 	async fn test_resume() -> Result<(), anyhow::Error> {
-		let client = McrSettlementClient::new();
+		let client = PcpSettlementClient::new();
 		let commitment = SuperBlockCommitment::new(2, Default::default(), Commitment::test());
 		client.pause_after(1).await;
 		client.post_block_commitment(commitment.clone()).await?;

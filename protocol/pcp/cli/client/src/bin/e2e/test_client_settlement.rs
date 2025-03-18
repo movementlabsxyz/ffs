@@ -6,8 +6,8 @@ use alloy_primitives::U256;
 use anyhow::Context;
 use ffs_environment::{backend::config_file::ConfigFile, ffs_environment};
 use postconfirmations_settlement_client::eth_client::Client;
-use postconfirmations_settlement_client::eth_client::{MOVEToken, MovementStaking, MCR};
-use postconfirmations_settlement_client::McrSettlementClientOperations;
+use postconfirmations_settlement_client::eth_client::{MOVEToken, MovementStaking, PCP};
+use postconfirmations_settlement_client::PcpSettlementClientOperations;
 use postconfirmations_config::Config;
 use postconfirmations_types::block_commitment::{BlockCommitment, Commitment, Id};
 use std::str::FromStr;
@@ -22,7 +22,7 @@ async fn run_genesis_ceremony(
 	staking_address: Address,
 	postconfirmations_address: Address,
 ) -> Result<(), anyhow::Error> {
-	// Build alice client for MOVEToken, MCR, and staking
+	// Build alice client for MOVEToken, PCP, and staking
 	info!("Creating alice client");
 	let alice: PrivateKeySigner = config
 		.testing
@@ -41,7 +41,7 @@ async fn run_genesis_ceremony(
 	let alice_staking = MovementStaking::new(staking_address, &alice_rpc_provider);
 	let alice_move_token = MOVEToken::new(move_token_address, &alice_rpc_provider);
 
-	// Build bob client for MOVEToken, MCR, and staking
+	// Build bob client for MOVEToken, PCP, and staking
 	info!("Creating bob client");
 	let bob: PrivateKeySigner = config
 		.testing
@@ -60,7 +60,7 @@ async fn run_genesis_ceremony(
 	let bob_staking = MovementStaking::new(staking_address, &bob_rpc_provider);
 	let bob_move_token = MOVEToken::new(move_token_address, &bob_rpc_provider);
 
-	// Build the MCR client for staking
+	// Build the PCP client for staking
 	info!("Creating governor client");
 	let governor_rpc_provider = ProviderBuilder::new()
 		.with_recommended_fillers()
@@ -68,7 +68,7 @@ async fn run_genesis_ceremony(
 		.on_builtin(&rpc_url)
 		.await?;
 	let governor_token = MOVEToken::new(move_token_address, &governor_rpc_provider);
-	let governor_mcr = MCR::new(postconfirmations_address, &governor_rpc_provider);
+	let governor_pcp = PCP::new(postconfirmations_address, &governor_rpc_provider);
 	let governor_staking = MovementStaking::new(staking_address, &governor_rpc_provider);
 
 	// Allow Alice and Bod to stake by adding to white list.
@@ -87,8 +87,8 @@ async fn run_genesis_ceremony(
 		.await
 		.context("Governor failed to whilelist Bod")?;
 
-	// alice stakes for mcr
-	info!("Alice stakes for MCR");
+	// alice stakes for pcp
+	info!("Alice stakes for PCP");
 	let token_name = governor_token.name().call().await.context("Failed to get token name")?;
 	info!("Token name: {}", token_name._0);
 
@@ -138,13 +138,13 @@ async fn run_genesis_ceremony(
 		.await?
 		.watch()
 		.await
-		.context("Alice failed to approve MCR")?;
+		.context("Alice failed to approve PCP")?;
 	info!("Alice move approve");
 	let callbuilder = alice_staking.stake(postconfirmations_address, move_token_address, U256::from(100));
 	let rc = callbuilder.send().await;
 	match rc {
 		Ok(rc) => {
-			rc.watch().await.context("Alice failed to stake for MCR")?;
+			rc.watch().await.context("Alice failed to stake for PCP")?;
 		}
 		Err(err) => {
 			println!("err: {err:?}");
@@ -153,8 +153,8 @@ async fn run_genesis_ceremony(
 	};
 	info!("Alice move staking");
 
-	// bob stakes for mcr
-	info!("Bob stakes for MCR");
+	// bob stakes for pcp
+	info!("Bob stakes for PCP");
 	governor_token
 		.mint(bob.address(), U256::from(100))
 		.send()
@@ -176,7 +176,7 @@ async fn run_genesis_ceremony(
 		.await?
 		.watch()
 		.await
-		.context("Bob failed to approve MCR")?;
+		.context("Bob failed to approve PCP")?;
 	info!("Bob move approve");
 	bob_staking
 		.stake(postconfirmations_address, move_token_address, U256::from(100))
@@ -184,24 +184,24 @@ async fn run_genesis_ceremony(
 		.await?
 		.watch()
 		.await
-		.context("Bob failed to stake for MCR")?;
+		.context("Bob failed to stake for PCP")?;
 	info!("Bob move staking");
 
 	// let domain_time = governor_staking
 	// .epochDurationByDomain(postconfirmations_address.clone())
 	// .call()
 	// .await.context("Failed to get domain registration time")?;
-	// info!("Domain registration time in MCR {:?}", domain_time);
-	// mcr accepts the genesis
-	info!("MCR accepts the genesis");
-	governor_mcr
+	// info!("Domain registration time in PCP {:?}", domain_time);
+	// pcp accepts the genesis
+	info!("PCP accepts the genesis");
+	governor_pcp
 		.acceptGenesisCeremony()
 		.send()
 		.await?
 		.watch()
 		.await
 		.context("Governor failed to accept genesis ceremony")?;
-	info!("mcr accepted");
+	info!("pcp accepted");
 
 	Ok(())
 }

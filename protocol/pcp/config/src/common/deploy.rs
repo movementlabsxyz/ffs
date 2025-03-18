@@ -15,7 +15,7 @@ pub struct Config {
 env_short_default!(
 	postconfirmations_deployment_working_directory,
 	String,
-	"protocol-units/settlement/mcr/contracts"
+	"protocol-units/settlement/pcp/contracts"
 );
 
 env_short_default!(
@@ -35,7 +35,7 @@ pub fn default_signer_identifier() -> SignerIdentifier {
 }
 
 pub fn maybe_deploy() -> Option<Config> {
-	match std::env::var("MAYBE_DEPLOY_MCR") {
+	match std::env::var("MAYBE_DEPLOY_PCP") {
 		Ok(str_value) => {
 			// if it parses as true then we want to deploy under the default config
 			let bool_value = str_value.parse::<bool>().unwrap_or(false);
