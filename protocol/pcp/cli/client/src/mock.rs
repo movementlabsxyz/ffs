@@ -114,14 +114,14 @@ impl PcpSettlementClientOperations for PcpSettlementClient {
 
 	async fn force_block_commitment(
 		&self,
-		block_commitment: SuperBlockCommitment,
+		_block_commitment: SuperBlockCommitment,
 	) -> Result<(), anyhow::Error> {
 		unimplemented!()
 	}
 
 	async fn get_posted_commitment_at_height(
 		&self,
-		height: u64,
+		_height: u64,
 	) -> Result<Option<SuperBlockCommitment>, anyhow::Error> {
 		unimplemented!();
 	}

@@ -5,8 +5,6 @@ use pcp_protocol_client_core_util::PcpClientOperations;
 use pcp_types::block_commitment::{SuperBlockCommitment, Commitment, Id};
 use sha3::{Digest, Keccak256};
 use secure_signer_loader::identifiers::SignerIdentifier;
-use secure_signer::key::TryFromCanonicalString;
-use anyhow::Context;
 use secure_signer_loader::identifiers::local::Local;
 
 /// The `pcp-protocol-client` CLI.
