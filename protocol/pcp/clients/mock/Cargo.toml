@@ -1,5 +1,5 @@
 [package]
-name = "ffs-client"
+name = "pcp-protocol-client-core-mock"
 version = { workspace = true }
 edition = { workspace = true }
 license = { workspace = true }
@@ -9,13 +9,15 @@ publish = { workspace = true }
 rust-version = { workspace = true }
 
 [dependencies]
+thiserror = { workspace = true }
 tokio = { workspace = true }
+tokio-stream = { workspace = true }
+tracing = { workspace = true }
 serde = { workspace = true, features = ["derive"] }
-clap = { workspace = true}
-dotenv = { workspace = true }
+pcp-types = { workspace = true }
+pcp-protocol-client-core-util = { workspace = true }
 anyhow = { workspace = true }
-mcr-protocol-client = { workspace = true }
-pcp-protocol-client = { workspace = true }
+futures = { workspace = true}
 
 [lints]
 workspace = true

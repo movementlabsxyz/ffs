@@ -1,26 +1,24 @@
-use crate::{CommitmentStream, PcpSettlementClientOperations};
-use pcp_config::Config;
-use pcp_types::block_commitment::SuperBlockCommitment;
+use pcp_protocol_client_core_util::{CommitmentStream, PcpClientError, PcpClientOperations};
+use pcp_types::block_commitment::BlockCommitment;
 use std::collections::BTreeMap;
 use std::sync::{Arc, Mutex};
 use tokio::sync::{mpsc, RwLock};
 use tokio_stream::wrappers::ReceiverStream;
-use tracing::info;
 
 #[derive(Clone)]
-pub struct PcpSettlementClient {
-	commitments: Arc<RwLock<BTreeMap<u64, SuperBlockCommitment>>>,
-	stream_sender: mpsc::Sender<Result<SuperBlockCommitment, anyhow::Error>>,
-	stream_receiver: Arc<Mutex<Option<mpsc::Receiver<Result<SuperBlockCommitment, anyhow::Error>>>>>,
+pub struct Client {
+	commitments: Arc<RwLock<BTreeMap<u64, BlockCommitment>>>,
+	stream_sender: mpsc::Sender<Result<BlockCommitment, PcpClientError>>,
+	stream_receiver: Arc<Mutex<Option<mpsc::Receiver<Result<BlockCommitment, PcpClientError>>>>>,
 	pub current_height: Arc<RwLock<u64>>,
 	pub block_lead_tolerance: u64,
 	paused_at_height: Arc<RwLock<Option<u64>>>,
 }
 
-impl PcpSettlementClient {
+impl Client {
 	pub fn new() -> Self {
 		let (stream_sender, receiver) = mpsc::channel(10);
-		PcpSettlementClient {
+		Client {
 			commitments: Arc::new(RwLock::new(BTreeMap::new())),
 			stream_sender,
 			stream_receiver: Arc::new(Mutex::new(Some(receiver))),
@@ -30,16 +28,11 @@ impl PcpSettlementClient {
 		}
 	}
 
-	pub async fn build_with_config(_config: &Config) -> Result<Self, anyhow::Error> {
-		info!("Building with config.");
-		Ok(Self::new())
-	}
-
 	/// Overrides the commitment to settle on at given height.
 	///
 	/// To have effect, this method needs to be called before a commitment is
-	/// posted for this height with the `PcpSettlementClientOperations` API.
-	pub async fn override_block_commitment(&self, commitment: SuperBlockCommitment) {
+	/// posted for this height with the `PcpClientOperations` API.
+	pub async fn override_block_commitment(&self, commitment: BlockCommitment) {
 		let mut commitments = self.commitments.write().await;
 		commitments.insert(commitment.height(), commitment);
 	}
@@ -70,12 +63,11 @@ impl PcpSettlementClient {
 	}
 }
 
-#[async_trait::async_trait]
-impl PcpSettlementClientOperations for PcpSettlementClient {
+impl PcpClientOperations for Client {
 	async fn post_block_commitment(
 		&self,
-		block_commitment: SuperBlockCommitment,
-	) -> Result<(), anyhow::Error> {
+		block_commitment: BlockCommitment,
+	) -> Result<(), PcpClientError> {
 		let height = block_commitment.height();
 
 		let settled = {
@@ -87,7 +79,10 @@ impl PcpSettlementClientOperations for PcpSettlementClient {
 			match *paused_at_height {
 				Some(ph) if ph < height => {}
 				_ => {
-					self.stream_sender.send(Ok(settled)).await?;
+					self.stream_sender
+						.send(Ok(settled))
+						.await
+						.map_err(|e| PcpClientError::Internal(Box::new(e)))?;
 				}
 			}
 		}
@@ -104,9 +99,9 @@ impl PcpSettlementClientOperations for PcpSettlementClient {
 
 	async fn post_block_commitment_batch(
 		&self,
-		block_commitments: Vec<SuperBlockCommitment>,
-	) -> Result<(), anyhow::Error> {
-		for commitment in block_commitments {
+		block_commitment: Vec<BlockCommitment>,
+	) -> Result<(), PcpClientError> {
+		for commitment in block_commitment {
 			self.post_block_commitment(commitment).await?;
 		}
 		Ok(())
@@ -114,19 +109,19 @@ impl PcpSettlementClientOperations for PcpSettlementClient {
 
 	async fn force_block_commitment(
 		&self,
-		_block_commitment: SuperBlockCommitment,
-	) -> Result<(), anyhow::Error> {
+		_block_commitment: BlockCommitment,
+	) -> Result<(), PcpClientError> {
 		unimplemented!()
 	}
 
 	async fn get_posted_commitment_at_height(
 		&self,
 		_height: u64,
-	) -> Result<Option<SuperBlockCommitment>, anyhow::Error> {
+	) -> Result<Option<BlockCommitment>, PcpClientError> {
 		unimplemented!();
 	}
 
-	async fn stream_block_commitments(&self) -> Result<CommitmentStream, anyhow::Error> {
+	async fn stream_block_commitments(&self) -> Result<CommitmentStream, PcpClientError> {
 		let receiver = self
 			.stream_receiver
 			.lock()
@@ -139,12 +134,12 @@ impl PcpSettlementClientOperations for PcpSettlementClient {
 	async fn get_commitment_at_height(
 		&self,
 		height: u64,
-	) -> Result<Option<SuperBlockCommitment>, anyhow::Error> {
+	) -> Result<Option<BlockCommitment>, PcpClientError> {
 		let guard = self.commitments.read().await;
 		Ok(guard.get(&height).cloned())
 	}
 
-	async fn get_max_tolerable_block_height(&self) -> Result<u64, anyhow::Error> {
+	async fn get_max_tolerable_block_height(&self) -> Result<u64, PcpClientError> {
 		Ok(*self.current_height.read().await + self.block_lead_tolerance)
 	}
 }
@@ -160,9 +155,9 @@ pub mod test {
 	use tokio_stream::StreamExt;
 
 	#[tokio::test]
-	async fn test_post_block_commitment() -> Result<(), anyhow::Error> {
-		let client = PcpSettlementClient::new();
-		let commitment = SuperBlockCommitment::new(1, Default::default(), Commitment::test());
+	async fn test_post_block_commitment() -> Result<(), PcpClientError> {
+		let client = Client::new();
+		let commitment = BlockCommitment::new(1, Default::default(), Commitment::test());
 		client.post_block_commitment(commitment.clone()).await.unwrap();
 		let guard = client.commitments.write().await;
 		assert_eq!(guard.get(&1), Some(&commitment));
@@ -174,10 +169,10 @@ pub mod test {
 	}
 
 	#[tokio::test]
-	async fn test_post_block_commitment_batch() -> Result<(), anyhow::Error> {
-		let client = PcpSettlementClient::new();
-		let commitment = SuperBlockCommitment::new(1, Default::default(), Commitment::test());
-		let commitment2 = SuperBlockCommitment::new(1, Default::default(), Commitment::test());
+	async fn test_post_block_commitment_batch() -> Result<(), PcpClientError> {
+		let client = Client::new();
+		let commitment = BlockCommitment::new(1, Default::default(), Commitment::test());
+		let commitment2 = BlockCommitment::new(1, Default::default(), Commitment::test());
 		client
 			.post_block_commitment_batch(vec![commitment.clone(), commitment2.clone()])
 			.await
@@ -189,9 +184,9 @@ pub mod test {
 	}
 
 	#[tokio::test]
-	async fn test_stream_block_commitments() -> Result<(), anyhow::Error> {
-		let client = PcpSettlementClient::new();
-		let commitment = SuperBlockCommitment::new(1, Default::default(), Commitment::test());
+	async fn test_stream_block_commitments() -> Result<(), PcpClientError> {
+		let client = Client::new();
+		let commitment = BlockCommitment::new(1, Default::default(), Commitment::test());
 		client.post_block_commitment(commitment.clone()).await.unwrap();
 		let mut stream = client.stream_block_commitments().await?;
 		assert_eq!(stream.next().await.unwrap().unwrap(), commitment);
@@ -199,12 +194,12 @@ pub mod test {
 	}
 
 	#[tokio::test]
-	async fn test_override_block_commitments() -> Result<(), anyhow::Error> {
-		let client = PcpSettlementClient::new();
-		let commitment = SuperBlockCommitment::new(2, Default::default(), Commitment::test());
+	async fn test_override_block_commitments() -> Result<(), PcpClientError> {
+		let client = Client::new();
+		let commitment = BlockCommitment::new(2, Default::default(), Commitment::test());
 		client.override_block_commitment(commitment.clone()).await;
 		client
-			.post_block_commitment(SuperBlockCommitment::new(2, Default::default(), Commitment::test()))
+			.post_block_commitment(BlockCommitment::new(2, Default::default(), Commitment::test()))
 			.await
 			.unwrap();
 		let mut stream = client.stream_block_commitments().await?;
@@ -213,12 +208,12 @@ pub mod test {
 	}
 
 	#[tokio::test]
-	async fn test_pause() -> Result<(), anyhow::Error> {
-		let client = PcpSettlementClient::new();
-		let commitment = SuperBlockCommitment::new(2, Default::default(), Commitment::test());
+	async fn test_pause() -> Result<(), PcpClientError> {
+		let client = Client::new();
+		let commitment = BlockCommitment::new(2, Default::default(), Commitment::test());
 		client.pause_after(1).await;
 		client.post_block_commitment(commitment.clone()).await?;
-		let commitment2 = SuperBlockCommitment::new(2, Default::default(), Commitment::test());
+		let commitment2 = BlockCommitment::new(2, Default::default(), Commitment::test());
 		client.post_block_commitment(commitment2).await?;
 		let mut stream = client.stream_block_commitments().await?;
 		assert_eq!(stream.next().await.expect("stream has ended")?, commitment);
@@ -231,12 +226,12 @@ pub mod test {
 	}
 
 	#[tokio::test]
-	async fn test_resume() -> Result<(), anyhow::Error> {
-		let client = PcpSettlementClient::new();
-		let commitment = SuperBlockCommitment::new(2, Default::default(), Commitment::test());
+	async fn test_resume() -> Result<(), PcpClientError> {
+		let client = Client::new();
+		let commitment = BlockCommitment::new(2, Default::default(), Commitment::test());
 		client.pause_after(1).await;
 		client.post_block_commitment(commitment.clone()).await?;
-		let commitment2 = SuperBlockCommitment::new(2, Default::default(), Commitment::test());
+		let commitment2 = BlockCommitment::new(2, Default::default(), Commitment::test());
 		client.post_block_commitment(commitment2.clone()).await?;
 		let mut stream = client.stream_block_commitments().await?;
 		assert_eq!(stream.next().await.expect("stream has ended")?, commitment);

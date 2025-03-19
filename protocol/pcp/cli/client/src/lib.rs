@@ -1,4 +1,4 @@
-use postconfirmations_types::block_commitment::SuperBlockCommitment;
+use pcp_types::block_commitment::SuperBlockCommitment;
 use tokio_stream::Stream;
 pub mod mock;
 
@@ -7,6 +7,7 @@ pub mod mock;
 // pub use mock::*;
 
 pub mod eth_client;
+pub mod cli;
 
 #[cfg(feature = "eth")]
 pub use eth_client::PcpSettlementClient;

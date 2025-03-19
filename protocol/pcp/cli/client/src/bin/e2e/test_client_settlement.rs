@@ -8,8 +8,8 @@ use ffs_environment::{backend::config_file::ConfigFile, ffs_environment};
 use postconfirmations_settlement_client::eth_client::Client;
 use postconfirmations_settlement_client::eth_client::{MOVEToken, MovementStaking, PCP};
 use postconfirmations_settlement_client::PcpSettlementClientOperations;
-use postconfirmations_config::Config;
-use postconfirmations_types::block_commitment::{BlockCommitment, Commitment, Id};
+use pcp_config::Config;
+use pcp_types::block_commitment::{BlockCommitment, Commitment, Id};
 use std::str::FromStr;
 use tokio_stream::StreamExt;
 use tracing::info;
@@ -239,7 +239,7 @@ pub async fn main() -> Result<(), anyhow::Error> {
 	// Build client 1 and send the first commitment.
 	//let settlement_config =
 	let config1 = Config {
-		settle: postconfirmations_config::common::settlement::Config {
+		settle: pcp_config::common::settlement::Config {
 			signer_private_key: testing_config
 				.well_known_account_private_keys
 				.get(1)
@@ -265,7 +265,7 @@ pub async fn main() -> Result<(), anyhow::Error> {
 
 	// Build client 2 and send the second commitment.
 	let config2 = Config {
-		settle: postconfirmations_config::common::settlement::Config {
+		settle: pcp_config::common::settlement::Config {
 			signer_private_key: testing_config
 				.well_known_account_private_keys
 				.get(2)

@@ -1,56 +1,19 @@
-use crate::send_eth_transaction::InsufficentFunds;
-use crate::send_eth_transaction::SendTransactionErrorRule;
-use crate::send_eth_transaction::UnderPriced;
-use crate::send_eth_transaction::VerifyRule;
-use crate::{CommitmentStream, PcpSettlementClientOperations};
-use alloy::providers::fillers::ChainIdFiller;
-use alloy::providers::fillers::FillProvider;
-use alloy::providers::fillers::GasFiller;
-use alloy::providers::fillers::JoinFill;
-use alloy::providers::fillers::NonceFiller;
-use alloy::providers::fillers::WalletFiller;
-use alloy::providers::{Provider, ProviderBuilder, RootProvider};
+use crate::util::send_eth_transaction::send_transaction;
+use crate::util::send_eth_transaction::PcpEthConnectorError;
+use crate::util::send_eth_transaction::VerifyRule;
+use alloy::providers::{Provider, RootProvider};
 use alloy::pubsub::PubSubFrontend;
-use alloy::signers::Signer;
-use alloy_network::Ethereum;
-use alloy_network::EthereumWallet;
 use alloy_primitives::Address;
 use alloy_primitives::U256;
 use alloy_sol_types::sol;
-use alloy_transport::BoxTransport;
-use alloy_transport_ws::WsConnect;
 use anyhow::Context;
-use pcp_config::Config;
-use pcp_types::block_commitment::{Commitment, Id, SuperBlockCommitment};
-use secure_signer::cryptography::secp256k1::Secp256k1;
-use secure_signer_loader::Load;
-// use secure_signing_eth::HsmSigner;
-use secure_signer_eth::Signer as HsmSigner;
+use pcp_protocol_client_core_util::{CommitmentStream, PcpClientError, PcpClientOperations};
+use pcp_types::block_commitment::{SuperBlockCommitment, Commitment, Id};
 use serde_json::Value as JsonValue;
 use std::array::TryFromSliceError;
 use std::fs;
 use std::path::Path;
-use thiserror::Error;
 use tokio_stream::StreamExt;
-use tracing::info;
-
-#[derive(Error, Debug)]
-pub enum PcpEthConnectorError {
-	#[error(
-		"PCP Settlement Transaction fails because gas estimation is too high. Estimated gas:{0} gas limit:{1}"
-	)]
-	GasLimitExceed(u128, u128),
-	#[error("PCP Settlement Transaction fails because account funds are insufficient. error:{0}")]
-	InsufficientFunds(String),
-	#[error("PCP Settlement Transaction send failed because :{0}")]
-	SendTransactionError(#[from] alloy_contract::Error),
-	#[error("PCP Settlement Transaction send failed during its execution :{0}")]
-	RpcTransactionExecution(String),
-	#[error("PCP Settlement SuperBlockPostconfirmed event notification error :{0}")]
-	EventNotificationError(#[from] alloy_sol_types::Error),
-	#[error("PCP Settlement SuperBlockPostconfirmed event notification stream close")]
-	EventNotificationStreamClosed,
-}
 
 // Note: we prefer using the ABI because the [`sol!`](alloy_sol_types::sol) macro, when used with smart contract code directly, will not handle inheritance.
 sol!(
@@ -76,121 +39,25 @@ sol!(
 	"abis/MOVEToken.json"
 );
 
-pub struct PcpSettlementClient<P> {
-	run_commitment_admin_mode: bool,
-	rpc_provider: P,
-	ws_provider: RootProvider<PubSubFrontend>,
-	pub signer_address: Address,
-	contract_address: Address,
-	send_transaction_error_rules: Vec<Box<dyn VerifyRule>>,
-	gas_limit: u64,
-	send_transaction_retries: u32,
+pub struct Client<P> {
+	pub(crate) run_commitment_admin_mode: bool,
+	pub(crate) rpc_provider: P,
+	pub(crate) ws_provider: RootProvider<PubSubFrontend>,
+	pub(crate) signer_address: Address,
+	pub(crate) contract_address: Address,
+	pub(crate) send_transaction_error_rules: Vec<Box<dyn VerifyRule>>,
+	pub(crate) gas_limit: u64,
+	pub(crate) send_transaction_retries: u32,
 }
 
-impl
-	PcpSettlementClient<
-		FillProvider<
-			JoinFill<
-				JoinFill<
-					JoinFill<JoinFill<alloy::providers::Identity, GasFiller>, NonceFiller>,
-					ChainIdFiller,
-				>,
-				WalletFiller<EthereumWallet>,
-			>,
-			RootProvider<BoxTransport>,
-			BoxTransport,
-			Ethereum,
-		>,
-	>
-{
-	pub async fn build_with_config(config: &Config) -> Result<Self, anyhow::Error> {
-		let signer_identifier: Box<dyn Load<Secp256k1> + Send> =
-			Box::new(config.settle.signer_identifier.clone());
-		let signer_provider = signer_identifier.load().await?;
-		let signer =
-			HsmSigner::try_new(signer_provider, Some(config.eth_connection.eth_chain_id)).await?;
-
-		let signer_address = signer.address();
-		info!("Signer address: {}", signer_address);
-		let contract_address = config
-			.settle
-			.pcp_contract_address
-			.parse()
-			.context("Failed to parse the contract address for the PCP settlement client")?;
-		let rpc_url = config.eth_rpc_connection_url();
-		let ws_url = config.eth_ws_connection_url();
-		let rpc_provider = ProviderBuilder::new()
-			.with_recommended_fillers()
-			.wallet(EthereumWallet::from(signer))
-			.on_builtin(&rpc_url)
-			.await
-			.context("Failed to create the RPC provider for the PCP settlement client")?;
-
-		let client = PcpSettlementClient::build_with_provider(
-			config.settle.settlement_admin_mode,
-			rpc_provider,
-			ws_url,
-			signer_address,
-			contract_address,
-			config.transactions.gas_limit,
-			config.transactions.transaction_send_retries,
-		)
-		.await
-		.context(
-			"Failed to create the PCP settlement client with the RPC provider and contract address",
-		)?;
-		Ok(client)
-	}
-}
-
-impl<P> PcpSettlementClient<P> {
-	async fn build_with_provider<S>(
-		run_commitment_admin_mode: bool,
-		rpc_provider: P,
-		ws_url: S,
-		signer_address: Address,
-		contract_address: Address,
-		gas_limit: u64,
-		send_transaction_retries: u32,
-	) -> Result<Self, anyhow::Error>
-	where
-		P: Provider + Clone,
-		S: Into<String>,
-	{
-		let ws = WsConnect::new(ws_url);
-
-		let ws_provider = ProviderBuilder::new()
-			.on_ws(ws)
-			.await
-			.context("Failed to create the WebSocket provider for the PCP settlement client")?;
-
-		let rule1: Box<dyn VerifyRule> = Box::new(SendTransactionErrorRule::<UnderPriced>::new());
-		let rule2: Box<dyn VerifyRule> =
-			Box::new(SendTransactionErrorRule::<InsufficentFunds>::new());
-		let send_transaction_error_rules = vec![rule1, rule2];
-
-		Ok(PcpSettlementClient {
-			run_commitment_admin_mode,
-			rpc_provider,
-			ws_provider,
-			signer_address,
-			contract_address,
-			send_transaction_error_rules,
-			gas_limit,
-			send_transaction_retries,
-		})
-	}
-}
-
-#[async_trait::async_trait]
-impl<P> PcpSettlementClientOperations for PcpSettlementClient<P>
+impl<P> PcpClientOperations for Client<P>
 where
 	P: Provider + Clone,
 {
 	async fn post_block_commitment(
 		&self,
 		block_commitment: SuperBlockCommitment,
-	) -> Result<(), anyhow::Error> {
+	) -> Result<(), PcpClientError> {
 		let contract = PCP::new(self.contract_address, &self.rpc_provider);
 
 		let eth_block_commitment = PCP::SuperBlockCommitment {
@@ -204,7 +71,7 @@ where
 
 		if self.run_commitment_admin_mode {
 			let call_builder = contract.forceLatestCommitment(eth_block_commitment);
-			crate::send_eth_transaction::send_transaction(
+			send_transaction(
 				call_builder,
 				&self.send_transaction_error_rules,
 				self.send_transaction_retries,
@@ -213,7 +80,7 @@ where
 			.await
 		} else {
 			let call_builder = contract.submitSuperBlockCommitment(eth_block_commitment);
-			crate::send_eth_transaction::send_transaction(
+			send_transaction(
 				call_builder,
 				&self.send_transaction_error_rules,
 				self.send_transaction_retries,
@@ -226,7 +93,7 @@ where
 	async fn post_block_commitment_batch(
 		&self,
 		block_commitments: Vec<SuperBlockCommitment>,
-	) -> Result<(), anyhow::Error> {
+	) -> Result<(), PcpClientError> {
 		let contract = PCP::new(self.contract_address, &self.rpc_provider);
 
 		let eth_block_commitment: Vec<_> = block_commitments
@@ -243,11 +110,12 @@ where
 					),
 				})
 			})
-			.collect::<Result<Vec<_>, TryFromSliceError>>()?;
+			.collect::<Result<Vec<_>, TryFromSliceError>>()
+			.map_err(|e| PcpClientError::Internal(Box::new(e)))?;
 
 		let call_builder = contract.submitBatchSuperBlockCommitment(eth_block_commitment);
 
-		crate::send_eth_transaction::send_transaction(
+		send_transaction(
 			call_builder,
 			&self.send_transaction_error_rules,
 			self.send_transaction_retries,
@@ -259,7 +127,7 @@ where
 	async fn force_block_commitment(
 		&self,
 		block_commitment: SuperBlockCommitment,
-	) -> Result<(), anyhow::Error> {
+	) -> Result<(), PcpClientError> {
 		let contract = PCP::new(self.contract_address, &self.rpc_provider);
 
 		let eth_block_commitment = PCP::SuperBlockCommitment {
@@ -272,7 +140,7 @@ where
 		};
 
 		let call_builder = contract.forceLatestCommitment(eth_block_commitment);
-		crate::send_eth_transaction::send_transaction(
+		send_transaction(
 			call_builder,
 			&self.send_transaction_error_rules,
 			self.send_transaction_retries,
@@ -281,11 +149,15 @@ where
 		.await
 	}
 
-	async fn stream_block_commitments(&self) -> Result<CommitmentStream, anyhow::Error> {
+	async fn stream_block_commitments(&self) -> Result<CommitmentStream, PcpClientError> {
 		// Register to contract BlockCommitmentSubmitted event
 
 		let contract = PCP::new(self.contract_address, &self.ws_provider);
-		let event_filter = contract.SuperBlockPostconfirmed_filter().watch().await?;
+		let event_filter = contract
+			.SuperBlockPostconfirmed_filter()
+			.watch()
+			.await
+			.map_err(|e| PcpClientError::StreamBlockCommitments(Box::new(e)))?;
 
 		let stream = event_filter.into_stream().map(|event| {
 			event
@@ -309,21 +181,26 @@ where
 	async fn get_commitment_at_height(
 		&self,
 		height: u64,
-	) -> Result<Option<SuperBlockCommitment>, anyhow::Error> {
+	) -> Result<Option<SuperBlockCommitment>, PcpClientError> {
 		let contract = PCP::new(self.contract_address, &self.ws_provider);
-		let PCP::getPostconfirmedCommitmentReturn { _0: commitment } =
-			contract.getPostconfirmedCommitment(U256::from(height)).call().await?;
+		let PCP::getPostconfirmedCommitmentReturn { _0: commitment } = contract
+			.getPostconfirmedCommitment(U256::from(height))
+			.call()
+			.await
+			.map_err(|e| PcpClientError::Internal(Box::new(e)))?;
 
 		let return_height: u64 = commitment
 			.height
 			.try_into()
-			.context("Failed to convert the commitment height from U256 to u64")?;
+			.context("failed to convert the commitment height from U256 to u64")
+			.map_err(|e| PcpClientError::Internal(e.into()))?;
 		// Commitment with height 0 mean not found
 		Ok((return_height != 0).then_some(SuperBlockCommitment::new(
 			commitment
 				.height
 				.try_into()
-				.context("Failed to convert the commitment height from U256 to u64")?,
+				.context("failed to convert the commitment height from U256 to u64")
+				.map_err(|e| PcpClientError::Internal(e.into()))?,
 			Id::new(commitment.blockId.into()),
 			Commitment::new(commitment.commitment.into()),
 		)))
@@ -332,35 +209,42 @@ where
 	async fn get_posted_commitment_at_height(
 		&self,
 		height: u64,
-	) -> Result<Option<SuperBlockCommitment>, anyhow::Error> {
+	) -> Result<Option<SuperBlockCommitment>, PcpClientError> {
 		let contract = PCP::new(self.contract_address, &self.ws_provider);
 		let PCP::getValidatorCommitmentAtSuperBlockHeightReturn { _0: commitment } = contract
 			.getValidatorCommitmentAtSuperBlockHeight(U256::from(height), self.signer_address)
 			.call()
-			.await?;
+			.await
+			.map_err(|e| PcpClientError::Internal(Box::new(e)))?;
 
 		let return_height: u64 = commitment
 			.height
 			.try_into()
-			.context("Failed to convert the commitment height from U256 to u64")?;
+			.context("failed to convert the commitment height from U256 to u64")
+			.map_err(|e| PcpClientError::Internal(e.into()))?;
 
 		Ok((return_height != 0).then_some(SuperBlockCommitment::new(
 			commitment
 				.height
 				.try_into()
-				.context("Failed to convert the commitment height from U256 to u64")?,
+				.context("failed to convert the commitment height from U256 to u64")
+				.map_err(|e| PcpClientError::Internal(e.into()))?,
 			Id::new(commitment.blockId.into()),
 			Commitment::new(commitment.commitment.into()),
 		)))
 	}
 
-	async fn get_max_tolerable_block_height(&self) -> Result<u64, anyhow::Error> {
+	async fn get_max_tolerable_block_height(&self) -> Result<u64, PcpClientError> {
 		let contract = PCP::new(self.contract_address, &self.ws_provider);
-		let PCP::getMaxTolerableSuperBlockHeightReturn { _0: block_height } =
-			contract.getMaxTolerableSuperBlockHeight().call().await?;
+		let PCP::getMaxTolerableSuperBlockHeightReturn { _0: block_height } = contract
+			.getMaxTolerableSuperBlockHeight()
+			.call()
+			.await
+			.map_err(|e| PcpClientError::Internal(Box::new(e)))?;
 		Ok(block_height
 			.try_into()
-			.context("Failed to convert the max tolerable block height from U256 to u64")?)
+			.context("Failed to convert the max tolerable block height from U256 to u64")
+			.map_err(|e| PcpClientError::Internal(e.into()))?)
 	}
 }
 
@@ -372,10 +256,12 @@ pub struct AnvilAddressEntry {
 /// Read the Anvil config file keys and return all address/private keys.
 pub fn read_anvil_json_file_addresses<P: AsRef<Path>>(
 	anvil_conf_path: P,
-) -> Result<Vec<AnvilAddressEntry>, anyhow::Error> {
-	let file_content = fs::read_to_string(anvil_conf_path)?;
+) -> Result<Vec<AnvilAddressEntry>, PcpClientError> {
+	let file_content =
+		fs::read_to_string(anvil_conf_path).map_err(|e| PcpClientError::Internal(Box::new(e)))?;
 
-	let json_value: JsonValue = serde_json::from_str(&file_content)?;
+	let json_value: JsonValue =
+		serde_json::from_str(&file_content).map_err(|e| PcpClientError::Internal(Box::new(e)))?;
 
 	// Extract the available_accounts and private_keys fields.
 	let available_accounts_iter = json_value["available_accounts"]

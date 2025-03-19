@@ -1978,6 +1978,7 @@ dependencies = [
  "clap",
  "dotenv",
  "mcr-protocol-client",
+ "pcp-protocol-client",
  "serde",
  "tokio",
 ]
@@ -2798,6 +2799,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "keccak"
+version = "0.1.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ecc2af9a1119c51f12a14607e783cb977bde58bc069ff0c3da1095e635d70654"
+dependencies = [
+ "cpufeatures",
+]
+
+[[package]]
 name = "keccak-asm"
 version = "0.1.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3326,6 +3336,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "pcp-config"
+version = "0.0.1"
+dependencies = [
+ "alloy",
+ "anyhow",
+ "ffs-environment",
+ "secure-signer",
+ "secure-signer-loader",
+ "serde",
+]
+
+[[package]]
 name = "pcp-network"
 version = "0.0.1"
 dependencies = [
@@ -3406,11 +3428,89 @@ dependencies = [
 name = "pcp-protocol-client"
 version = "0.0.1"
 dependencies = [
+ "alloy",
+ "alloy-contract",
+ "alloy-network",
+ "alloy-primitives 0.7.7",
+ "alloy-provider",
+ "alloy-rpc-types",
+ "alloy-signer",
+ "alloy-sol-types",
+ "alloy-transport",
+ "alloy-transport-ws",
  "anyhow",
+ "async-stream",
+ "async-trait",
  "clap",
- "dotenv",
+ "ffs-environment",
+ "futures",
+ "hex",
+ "pcp-config",
+ "pcp-protocol-client-core-eth",
+ "pcp-protocol-client-core-util",
+ "pcp-types",
+ "secure-signer",
+ "secure-signer-eth",
+ "secure-signer-loader",
  "serde",
+ "serde_json",
+ "sha3",
+ "thiserror 1.0.69",
  "tokio",
+ "tokio-stream",
+ "tracing",
+ "tracing-subscriber",
+]
+
+[[package]]
+name = "pcp-protocol-client-core-eth"
+version = "0.0.1"
+dependencies = [
+ "alloy",
+ "alloy-contract",
+ "alloy-network",
+ "alloy-primitives 0.7.7",
+ "alloy-provider",
+ "alloy-rpc-types",
+ "alloy-signer",
+ "alloy-sol-types",
+ "alloy-transport",
+ "alloy-transport-ws",
+ "anyhow",
+ "async-stream",
+ "async-trait",
+ "clap",
+ "futures",
+ "pcp-protocol-client-core-util",
+ "pcp-types",
+ "secure-signer",
+ "secure-signer-eth",
+ "secure-signer-loader",
+ "serde",
+ "serde_json",
+ "thiserror 1.0.69",
+ "tokio",
+ "tokio-stream",
+ "tracing",
+ "tracing-subscriber",
+]
+
+[[package]]
+name = "pcp-protocol-client-core-util"
+version = "0.0.1"
+dependencies = [
+ "pcp-types",
+ "serde",
+ "thiserror 1.0.69",
+ "tokio",
+ "tokio-stream",
+]
+
+[[package]]
+name = "pcp-types"
+version = "0.0.1"
+dependencies = [
+ "serde",
 ]
 
 [[package]]
@@ -4339,6 +4439,16 @@ dependencies = [
  "cfg-if",
  "cpufeatures",
  "digest 0.10.7",
+]
+
+[[package]]
+name = "sha3"
+version = "0.10.8"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "75872d278a8f37ef87fa0ddbda7802605cb18344497949862c0d4dcb291eba60"
+dependencies = [
+ "digest 0.10.7",
+ "keccak",
 ]
 
 [[package]]

@@ -5,6 +5,7 @@ Fastconfirmations
 Merkle
 multisig
 onchain
+preimage
 postconfirm
 postconfirmed
 timelock

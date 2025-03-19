@@ -1,8 +1,8 @@
 use crate::{CommitmentEventStream, PcpSettlementManagerOperations, SuperBlockCommitmentEvent};
 
-use postconfirmations_config::Config;
+use pcp_config::Config;
 use postconfirmations_settlement_client::PcpSettlementClientOperations;
-use postconfirmations_types::block_commitment::{
+use pcp_types::block_commitment::{
 	SuperBlockCommitment, SuperBlockCommitmentRejectionReason,
 };
 
@@ -149,7 +149,7 @@ fn process_commitments<C: PcpSettlementClientOperations + Send + 'static>(
 mod tests {
 	use super::*;
 	use postconfirmations_settlement_client::mock::PcpSettlementClient;
-	use postconfirmations_types::block_commitment::{Commitment, SuperBlockCommitment};
+	use pcp_types::block_commitment::{Commitment, SuperBlockCommitment};
 
 	#[tokio::test]
 	async fn test_block_commitment_accepted() -> Result<(), anyhow::Error> {

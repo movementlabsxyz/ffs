@@ -1,5 +1,5 @@
 [package]
-name = "postconfirmationssettlement-client"
+name = "pcp-protocol-client"
 version = { workspace = true }
 edition = { workspace = true }
 license = { workspace = true }
@@ -15,10 +15,15 @@ rust-version = { workspace = true }
 
 
 [dependencies]
-postconfirmationsconfig = { workspace = true }
 secure-signer-loader = { workspace = true }
 secure-signer = { workspace = true }
-secure-signing-eth = { workspace = true }
+secure-signer-eth = { workspace = true }
+pcp-types = { workspace = true }
+pcp-config = { workspace = true }
+pcp-protocol-client-core-util = { workspace = true }
+pcp-protocol-client-core-eth = { workspace = true }
+hex = { workspace = true }
+sha3 = { workspace = true }
 
 alloy = { workspace = true, features = [
     "node-bindings",
@@ -43,7 +48,7 @@ anyhow = { workspace = true }
 async-stream = { workspace = true }
 async-trait = { workspace = true }
 serde_json = { workspace = true }
-movement-types = { workspace = true }
+# movement-types = { workspace = true }
 thiserror = { workspace = true }
 tokio = { workspace = true }
 tokio-stream = { workspace = true }
@@ -52,10 +57,12 @@ serde = { workspace = true }
 
 ffs-environment = { workspace = true }
 
-dot-movement = { workspace = true }
+# dot-movement = { workspace = true }
 alloy-rpc-types = { workspace = true }
 futures = { workspace = true }
 tracing-subscriber = { workspace = true }
+
+clap = { workspace = true }
 
 [features]
 default = ["eth"]
@@ -65,3 +72,29 @@ mock = []
 
 [lints]
 workspace = true
+
+
+
+
+# [package]
+# name = "pcp-protocol-client"
+# version = { workspace = true }
+# edition = { workspace = true }
+# license = { workspace = true }
+# authors = { workspace = true }
+# homepage = { workspace = true }
+# publish = { workspace = true }
+# rust-version = { workspace = true }
+
+# [dependencies]
+# tokio = { workspace = true }
+# serde = { workspace = true, features = ["derive"] }
+# clap = { workspace = true}
+# dotenv = { workspace = true }
+# anyhow = { workspace = true }
+# pcp-protocol-client-core-util = { workspace = true }
+# pcp-protocol-client-core-eth = { workspace = true }
+# pcp-types = { workspace = true }
+
+# [lints]
+# workspace = true
