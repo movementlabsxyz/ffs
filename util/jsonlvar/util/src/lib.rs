@@ -87,13 +87,16 @@ pub enum JsonlError {
 
 pub trait Jsonl: Sized + Serialize {
 	/// Converts a parsed JSONL map into the struct
-	fn try_from_jsonl_map(parsed_data: &HashMap<String, Value>) -> Result<Self, JsonlError>;
+	fn try_from_jsonl_map(
+		parsed_data: &HashMap<String, Value>,
+		var_prefix: Option<&str>,
+	) -> Result<Self, JsonlError>;
 
 	/// Parses a JSONL string into a struct
-	fn try_from_jsonl(jsonl: &str) -> Result<Self, JsonlError> {
+	fn try_from_jsonl(jsonl: &str, var_prefix: Option<&str>) -> Result<Self, JsonlError> {
 		let parser = JsonlParser::new();
 		let parsed_data = parser.parse(jsonl);
-		Self::try_from_jsonl_map(&parsed_data)
+		Self::try_from_jsonl_map(&parsed_data, var_prefix)
 	}
 
 	/// Converts the struct into a JSONL-formatted string with a variable name

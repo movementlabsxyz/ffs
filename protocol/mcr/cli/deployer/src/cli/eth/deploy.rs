@@ -1,5 +1,6 @@
 use anyhow::Context;
 use clap::Parser;
+use jsonlvar::Jsonl;
 use mcr_protocol_deployer_core_eth::dev::config::Config;
 use serde::{Deserialize, Serialize};
 
@@ -15,7 +16,7 @@ impl Deploy {
 		let config = self.config.clone().context("no config provided")?;
 		let deployer = config.build()?;
 		let artifacts = deployer.deploy().await?;
-		println!("JSONL mcr_artifacts = {:?}", artifacts);
+		println!("{}", artifacts.try_to_jsonl_flat(None)?);
 		Ok(())
 	}
 }

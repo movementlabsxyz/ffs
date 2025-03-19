@@ -13,6 +13,8 @@ pub struct Deployer {
 	pub fork_url: String,
 	/// The contractAdmin address used in deployment.
 	pub contract_admin: String,
+	/// The jsonl prefix to give to the output from the deployer.
+	pub jsonl_prefix: Option<String>,
 }
 
 impl Deployer {
@@ -46,6 +48,6 @@ impl Deployer {
 			.await?;
 
 		// Parse the output
-		Ok(Artifacts::try_from_jsonl(&log_output)?)
+		Ok(Artifacts::try_from_jsonl(&log_output, self.jsonl_prefix.as_deref())?)
 	}
 }

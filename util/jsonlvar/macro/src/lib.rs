@@ -18,12 +18,16 @@ pub fn derive_jsonl(input: TokenStream) -> TokenStream {
 		let field_str = field_name.to_string();
 
 		quote! {
-			#field_name: serde_json::from_value(
-				parsed_data.get(#field_str)
-					.ok_or_else(|| jsonlvar::JsonlError::MissingField(#field_str.to_string()))?
-					.clone()
-			).map_err(jsonlvar::JsonlError::Json)?,
-		}
+            #field_name: {
+                let prefixed_key = var_prefix.map(|p| format!("{}_{}", p, #field_str)).unwrap_or_else(|| #field_str.to_string());
+                let value = parsed_data.get(&prefixed_key)
+                    .or_else(|| parsed_data.get(#field_str)) // fallback to unprefixed key
+                    .ok_or_else(|| jsonlvar::JsonlError::MissingField(prefixed_key.clone()))?
+                    .clone();
+                
+                serde_json::from_value(value).map_err(jsonlvar::JsonlError::Json)?
+            },
+        }
 	});
 
 	// Generate JSONL field serialization (flat)
@@ -45,7 +49,7 @@ pub fn derive_jsonl(input: TokenStream) -> TokenStream {
 		use jsonlvar::{JsonlError, serde_json};
 
 		impl Jsonl for #struct_name {
-			fn try_from_jsonl_map(parsed_data: &std::collections::HashMap<String, serde_json::Value>)
+			fn try_from_jsonl_map(parsed_data: &std::collections::HashMap<String, serde_json::Value>, var_prefix: Option<&str>)
 				-> Result<Self, JsonlError> {
 				Ok(Self {
 					#(#field_extracts)*
