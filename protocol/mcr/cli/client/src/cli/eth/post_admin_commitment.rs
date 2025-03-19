@@ -6,6 +6,7 @@ use mcr_types::block_commitment::BlockCommitment;
 use serde::{Deserialize, Serialize};
 
 #[derive(Parser, Serialize, Deserialize, Debug, Clone)]
+#[clap(help_expected = true)]
 pub struct PostAdminCommitment {
 	#[clap(flatten)]
 	pub config: Option<Config>,

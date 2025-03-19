@@ -12,7 +12,8 @@ rust-version.workspace = true
 [dependencies]
 secure-signer = { workspace = true }
 secure-signer-aws-kms = { workspace = true }
-async-trait.workspace = true
+async-trait = { workspace = true }
+tracing = { workspace = true }
 
 # Alloy needed crates
 alloy-primitives.workspace = true
