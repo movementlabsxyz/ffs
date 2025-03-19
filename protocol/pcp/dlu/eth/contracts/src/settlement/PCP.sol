@@ -269,12 +269,12 @@ contract PCP is Initializable, BaseSettlement, PCPStorage, IPCP {
             attesterStakeForAcceptingEpoch
         );
     }
-    function submitSuperBlockCommitment(SuperBlockCommitment memory commitment) external {
+    function submitSuperBlockCommitment(SuperBlockCommitment memory superBlockCommitment) external {
         require(
             openAttestationEnabled || hasRole(TRUSTED_ATTESTER, msg.sender),
             "UNAUTHORIZED_SUPERBLOCK_COMMITMENT"
         );
-        submitSuperBlockCommitmentForAttester(msg.sender, commitment);
+        submitSuperBlockCommitmentForAttester(msg.sender, superBlockCommitment);
     }
 
     function submitBatchSuperBlockCommitment(SuperBlockCommitment[] memory superBlockCommitments) public {
