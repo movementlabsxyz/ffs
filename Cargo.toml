@@ -9,6 +9,7 @@ members = [
   "protocol/mcr/clients/*",
   "protocol/mcr/manager",
   "protocol/mcr/cli/*",
+  "protocol/mcr/dlu/eth/deployer-core",
 
   # pcp
   ## protocol
@@ -39,6 +40,7 @@ members = [
   # util
   "util/signing/eth",
   "util/environment",
+  "util/commander",
 ]
 
 [workspace.package]
@@ -99,6 +101,10 @@ hex = { version = "0.4.3", default-features = false, features = [
   "alloc",
   "serde",
 ] }
+zip = { version = "2.4.2", features = ["flate2"] }
+walkdir = "2.3.2"
+tempfile = "3.5.0"
+itertools = "0.14.0"
 
 # model checking and verification
 
@@ -118,6 +124,7 @@ mcr-protocol-client-core-eth = { path = "protocol/mcr/clients/eth" }
 mcr-protocol-client-core-mock = { path = "protocol/mcr/clients/mock" }
 mcr-protocol-client = { path = "protocol/mcr/cli/client" }
 mcr-protocol = { path = "protocol/mcr/cli"}
+mcr-protocol-deployer-core-eth = { path = "protocol/mcr/dlu/eth/deployer-core" }
 ### network
 mcr-network-client = { path = "network/mcr/cli/client" }
 mcr-network-coordinator = { path = "network/mcr/cli/coordinator" }
@@ -126,6 +133,7 @@ mcr-network = { path = "network/mcr/cli/network" }
 # util
 secure-signer-eth = { path = "util/signing/eth" }
 ffs-environment = { path = "util/environment" }
+commander = { path = "util/commander" }
 
 [workspace.lints.clippy]
 debug_assert_with_mut_call = "deny"
