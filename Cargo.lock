@@ -3318,9 +3318,34 @@ dependencies = [
 name = "jsonlvar"
 version = "0.0.1"
 dependencies = [
+ "jsonlvar-macro",
+ "jsonlvar-util",
  "regex",
  "serde_json",
  "tempfile",
+]
+
+[[package]]
+name = "jsonlvar-macro"
+version = "0.0.1"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "serde",
+ "syn 2.0.100",
+ "tempfile",
+ "thiserror 1.0.69",
+]
+
+[[package]]
+name = "jsonlvar-util"
+version = "0.0.1"
+dependencies = [
+ "regex",
+ "serde",
+ "serde_json",
+ "tempfile",
+ "thiserror 1.0.69",
 ]
 
 [[package]]

@@ -1,5 +1,6 @@
 use crate::contracts::ContractWorkspace;
 use crate::dev::artifacts::Artifacts;
+use jsonlvar::Jsonl;
 
 /// The deployer of MCR dev contracts.
 #[derive(Debug)]

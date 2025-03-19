@@ -1,6 +1,8 @@
 use regex::Regex;
+use serde::Serialize;
 use serde_json::Value;
 use std::collections::HashMap;
+use thiserror::Error;
 
 pub struct JsonlParser {
 	// Placeholder for future configurable options
@@ -71,5 +73,41 @@ mod tests {
 			result.get("invalid").unwrap(),
 			&serde_json::json!("{invalid json gets parsed as string}")
 		);
+	}
+}
+
+#[derive(Debug, Error)]
+pub enum JsonlError {
+	#[error("JSON parsing error: {0}")]
+	Json(#[from] serde_json::Error),
+
+	#[error("Missing or invalid field: {0}")]
+	MissingField(String),
+}
+
+pub trait Jsonl: Sized + Serialize {
+	/// Converts a parsed JSONL map into the struct
+	fn try_from_jsonl_map(parsed_data: &HashMap<String, Value>) -> Result<Self, JsonlError>;
+
+	/// Parses a JSONL string into a struct
+	fn try_from_jsonl(jsonl: &str) -> Result<Self, JsonlError> {
+		let parser = JsonlParser::new();
+		let parsed_data = parser.parse(jsonl);
+		Self::try_from_jsonl_map(&parsed_data)
+	}
+
+	/// Converts the struct into a JSONL-formatted string with a variable name
+	fn try_to_jsonl(&self, var_name: &str) -> Result<String, JsonlError> {
+		let serialized = serde_json::to_string(self)?;
+		Ok(format!("JSONL {} = {}", var_name, serialized))
+	}
+
+	/// Converts each field of the struct into a list of individual JSONL entries
+	fn try_to_jsonl_flat_vec(&self, var_prefix: Option<String>) -> Result<Vec<String>, JsonlError>;
+
+	/// Converts each field of the struct into a single JSONL-formatted string (newline-separated)
+	fn try_to_jsonl_flat(&self, var_prefix: Option<String>) -> Result<String, JsonlError> {
+		let entries = self.try_to_jsonl_flat_vec(var_prefix)?;
+		Ok(entries.join("\n"))
 	}
 }
