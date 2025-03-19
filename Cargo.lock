@@ -3315,6 +3315,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "jsonlvar"
+version = "0.0.1"
+dependencies = [
+ "regex",
+ "serde_json",
+ "tempfile",
+]
+
+[[package]]
 name = "jsonwebtoken"
 version = "9.3.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3673,6 +3682,7 @@ dependencies = [
  "commander",
  "futures",
  "hex",
+ "jsonlvar",
  "mcr-config",
  "mcr-protocol-client-core-mock",
  "mcr-protocol-client-core-util",
@@ -3682,6 +3692,7 @@ dependencies = [
  "serde",
  "serde_json",
  "tempfile",
+ "thiserror 1.0.69",
  "tokio",
  "tokio-stream",
  "walkdir",

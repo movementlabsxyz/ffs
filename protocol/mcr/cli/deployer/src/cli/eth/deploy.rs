@@ -14,7 +14,8 @@ impl Deploy {
 	pub async fn execute(&self) -> Result<(), anyhow::Error> {
 		let config = self.config.clone().context("no config provided")?;
 		let deployer = config.build()?;
-		deployer.deploy().await?;
+		let artifacts = deployer.deploy().await?;
+		println!("JSONL mcr_artifacts = {:?}", artifacts);
 		Ok(())
 	}
 }

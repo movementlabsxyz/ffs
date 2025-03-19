@@ -31,6 +31,8 @@ serde = { workspace = true }
 secure-signer = { workspace = true }
 secure-signer-loader = { workspace = true }
 hex = { workspace = true }
+jsonlvar = { workspace = true }
+thiserror = { workspace = true }
 
 [build-dependencies]
 zip = { workspace = true }
