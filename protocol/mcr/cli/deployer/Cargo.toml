@@ -1,0 +1,21 @@
+[package]
+name = "mcr-protocol-deployer"
+version = { workspace = true }
+edition = { workspace = true }
+license = { workspace = true }
+authors = { workspace = true }
+homepage = { workspace = true }
+publish = { workspace = true }
+rust-version = { workspace = true }
+
+[dependencies]
+tokio = { workspace = true }
+serde = { workspace = true, features = ["derive"] }
+clap = { workspace = true}
+dotenv = { workspace = true }
+anyhow = { workspace = true }
+mcr-protocol-deployer-core-eth = { workspace = true }
+mcr-types = { workspace = true }
+
+[lints]
+workspace = true

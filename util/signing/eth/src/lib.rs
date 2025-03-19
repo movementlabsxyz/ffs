@@ -8,6 +8,7 @@ use secure_signer::cryptography::secp256k1::{self, Secp256k1};
 use secure_signer::SignerError;
 use secure_signer::Signing;
 use std::fmt;
+use tracing::debug;
 
 pub struct Signer<S: Signing<Secp256k1> + Sync + Send> {
 	kms: S,
@@ -36,6 +37,8 @@ impl<S: Signing<Secp256k1> + Sync + Send> alloy_network::TxSigner<AlloySignature
 		&self,
 		tx: &mut dyn SignableTransaction<AlloySignature>,
 	) -> Result<AlloySignature> {
+		debug!("signing tx: {:?}", tx);
+		debug!("address: {:?}", self.address);
 		sign_transaction_with_chain_id!(self, tx, self.sign_hash(&tx.signature_hash()).await)
 	}
 }
@@ -86,10 +89,7 @@ impl<S: Signing<Secp256k1> + Sync + Send> Signer<S> {
 		let sig = request_sign_digest(&self.kms, digest).await?;
 		let sig = ecdsa::Signature::from_slice(sig.as_bytes())
 			.map_err(|e| SignerError::Decode(e.into()))?;
-		let mut sig = sig_from_digest_bytes_trial_recovery(sig, digest, &self.pubkey);
-		if let Some(chain_id) = self.chain_id {
-			sig = sig.with_chain_id(chain_id);
-		}
+		let sig = sig_from_digest_bytes_trial_recovery(sig, digest, &self.pubkey);
 		Ok(sig)
 	}
 }
@@ -120,7 +120,7 @@ fn sig_from_digest_bytes_trial_recovery(
 	hash: &B256,
 	pubkey: &VerifyingKey,
 ) -> AlloySignature {
-	let signature = AlloySignature::from_signature_and_parity(sig, false).unwrap();
+	let signature = AlloySignature::from_signature_and_parity(sig, false);
 
 	if check_candidate(&signature, hash, pubkey) {
 		return signature;
