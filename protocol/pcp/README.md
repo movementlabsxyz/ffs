@@ -4,12 +4,11 @@ This directory contains the implementation of the PCP protocol, which handles co
 
 ## Overview
 
-PCP (Postconfirmation Protocol) is responsible for handling post-confirmation commitment settlement between different parts of the system. It provides:
+**PCP** implements a staking-based settlement where validators commit to a state from L2 on Layer 1 (L1). PCP accepts commitments from all staked attesters. A specialized attester - the acceptor - aggregates them into a single confirmation, called a postconfirmation. The contracts on L1 tracks block commitments, epochs, stake and rewards.
 
-1. Contract deployment and management
-2. Commitment posting and verification
-3. Client interfaces for interacting with the protocol
-4. Testing and mock implementations
+The distinguishing feature to MCR is that there are two types of actors, which are the attesters and the acceptors.
+
+For further details see the [MIP-37](https://github.com/movementlabsxyz/MIP/blob/main/MIP/mip-37).
 
 ## Architecture
 

@@ -4,11 +4,9 @@ This directory contains the implementation of the MCR protocol, which handles ro
 
 ## Overview
 
-**MCR** implements a staking-based settlement where validators commit L2-blocks on Layer 1 (L1). MCR is responsible for aggregating multiple commitments into a single commitment. It provides:
+**MCR** implements a staking-based settlement where validators commit to a state from L2 on Layer 1 (L1). MCR accepts commitments from all staked attesters and aggregates them into a single confirmation. The contracts on L1 tracks block commitments, epochs, stake and rewards.
 
-The distinguishing feature is that there is only one type of actor, which is the attester.
-
-Validators stake tokens to participate in block validation. They commit to L2-blocks on L1, and the contract on L1 tracks block commitments, epochs, and stake. The contracts also manage validators and custodian staking and unstaking. The contract validates if commitments have reached two-thirds supermajority stake, and rewards or slashes validators based on their actions.
+The distinguishing feature to PCP is that there is only one type of actor, which is the attester.
 
 For further details see the [RFC for MCR](https://github.com/movementlabsxyz/rfcs/pull/29) and the [MIP-34](https://github.com/movementlabsxyz/MIP/blob/main/MIP/mip-34).
 
@@ -35,11 +33,3 @@ For further details see the [RFC for MCR](https://github.com/movementlabsxyz/rfc
 - [`util/`](util/) - Shared utilities
   - [`config/`](util/config/) - Configuration management
   - [`types/`](util/types/) - Common type definitions
-
------
-
-TODO: remove once we have used this content at the correct place
-
-- **Setup**: Prepares local environments or deploys contracts, manages configuration for local and deployment setups, and ensures contract deployment when needed.
-- **Runner**: Orchestrates the setup and execution of configuration tasks, applies setup steps, and logs processes for debugging.
-
