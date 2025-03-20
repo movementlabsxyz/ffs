@@ -35,11 +35,14 @@ contract MCR is Initializable, BaseSettlement, MCRStorage, IMCR {
     }
 
     function grantCommitmentAdmin(address account) public {
+        console.log("grantCommitmentAdmin called by:", msg.sender);
         require(
             hasRole(DEFAULT_ADMIN_ROLE, msg.sender),
             "ADD_COMMITMENT_ADMIN_IS_ADMIN_ONLY"
         );
         grantRole(COMMITMENT_ADMIN, account);
+        console.log("CommitmentAdmin role granted to:", account);
+
     }
 
     function batchGrantCommitmentAdmin(address[] memory accounts) public {
@@ -204,8 +207,9 @@ contract MCR is Initializable, BaseSettlement, MCRStorage, IMCR {
     // Forces the latest attestation by setting the block height
     // Note: this only safe when we are running with a single validator as it does not zero out follow-on commitments.
     function forceLatestCommitment(BlockCommitment memory blockCommitment) public {
+        console.log("forceLatestCommitment called by:", msg.sender);
         require(
-            hasRole(DEFAULT_ADMIN_ROLE, msg.sender),
+            hasRole(COMMITMENT_ADMIN, msg.sender),
             "FORCE_LATEST_COMMITMENT_IS_COMMITMENT_ADMIN_ONLY"
         );
 

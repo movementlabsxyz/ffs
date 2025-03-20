@@ -1,8 +1,8 @@
 use alloy::providers::Provider;
 use alloy_contract::CallBuilder;
 use alloy_contract::CallDecoder;
-use alloy_network::Ethereum;
-use alloy_transport::{Transport, TransportError};
+use alloy_primitives::Address;
+use alloy_transport::TransportError;
 use mcr_protocol_client_core_util::McrClientError;
 use std::marker::PhantomData;
 use thiserror::Error;
@@ -77,101 +77,108 @@ impl VerifyRule for SendTransactionErrorRule<InsufficentFunds> {
 		};
 
 		if payload.code == -32000 && payload.message.contains("insufficient funds") {
-			Err(McrEthConnectorError::InsufficientFunds(payload.message.clone()))
+			Err(McrEthConnectorError::InsufficientFunds(payload.message.to_string()))
 		} else {
 			Ok(false)
 		}
 	}
 }
 
-pub async fn send_transaction<
-	P: Provider<T, Ethereum> + Clone,
-	T: Transport + Clone,
-	D: CallDecoder + Clone,
->(
-	base_call_builder: CallBuilder<T, &&P, D, Ethereum>,
+pub async fn send_transaction<P: Provider + Clone, D: CallDecoder + Clone>(
+	signer_address: Address,
+	base_call_builder: CallBuilder<(), &&P, D>,
 	send_transaction_error_rules: &[Box<dyn VerifyRule>],
 	number_retry: u32,
 	gas_limit: u128,
 ) -> Result<(), McrClientError> {
-	info!("Sending transaction with gas limit: {}", gas_limit);
-	//validate gas price.
-	let mut estimate_gas = base_call_builder.estimate_gas().await.expect("Failed to estimate gas");
-	// Add 20% because initial gas estimate are too low.
+	let base_call_builder = base_call_builder.from(signer_address);
+
+	// Fetch initial gas estimate
+	let mut estimate_gas = base_call_builder
+		.estimate_gas()
+		.await
+		.map_err(|_| McrClientError::Internal("Gas estimation failed".into()))?
+		as u128;
+
+	// Apply an initial 20% buffer
 	estimate_gas += (estimate_gas * 20) / 100;
+	let max_gas_limit = 30_000_000; // Cap max gas to avoid runaway values
+	estimate_gas = estimate_gas.min(max_gas_limit);
 
-	info!("estimated_gas: {}", estimate_gas);
+	info!("Initial estimated gas: {}", estimate_gas);
 
-	// Sending Transaction automatically can lead to errors that depend on the state for Eth.
-	// It's convenient to manage some of them automatically to avoid to fail commitment Transaction.
-	// I define a first one but other should be added depending on the test with mainnet.
-	for _ in 0..number_retry {
-		let call_builder = base_call_builder.clone().gas(estimate_gas);
+	for attempt in 0..number_retry {
+		info!("Retry attempt: {}", attempt + 1);
 
-		//detect if the gas price doesn't execeed the limit.
-		let gas_price = call_builder
+		// Clone the base call builder and set gas limit
+		let mut call_builder = base_call_builder.clone().gas(estimate_gas as u64);
+
+		// Fetch gas price with a 20% buffer
+		let mut gas_price = call_builder
 			.provider
 			.get_gas_price()
 			.await
 			.map_err(|e| McrClientError::Internal(Box::new(e)))?;
+		gas_price += (gas_price * 20) / 100;
+
+		call_builder = call_builder.gas_price(gas_price);
+
 		let transaction_fee_wei = estimate_gas * gas_price;
 		if transaction_fee_wei > gas_limit {
 			return Err(McrEthConnectorError::GasLimitExceed(transaction_fee_wei, gas_limit).into());
 		}
 
-		info!("Sending transaction with gas: {}", estimate_gas);
-
-		//send the Transaction and detect send error.
+		// Attempt to send the transaction
 		let pending_transaction = match call_builder.send().await {
-			Ok(pending_transaction) => pending_transaction,
+			Ok(tx) => tx,
 			Err(err) => {
-				//apply defined rules.
+				// Apply verification rules on failure
 				for rule in send_transaction_error_rules {
-					// Verify all rules. If one rule return true or an error stop verification.
-					// If true retry with more gas else return the error.
 					if rule.verify(&err)? {
-						//increase gas of 10% and retry
 						estimate_gas += (estimate_gas * 10) / 100;
-						tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
+						estimate_gas = estimate_gas.min(max_gas_limit); // Prevent excessive gas increases
 						continue;
 					}
 				}
-
 				return Err(McrEthConnectorError::from(err).into());
 			}
 		};
 
+		// Check transaction receipt
 		match pending_transaction.get_receipt().await {
-			// Transaction execution fail
-			Ok(transaction_receipt) if !transaction_receipt.status() => {
+			Ok(receipt) if !receipt.status() => {
 				tracing::debug!(
-					"transaction_receipt.gas_used: {} / estimate_gas: {estimate_gas}",
-					transaction_receipt.gas_used
+					"Transaction failed. Gas used: {} / Estimated gas: {}",
+					receipt.gas_used,
+					estimate_gas
 				);
-				// Some valid Tx can abort cause of insufficient gas without consuming all its gas.
-				// Define a threshold a little less than estimated gas to detect them.
-				let tx_gas_consumption_threshold = estimate_gas - (estimate_gas * 10) / 100;
-				if transaction_receipt.gas_used >= tx_gas_consumption_threshold {
-					tracing::info!("Send commitment Transaction  fail because of insufficient gas, receipt:{transaction_receipt:?} ");
+
+				let tx_gas_threshold = estimate_gas - (estimate_gas * 10) / 100;
+				if receipt.gas_used as u128 >= tx_gas_threshold {
+					tracing::info!(
+						"Transaction failed due to insufficient gas, retrying with increased gas."
+					);
 					estimate_gas += (estimate_gas * 30) / 100;
+					estimate_gas = estimate_gas.min(max_gas_limit);
 					continue;
 				} else {
 					return Err(McrEthConnectorError::RpcTransactionExecution(format!(
-						"Send commitment Transaction fail, abort Transaction, receipt:{transaction_receipt:?}"
+						"Transaction failed and was aborted. Receipt: {:?}",
+						receipt
 					))
 					.into());
 				}
 			}
-			Ok(_) => return Ok(()),
+			Ok(_) => return Ok(()), // Transaction succeeded
 			Err(err) => {
-				return Err(McrEthConnectorError::RpcTransactionExecution(err.to_string()).into())
+				return Err(McrEthConnectorError::RpcTransactionExecution(err.to_string()).into());
 			}
 		};
 	}
 
-	//Max retry exceed
+	// If all retries fail
 	Err(McrEthConnectorError::RpcTransactionExecution(
-		"Send commitment Transaction fail because of exceed max retry".to_string(),
+		"Transaction failed after max retries.".to_string(),
 	)
 	.into())
 }

@@ -8,44 +8,74 @@ import {IMintableToken, MintableToken} from "../src/token/base/MintableToken.sol
 import {ProxyAdmin} from "@openzeppelin/contracts/proxy/transparent/ProxyAdmin.sol";
 import {TransparentUpgradeableProxy} from "@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol";
 import {IERC20} from "@openzeppelin/contracts/interfaces/IERC20.sol";
-import {ERC1967Proxy} from "@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol";
 
 contract DeployMCRDev is Script {
-    function run() external {
+    function run(address contractAdmin) external {
         vm.startBroadcast();
-
+        vm.recordLogs();
+        
         console.log("hot: msg.sender: %s", msg.sender);
+
+        // Deploy Proxy Admin
+        ProxyAdmin proxyAdmin = new ProxyAdmin(msg.sender);
+        console.log("Proxy Admin Deployed: %s", address(proxyAdmin));
+
+        // Deploy Implementations
         MintableToken moveTokenImplementation = new MintableToken();
+        console.log("Move Token Implementation Deployed: %s", address(moveTokenImplementation));
         MovementStaking stakingImplementation = new MovementStaking();
+        console.log("Movement Staking Implementation Deployed: %s", address(stakingImplementation));
         MCR mcrImplementation = new MCR();
+        console.log("MCR Implementation Deployed: %s", address(mcrImplementation));
 
-        // Deploy the Move Token
+        // Deploy the Move Token Proxy
         bytes memory moveTokenData = abi.encodeCall(MintableToken.initialize, ("Move Token", "MOVE"));
-        address moveTokenProxy = address(new ERC1967Proxy(address(moveTokenImplementation), moveTokenData));
+        TransparentUpgradeableProxy moveTokenProxy = new TransparentUpgradeableProxy(
+            address(moveTokenImplementation), address(proxyAdmin), moveTokenData
+        );
+        console.log("Move Token Proxy Deployed: %s", address(moveTokenProxy));
 
-        // Deploy the Movement Staking
+        // Deploy the Movement Staking Proxy
         bytes memory movementStakingData =
             abi.encodeCall(MovementStaking.initialize, IMintableToken(address(moveTokenProxy)));
-        address movementStakingProxy = address(new ERC1967Proxy(address(stakingImplementation), movementStakingData));
+        TransparentUpgradeableProxy movementStakingProxy = new TransparentUpgradeableProxy(
+            address(stakingImplementation), address(proxyAdmin), movementStakingData
+        );
+        console.log("Movement Staking Proxy Deployed: %s", address(movementStakingProxy));
 
-        // Deploy the MCR
+        // Deploy the MCR Proxy
         address[] memory custodians = new address[](1);
         custodians[0] = address(moveTokenProxy);
         bytes memory mcrData = abi.encodeCall(
             MCR.initialize, (IMovementStaking(address(movementStakingProxy)), 0, 10, 4 seconds, custodians)
         );
-        address mcrProxy = address(new ERC1967Proxy(address(mcrImplementation), mcrData));
-        MCR mcr = MCR(mcrProxy);
+        TransparentUpgradeableProxy mcrProxy = new TransparentUpgradeableProxy(
+            address(mcrImplementation), address(proxyAdmin), mcrData
+        );
+        console.log("MCR Proxy Deployed: %s", address(mcrProxy));
+
+        // Grant commitment admin
+        MCR mcr = MCR(address(mcrProxy));
+        mcr.grantCommitmentAdmin(contractAdmin);
+        console.log("Granted CommitmentAdmin role to: %s", contractAdmin);
         mcr.grantCommitmentAdmin(msg.sender);
+        console.log("Granted CommitmentAdmin role to: %s", msg.sender);
 
-        console.log("Move Token Proxy: %s", moveTokenProxy);
-        console.log("MCR Proxy: %s", mcrProxy);
-        console.log("MCR custodian: %s", MovementStaking(movementStakingProxy).epochDurationByDomain(mcrProxy));
-        MintableToken moveToken = MintableToken(moveTokenProxy);
-        moveToken.mint(msg.sender, 100000 ether);
+        // Verify custodian setup
+        console.log("MCR custodian: %s", MovementStaking(address(movementStakingProxy)).epochDurationByDomain(address(mcrProxy)));
 
+        // Mint tokens
+        MintableToken moveToken = MintableToken(address(moveTokenProxy));
+        moveToken.mint(contractAdmin, 100000 ether);
+        console.log("Minted 100000 MOVE to %s", contractAdmin);
+
+        // Grant minter role
         moveToken.grantMinterRole(msg.sender);
+        console.log("Granted Minter Role to: %s", msg.sender);
+        moveToken.grantMinterRole(contractAdmin);
+        console.log("Granted Minter Role to: %s", contractAdmin);
         moveToken.grantMinterRole(address(movementStakingProxy));
+        console.log("Granted Minter Role to: %s", address(movementStakingProxy));
 
         vm.stopBroadcast();
     }
