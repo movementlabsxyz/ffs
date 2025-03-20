@@ -15,12 +15,12 @@ For further details see the [RFC for MCR](https://github.com/movementlabsxyz/rfc
 ## Architecture
 
 - [`cli/`](cli/) - Command line interface tools
-  - [`client/`](cli/client/) - Client implementation for interacting with the protocol. Handles interaction with the protocol by posting block commitments, streaming commitment data, and managing Ethereum blockchain interactions.
-  - [`deployer/`](cli/deployer/) - Tools for deploying the protocol contracts
-  - [`protocol/`](cli/protocol/) - Core protocol implementation
+  - [`client/`](cli/client/) - CLI tool for users to interact with the protocol (posting commitments, querying state)
+  - [`deployer/`](cli/deployer/) - CLI tool for deploying the protocol contracts
+  - [`protocol/`](cli/protocol/) - CLI tool for protocol-specific operations
 
 - [`clients/`](clients/) - Protocol client implementations
-  - [`eth/`](clients/eth/) - Ethereum client implementation
+  - [`eth/`](clients/eth/) - Ethereum client implementation that handles blockchain interactions
   - [`mock/`](clients/mock/) - Mock client for testing
   - [`util/`](clients/util/) - Shared utilities for clients
 

@@ -14,9 +14,9 @@ PCP (Postconfirmation Protocol) is responsible for handling post-confirmation co
 ## Architecture
 
 - [`cli/`](cli/) - Command line interface tools
-  - [`client/`](cli/client/) - Client implementation for interacting with PCP. Handles posting commitments and managing blockchain interactions.
-  - [`deployer/`](cli/deployer/) - Tools for deploying PCP contracts
-  - [`protocol/`](cli/protocol/) - Core protocol implementation
+  - [`client/`](cli/client/) - CLI tool for users to interact with the protocol (posting commitments, querying state)
+  - [`deployer/`](cli/deployer/) - CLI tool for deploying the protocol contracts
+  - [`protocol/`](cli/protocol/) - CLI tool for protocol-specific operations
 
 - [`dlu/`](dlu/) - Deployment and Lifecycle Utilities
   - [`eth/`](dlu/eth/) - Ethereum-specific deployment tools
