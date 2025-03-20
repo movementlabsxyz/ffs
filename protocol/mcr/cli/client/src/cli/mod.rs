@@ -1,4 +1,5 @@
 pub mod eth;
+pub mod post_commitment;
 use clap::{Parser, Subcommand};
 
 /// The `mcr-protocol-client` CLI.
@@ -17,20 +18,7 @@ pub enum McrProtocolClientSubcommand {
 	#[clap(subcommand)]
 	Eth(eth::Eth),
 	/// Post a commitment to an MCR implementation
-	PostCommitment(PostCommitmentArgs),
-}
-
-#[derive(clap::Args)]
-pub struct PostCommitmentArgs {
-	/// Hex-encoded commitment
-	#[clap(long, conflicts_with = "preimage_string", required_unless_present = "preimage_string")]
-	// for option `--commitment-hex "0x1234567890abcdef"`
-	commitment_hex: Option<String>,
-
-	/// String to be hashed into a commitment
-	#[clap(long, conflicts_with = "commitment_hex", required_unless_present = "commitment_hex")]
-	// for option `--preimage-string "test message"`
-	preimage_string: Option<String>,
+	PostCommitment(post_commitment::PostCommitment),
 }
 
 /// Implement the `From` trait for `McrProtocolClient` to convert it into a `McrProtocolClientSubcommand`.
@@ -57,12 +45,8 @@ impl McrProtocolClientSubcommand {
 				println!("mcr-protocol-client is under development. Please check back later.");
 			}
 			McrProtocolClientSubcommand::Eth(eth) => eth.execute().await?,
-			McrProtocolClientSubcommand::PostCommitment(args) => {
-				if let Some(hex) = &args.commitment_hex {
-					println!("Would post commitment from hex: {}", hex);
-				} else if let Some(preimage) = &args.preimage_string {
-					println!("Would hash and post commitment from preimage: {}", preimage);
-				}
+			McrProtocolClientSubcommand::PostCommitment(post_commitment) => {
+				post_commitment.execute().await?
 			}
 		}
 		Ok(())
