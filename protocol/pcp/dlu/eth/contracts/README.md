@@ -3,8 +3,20 @@
 - **RFC**: [RFC PCP](https://github.com/movementlabsxyz/rfcs/pulls)
 - **MIP**: [MIP-37](https://github.com/movementlabsxyz/MIP/blob/mip/postconfirmation/MIP/mip-37/README.md)
 
-This directory contains the implementation of the MRC settlement smart contract. To test the contract, run:
+This directory contains the implementation of the PCP settlement smart contract. To test the contract, run:
 
+## Testing
+
+Setup dependencies:
+```bash
+forge install foundry-rs/forge-std --no-commit
+forge install OpenZeppelin/openzeppelin-contracts --no-commit
+forge install safe-global/safe-smart-account --no-commit
+forge install transmissions11/solmate --no-commit
+forge install OpenZeppelin/openzeppelin-contracts-upgradeable --no-commit
+```
+
+Run tests:
 ```bash
 forge test
 ```
