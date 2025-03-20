@@ -4,8 +4,6 @@ This directory contains the implementation of the PCP settlement smart contract.
 
 ## Installation
 
-First, make the install script executable:
-
 ```bash
 chmod +x install-deps.sh
 ./install-deps.sh
@@ -13,10 +11,10 @@ chmod +x install-deps.sh
 
 ## Testing
 
-Then, run the install script:
+After installing the dependencies, run
 
 ```bash
-./install-deps.sh
+forge test
 ```
 
 There is a long-running test covering over 50 epochs. It will likely take a few seconds to run.
