@@ -5,6 +5,7 @@ broadcast/
 artifacts/
 typechain-types/
 cache_hardhat/
+
 lib/
 
 # Ignores development broadcast logs
