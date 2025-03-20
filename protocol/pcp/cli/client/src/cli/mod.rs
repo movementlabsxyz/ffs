@@ -1,4 +1,5 @@
 pub mod eth;
+pub mod post_commitment;
 use clap::{Parser, Subcommand};
 
 /// The `pcp-protocol-client` CLI.
@@ -16,6 +17,8 @@ pub enum PcpProtocolClientSubcommand {
 	Run,
 	#[clap(subcommand)]
 	Eth(eth::Eth),
+	/// Post a commitment to an PCP implementation
+	PostCommitment(post_commitment::PostCommitment),
 }
 
 /// Implement the `From` trait for `PcpProtocolClient` to convert it into a `PcpProtocolClientSubcommand`.
@@ -42,6 +45,9 @@ impl PcpProtocolClientSubcommand {
 				println!("pcp-protocol-client is under development. Please check back later.");
 			}
 			PcpProtocolClientSubcommand::Eth(eth) => eth.execute().await?,
+			PcpProtocolClientSubcommand::PostCommitment(post_commitment) => {
+				post_commitment.execute().await?
+			}
 		}
 		Ok(())
 	}
