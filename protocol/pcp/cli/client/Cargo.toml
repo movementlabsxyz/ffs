@@ -17,6 +17,9 @@ anyhow = { workspace = true }
 pcp-protocol-client-core-util = { workspace = true }
 pcp-protocol-client-core-eth = { workspace = true }
 pcp-types = { workspace = true }
+hex = { workspace = true }
+sha3 = "0.10.0"
+secure-signer-loader = { workspace = true }
 
 [lints]
 workspace = true
