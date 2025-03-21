@@ -22,7 +22,7 @@ pcp-config = { workspace = true }
 pcp-protocol-client-core-util = { workspace = true }
 pcp-protocol-client-core-eth = { workspace = true }
 hex = { workspace = true }
-sha3 = { workspace = true }
+sha3 = "0.10.0"
 
 alloy = { workspace = true, features = [
     "node-bindings",
