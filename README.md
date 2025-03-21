@@ -29,7 +29,7 @@ The `ffs-dev` binary will then be available in `target/release/ffs-dev`.
 > [!NOTE]
 > We use [`clap`](https://docs.rs/clap/latest/clap/) to build our CLIs, so you can always call `--help` to get a list of available commands and their usage.
 
-### `protocol`
+### CLI supported protocols
 
 The following protocols are supported:
 
@@ -42,9 +42,12 @@ The following commands are available:
 - `ffs-dev <protocol> protocol client ...`: to interact with `<protocol>` from the client.
 - `ffs-client -- protocol <protocol> ...`: to interact with `<protocol>` from the client.
 
-**Testing**
+### Crate usage
+To better understand the available crates we recommend reviewing the `cargo doc` documentation:
 
-To test with Anvil, read [README_anvil.md](README_anvil.md).
+```toml
+cargo doc --open --no-deps
+```
 
 ## Contributing
 
