@@ -2440,6 +2440,7 @@ dependencies = [
  "clap",
  "dotenv",
  "mcr-network",
+ "mcr-protocol",
  "serde",
  "tokio",
 ]
