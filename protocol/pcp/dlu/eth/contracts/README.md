@@ -9,6 +9,16 @@ chmod +x install-deps.sh
 ./install-deps.sh
 ```
 
+## Build
+
+Build and apply new abis
+
+```bash
+forge build
+chmod +x apply-new-abis.sh
+./apply-new-abis.sh
+```
+
 ## Testing
 
 After installing the dependencies, run
