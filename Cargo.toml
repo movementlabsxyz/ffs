@@ -14,7 +14,7 @@ members = [
   "protocol/mcr/cli/*",
   "protocol/mcr/dlu/eth/deployer-core",
   "network/mcr/cli/*",
-  "network/mcr/components/*",
+  "network/mcr/components/eth/*",
 
   # pcp
   ## protocol
@@ -147,6 +147,8 @@ mcr-protocol-deployer-eth-core = { path = "protocol/mcr/dlu/eth/deployer-core" }
 mcr-network-client = { path = "network/mcr/cli/client" }
 mcr-network-coordinator = { path = "network/mcr/cli/coordinator" }
 mcr-network = { path = "network/mcr/cli/network" }
+mcr-network-anvil-component-core = { path = "network/mcr/components/eth/anvil" }
+mcr-network-eth-live-component-core = { path = "network/mcr/components/eth/live" }
 
 # util
 secure-signer-eth = { path = "util/signing/eth" }

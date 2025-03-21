@@ -3718,6 +3718,26 @@ dependencies = [
 ]
 
 [[package]]
+name = "mcr-network-eth-live-component-core"
+version = "0.0.1"
+dependencies = [
+ "anyhow",
+ "async-stream",
+ "async-trait",
+ "futures",
+ "kestrel",
+ "mcr-config",
+ "mcr-protocol-client-core-mock",
+ "mcr-protocol-client-core-util",
+ "mcr-protocol-deployer-eth-core",
+ "mcr-types",
+ "secure-signer-loader",
+ "serde_json",
+ "tokio",
+ "tokio-stream",
+]
+
+[[package]]
 name = "mcr-protocol"
 version = "0.0.1"
 dependencies = [

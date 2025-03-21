@@ -1,5 +1,5 @@
 use kestrel::State;
-use mcr_protocol_deployer_eth_core::dev::config::Config;
+use mcr_protocol_deployer_eth_core::dev::{artifacts::Artifacts, config::Config};
 use network_anvil_component_core::{lifecycle::up::Up as AnvilUp, util::parser::AnvilData};
 use secure_signer_loader::identifiers::{local::Local, SignerIdentifier};
 
@@ -7,15 +7,20 @@ use secure_signer_loader::identifiers::{local::Local, SignerIdentifier};
 pub struct Up {
 	anvil_deploy: AnvilUp,
 	config: Config,
+	artifacts: State<Artifacts>,
 }
 
 impl Up {
 	pub fn new(config: Config) -> Self {
-		Up { anvil_deploy: AnvilUp::new(), config }
+		Up { anvil_deploy: AnvilUp::new(), config, artifacts: State::new() }
 	}
 
 	pub fn anvil_data(&self) -> &State<AnvilData> {
 		&self.anvil_deploy.anvil_data()
+	}
+
+	pub fn artifacts(&self) -> &State<Artifacts> {
+		&self.artifacts
 	}
 
 	pub async fn run(mut self) -> Result<(), anyhow::Error> {
@@ -47,7 +52,10 @@ impl Up {
 
 		// build the deployer
 		let deployer = self.config.build()?;
-		deployer.deploy().await?;
+		let artifacts = deployer.deploy().await?;
+
+		// for composability, set the artifacts in the state
+		self.artifacts.write().set(artifacts).await;
 
 		// Wait for the anvil deployer to finish
 		deployer_future.await??;
