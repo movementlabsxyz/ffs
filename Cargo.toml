@@ -14,7 +14,6 @@ members = [
   "protocol/mcr/cli/*",
   "protocol/mcr/dlu/eth/deployer-core",
   "network/mcr/cli/*",
-  "network/mcr/coordinator/*",
   "network/mcr/components/*",
 
   # pcp
@@ -130,16 +129,20 @@ secure-signer-aws-kms = { git = "https://github.com/movementlabsxyz/secure-signi
 kestrel = { git = "https://github.com/movementlabsxyz/kestrel.git", rev = "c5c9b30ba2532f606485ad5a08da40d2940491fa" }
 
 # internal
+## common
+### protocol
+network-anvil-component-core = { path = "network/common/components/anvil" }
+
 ## mcr
 ### protocol
 mcr-types = { path = "protocol/mcr/util/types" }
 mcr-config = { path = "protocol/mcr/util/config" }
 mcr-protocol-client-core-util = { path = "protocol/mcr/clients/util" }
-mcr-protocol-client-core-eth = { path = "protocol/mcr/clients/eth" }
+mcr-protocol-client-eth-core = { path = "protocol/mcr/clients/eth" }
 mcr-protocol-client-core-mock = { path = "protocol/mcr/clients/mock" }
 mcr-protocol-client = { path = "protocol/mcr/cli/client" }
 mcr-protocol = { path = "protocol/mcr/cli"}
-mcr-protocol-deployer-core-eth = { path = "protocol/mcr/dlu/eth/deployer-core" }
+mcr-protocol-deployer-eth-core = { path = "protocol/mcr/dlu/eth/deployer-core" }
 ### network
 mcr-network-client = { path = "network/mcr/cli/client" }
 mcr-network-coordinator = { path = "network/mcr/cli/coordinator" }

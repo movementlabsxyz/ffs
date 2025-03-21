@@ -3674,7 +3674,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "mcr-network-anvil-component"
+name = "mcr-network-anvil-component-core"
 version = "0.0.1"
 dependencies = [
  "anyhow",
@@ -3685,8 +3685,10 @@ dependencies = [
  "mcr-config",
  "mcr-protocol-client-core-mock",
  "mcr-protocol-client-core-util",
- "mcr-protocol-deployer-core-eth",
+ "mcr-protocol-deployer-eth-core",
  "mcr-types",
+ "network-anvil-component-core",
+ "secure-signer-loader",
  "serde_json",
  "strip-ansi-escapes",
  "tokio",
@@ -3716,26 +3718,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "mcr-network-kestrel-coordinator"
-version = "0.0.1"
-dependencies = [
- "anyhow",
- "async-stream",
- "async-trait",
- "futures",
- "kestrel",
- "mcr-config",
- "mcr-protocol-client-core-mock",
- "mcr-protocol-client-core-util",
- "mcr-protocol-deployer-core-eth",
- "mcr-types",
- "serde_json",
- "strip-ansi-escapes",
- "tokio",
- "tokio-stream",
-]
-
-[[package]]
 name = "mcr-protocol"
 version = "0.0.1"
 dependencies = [
@@ -3754,15 +3736,41 @@ dependencies = [
  "anyhow",
  "clap",
  "dotenv",
- "mcr-protocol-client-core-eth",
  "mcr-protocol-client-core-util",
+ "mcr-protocol-client-eth-core",
  "mcr-types",
  "serde",
  "tokio",
 ]
 
 [[package]]
-name = "mcr-protocol-client-core-eth"
+name = "mcr-protocol-client-core-mock"
+version = "0.0.1"
+dependencies = [
+ "anyhow",
+ "futures",
+ "mcr-protocol-client-core-util",
+ "mcr-types",
+ "serde",
+ "thiserror 1.0.69",
+ "tokio",
+ "tokio-stream",
+ "tracing",
+]
+
+[[package]]
+name = "mcr-protocol-client-core-util"
+version = "0.0.1"
+dependencies = [
+ "mcr-types",
+ "serde",
+ "thiserror 1.0.69",
+ "tokio",
+ "tokio-stream",
+]
+
+[[package]]
+name = "mcr-protocol-client-eth-core"
 version = "0.0.1"
 dependencies = [
  "alloy",
@@ -3796,32 +3804,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "mcr-protocol-client-core-mock"
-version = "0.0.1"
-dependencies = [
- "anyhow",
- "futures",
- "mcr-protocol-client-core-util",
- "mcr-types",
- "serde",
- "thiserror 1.0.69",
- "tokio",
- "tokio-stream",
- "tracing",
-]
-
-[[package]]
-name = "mcr-protocol-client-core-util"
-version = "0.0.1"
-dependencies = [
- "mcr-types",
- "serde",
- "thiserror 1.0.69",
- "tokio",
- "tokio-stream",
-]
-
-[[package]]
 name = "mcr-protocol-deployer"
 version = "0.0.1"
 dependencies = [
@@ -3829,7 +3811,7 @@ dependencies = [
  "clap",
  "dotenv",
  "jsonlvar 0.0.1",
- "mcr-protocol-deployer-core-eth",
+ "mcr-protocol-deployer-eth-core",
  "mcr-types",
  "serde",
  "tokio",
@@ -3853,7 +3835,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "mcr-protocol-deployer-core-eth"
+name = "mcr-protocol-deployer-eth-core"
 version = "0.0.1"
 dependencies = [
  "anyhow",
@@ -3954,7 +3936,7 @@ dependencies = [
  "mcr-config",
  "mcr-protocol-client-core-mock",
  "mcr-protocol-client-core-util",
- "mcr-protocol-deployer-core-eth",
+ "mcr-protocol-deployer-eth-core",
  "mcr-types",
  "serde_json",
  "strip-ansi-escapes",

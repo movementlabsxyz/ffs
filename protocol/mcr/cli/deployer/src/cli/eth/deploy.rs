@@ -1,7 +1,7 @@
 use anyhow::Context;
 use clap::Parser;
 use jsonlvar::Jsonl;
-use mcr_protocol_deployer_core_eth::dev::config::Config;
+use mcr_protocol_deployer_eth_core::dev::config::Config;
 use serde::{Deserialize, Serialize};
 
 #[derive(Parser, Serialize, Deserialize, Debug, Clone)]

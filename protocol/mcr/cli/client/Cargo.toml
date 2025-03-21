@@ -15,7 +15,7 @@ clap = { workspace = true}
 dotenv = { workspace = true }
 anyhow = { workspace = true }
 mcr-protocol-client-core-util = { workspace = true }
-mcr-protocol-client-core-eth = { workspace = true }
+mcr-protocol-client-eth-core = { workspace = true }
 mcr-types = { workspace = true }
 
 [lints]

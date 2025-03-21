@@ -19,7 +19,7 @@ impl Deploy {
 		&self.anvil_data
 	}
 
-	pub async fn run(&self) -> Result<(), anyhow::Error> {
+	pub async fn run(self) -> Result<(), anyhow::Error> {
 		let anvil_data = self.anvil_data.clone();
 		let anvil = kestrel::task(async move {
 			// construct the keys fulfiller

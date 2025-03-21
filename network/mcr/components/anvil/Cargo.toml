@@ -1,5 +1,5 @@
 [package]
-name = "mcr-network-anvil-component"
+name = "mcr-network-anvil-component-core"
 version = { workspace = true }
 edition  = { workspace = true }
 license  = { workspace = true }
@@ -24,8 +24,10 @@ serde_json = { workspace = true }
 mcr-types = { workspace = true }
 mcr-config = { workspace = true }
 kestrel = { workspace = true }
-mcr-protocol-deployer-core-eth = { workspace = true }
+mcr-protocol-deployer-eth-core = { workspace = true }
 strip-ansi-escapes = { workspace = true }
+network-anvil-component-core = { workspace = true }
+secure-signer-loader = { workspace = true }
 
 [dev-dependencies]
 mcr-protocol-client-core-mock = { workspace = true }
