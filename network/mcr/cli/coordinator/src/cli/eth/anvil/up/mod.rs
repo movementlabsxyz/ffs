@@ -17,11 +17,14 @@ impl Up {
 
 		let up = UpCore::new(config);
 		let artifacts_state = up.artifacts().clone();
+		let anvil_state = up.anvil_data().clone();
 
 		let up_task = kestrel::task(async move { up.run().await });
 
-		let artifacts = artifacts_state.read().wait_for().await;
+		let anvil_data = anvil_state.read().wait_for().await;
+		println!("{}", anvil_data.try_to_jsonl_flat(None)?);
 
+		let artifacts = artifacts_state.read().wait_for().await;
 		println!("{}", artifacts.try_to_jsonl_flat(None)?);
 
 		up_task.await??;

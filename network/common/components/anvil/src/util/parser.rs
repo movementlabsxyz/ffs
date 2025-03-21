@@ -1,8 +1,10 @@
+use jsonlvar::Jsonl;
 use kestrel::{fulfill::custom::CustomProcessor, fulfill::FulfillError};
+use serde::{Deserialize, Serialize};
 use tokio::sync::mpsc::Receiver;
 
 /// The data output from starting Anvil
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Deserialize, Serialize, Jsonl)]
 pub struct AnvilData {
 	pub signers: Vec<String>,
 	pub private_keys: Vec<String>,

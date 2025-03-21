@@ -26,6 +26,8 @@ mcr-config = { workspace = true }
 kestrel = { workspace = true }
 mcr-protocol-deployer-eth-core = { workspace = true }
 strip-ansi-escapes = { workspace = true }
+jsonlvar = { workspace = true }
+serde = { workspace = true }
 
 [dev-dependencies]
 mcr-protocol-client-core-mock = { workspace = true }
