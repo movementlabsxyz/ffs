@@ -73,7 +73,7 @@ The following commands are available:
 
 - `ffs-dev <protocol> network ...`: to spin up a network with all that you need to run `<protocol>`.
 - `ffs-dev <protocol> protocol client ...`: to interact with `<protocol>` from the client.
-- `ffs-client -- protocol <protocol> ...`: to interact with `<protocol>` from the client.
+- `ffs-client protocol <protocol> ...`: to interact with `<protocol>` from the client.
 
 #### `where` and `using`
 Many of our CLI subcommands share a common pattern where `where` and `using` subcommand variant are tied into the same logic, but accept different parameters.
