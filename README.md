@@ -18,36 +18,11 @@ Movement Labs' Fast Finality Settlement is a proof of stake settlement system.
 
 The easiest entry point for all protocols and use cases is the [`ffs-dev`](sdk/cli/ffs-dev/README.md) CLI. Subcomponents of `ffs-dev` will have their own CLIs and these CLIs have their core libraries. 
 
-To build `ffs-dev` manually you can run the following command:
-
 ```bash
-cargo build -p ffs-dev --release
+ffs-dev mcr network coordinator eth anvil up
 ```
 
-The `ffs-dev` binary will then be available in `target/release/ffs-dev`.
-
-> [!NOTE]
-> We use [`clap`](https://docs.rs/clap/latest/clap/) to build our CLIs, so you can always call `--help` to get a list of available commands and their usage.
-
-### CLI supported protocols
-
-The following protocols are supported:
-
-- `mcr` (Multi-Commit Rollup Protocol)
-- `pcp` (Postconfirmation Protocol)
-
-The following commands are available:
-
-- `ffs-dev <protocol> network ...`: to spin up a network with all that you need to run `<protocol>`.
-- `ffs-dev <protocol> protocol client ...`: to interact with `<protocol>` from the client.
-- `ffs-client -- protocol <protocol> ...`: to interact with `<protocol>` from the client.
-
-### Crate usage
-To better understand the available crates we recommend reviewing the `cargo doc` documentation:
-
-```toml
-cargo doc --open --no-deps
-```
+For a more in-depth usage guide, see [Usage](#usage).
 
 ## Contributing
 
@@ -72,3 +47,40 @@ There are five subdirectories which progressively build on one another for node 
 There are several other subdirectories of note:
 
 - [`spec`](./spec): contains formal verification of FFS protocols.
+
+## Usage
+We recommend  [`ffs-dev`](sdk/cli/ffs-dev/README.md) as the best starting point for using this repo. 
+
+To build `ffs-dev` manually you can run the following command:
+
+```bash
+cargo build -p ffs-dev --release
+```
+
+The `ffs-dev` binary will then be available in `target/release/ffs-dev`.
+
+> [!NOTE]
+> We use [`clap`](https://docs.rs/clap/latest/clap/) to build our CLIs, so you can always call `--help` to get a list of available commands and their usage.
+
+### CLI supported protocols
+
+The following protocols are supported:
+
+- `mcr` (Multi-Commit Rollup Protocol)
+- `pcp` (Postconfirmation Protocol)
+
+The following commands are available:
+
+- `ffs-dev <protocol> network ...`: to spin up a network with all that you need to run `<protocol>`.
+- `ffs-dev <protocol> protocol client ...`: to interact with `<protocol>` from the client.
+- `ffs-client -- protocol <protocol> ...`: to interact with `<protocol>` from the client.
+
+### Crates
+To better understand the available crates we recommend reviewing the `cargo doc` documentation:
+
+```bash
+cargo doc --open --no-deps
+```
+
+### Production
+Coming soon!
