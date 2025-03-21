@@ -2,7 +2,7 @@
 pragma solidity ^0.8.19;
 
 import "forge-std/Test.sol";
-import "../../src/token/MOVEToken.sol";
+import "../src/token/MOVEToken.sol";
 
 contract DeployerTest is Test {
     
