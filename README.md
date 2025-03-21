@@ -75,6 +75,21 @@ The following commands are available:
 - `ffs-dev <protocol> protocol client ...`: to interact with `<protocol>` from the client.
 - `ffs-client -- protocol <protocol> ...`: to interact with `<protocol>` from the client.
 
+#### `where` and `using`
+Many of our CLI subcommands share a common pattern where `where` and `using` subcommand variant are tied into the same logic, but accept different parameters.
+
+- **`where`**: Explicitly requires parameters to be passed in as args. This is best for when you're learning to use a given command, or want to see what is necessary to run a command.
+- **`using`**: Allows parameters to passed in a hierarchy from environment variables, to config files, to command line args in order of override. This is useful for production settings. The subcommand will still validate the config. 
+
+For an example, run the following command and observe the config logged at the top:
+
+```bash
+UP_CONTRACT_ADMIN=0x911 ffs-dev mcr network coordinator eth anvil up using --config-path ./example/using.json -- --fork-url http://localhost:8545
+```
+
+> [!NOTE]
+> A helpful pattern is to check command requirements with `where` and then develop with `using`. 
+
 ### Crates
 To better understand the available crates we recommend reviewing the `cargo doc` documentation:
 

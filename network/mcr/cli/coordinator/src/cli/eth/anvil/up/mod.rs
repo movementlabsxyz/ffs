@@ -21,6 +21,7 @@ pub struct Up {
 impl Up {
 	pub async fn execute(&self) -> Result<(), anyhow::Error> {
 		let config = self.config.clone();
+		println!("{}", config.try_to_jsonl_flat(None)?);
 
 		let up = UpCore::new(config);
 		let artifacts_state = up.artifacts().clone();

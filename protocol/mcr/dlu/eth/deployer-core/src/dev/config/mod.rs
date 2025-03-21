@@ -1,11 +1,12 @@
 use crate::contracts::ContractWorkspace;
 use crate::dev::deployer::Deployer;
 use clap::Parser;
+use jsonlvar::Jsonl;
 use secure_signer::key::TryFromCanonicalString;
 use secure_signer_loader::identifiers::SignerIdentifier;
 use serde::{Deserialize, Serialize};
 
-#[derive(Parser, Debug, Serialize, Deserialize, Clone)]
+#[derive(Parser, Debug, Serialize, Deserialize, Clone, Jsonl)]
 #[clap(help_expected = true)]
 pub struct Config {
 	/// The signer identifier.

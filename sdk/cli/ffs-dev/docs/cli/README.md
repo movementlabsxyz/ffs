@@ -175,14 +175,14 @@ The subcommands of the `mcr-network-coordinator` CLI
 
 ###### **Subcommands:**
 
-* `where` — Run $struct_name where flags provide parameters
-* `using` — Run $struct_name using config files to load parameters
+* `where` — Run with all values passed explicitly as CLI flags
+* `using` — Load from config files, with optional env + CLI arg overrides
 
 
 
 ## `ffs-dev mcr network coordinator eth anvil up where`
 
-Run $struct_name where flags provide parameters
+Run with all values passed explicitly as CLI flags
 
 **Usage:** `ffs-dev mcr network coordinator eth anvil up where [OPTIONS] --signer-identifier <SIGNER_IDENTIFIER> --fork-url <FORK_URL> --contract-admin <CONTRACT_ADMIN>`
 
@@ -199,9 +199,13 @@ Run $struct_name where flags provide parameters
 
 ## `ffs-dev mcr network coordinator eth anvil up using`
 
-Run $struct_name using config files to load parameters
+Load from config files, with optional env + CLI arg overrides
 
-**Usage:** `ffs-dev mcr network coordinator eth anvil up using [OPTIONS] --config-path <CONFIG_PATH>`
+**Usage:** `ffs-dev mcr network coordinator eth anvil up using [OPTIONS] [EXTRA_ARGS]...`
+
+###### **Arguments:**
+
+* `<EXTRA_ARGS>`
 
 ###### **Options:**
 
