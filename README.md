@@ -29,10 +29,22 @@ The `ffs-dev` binary will then be available in `target/release/ffs-dev`.
 > [!NOTE]
 > We use [`clap`](https://docs.rs/clap/latest/clap/) to build our CLIs, so you can always call `--help` to get a list of available commands and their usage.
 
-### `mcr`
+### `protocol`
 
-- `ffs-dev mcr network ...`: to spin up a network with all that you need to run MCR.
-- `ffs-dev mcr protocol client ...`: to interact with the MCR protocol from the client.
+The following protocols are supported:
+
+- `mcr` (Multi-Commit Rollup Protocol)
+- `pcp` (Postconfirmation Protocol)
+
+The following commands are available:
+
+- `ffs-dev <protocol> network ...`: to spin up a network with all that you need to run `<protocol>`.
+- `ffs-dev <protocol> protocol client ...`: to interact with `<protocol>` from the client.
+- `ffs-client -- protocol <protocol> ...`: to interact with `<protocol>` from the client.
+
+**Testing**
+
+To test with Anvil, read [README_anvil.md](README_anvil.md).
 
 ## Contributing
 
