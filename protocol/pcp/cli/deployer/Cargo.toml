@@ -1,5 +1,5 @@
 [package]
-name = "pcp-protocol"
+name = "pcp-protocol-deployer"
 version = { workspace = true }
 edition = { workspace = true }
 license = { workspace = true }
@@ -14,7 +14,8 @@ serde = { workspace = true, features = ["derive"] }
 clap = { workspace = true}
 dotenv = { workspace = true }
 anyhow = { workspace = true }
-pcp-protocol-client = { workspace = true }
+pcp-protocol-deployer-core-eth = { workspace = true }
+pcp-types = { workspace = true }
 
 [lints]
 workspace = true

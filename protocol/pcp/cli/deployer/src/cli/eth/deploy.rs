@@ -1,23 +1,20 @@
 use anyhow::Context;
 use clap::Parser;
-use pcp_protocol_client_core_eth::config::Config;
-use pcp_protocol_client_core_util::PcpClientOperations;
-use pcp_types::block_commitment::SuperBlockCommitment;
+use pcp_protocol_deployer_core_eth::dev::config::Config;
 use serde::{Deserialize, Serialize};
 
 #[derive(Parser, Serialize, Deserialize, Debug, Clone)]
 #[clap(help_expected = true)]
-pub struct PostAdminCommitment {
+pub struct Deploy {
 	#[clap(flatten)]
 	pub config: Option<Config>,
 }
 
-impl PostAdminCommitment {
+impl Deploy {
 	pub async fn execute(&self) -> Result<(), anyhow::Error> {
 		let config = self.config.clone().context("no config provided")?;
-		let client = config.build().await?;
-		client.force_block_commitment(SuperBlockCommitment::test()).await?;
-
+		let deployer = config.build()?;
+		deployer.deploy().await?;
 		Ok(())
 	}
 }

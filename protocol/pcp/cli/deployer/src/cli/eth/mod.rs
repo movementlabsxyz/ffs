@@ -1,17 +1,17 @@
-pub mod post_admin_commitment;
+pub mod deploy;
 
 use clap::Subcommand;
 
 #[derive(Subcommand)]
 #[clap(rename_all = "kebab-case")]
 pub enum Eth {
-	PostAdminCommitment(post_admin_commitment::PostAdminCommitment),
+	Deploy(deploy::Deploy),
 }
 
 impl Eth {
 	pub async fn execute(&self) -> Result<(), anyhow::Error> {
 		match self {
-			Eth::PostAdminCommitment(cmd) => cmd.execute().await?,
+			Eth::Deploy(cmd) => cmd.execute().await?,
 		}
 		Ok(())
 	}

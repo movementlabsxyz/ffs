@@ -10,10 +10,12 @@ members = [
   "protocol/mcr/manager",
   "protocol/mcr/cli/*",
   "protocol/mcr/dlu/eth/deployer-core",
-
   # pcp
-  ## protocol
+  "protocol/pcp/util/*",
+  "protocol/pcp/clients/*",
+  "protocol/pcp/manager",
   "protocol/pcp/cli/*",
+  "protocol/pcp/dlu/eth/deployer-core",
   ## node
   "node/pcp/cli/*",
   ## network
@@ -139,6 +141,7 @@ pcp-protocol-client-core-eth = { path = "protocol/pcp/clients/eth" }
 pcp-protocol-client-core-mock = { path = "protocol/pcp/clients/mock" }
 pcp-protocol-client = { path = "protocol/pcp/cli/client" }
 pcp-protocol = { path = "protocol/pcp/cli"}
+pcp-protocol-deployer-core-eth = { path = "protocol/pcp/dlu/eth/deployer-core" }
 ### network
 pcp-network-client = { path = "network/pcp/cli/client" }
 pcp-network-coordinator = { path = "network/pcp/cli/coordinator" }

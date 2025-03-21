@@ -1,4 +1,5 @@
 pub mod eth;
+pub mod post_commitment;
 use clap::{Parser, Subcommand};
 use pcp_protocol_client_core_eth::config::Config;
 use pcp_protocol_client_core_util::PcpClientOperations;
@@ -35,6 +36,8 @@ pub struct PostCommitmentArgs {
 	/// String to be hashed into a commitment
 	#[clap(long, conflicts_with = "commitment_hex", required_unless_present = "commitment_hex")]
 	preimage_string: Option<String>,
+	/// Post a commitment to an PCP implementation
+	// PostCommitment(post_commitment::PostCommitment),
 }
 
 /// Implement the `From` trait for `PcpProtocolClient` to convert it into a `PcpProtocolClientSubcommand`.

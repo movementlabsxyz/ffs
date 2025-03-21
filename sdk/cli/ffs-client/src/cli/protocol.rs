@@ -8,7 +8,6 @@ pub enum Protocol {
 	/// MCR protocol commands
 	#[clap(subcommand)]
 	Mcr(McrProtocolClientSubcommand),
-	
 	/// PCP protocol commands
 	#[clap(subcommand)]
 	Pcp(PcpProtocolClientSubcommand),

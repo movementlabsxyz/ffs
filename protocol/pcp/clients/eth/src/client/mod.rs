@@ -39,10 +39,10 @@ sol!(
 	"abis/MOVEToken.json"
 );
 
-pub struct Client<P> {
+pub struct Client<R, W> {
 	pub(crate) run_commitment_admin_mode: bool,
-	pub(crate) rpc_provider: P,
-	pub(crate) ws_provider: RootProvider<PubSubFrontend>,
+	pub(crate) rpc_provider: R,
+	pub(crate) ws_provider: W,
 	pub(crate) signer_address: Address,
 	pub(crate) contract_address: Address,
 	pub(crate) send_transaction_error_rules: Vec<Box<dyn VerifyRule>>,
@@ -50,9 +50,10 @@ pub struct Client<P> {
 	pub(crate) send_transaction_retries: u32,
 }
 
-impl<P> PcpClientOperations for Client<P>
+impl<R, W> PcpClientOperations for Client<R, W>
 where
-	P: Provider + Clone,
+	R: Provider + Clone,
+	W: Provider + Clone,
 {
 	async fn post_block_commitment(
 		&self,
@@ -60,7 +61,7 @@ where
 	) -> Result<(), PcpClientError> {
 		let contract = PCP::new(self.contract_address, &self.rpc_provider);
 
-		let eth_block_commitment = PCP::SuperBlockCommitment {
+		let eth_block_commitment = PCPStorage::SuperBlockCommitment {
 			// Currently, to simplify the API, we'll say 0 is uncommitted all other numbers are legitimate heights
 			height: U256::from(block_commitment.height()),
 			commitment: alloy_primitives::FixedBytes(
@@ -72,6 +73,7 @@ where
 		if self.run_commitment_admin_mode {
 			let call_builder = contract.forceLatestCommitment(eth_block_commitment);
 			send_transaction(
+				self.signer_address.clone(),
 				call_builder,
 				&self.send_transaction_error_rules,
 				self.send_transaction_retries,
@@ -81,6 +83,7 @@ where
 		} else {
 			let call_builder = contract.submitSuperBlockCommitment(eth_block_commitment);
 			send_transaction(
+				self.signer_address.clone(),
 				call_builder,
 				&self.send_transaction_error_rules,
 				self.send_transaction_retries,
@@ -99,7 +102,7 @@ where
 		let eth_block_commitment: Vec<_> = block_commitments
 			.into_iter()
 			.map(|block_commitment| {
-				Ok(PCP::SuperBlockCommitment {
+				Ok(PCPStorage::SuperBlockCommitment {
 					// Currently, to simplify the API, we'll say 0 is uncommitted all other numbers are legitimate heights
 					height: U256::from(block_commitment.height()),
 					commitment: alloy_primitives::FixedBytes(
@@ -116,6 +119,7 @@ where
 		let call_builder = contract.submitBatchSuperBlockCommitment(eth_block_commitment);
 
 		send_transaction(
+			self.signer_address.clone(),
 			call_builder,
 			&self.send_transaction_error_rules,
 			self.send_transaction_retries,
@@ -130,7 +134,7 @@ where
 	) -> Result<(), PcpClientError> {
 		let contract = PCP::new(self.contract_address, &self.rpc_provider);
 
-		let eth_block_commitment = PCP::SuperBlockCommitment {
+		let eth_block_commitment = PCPStorage::SuperBlockCommitment {
 			// Currently, to simplify the API, we'll say 0 is uncommitted all other numbers are legitimate heights
 			height: U256::from(block_commitment.height()),
 			commitment: alloy_primitives::FixedBytes(
@@ -141,6 +145,7 @@ where
 
 		let call_builder = contract.forceLatestCommitment(eth_block_commitment);
 		send_transaction(
+			self.signer_address.clone(),
 			call_builder,
 			&self.send_transaction_error_rules,
 			self.send_transaction_retries,

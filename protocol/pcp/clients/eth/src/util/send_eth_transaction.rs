@@ -3,6 +3,7 @@ use alloy_contract::CallBuilder;
 use alloy_contract::CallDecoder;
 use alloy_network::Ethereum;
 use alloy_transport::{Transport, TransportError};
+use alloy_primitives::Address;
 use pcp_protocol_client_core_util::PcpClientError;
 use std::marker::PhantomData;
 use thiserror::Error;
@@ -114,6 +115,10 @@ pub async fn send_transaction<
 			.get_gas_price()
 			.await
 			.map_err(|e| PcpClientError::Internal(Box::new(e)))?;
+		gas_price += (gas_price * 20) / 100;
+
+		call_builder = call_builder.gas_price(gas_price);
+
 		let transaction_fee_wei = estimate_gas * gas_price;
 		if transaction_fee_wei > gas_limit {
 			return Err(PcpEthConnectorError::GasLimitExceed(transaction_fee_wei, gas_limit).into());
@@ -162,16 +167,16 @@ pub async fn send_transaction<
 					.into());
 				}
 			}
-			Ok(_) => return Ok(()),
+			Ok(_) => return Ok(()), // Transaction succeeded
 			Err(err) => {
-				return Err(PcpEthConnectorError::RpcTransactionExecution(err.to_string()).into())
+				return Err(PcpEthConnectorError::RpcTransactionExecution(err.to_string()).into());
 			}
 		};
 	}
 
-	//Max retry exceed
+	// If all retries fail
 	Err(PcpEthConnectorError::RpcTransactionExecution(
-		"Send commitment Transaction fail because of exceed max retry".to_string(),
+		"Transaction failed after max retries.".to_string(),
 	)
 	.into())
 }
