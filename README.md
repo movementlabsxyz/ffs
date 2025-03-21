@@ -42,10 +42,10 @@ The following commands are available:
 - `ffs-dev <protocol> protocol client ...`: to interact with `<protocol>` from the client.
 - `ffs-client -- protocol <protocol> ...`: to interact with `<protocol>` from the client.
 
-### Crate usage
+### Crates
 To better understand the available crates we recommend reviewing the `cargo doc` documentation:
 
-```toml
+```bash
 cargo doc --open --no-deps
 ```
 
