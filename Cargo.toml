@@ -48,7 +48,8 @@ members = [
   "util/signing/eth",
   "util/environment",
   "util/commander",
-  "util/clap-markdown-ext"
+  "util/clap-markdown-ext",
+  "util/orfile/*"
 ]
 
 [workspace.package]
@@ -180,6 +181,9 @@ secure-signer-eth = { path = "util/signing/eth" }
 ffs-environment = { path = "util/environment" }
 commander = { path = "util/commander" }
 clap-markdown-ext = { path = "util/clap-markdown-ext" }
+orfile = { path = "util/orfile/orfile" }
+orfile-util = { path = "util/orfile/util" }
+orfile-macro = { path = "util/orfile/macro" }
 
 [workspace.lints.clippy]
 debug_assert_with_mut_call = "deny"

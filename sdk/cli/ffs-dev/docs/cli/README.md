@@ -19,6 +19,8 @@ This document contains the help content for the `ffs-dev` command-line program.
 * [`ffs-dev mcr network coordinator eth`↴](#ffs-dev-mcr-network-coordinator-eth)
 * [`ffs-dev mcr network coordinator eth anvil`↴](#ffs-dev-mcr-network-coordinator-eth-anvil)
 * [`ffs-dev mcr network coordinator eth anvil up`↴](#ffs-dev-mcr-network-coordinator-eth-anvil-up)
+* [`ffs-dev mcr network coordinator eth anvil up where`↴](#ffs-dev-mcr-network-coordinator-eth-anvil-up-where)
+* [`ffs-dev mcr network coordinator eth anvil up using`↴](#ffs-dev-mcr-network-coordinator-eth-anvil-up-using)
 * [`ffs-dev mcr network coordinator eth live`↴](#ffs-dev-mcr-network-coordinator-eth-live)
 * [`ffs-dev mcr network coordinator eth live up`↴](#ffs-dev-mcr-network-coordinator-eth-live-up)
 * [`ffs-dev mcr protocol`↴](#ffs-dev-mcr-protocol)
@@ -169,7 +171,20 @@ The subcommands of the `mcr-network-coordinator` CLI
 
 ## `ffs-dev mcr network coordinator eth anvil up`
 
-**Usage:** `ffs-dev mcr network coordinator eth anvil up [OPTIONS] --signer-identifier <SIGNER_IDENTIFIER> --fork-url <FORK_URL> --contract-admin <CONTRACT_ADMIN>`
+**Usage:** `ffs-dev mcr network coordinator eth anvil up <COMMAND>`
+
+###### **Subcommands:**
+
+* `where` — Run $struct_name where flags provide parameters
+* `using` — Run $struct_name using config files to load parameters
+
+
+
+## `ffs-dev mcr network coordinator eth anvil up where`
+
+Run $struct_name where flags provide parameters
+
+**Usage:** `ffs-dev mcr network coordinator eth anvil up where [OPTIONS] --signer-identifier <SIGNER_IDENTIFIER> --fork-url <FORK_URL> --contract-admin <CONTRACT_ADMIN>`
 
 ###### **Options:**
 
@@ -177,6 +192,22 @@ The subcommands of the `mcr-network-coordinator` CLI
 * `--fork-url <FORK_URL>` — Whether to run in settlement admin mode
 * `--contract-admin <CONTRACT_ADMIN>` — The gas limit for transactions
 * `--jsonl-prefix <JSONL_PREFIX>` — The JSONL prefix to give to the output from the deployer
+* `--write-artifacts-path <WRITE_ARTIFACTS_PATH>` — Path to the configuration file
+* `--write-anvil-data-path <WRITE_ANVIL_DATA_PATH>` — Path to write the anvil data as json
+
+
+
+## `ffs-dev mcr network coordinator eth anvil up using`
+
+Run $struct_name using config files to load parameters
+
+**Usage:** `ffs-dev mcr network coordinator eth anvil up using [OPTIONS] --config-path <CONFIG_PATH>`
+
+###### **Options:**
+
+* `--config-path <CONFIG_PATH>`
+* `--write-artifacts-path <WRITE_ARTIFACTS_PATH>`
+* `--write-anvil-data-path <WRITE_ANVIL_DATA_PATH>`
 
 
 
