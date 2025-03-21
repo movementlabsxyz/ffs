@@ -14,6 +14,9 @@ serde = { workspace = true, features = ["derive"] }
 clap = { workspace = true}
 dotenv = { workspace = true }
 anyhow = { workspace = true }
+pcp-protocol-client-core-util = { workspace = true }
+pcp-protocol-client-core-eth = { workspace = true }
+pcp-types = { workspace = true }
 
 [lints]
 workspace = true

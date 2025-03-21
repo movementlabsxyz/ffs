@@ -17,8 +17,10 @@ members = [
   "network/mcr/components/eth/*",
 
   # pcp
-  ## protocol
+  "protocol/pcp/util/*",
+  "protocol/pcp/clients/*",
   "protocol/pcp/cli/*",
+  "protocol/pcp/dlu/eth/deployer-core",
   ## node
   "node/pcp/cli/*",
   ## network
@@ -149,6 +151,21 @@ mcr-network-coordinator = { path = "network/mcr/cli/coordinator" }
 mcr-network = { path = "network/mcr/cli/network" }
 mcr-network-anvil-component-core = { path = "network/mcr/components/eth/anvil" }
 mcr-network-eth-live-component-core = { path = "network/mcr/components/eth/live" }
+
+## pcp
+### protocol
+pcp-types = { path = "protocol/pcp/util/types" }
+pcp-config = { path = "protocol/pcp/util/config" }
+pcp-protocol-client-core-util = { path = "protocol/pcp/clients/util" }
+pcp-protocol-client-core-eth = { path = "protocol/pcp/clients/eth" }
+pcp-protocol-client-core-mock = { path = "protocol/pcp/clients/mock" }
+pcp-protocol-client = { path = "protocol/pcp/cli/client" }
+pcp-protocol = { path = "protocol/pcp/cli"}
+pcp-protocol-deployer-core-eth = { path = "protocol/pcp/dlu/eth/deployer-core" }
+### network
+pcp-network-client = { path = "network/pcp/cli/client" }
+pcp-network-coordinator = { path = "network/pcp/cli/coordinator" }
+pcp-network = { path = "network/pcp/cli/network" }
 
 # util
 secure-signer-eth = { path = "util/signing/eth" }

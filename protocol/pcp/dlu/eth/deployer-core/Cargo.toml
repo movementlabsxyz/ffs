@@ -1,0 +1,43 @@
+[package]
+name = "pcp-protocol-deployer-core-eth"
+version = { workspace = true }
+edition  = { workspace = true }
+license  = { workspace = true }
+authors = { workspace = true }
+repository = { workspace = true }
+homepage = { workspace = true }
+publish = { workspace = true }
+rust-version = { workspace = true }
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+pcp-protocol-client-core-util = { workspace = true }
+
+anyhow = { workspace = true }
+async-stream = { workspace = true }
+async-trait = { workspace = true }
+futures = { workspace = true }
+tokio = { workspace = true }
+tokio-stream = { workspace = true }
+serde_json = { workspace = true }
+pcp-types = { workspace = true }
+pcp-config = { workspace = true }
+tempfile = { workspace = true }
+zip = { workspace = true }
+commander = { workspace = true }
+clap = { workspace = true }
+serde = { workspace = true }
+secure-signer = { workspace = true }
+secure-signer-loader = { workspace = true }
+hex = { workspace = true }
+
+[build-dependencies]
+zip = { workspace = true }
+walkdir = { workspace = true }
+
+[dev-dependencies]
+pcp-protocol-client-core-mock = { workspace = true }
+
+[lints]
+workspace = true
