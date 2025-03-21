@@ -51,8 +51,6 @@ impl CustomProcessor<AnvilData> for ParseAnvilData {
 				.map_err(|e| FulfillError::Internal(format!("invalid UTF-8: {e}").into()))?
 				.trim();
 
-			println!("Received line in {:?}: {}", current_section, trimmed);
-
 			match trimmed {
 				"Available Accounts" => {
 					current_section = Section::Accounts;
@@ -134,8 +132,6 @@ impl CustomProcessor<AnvilData> for ParseAnvilData {
 				},
 			}
 		}
-
-		println!("Parsed signers: {:?}", signers);
 
 		Ok(Some(AnvilData {
 			signers,

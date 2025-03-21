@@ -45,10 +45,6 @@ impl Up {
 			Ok::<_, anyhow::Error>(())
 		});
 
-		let signers = self.anvil_data.read().wait_for().await;
-
-		println!("Signers: {:?}", signers);
-
 		anvil.await??;
 
 		Ok(())
