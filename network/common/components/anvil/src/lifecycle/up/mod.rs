@@ -6,13 +6,13 @@ use kestrel::{
 
 use crate::util::parser::{AnvilData, ParseAnvilData};
 
-pub struct Deploy {
+pub struct Up {
 	anvil_data: State<AnvilData>,
 }
 
-impl Deploy {
+impl Up {
 	pub fn new() -> Self {
-		Deploy { anvil_data: State::new() }
+		Up { anvil_data: State::new() }
 	}
 
 	pub fn anvil_data(&self) -> &State<AnvilData> {

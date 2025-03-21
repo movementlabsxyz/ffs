@@ -1,19 +1,17 @@
 use kestrel::State;
 use mcr_protocol_deployer_eth_core::dev::config::Config;
-use network_anvil_component_core::{
-	lifecycle::deploy::Deploy as AnvilDeploy, util::parser::AnvilData,
-};
+use network_anvil_component_core::{lifecycle::up::Up as AnvilUp, util::parser::AnvilData};
 use secure_signer_loader::identifiers::{local::Local, SignerIdentifier};
 
-/// Deploy struct for managing the MCR deployment process against Anvil.
-pub struct Deploy {
-	anvil_deploy: AnvilDeploy,
+/// Up struct for managing the MCR deployment process against Anvil.
+pub struct Up {
+	anvil_deploy: AnvilUp,
 	config: Config,
 }
 
-impl Deploy {
+impl Up {
 	pub fn new(config: Config) -> Self {
-		Deploy { anvil_deploy: AnvilDeploy::new(), config }
+		Up { anvil_deploy: AnvilUp::new(), config }
 	}
 
 	pub fn anvil_data(&self) -> &State<AnvilData> {

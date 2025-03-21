@@ -1,3 +1,3 @@
-pub mod deploy;
-pub mod destroy;
-pub mod upgrade;
+pub mod attach;
+pub mod down;
+pub mod up;

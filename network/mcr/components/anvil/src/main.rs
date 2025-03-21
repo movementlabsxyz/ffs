@@ -1,4 +1,4 @@
-use mcr_network_anvil_component_core::dev::lifecycle::deploy::Deploy;
+use mcr_network_anvil_component_core::dev::lifecycle::up::Up;
 use mcr_protocol_deployer_eth_core::dev::config::Config;
 use secure_signer_loader::identifiers::{local::Local, SignerIdentifier};
 
@@ -12,7 +12,7 @@ pub async fn main() -> Result<(), anyhow::Error> {
 		contract_admin: "0x...".to_string(), // Replace with actual admin address
 		jsonl_prefix: None,
 	};
-	let deploy = Deploy::new(mcr_config);
+	let deploy = Up::new(mcr_config);
 	deploy.run().await?;
 	Ok(())
 }
