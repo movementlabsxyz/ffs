@@ -43,6 +43,7 @@
           rust
           zlib
           fixDarwinDylibNames
+          pandoc
         ];
         
         sysDependencies = with pkgs; [] 
