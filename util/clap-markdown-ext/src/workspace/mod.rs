@@ -7,7 +7,7 @@ use std::path::Path;
 pub struct Workspace {
 	/// The file to write out to, relative to the crate root
 	#[clap(long)]
-	pub relative_prefix: String,
+	pub relative_path: String,
 }
 
 impl Workspace {
@@ -37,7 +37,7 @@ impl Workspace {
 
 		let crate_root = package.manifest_path.parent().unwrap();
 
-		let output_path = crate_root.join(&self.relative_prefix);
+		let output_path = crate_root.join(&self.relative_path);
 
 		// Generate markdown
 		let markdown = clap_markdown::help_markdown::<C>();

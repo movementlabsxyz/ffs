@@ -70,11 +70,11 @@ This document contains the help content for the `ffs-dev` command-line program.
 
 ## `ffs-dev markdown workspace`
 
-**Usage:** `ffs-dev markdown workspace --relative-prefix <RELATIVE_PREFIX>`
+**Usage:** `ffs-dev markdown workspace --relative-path <RELATIVE_PATH>`
 
 ###### **Options:**
 
-* `--relative-prefix <RELATIVE_PREFIX>` — The file to write out to, relative to the crate root
+* `--relative-path <RELATIVE_PATH>` — The file to write out to, relative to the crate root
 
 
 
