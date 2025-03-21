@@ -1,7 +1,8 @@
 use crate::util::send_eth_transaction::send_transaction;
 use crate::util::send_eth_transaction::PcpEthConnectorError;
 use crate::util::send_eth_transaction::VerifyRule;
-use alloy::providers::Provider;
+use alloy::providers::{Provider, RootProvider};
+use alloy::pubsub::PubSubFrontend;
 use alloy_primitives::Address;
 use alloy_primitives::U256;
 use alloy_sol_types::sol;

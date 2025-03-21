@@ -1,0 +1,15 @@
+{
+  "ProxyAdmin": "0xB965D10739e19a9158e7f713720B0145D996E370",
+  "MoveToken": {
+    "implementation": "0x3A8C1bd531b5C1aeFBB9ebc3e021C1251cF4Ccb1",
+    "proxy": "0x80741a37E3644612F0465145C9709a90B6D77Ee3"
+  },
+  "MovementStaking": {
+    "implementation": "0x38435Ac0E0e9Bd8737c476F8F39a24b0735e00dc",
+    "proxy": "0xE19dddcaF5dCb2Ec0Fe52229e3133B99396f22e2"
+  },
+  "PCP": {
+    "implementation": "0x1430c9c2143F97aaE765197e744BaBa7e78acaf0",
+    "proxy": "0x2A3365C575a5Fc8fD2842B82D29f8035E7f71CeC"
+  }
+}
