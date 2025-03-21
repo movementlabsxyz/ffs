@@ -26,22 +26,10 @@ pub struct PostCommitmentArgs {
     preimage_string: Option<String>,
 }
 
-
-
 impl PostCommitment {
-    // pub async fn execute(&self) -> Result<(), anyhow::Error> {
-    //     if let Some(hex) = &self.args.commitment_hex {
-    //         println!("Would post commitment from hex: {}", hex);
-    //     } else if let Some(preimage) = &self.args.preimage_string {
-    //         println!("Would hash and post commitment from preimage: {}", preimage);
-    //     }
-    //     Ok(())
-    // }
-
-
 	/// Handle the post commitment command.
-	pub async fn execute(&self, args: &PostCommitmentArgs) -> Result<(), anyhow::Error> {
-		let commitment = self.create_commitment(args)?;
+	pub async fn execute(&self) -> Result<(), anyhow::Error> {
+		let commitment = self.create_commitment()?;
 
 		// Get config and post commitment
 		let config = get_config()?;
@@ -55,8 +43,8 @@ impl PostCommitment {
 	}
 
     /// Create a commitment from the given arguments.
-    fn create_commitment(&self, args: &PostCommitmentArgs) -> Result<SuperBlockCommitment, anyhow::Error> {
-        if let Some(hex) = &args.commitment_hex {
+    fn create_commitment(&self) -> Result<SuperBlockCommitment, anyhow::Error> {
+        if let Some(hex) = &self.args.commitment_hex {
             // Parse hex commitment
             let bytes = hex::decode(hex)?;
             let bytes_len = bytes.len();
@@ -70,7 +58,7 @@ impl PostCommitment {
                         bytes_len * 2
                     ))?)
             ))
-        } else if let Some(preimage) = &args.preimage_string {
+        } else if let Some(preimage) = &self.args.preimage_string {
             // Hash preimage to get commitment
             let mut hasher = Keccak256::new();
             hasher.update(preimage.as_bytes());
@@ -84,10 +72,7 @@ impl PostCommitment {
             unreachable!("clap ensures one option is present")
         }
     }
-
-
 }
-
 
 /// Get the config for the PCP client.
 fn get_config() -> Result<Config, anyhow::Error> {

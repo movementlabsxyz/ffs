@@ -12,9 +12,10 @@ f ------ | 5e771e3e47 |
 
 > FFS, just take a vote.
 
-Movement Labs' Fast Finality Settlement is a proof of stake settlement system. 
+Movement Labs' Fast Finality Settlement is a proof of stake settlement system.
 
 ## Getting started
+
 The easiest entry point for all protocols and use cases is the [`ffs-dev`](sdk/cli/ffs-dev/README.md) CLI. Subcomponents of `ffs-dev` will have their own CLIs and these CLIs have their core libraries. 
 
 To build `ffs-dev` manually you can run the following command:
@@ -29,6 +30,7 @@ The `ffs-dev` binary will then be available in `target/release/ffs-dev`.
 > We use [`clap`](https://docs.rs/clap/latest/clap/) to build our CLIs, so you can always call `--help` to get a list of available commands and their usage.
 
 ### `mcr`
+
 - `ffs-dev mcr network ...`: to spin up a network with all that you need to run MCR.
 - `ffs-dev mcr protocol client ...`: to interact with the MCR protocol from the client.
 
@@ -43,14 +45,15 @@ The `ffs-dev` binary will then be available in `target/release/ffs-dev`.
 Please see the [CONTRIBUTING.md](CONTRIBUTING.md) file for contribution guidelines.
 
 ## Organization
+
 There are five subdirectories which progressively build on one another for node logic.
 
 1. [`util`](./util): contains utility logic mainly reused in [`protocol`](./protocol).
-2. [`protocol`](./protocol): contains implementations of the protocol logic. 
+2. [`protocol`](./protocol): contains implementations of the protocol logic.
 3. [`node`](./node): contains single-process runnable binaries that aggregate the protocol logic.
 4. [`network`](./network): contains logic for running multiple nodes in a network.
 5. [`sdk`](./sdk): contains logic for interacting nodes and networks.
 
 There are several other subdirectories of note:
 
-- [`spec`](./spec): contains formal verification of FFS protocols. 
+- [`spec`](./spec): contains formal verification of FFS protocols.
