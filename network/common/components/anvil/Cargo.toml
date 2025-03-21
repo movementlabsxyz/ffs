@@ -1,5 +1,5 @@
 [package]
-name = "mcr-settlement-manager"
+name = "network-anvil-component-core"
 version = { workspace = true }
 edition  = { workspace = true }
 license  = { workspace = true }
@@ -23,6 +23,11 @@ tokio-stream = { workspace = true }
 serde_json = { workspace = true }
 mcr-types = { workspace = true }
 mcr-config = { workspace = true }
+kestrel = { workspace = true }
+mcr-protocol-deployer-eth-core = { workspace = true }
+strip-ansi-escapes = { workspace = true }
+jsonlvar = { workspace = true }
+serde = { workspace = true }
 
 [dev-dependencies]
 mcr-protocol-client-core-mock = { workspace = true }

@@ -1,7 +1,7 @@
 use anyhow::Context;
 use clap::Parser;
-use mcr_protocol_client_core_eth::config::Config;
 use mcr_protocol_client_core_util::McrClientOperations;
+use mcr_protocol_client_eth_core::config::Config;
 use mcr_types::block_commitment::BlockCommitment;
 use serde::{Deserialize, Serialize};
 

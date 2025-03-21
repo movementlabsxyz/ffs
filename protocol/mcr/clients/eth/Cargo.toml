@@ -1,5 +1,5 @@
 [package]
-name = "mcr-protocol-client-core-eth"
+name = "mcr-protocol-client-eth-core"
 version = { workspace = true }
 edition = { workspace = true }
 license = { workspace = true }

@@ -18,6 +18,9 @@ pub struct Config {
 	/// The gas limit for transactions.
 	#[arg(long)]
 	pub contract_admin: String,
+	/// The JSONL prefix to give to the output from the deployer.
+	#[arg(long)]
+	pub jsonl_prefix: Option<String>,
 }
 
 impl Config {
@@ -26,8 +29,9 @@ impl Config {
 		signer_identifier: SignerIdentifier,
 		fork_url: String,
 		contract_admin: String,
+		jsonl_prefix: Option<String>,
 	) -> Self {
-		Config { signer_identifier, fork_url, contract_admin }
+		Config { signer_identifier, fork_url, contract_admin, jsonl_prefix }
 	}
 
 	pub fn build(&self) -> Result<Deployer, anyhow::Error> {
@@ -39,6 +43,7 @@ impl Config {
 			raw_private_key,
 			fork_url: self.fork_url.clone(),
 			contract_admin: self.contract_admin.clone(),
+			jsonl_prefix: self.jsonl_prefix.clone(),
 		})
 	}
 }

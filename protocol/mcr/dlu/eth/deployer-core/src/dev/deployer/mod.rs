@@ -1,4 +1,6 @@
 use crate::contracts::ContractWorkspace;
+use crate::dev::artifacts::Artifacts;
+use jsonlvar::Jsonl;
 
 /// The deployer of MCR dev contracts.
 #[derive(Debug)]
@@ -11,6 +13,8 @@ pub struct Deployer {
 	pub fork_url: String,
 	/// The contractAdmin address used in deployment.
 	pub contract_admin: String,
+	/// The jsonl prefix to give to the output from the deployer.
+	pub jsonl_prefix: Option<String>,
 }
 
 impl Deployer {
@@ -18,13 +22,14 @@ impl Deployer {
 	pub const DEPLOYMENT_SCRIPT_PATH: &'static str = "./script/DeployMCRDev.s.sol";
 
 	/// Deploys the MCR dev contracts.
-	pub async fn deploy(&self) -> Result<(), anyhow::Error> {
+	pub async fn deploy(&self) -> Result<Artifacts, anyhow::Error> {
 		// prepare the workspace directory
 		self.workspace.prepare_directory()?;
 
 		// run the command for deployment
 		// todo: we would like to migrate this to use an embedded version of forge
-		self.workspace
+		let log_output = self
+			.workspace
 			.run_command(
 				"forge",
 				vec![
@@ -42,8 +47,7 @@ impl Deployer {
 			)
 			.await?;
 
-		// todo: parse the output
-
-		Ok(())
+		// Parse the output
+		Ok(Artifacts::try_from_jsonl(&log_output, self.jsonl_prefix.as_deref())?)
 	}
 }

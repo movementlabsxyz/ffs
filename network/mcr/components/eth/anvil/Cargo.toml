@@ -1,5 +1,5 @@
 [package]
-name = "pcp-protocol-deployer-core-anvil"
+name = "mcr-network-anvil-component-core"
 version = { workspace = true }
 edition  = { workspace = true }
 license  = { workspace = true }
@@ -12,7 +12,7 @@ rust-version = { workspace = true }
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-pcp-protocol-client-core-util = { workspace = true }
+mcr-protocol-client-core-util = { workspace = true }
 
 anyhow = { workspace = true }
 async-stream = { workspace = true }
@@ -21,11 +21,16 @@ futures = { workspace = true }
 tokio = { workspace = true }
 tokio-stream = { workspace = true }
 serde_json = { workspace = true }
-pcp-types = { workspace = true }
-pcp-config = { workspace = true }
+mcr-types = { workspace = true }
+mcr-config = { workspace = true }
+kestrel = { workspace = true }
+mcr-protocol-deployer-eth-core = { workspace = true }
+strip-ansi-escapes = { workspace = true }
+network-anvil-component-core = { workspace = true }
+secure-signer-loader = { workspace = true }
 
 [dev-dependencies]
-pcp-protocol-client-core-mock = { workspace = true }
+mcr-protocol-client-core-mock = { workspace = true }
 
 [lints]
 workspace = true

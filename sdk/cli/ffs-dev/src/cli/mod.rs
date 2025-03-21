@@ -1,18 +1,19 @@
+pub mod mcr;
+
 use clap::Parser;
-use mcr_network::cli::McrNetworkSubcommand;
 
 #[derive(Parser)]
 #[clap(rename_all = "kebab-case")]
 pub enum FfsDev {
 	#[clap(subcommand)]
-	Network(McrNetworkSubcommand),
+	Mcr(mcr::Mcr),
 }
 
 impl FfsDev {
 	pub async fn execute(&self) -> Result<(), anyhow::Error> {
 		match self {
-			FfsDev::Network(network) => {
-				network.execute().await?;
+			FfsDev::Mcr(mcr) => {
+				mcr.execute().await?;
 			}
 		}
 
