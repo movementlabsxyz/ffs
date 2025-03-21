@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
 
 import "forge-std/Script.sol";
@@ -13,27 +14,27 @@ contract DeployMCRDev is Script {
     function run(address contractAdmin) external {
         vm.startBroadcast();
         vm.recordLogs();
-        
-        console.log("hot: msg.sender: %s", msg.sender);
 
         // Deploy Proxy Admin
         ProxyAdmin proxyAdmin = new ProxyAdmin(msg.sender);
-        console.log("Proxy Admin Deployed: %s", address(proxyAdmin));
+        console.log("JSONL proxy_admin = %s", address(proxyAdmin));
 
         // Deploy Implementations
         MintableToken moveTokenImplementation = new MintableToken();
-        console.log("Move Token Implementation Deployed: %s", address(moveTokenImplementation));
+        console.log("JSONL move_token_implementation = %s", address(moveTokenImplementation));
+        
         MovementStaking stakingImplementation = new MovementStaking();
-        console.log("Movement Staking Implementation Deployed: %s", address(stakingImplementation));
+        console.log("JSONL staking_implementation = %s", address(stakingImplementation));
+        
         MCR mcrImplementation = new MCR();
-        console.log("MCR Implementation Deployed: %s", address(mcrImplementation));
+        console.log("JSONL mcr_implementation = %s", address(mcrImplementation));
 
         // Deploy the Move Token Proxy
         bytes memory moveTokenData = abi.encodeCall(MintableToken.initialize, ("Move Token", "MOVE"));
         TransparentUpgradeableProxy moveTokenProxy = new TransparentUpgradeableProxy(
             address(moveTokenImplementation), address(proxyAdmin), moveTokenData
         );
-        console.log("Move Token Proxy Deployed: %s", address(moveTokenProxy));
+        console.log("JSONL move_token_proxy = %s", address(moveTokenProxy));
 
         // Deploy the Movement Staking Proxy
         bytes memory movementStakingData =
@@ -41,7 +42,7 @@ contract DeployMCRDev is Script {
         TransparentUpgradeableProxy movementStakingProxy = new TransparentUpgradeableProxy(
             address(stakingImplementation), address(proxyAdmin), movementStakingData
         );
-        console.log("Movement Staking Proxy Deployed: %s", address(movementStakingProxy));
+        console.log("JSONL movement_staking_proxy = %s", address(movementStakingProxy));
 
         // Deploy the MCR Proxy
         address[] memory custodians = new address[](1);
@@ -52,30 +53,30 @@ contract DeployMCRDev is Script {
         TransparentUpgradeableProxy mcrProxy = new TransparentUpgradeableProxy(
             address(mcrImplementation), address(proxyAdmin), mcrData
         );
-        console.log("MCR Proxy Deployed: %s", address(mcrProxy));
+        console.log("JSONL mcr_proxy = %s", address(mcrProxy));
 
         // Grant commitment admin
         MCR mcr = MCR(address(mcrProxy));
         mcr.grantCommitmentAdmin(contractAdmin);
-        console.log("Granted CommitmentAdmin role to: %s", contractAdmin);
         mcr.grantCommitmentAdmin(msg.sender);
-        console.log("Granted CommitmentAdmin role to: %s", msg.sender);
+        console.log("JSONL granted_commitment_admin = %s", contractAdmin);
 
         // Verify custodian setup
-        console.log("MCR custodian: %s", MovementStaking(address(movementStakingProxy)).epochDurationByDomain(address(mcrProxy)));
+        uint256 custodianEpochDuration = MovementStaking(address(movementStakingProxy)).epochDurationByDomain(address(mcrProxy));
+        console.log("JSONL mcr_custodian_epoch_duration = %d", custodianEpochDuration);
 
         // Mint tokens
         MintableToken moveToken = MintableToken(address(moveTokenProxy));
         moveToken.mint(contractAdmin, 100000 ether);
-        console.log("Minted 100000 MOVE to %s", contractAdmin);
+        console.log("JSONL minted_tokens = { \"recipient\" : \"%s\", \"amount\" : \"100000 ether\" }", contractAdmin);
 
         // Grant minter role
         moveToken.grantMinterRole(msg.sender);
-        console.log("Granted Minter Role to: %s", msg.sender);
         moveToken.grantMinterRole(contractAdmin);
-        console.log("Granted Minter Role to: %s", contractAdmin);
+        console.log("JSONL granted_minter_role = %s", contractAdmin);
+
         moveToken.grantMinterRole(address(movementStakingProxy));
-        console.log("Granted Minter Role to: %s", address(movementStakingProxy));
+        // console.log("JSONL granted_minter_role = %s", address(movementStakingProxy));
 
         vm.stopBroadcast();
     }

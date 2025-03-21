@@ -15,8 +15,22 @@ f ------ | 5e771e3e47 |
 Movement Labs' Fast Finality Settlement is a proof of stake settlement system.
 
 ## Getting started
+The easiest entry point for all protocols and use cases is the [`ffs-dev`](sdk/cli/ffs-dev/README.md) CLI. Subcomponents of `ffs-dev` will have their own CLIs and these CLIs have their core libraries. 
 
-We're working on getting this into a user-ready state. Check back soon!
+To build `ffs-dev` manually you can run the following command:
+
+```bash
+cargo build -p ffs-dev --release
+```
+
+The `ffs-dev` binary will then be available in `target/release/ffs-dev`.
+
+> [!NOTE]
+> We use [`clap`](https://docs.rs/clap/latest/clap/) to build our CLIs, so you can always call `--help` to get a list of available commands and their usage.
+
+### `mcr`
+- `ffs-dev mcr network ...`: to spin up a network with all that you need to run MCR.
+- `ffs-dev mcr protocol client ...`: to interact with the MCR protocol from the client.
 
 ## Contributing
 

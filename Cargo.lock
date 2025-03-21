@@ -1744,6 +1744,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "commander"
+version = "0.0.1"
+source = "git+https://github.com/movementlabsxyz/kestrel.git?rev=c5c9b30ba2532f606485ad5a08da40d2940491fa#c5c9b30ba2532f606485ad5a08da40d2940491fa"
+dependencies = [
+ "anyhow",
+ "futures",
+ "itertools 0.14.0",
+ "tokio",
+ "tracing",
+]
+
+[[package]]
 name = "const-hex"
 version = "1.14.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1787,6 +1799,15 @@ name = "constant_time_eq"
 version = "0.3.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7c74b8349d32d297c9134b8c88677813a227df8f779daa29bfc29c183fe3dca6"
+
+[[package]]
+name = "convert_case"
+version = "0.8.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "baaaa0ecca5b51987b9423ccdc971514dd8b0bb7b4060b983d3664dad3f1f89f"
+dependencies = [
+ "unicode-segmentation",
+]
 
 [[package]]
 name = "core-foundation"
@@ -2420,6 +2441,7 @@ dependencies = [
  "clap",
  "dotenv",
  "mcr-network",
+ "mcr-protocol",
  "serde",
  "tokio",
 ]
@@ -3316,6 +3338,54 @@ dependencies = [
 ]
 
 [[package]]
+name = "jsonlvar"
+version = "0.0.1"
+source = "git+https://github.com/movementlabsxyz/kestrel.git?rev=c5c9b30ba2532f606485ad5a08da40d2940491fa#c5c9b30ba2532f606485ad5a08da40d2940491fa"
+dependencies = [
+ "jsonlvar-core",
+ "jsonlvar-macro",
+ "regex",
+ "serde_json",
+]
+
+[[package]]
+name = "jsonlvar-core"
+version = "0.0.1"
+source = "git+https://github.com/movementlabsxyz/kestrel.git?rev=c5c9b30ba2532f606485ad5a08da40d2940491fa#c5c9b30ba2532f606485ad5a08da40d2940491fa"
+dependencies = [
+ "regex",
+ "serde",
+ "serde_json",
+ "thiserror 1.0.69",
+]
+
+[[package]]
+name = "jsonlvar-macro"
+version = "0.0.1"
+source = "git+https://github.com/movementlabsxyz/kestrel.git?rev=c5c9b30ba2532f606485ad5a08da40d2940491fa#c5c9b30ba2532f606485ad5a08da40d2940491fa"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "serde",
+ "syn 2.0.100",
+ "thiserror 1.0.69",
+]
+
+[[package]]
+name = "jsonlvar-tokio"
+version = "0.0.1"
+source = "git+https://github.com/movementlabsxyz/kestrel.git?rev=c5c9b30ba2532f606485ad5a08da40d2940491fa#c5c9b30ba2532f606485ad5a08da40d2940491fa"
+dependencies = [
+ "anyhow",
+ "jsonlvar",
+ "regex",
+ "serde",
+ "serde_json",
+ "thiserror 1.0.69",
+ "tokio",
+]
+
+[[package]]
 name = "jsonwebtoken"
 version = "9.3.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3362,6 +3432,52 @@ checksum = "505d1856a39b200489082f90d897c3f07c455563880bc5952e38eabf731c83b6"
 dependencies = [
  "digest 0.10.7",
  "sha3-asm",
+]
+
+[[package]]
+name = "kestrel"
+version = "0.0.1"
+source = "git+https://github.com/movementlabsxyz/kestrel.git?rev=c5c9b30ba2532f606485ad5a08da40d2940491fa#c5c9b30ba2532f606485ad5a08da40d2940491fa"
+dependencies = [
+ "kestrel-macro",
+ "kestrel-process",
+ "kestrel-state",
+ "tokio",
+]
+
+[[package]]
+name = "kestrel-macro"
+version = "0.0.1"
+source = "git+https://github.com/movementlabsxyz/kestrel.git?rev=c5c9b30ba2532f606485ad5a08da40d2940491fa#c5c9b30ba2532f606485ad5a08da40d2940491fa"
+dependencies = [
+ "convert_case",
+ "proc-macro2",
+ "quote",
+ "serde",
+ "syn 2.0.100",
+ "thiserror 1.0.69",
+]
+
+[[package]]
+name = "kestrel-process"
+version = "0.0.1"
+source = "git+https://github.com/movementlabsxyz/kestrel.git?rev=c5c9b30ba2532f606485ad5a08da40d2940491fa#c5c9b30ba2532f606485ad5a08da40d2940491fa"
+dependencies = [
+ "commander 0.0.1 (git+https://github.com/movementlabsxyz/kestrel.git?rev=c5c9b30ba2532f606485ad5a08da40d2940491fa)",
+ "jsonlvar",
+ "jsonlvar-tokio",
+ "kestrel-state",
+ "paste",
+ "thiserror 1.0.69",
+ "tokio",
+]
+
+[[package]]
+name = "kestrel-state"
+version = "0.0.1"
+source = "git+https://github.com/movementlabsxyz/kestrel.git?rev=c5c9b30ba2532f606485ad5a08da40d2940491fa#c5c9b30ba2532f606485ad5a08da40d2940491fa"
+dependencies = [
+ "tokio",
 ]
 
 [[package]]
@@ -3526,6 +3642,28 @@ dependencies = [
 ]
 
 [[package]]
+name = "mcr-network-anvil-component-core"
+version = "0.0.1"
+dependencies = [
+ "anyhow",
+ "async-stream",
+ "async-trait",
+ "futures",
+ "kestrel",
+ "mcr-config",
+ "mcr-protocol-client-core-mock",
+ "mcr-protocol-client-core-util",
+ "mcr-protocol-deployer-eth-core",
+ "mcr-types",
+ "network-anvil-component-core",
+ "secure-signer-loader",
+ "serde_json",
+ "strip-ansi-escapes",
+ "tokio",
+ "tokio-stream",
+]
+
+[[package]]
 name = "mcr-network-client"
 version = "0.0.1"
 dependencies = [
@@ -3543,8 +3681,33 @@ dependencies = [
  "anyhow",
  "clap",
  "dotenv",
+ "jsonlvar",
+ "kestrel",
+ "mcr-network-anvil-component-core",
+ "mcr-network-eth-live-component-core",
+ "mcr-protocol-deployer-eth-core",
  "serde",
  "tokio",
+]
+
+[[package]]
+name = "mcr-network-eth-live-component-core"
+version = "0.0.1"
+dependencies = [
+ "anyhow",
+ "async-stream",
+ "async-trait",
+ "futures",
+ "kestrel",
+ "mcr-config",
+ "mcr-protocol-client-core-mock",
+ "mcr-protocol-client-core-util",
+ "mcr-protocol-deployer-eth-core",
+ "mcr-types",
+ "secure-signer-loader",
+ "serde_json",
+ "tokio",
+ "tokio-stream",
 ]
 
 [[package]]
@@ -3566,15 +3729,41 @@ dependencies = [
  "anyhow",
  "clap",
  "dotenv",
- "mcr-protocol-client-core-eth",
  "mcr-protocol-client-core-util",
+ "mcr-protocol-client-eth-core",
  "mcr-types",
  "serde",
  "tokio",
 ]
 
 [[package]]
-name = "mcr-protocol-client-core-eth"
+name = "mcr-protocol-client-core-mock"
+version = "0.0.1"
+dependencies = [
+ "anyhow",
+ "futures",
+ "mcr-protocol-client-core-util",
+ "mcr-types",
+ "serde",
+ "thiserror 1.0.69",
+ "tokio",
+ "tokio-stream",
+ "tracing",
+]
+
+[[package]]
+name = "mcr-protocol-client-core-util"
+version = "0.0.1"
+dependencies = [
+ "mcr-types",
+ "serde",
+ "thiserror 1.0.69",
+ "tokio",
+ "tokio-stream",
+]
+
+[[package]]
+name = "mcr-protocol-client-eth-core"
 version = "0.0.1"
 dependencies = [
  "alloy",
@@ -3608,39 +3797,14 @@ dependencies = [
 ]
 
 [[package]]
-name = "mcr-protocol-client-core-mock"
-version = "0.0.1"
-dependencies = [
- "anyhow",
- "futures",
- "mcr-protocol-client-core-util",
- "mcr-types",
- "serde",
- "thiserror 1.0.69",
- "tokio",
- "tokio-stream",
- "tracing",
-]
-
-[[package]]
-name = "mcr-protocol-client-core-util"
-version = "0.0.1"
-dependencies = [
- "mcr-types",
- "serde",
- "thiserror 1.0.69",
- "tokio",
- "tokio-stream",
-]
-
-[[package]]
 name = "mcr-protocol-deployer"
 version = "0.0.1"
 dependencies = [
  "anyhow",
  "clap",
  "dotenv",
- "mcr-protocol-deployer-core-eth",
+ "jsonlvar",
+ "mcr-protocol-deployer-eth-core",
  "mcr-types",
  "serde",
  "tokio",
@@ -3664,16 +3828,17 @@ dependencies = [
 ]
 
 [[package]]
-name = "mcr-protocol-deployer-core-eth"
+name = "mcr-protocol-deployer-eth-core"
 version = "0.0.1"
 dependencies = [
  "anyhow",
  "async-stream",
  "async-trait",
  "clap",
- "commander",
+ "commander 0.0.1",
  "futures",
  "hex",
+ "jsonlvar",
  "mcr-config",
  "mcr-protocol-client-core-mock",
  "mcr-protocol-client-core-util",
@@ -3683,6 +3848,7 @@ dependencies = [
  "serde",
  "serde_json",
  "tempfile",
+ "thiserror 1.0.69",
  "tokio",
  "tokio-stream",
  "walkdir",
@@ -3749,6 +3915,28 @@ dependencies = [
  "security-framework 2.11.1",
  "security-framework-sys",
  "tempfile",
+]
+
+[[package]]
+name = "network-anvil-component-core"
+version = "0.0.1"
+dependencies = [
+ "anyhow",
+ "async-stream",
+ "async-trait",
+ "futures",
+ "jsonlvar",
+ "kestrel",
+ "mcr-config",
+ "mcr-protocol-client-core-mock",
+ "mcr-protocol-client-core-util",
+ "mcr-protocol-deployer-eth-core",
+ "mcr-types",
+ "serde",
+ "serde_json",
+ "strip-ansi-escapes",
+ "tokio",
+ "tokio-stream",
 ]
 
 [[package]]
@@ -4265,23 +4453,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "pcp-protocol-deployer-core-anvil"
-version = "0.0.1"
-dependencies = [
- "anyhow",
- "async-stream",
- "async-trait",
- "futures",
- "pcp-config",
- "pcp-protocol-client-core-mock",
- "pcp-protocol-client-core-util",
- "pcp-types",
- "serde_json",
- "tokio",
- "tokio-stream",
-]
-
-[[package]]
 name = "pcp-protocol-deployer-core-eth"
 version = "0.0.1"
 dependencies = [
@@ -4289,7 +4460,7 @@ dependencies = [
  "async-stream",
  "async-trait",
  "clap",
- "commander",
+ "commander 0.0.1",
  "futures",
  "hex",
  "pcp-config",
@@ -5531,6 +5702,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a2eb9349b6444b326872e140eb1cf5e7c522154d69e7a0ffb0fb81c06b37543f"
 
 [[package]]
+name = "strip-ansi-escapes"
+version = "0.2.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2a8f8038e7e7969abb3f1b7c2a811225e9296da208539e0f79c5251d6cac0025"
+dependencies = [
+ "vte",
+]
+
+[[package]]
 name = "strsim"
 version = "0.10.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -6060,6 +6240,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "5a5f39404a5da50712a4c1eecf25e90dd62b613502b7e925fd4e4d19b5c96512"
 
 [[package]]
+name = "unicode-segmentation"
+version = "1.12.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f6ccf251212114b54433ec949fd6a7841275f9ada20dddd2f29e9ceea4501493"
+
+[[package]]
 name = "unicode-xid"
 version = "0.2.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -6165,6 +6351,15 @@ name = "vsimd"
 version = "0.8.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "5c3082ca00d5a5ef149bb8b555a72ae84c9c59f7250f013ac822ac2e49b19c64"
+
+[[package]]
+name = "vte"
+version = "0.14.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "231fdcd7ef3037e8330d8e17e61011a2c244126acc0a982f4040ac3f9f0bc077"
+dependencies = [
+ "memchr",
+]
 
 [[package]]
 name = "wait-timeout"

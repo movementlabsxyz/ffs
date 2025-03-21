@@ -1,3 +1,5 @@
+pub mod eth;
+
 use clap::{Parser, Subcommand};
 
 /// The `mcr-network-coordinator` CLI.
@@ -13,6 +15,8 @@ pub struct McrNetworkCoordinator {
 #[clap(rename_all = "kebab-case")]
 pub enum McrNetworkCoordinatorSubcommand {
 	Run,
+	#[clap(subcommand)]
+	Eth(eth::Eth),
 }
 
 /// Implement the `From` trait for `McrNetworkCoordinator` to convert it into a `McrNetworkCoordinatorSubcommand`.
@@ -38,6 +42,7 @@ impl McrNetworkCoordinatorSubcommand {
 			McrNetworkCoordinatorSubcommand::Run => {
 				println!("mcr-network-coordinator is under development. Please check back later.");
 			}
+			McrNetworkCoordinatorSubcommand::Eth(eth) => eth.execute().await?,
 		}
 		Ok(())
 	}
