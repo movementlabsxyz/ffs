@@ -1,4 +1,5 @@
 use proc_macro::TokenStream;
+use proc_macro2::Literal;
 use quote::{format_ident, quote};
 use syn::{parse_macro_input, Data, DeriveInput};
 
@@ -10,6 +11,16 @@ pub fn impl_orfile(input: TokenStream) -> TokenStream {
 
 	let mod_or_file = format_ident!("or_file");
 	let mod_using = format_ident!("using");
+
+	let lower_case_struct_prefix = struct_name.to_string().to_lowercase();
+	let doc_where = Literal::string(&format!(
+		"Run {} with all parameters passed explicitly as CLI flags.",
+		lower_case_struct_prefix
+	));
+	let doc_using = Literal::string(&format!(
+		"Run {} with parameters from environment variables, config files, and CLI flags.",
+		lower_case_struct_prefix
+	));
 
 	let (config_fields, other_fields): (Vec<_>, Vec<_>) = match &input.data {
 		Data::Struct(data) => data
@@ -138,10 +149,10 @@ pub fn impl_orfile(input: TokenStream) -> TokenStream {
 
 			#[derive(clap::Subcommand, Debug, Clone)]
 			#vis enum #struct_name {
-				/// Run with all values passed explicitly as CLI flags
+				#[doc = #doc_where]
 				Where(super::#struct_name),
 
-				/// Load from config files, with optional env + CLI arg overrides
+				#[doc = #doc_using]
 				Using(#mod_using::#struct_name),
 			}
 

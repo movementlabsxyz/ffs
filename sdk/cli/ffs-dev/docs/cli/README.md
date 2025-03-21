@@ -175,14 +175,14 @@ The subcommands of the `mcr-network-coordinator` CLI
 
 ###### **Subcommands:**
 
-* `where` — Run with all values passed explicitly as CLI flags
-* `using` — Load from config files, with optional env + CLI arg overrides
+* `where` — Run up with all parameters passed explicitly as CLI flags
+* `using` — Run up with parameters from environment variables, config files, and CLI flags
 
 
 
 ## `ffs-dev mcr network coordinator eth anvil up where`
 
-Run with all values passed explicitly as CLI flags
+Run up with all parameters passed explicitly as CLI flags
 
 **Usage:** `ffs-dev mcr network coordinator eth anvil up where [OPTIONS] --signer-identifier <SIGNER_IDENTIFIER> --fork-url <FORK_URL> --contract-admin <CONTRACT_ADMIN>`
 
@@ -199,7 +199,7 @@ Run with all values passed explicitly as CLI flags
 
 ## `ffs-dev mcr network coordinator eth anvil up using`
 
-Load from config files, with optional env + CLI arg overrides
+Run up with parameters from environment variables, config files, and CLI flags
 
 **Usage:** `ffs-dev mcr network coordinator eth anvil up using [OPTIONS] [EXTRA_ARGS]...`
 
