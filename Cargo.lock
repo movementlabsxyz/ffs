@@ -3338,21 +3338,10 @@ dependencies = [
 [[package]]
 name = "jsonlvar"
 version = "0.0.1"
-dependencies = [
- "jsonlvar-macro 0.0.1",
- "jsonlvar-util",
- "regex",
- "serde_json",
- "tempfile",
-]
-
-[[package]]
-name = "jsonlvar"
-version = "0.0.1"
 source = "git+https://github.com/movementlabsxyz/kestrel.git?rev=c5c9b30ba2532f606485ad5a08da40d2940491fa#c5c9b30ba2532f606485ad5a08da40d2940491fa"
 dependencies = [
  "jsonlvar-core",
- "jsonlvar-macro 0.0.1 (git+https://github.com/movementlabsxyz/kestrel.git?rev=c5c9b30ba2532f606485ad5a08da40d2940491fa)",
+ "jsonlvar-macro",
  "regex",
  "serde_json",
 ]
@@ -3365,18 +3354,6 @@ dependencies = [
  "regex",
  "serde",
  "serde_json",
- "thiserror 1.0.69",
-]
-
-[[package]]
-name = "jsonlvar-macro"
-version = "0.0.1"
-dependencies = [
- "proc-macro2",
- "quote",
- "serde",
- "syn 2.0.100",
- "tempfile",
  "thiserror 1.0.69",
 ]
 
@@ -3398,23 +3375,12 @@ version = "0.0.1"
 source = "git+https://github.com/movementlabsxyz/kestrel.git?rev=c5c9b30ba2532f606485ad5a08da40d2940491fa#c5c9b30ba2532f606485ad5a08da40d2940491fa"
 dependencies = [
  "anyhow",
- "jsonlvar 0.0.1 (git+https://github.com/movementlabsxyz/kestrel.git?rev=c5c9b30ba2532f606485ad5a08da40d2940491fa)",
+ "jsonlvar",
  "regex",
  "serde",
  "serde_json",
  "thiserror 1.0.69",
  "tokio",
-]
-
-[[package]]
-name = "jsonlvar-util"
-version = "0.0.1"
-dependencies = [
- "regex",
- "serde",
- "serde_json",
- "tempfile",
- "thiserror 1.0.69",
 ]
 
 [[package]]
@@ -3496,7 +3462,7 @@ version = "0.0.1"
 source = "git+https://github.com/movementlabsxyz/kestrel.git?rev=c5c9b30ba2532f606485ad5a08da40d2940491fa#c5c9b30ba2532f606485ad5a08da40d2940491fa"
 dependencies = [
  "commander 0.0.1 (git+https://github.com/movementlabsxyz/kestrel.git?rev=c5c9b30ba2532f606485ad5a08da40d2940491fa)",
- "jsonlvar 0.0.1 (git+https://github.com/movementlabsxyz/kestrel.git?rev=c5c9b30ba2532f606485ad5a08da40d2940491fa)",
+ "jsonlvar",
  "jsonlvar-tokio",
  "kestrel-state",
  "paste",
@@ -3713,6 +3679,11 @@ dependencies = [
  "anyhow",
  "clap",
  "dotenv",
+ "jsonlvar",
+ "kestrel",
+ "mcr-network-anvil-component-core",
+ "mcr-network-eth-live-component-core",
+ "mcr-protocol-deployer-eth-core",
  "serde",
  "tokio",
 ]
@@ -3830,7 +3801,7 @@ dependencies = [
  "anyhow",
  "clap",
  "dotenv",
- "jsonlvar 0.0.1",
+ "jsonlvar",
  "mcr-protocol-deployer-eth-core",
  "mcr-types",
  "serde",
@@ -3865,7 +3836,7 @@ dependencies = [
  "commander 0.0.1",
  "futures",
  "hex",
- "jsonlvar 0.0.1",
+ "jsonlvar",
  "mcr-config",
  "mcr-protocol-client-core-mock",
  "mcr-protocol-client-core-util",

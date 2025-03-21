@@ -1,5 +1,5 @@
 use kestrel::State;
-use mcr_protocol_deployer_eth_core::dev::{artifacts::Artifacts, config::Config};
+pub use mcr_protocol_deployer_eth_core::dev::{artifacts::Artifacts, config::Config};
 use network_anvil_component_core::{lifecycle::up::Up as AnvilUp, util::parser::AnvilData};
 use secure_signer_loader::identifiers::{local::Local, SignerIdentifier};
 
