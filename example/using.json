@@ -1,0 +1,8 @@
+{
+    "signer_identifier": {
+        "Local" : {
+            "private_key_hex_bytes" : "112348042980898023423"
+        }
+    },
+    "not_real": "abc"
+}

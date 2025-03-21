@@ -19,6 +19,8 @@ mcr-network-anvil-component-core = { workspace = true }
 mcr-network-eth-live-component-core = { workspace = true }
 kestrel = { workspace = true }
 jsonlvar = { workspace = true }
+orfile = { workspace = true }
+serde_json = { workspace = true }
 
 [lints]
 workspace = true
