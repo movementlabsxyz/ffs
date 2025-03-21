@@ -48,6 +48,7 @@ members = [
   "util/signing/eth",
   "util/environment",
   "util/commander",
+  "util/clap-markdown-ext"
 ]
 
 [workspace.package]
@@ -117,6 +118,7 @@ syn = { version = "2.0", features = ["full"] }
 quote = "1.0.23"
 proc-macro2 = "1.0.32"
 strip-ansi-escapes = "0.2.1"
+cargo_metadata = "0.19.2"
 
 # model checking and verification
 
@@ -126,9 +128,12 @@ secure-signer = { git = "https://github.com/movementlabsxyz/secure-signing.git",
 secure-signer-loader = { git = "https://github.com/movementlabsxyz/secure-signing.git", rev = "62d9ae5fd098d2c0d2a2da2004ada91681e0df53"  }
 secure-signer-aws-kms = { git = "https://github.com/movementlabsxyz/secure-signing.git", rev = "62d9ae5fd098d2c0d2a2da2004ada91681e0df53"  }
 
-#kestrel 
+# kestrel 
 kestrel = { git = "https://github.com/movementlabsxyz/kestrel.git", rev = "c5c9b30ba2532f606485ad5a08da40d2940491fa" }
 jsonlvar = { git = "https://github.com/movementlabsxyz/kestrel.git", rev = "c5c9b30ba2532f606485ad5a08da40d2940491fa" }
+
+# docs
+clap-markdown = { git = "https://github.com/ConnorGray/clap-markdown.git", rev = "1e1ae469444604d5b9ee650232abc2d3a0fa723b"}
 
 # internal
 ## common
@@ -167,10 +172,14 @@ pcp-network-client = { path = "network/pcp/cli/client" }
 pcp-network-coordinator = { path = "network/pcp/cli/coordinator" }
 pcp-network = { path = "network/pcp/cli/network" }
 
+# sdk
+ffs-dev = { path = "sdk/cli/ffs-dev" }
+
 # util
 secure-signer-eth = { path = "util/signing/eth" }
 ffs-environment = { path = "util/environment" }
 commander = { path = "util/commander" }
+clap-markdown-ext = { path = "util/clap-markdown-ext" }
 
 [workspace.lints.clippy]
 debug_assert_with_mut_call = "deny"
