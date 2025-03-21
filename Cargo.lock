@@ -4296,10 +4296,13 @@ dependencies = [
  "anyhow",
  "clap",
  "dotenv",
+ "hex",
  "pcp-protocol-client-core-eth",
  "pcp-protocol-client-core-util",
  "pcp-types",
+ "secure-signer-loader",
  "serde",
+ "sha3",
  "tokio",
 ]
 
