@@ -38,14 +38,12 @@ The commands are composed as follows:
 ```
 
 **CLI supported protocols**
-
 The following protocols are supported:
 
 - `mcr` (Multi-Commit Rollup Protocol)
 - `pcp` (Postconfirmation Protocol)
 
 **`where` and `using`**
-
 Many of our CLI subcommands share a common pattern where `where` and `using` subcommand variants are tied into the same logic, but accept different parameters.
 
 > [!NOTE]
@@ -107,46 +105,47 @@ This structure keeps related code together and makes it easy to add new commands
 
 ### Nested Commands (Command Hierarchy)
 
-Commands are organized in a tree structure, where each level narrows down the scope:
+Commands are organized in a tree structure across different crates, where each level narrows down the scope:
 
 ```
-ffs-dev                    # Root level
-   └── mcr                 # Protocol level
-       └── network         # Component level
-           └── coordinator # Action level
+ffs-dev                 # Root level  (in sdk/cli/ffs-dev/src/cli/mod.rs)
+   └── mcr              # protocol type  (called in sdk/cli/ffs-dev/src/cli/mod.rs)
+       └── protocol     # protocol command  (called in sdk/cli/ffs-dev/src/cli/mcr/mod.rs)
+           └── client   # protocol client command  (called in protocol/mcr/cli/protocol/src/cli/mod.rs)
+               └── post-commitment # command level  (called in protocol/mcr/cli/client/src/cli/mod.rs)
 ```
 
-This tree structure is implemented through nested enums in the code. Each level in the tree is represented by its own enum:
+This tree structure is implemented through nested enums in different crates. Each level in the tree is represented by its own enum:
 
 ```rust
-// Root level: ffs-dev
+// Root level (called in sdk/cli/ffs-dev/src/cli/mod.rs)
 #[derive(Parser)]
-pub struct FfsDev {
+pub enum FfsDev {
     #[clap(subcommand)]
-    command: Option<FfsDevSubcommand>,
+    Mcr(mcr::Mcr),  // branches into protocol type
 }
 
-// Protocol level: mcr
+// Protocol command (called in sdk/cli/ffs-dev/src/cli/mcr/mod.rs)
 #[derive(Subcommand)]
-pub enum FfsDevSubcommand {
-    Mcr(McrCommands),  // branches into MCR-specific commands
-    Pcp(PcpCommands),  // branches into PCP-specific commands
+pub enum Mcr {
+    Protocol(McrProtocol),  // branches into protocol commands
 }
 
-// Component level: network
+// Protocol client command (called in protocol/mcr/cli/protocol/src/cli/mod.rs)
 #[derive(Subcommand)]
-pub enum McrCommands {
-    Network(NetworkCommands),  // branches into network-specific commands
+pub enum McrProtocol {
+    Client(McrProtocolClient),  // branches into client commands
 }
 
-// Action level: coordinator
+// Command level (called in protocol/mcr/cli/client/src/cli/mod.rs)
 #[derive(Subcommand)]
-pub enum NetworkCommands {
-    Coordinator(CoordinatorCommands),  // final level with actual actions
+pub enum McrProtocolClientSubcommand {
+    PostCommitment(post_commitment::PostCommitment),
+    // ...
 }
 ```
 
-Each level in the tree corresponds to a nested enum in the code, allowing commands to be organized hierarchically.
+Each level in the tree corresponds to a nested enum in a different crate, allowing commands to be organized hierarchically while maintaining separation of concerns.
 
 This structure ensures:
 
