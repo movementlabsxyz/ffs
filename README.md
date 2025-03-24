@@ -16,10 +16,18 @@ Movement Labs' Fast Finality Settlement is a proof of stake settlement system.
 
 ## Getting started
 
-The easiest entry point for all protocols and use cases is the [`ffs-dev`](sdk/cli/ffs-dev/README.md) CLI. Subcomponents of `ffs-dev` will have their own CLIs and these CLIs have their core libraries. 
+We develop in nix. Hence start by entering the nix shell:
 
 ```bash
-ffs-dev mcr network coordinator eth anvil up
+nix develop
+```
+
+The easiest entry point for all protocols and use cases is the [`ffs-dev`](sdk/cli/ffs-dev/README.md) CLI. Subcomponents of `ffs-dev` will have their own CLIs and these CLIs have their core libraries.
+
+For example, to spin up a network with Anvil, you can run the following command (after you build the `ffs-dev` binary):
+
+```bash
+./target/release/ffs-dev mcr network coordinator eth anvil up
 ```
 
 For a more in-depth usage guide, see [Usage](#usage).
@@ -62,35 +70,53 @@ The `ffs-dev` binary will then be available in `target/release/ffs-dev`.
 > [!NOTE]
 > We use [`clap`](https://docs.rs/clap/latest/clap/) to build our CLIs, so you can always call `--help` to get a list of available commands and their usage.
 
-### CLI supported protocols
+The commands are composed as follows:
+
+```
+./target/release/ffs-dev 
+  <protocol> // the protocol to run
+  <ffs-dev subcommands> // subcommands for the protocol
+  eth <anvil-command> // the anvil command to run
+  <using/where> // the using or where command to run
+  --config-path <config-file> // only if `using` 
+  -- <any anvil data> // any anvil data to pass to anvil
+```
+
+**CLI supported protocols**
 
 The following protocols are supported:
 
 - `mcr` (Multi-Commit Rollup Protocol)
 - `pcp` (Postconfirmation Protocol)
 
-The following commands are available:
+**`where` and `using`**
 
-- `ffs-dev <protocol> network ...`: to spin up a network with all that you need to run `<protocol>`.
-- `ffs-dev <protocol> protocol client ...`: to interact with `<protocol>` from the client.
-- `ffs-client protocol <protocol> ...`: to interact with `<protocol>` from the client.
-
-#### `where` and `using`
-Many of our CLI subcommands share a common pattern where `where` and `using` subcommand variant are tied into the same logic, but accept different parameters.
-
-- **`where`**: Explicitly requires parameters to be passed in as args. This is best for when you're learning to use a given command, or want to see what is necessary to run a command.
-- **`using`**: Allows parameters to passed in a hierarchy from environment variables, to config files, to command line args in order of override. This is useful for production settings. The subcommand will still validate the config. 
-
-For an example, run the following command and observe the config logged at the top:
-
-```bash
-UP_CONTRACT_ADMIN=0x911 ffs-dev mcr network coordinator eth anvil up using --config-path ./example/using.json -- --fork-url http://localhost:8545
-```
+Many of our CLI subcommands share a common pattern where `where` and `using` subcommand variants are tied into the same logic, but accept different parameters.
 
 > [!NOTE]
-> A helpful pattern is to check command requirements with `where` and then develop with `using`. 
+> A helpful pattern is to check command requirements with `where` and then develop with `using`.
+
+- **`where`**: Explicitly requires parameters to be passed in as args. This is best for when you're learning to use a given command, or want to see what is necessary to run a command.
+- **`using`**: Allows parameters to be passed in a hierarchy from environment variables, to config files, to command line args in order of override. This is useful for production settings. The subcommand will still validate the config.
+
+**Example**
+For an example for `using`, observe the config logged at the top, when running the following command:
+
+```bash
+UP_CONTRACT_ADMIN=0x911 ./target/release/ffs-dev mcr network coordinator eth anvil up using --config-path ./example/using.json -- --fork-url http://localhost:8545
+```
+
+where
+
+- `UP_CONTRACT_ADMIN`: sets an environment variable
+- `mcr`: uses the `mcr` sub-protocol
+- `network` and `coordinator`: some parameters the sub-protocol
+- `eth anvil up`: uses Ethereum Anvil local testnet
+- `using`: uses the example config file
+- passes the fork url to anvil
 
 ### Crates
+
 To better understand the available crates we recommend reviewing the `cargo doc` documentation:
 
 ```bash
@@ -98,4 +124,5 @@ cargo doc --open --no-deps
 ```
 
 ### Production
+
 Coming soon!
