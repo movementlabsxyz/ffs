@@ -30,8 +30,8 @@ The commands are composed as follows:
 ```
 ./target/release/ffs-dev 
   <protocol> // the protocol to run
-  <ffs-dev subcommands> // subcommands for the protocol
-  eth <anvil-command> // the anvil command to run
+  <commands> // hierarchical organized commands, see #Nested-Commands below for more details
+  eth anvil up // the anvil command to run
   <using/where> // the using or where command to run
   --config-path <config-file> // only if `using` 
   -- <any anvil data> // any anvil data to pass to anvil
