@@ -10,6 +10,11 @@ import {MovementStakingStorage, EnumerableSet} from "./MovementStakingStorage.so
 import {IMovementStaking} from "./interfaces/IMovementStaking.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 
+/**
+ * @title MovementStaking
+ * @notice Contract that manages staking and unstaking of tokens across multiple domains
+ * @dev Implements epoch-based staking with support for multiple custodians per domain
+ */
 contract MovementStaking is
     MovementStakingStorage,
     IMovementStaking,
@@ -18,11 +23,20 @@ contract MovementStaking is
 {
     using EnumerableSet for EnumerableSet.AddressSet;
 
+    /**
+     * @notice Initializes the staking contract
+     * @param _token The token to be staked
+     */
     function initialize(IERC20 _token) public initializer {
         __BaseStaking_init_unchained();
         token = _token;
     }
 
+    /**
+     * @notice Registers a domain with the staking contract
+     * @param epochDuration Duration of each epoch for this domain
+     * @param custodians Array of custodian addresses for this domain
+     */
     function registerDomain(
         uint256 epochDuration,
         address[] calldata custodians
@@ -35,10 +49,15 @@ contract MovementStaking is
         }
     }
 
+    /**
+     * @notice Gets all custodians for a specific domain
+     * @dev TODO: Consider improving the API to allow domains to interpret custodians as they see fit
+     * @param domain The domain address
+     * @return Array of custodian addresses
+     */
     function getCustodiansByDomain(
         address domain
     ) public view returns (address[] memory) {
-        // todo: we probably want to figure out a better API which still allows domains to interpret custodians as they see fit
         address[] memory custodians = new address[](
             custodiansByDomain[domain].length()
         );
@@ -48,6 +67,11 @@ contract MovementStaking is
         return custodians;
     }
 
+    /**
+     * @notice Gets all attesters for a specific domain
+     * @param domain The domain address
+     * @return Array of attester addresses
+     */
     function getAttestersByDomain(
         address domain
     ) public view returns (address[] memory) {
@@ -60,11 +84,16 @@ contract MovementStaking is
         return attesters;
     }
 
+    /**
+     * @notice Accepts the genesis ceremony for a domain
+     * @dev Rolls over from genesis (epoch 0) to current epoch and sets initial stakes
+     */
     function acceptGenesisCeremony() public nonReentrant {
         address domain = msg.sender;
         if (domainGenesisAccepted[domain]) revert GenesisAlreadyAccepted();
         domainGenesisAccepted[domain] = true;
-        // roll over from 0 (genesis) to current epoch by block time
+        
+        // Roll over from 0 (genesis) to current epoch by block time
         currentEpochByDomain[domain] = getEpochByBlockTime(domain);
 
         for (uint256 i = 0; i < attestersByDomain[domain].length(); i++) {
@@ -73,7 +102,7 @@ contract MovementStaking is
             for (uint256 j = 0; j < custodiansByDomain[domain].length(); j++) {
                 address custodian = custodiansByDomain[domain].at(j);
 
-                // get the genesis stake for the attester
+                // Get the genesis stake for the attester
                 uint256 attesterStake = getStakeAtEpoch(
                     domain,
                     0,
@@ -81,7 +110,7 @@ contract MovementStaking is
                     attester
                 );
 
-                // roll over the genesis stake to the current epoch
+                // Roll over the genesis stake to the current epoch
                 _addStake(
                     domain,
                     getCurrentEpoch(domain),
@@ -93,6 +122,14 @@ contract MovementStaking is
         }
     }
 
+    /**
+     * @notice Adds stake for an attester
+     * @param domain The domain address
+     * @param epoch The epoch number
+     * @param custodian The custodian address
+     * @param attester The attester address
+     * @param amount The amount to stake
+     */
     function _addStake(
         address domain,
         uint256 epoch,
@@ -104,6 +141,14 @@ contract MovementStaking is
         epochTotalStakeByDomain[domain][epoch][custodian] += amount;
     }
 
+    /**
+     * @notice Removes stake from an attester
+     * @param domain The domain address
+     * @param epoch The epoch number
+     * @param custodian The custodian address
+     * @param attester The attester address
+     * @param amount The amount to remove
+     */
     function _removeStake(
         address domain,
         uint256 epoch,
@@ -115,6 +160,14 @@ contract MovementStaking is
         epochTotalStakeByDomain[domain][epoch][custodian] -= amount;
     }
 
+    /**
+     * @notice Adds an unstake request for an attester
+     * @param domain The domain address
+     * @param epoch The epoch number
+     * @param custodian The custodian address
+     * @param attester The attester address
+     * @param amount The amount to unstake
+     */
     function _addUnstake(
         address domain,
         uint256 epoch,
@@ -125,6 +178,14 @@ contract MovementStaking is
         epochUnstakesByDomain[domain][epoch][custodian][attester] += amount;
     }
 
+    /**
+     * @notice Removes an unstake request for an attester
+     * @param domain The domain address
+     * @param epoch The epoch number
+     * @param custodian The custodian address
+     * @param attester The attester address
+     * @param amount The amount to remove from unstake
+     */
     function _removeUnstake(
         address domain,
         uint256 epoch,
@@ -135,6 +196,14 @@ contract MovementStaking is
         epochUnstakesByDomain[domain][epoch][custodian][attester] -= amount;
     }
 
+    /**
+     * @notice Sets the unstake amount for an attester
+     * @param domain The domain address
+     * @param epoch The epoch number
+     * @param custodian The custodian address
+     * @param attester The attester address
+     * @param amount The amount to set
+     */
     function _setUnstake(
         address domain,
         uint256 epoch,
@@ -145,21 +214,38 @@ contract MovementStaking is
         epochUnstakesByDomain[domain][epoch][custodian][attester] = amount;
     }
 
-    // gets the would be epoch for the current block time
+    /**
+     * @notice Gets the epoch for the current block time
+     * @param domain The domain address
+     * @return uint256 Current epoch based on block time
+     */
     function getEpochByBlockTime(address domain) public view returns (uint256) {
         return block.timestamp / epochDurationByDomain[domain];
     }
 
-    // gets the current epoch up to which blocks have been accepted
+    /**
+     * @notice Gets the current epoch up to which blocks have been accepted
+     * @param domain The domain address
+     * @return uint256 Current epoch
+     */
     function getCurrentEpoch(address domain) public view returns (uint256) {
         return currentEpochByDomain[domain];
     }
 
-    // gets the next epoch
+    /**
+     * @notice Gets the next epoch
+     * @param domain The domain address
+     * @return uint256 Next epoch 
+     */
     function getNextEpoch(address domain) public view returns (uint256) {
         return getCurrentEpoch(domain) == 0 ? 0 : getCurrentEpoch(domain) + 1;
     }
 
+    /**
+     * @notice Gets the next epoch based on block time
+     * @param domain The domain address
+     * @return uint256 Next epoch by block time
+     */
     function getNextEpochByBlockTime(
         address domain
     ) public view returns (uint256) {
@@ -167,7 +253,14 @@ contract MovementStaking is
             getCurrentEpoch(domain) == 0 ? 0 : getEpochByBlockTime(domain) + 1;
     }
 
-    // gets the stake for a given attester at a given epoch
+    /**
+     * @notice Gets the stake for a given attester at a specific epoch
+     * @param domain The domain address
+     * @param epoch The epoch number
+     * @param custodian The custodian address
+     * @param attester The attester address
+     * @return uint256 Stake amount
+     */
     function getStakeAtEpoch(
         address domain,
         uint256 epoch,
@@ -177,7 +270,13 @@ contract MovementStaking is
         return epochStakesByDomain[domain][epoch][custodian][attester];
     }
 
-    // gets the stake for a given attester at the current epoch
+    /**
+     * @notice Gets the stake for a given attester at the current epoch
+     * @param domain The domain address
+     * @param custodian The custodian address
+     * @param attester The attester address
+     * @return uint256 Current epoch stake
+     */
     function getCurrentEpochStake(
         address domain,
         address custodian,
@@ -192,7 +291,14 @@ contract MovementStaking is
             );
     }
 
-    // gets the unstake for a given attester at a given epoch
+    /**
+     * @notice Gets the unstake amount for a given attester at a specific epoch
+     * @param domain The domain address
+     * @param epoch The epoch number
+     * @param custodian The custodian address
+     * @param attester The attester address
+     * @return uint256 Unstake amount
+     */
     function getUnstakeAtEpoch(
         address domain,
         uint256 epoch,
@@ -202,7 +308,13 @@ contract MovementStaking is
         return epochUnstakesByDomain[domain][epoch][custodian][attester];
     }
 
-    // gets the unstake for a given attester at the current epoch
+    /**
+     * @notice Gets the unstake amount for a given attester at the current epoch
+     * @param domain The domain address
+     * @param custodian The custodian address
+     * @param attester The attester address
+     * @return uint256 Current epoch unstake amount
+     */
     function getCurrentEpochUnstake(
         address domain,
         address custodian,
@@ -217,7 +329,13 @@ contract MovementStaking is
             );
     }
 
-    // gets the total stake for a given epoch
+    /**
+     * @notice Gets the total stake for a given epoch and custodian
+     * @param domain The domain address
+     * @param epoch The epoch number
+     * @param custodian The custodian address
+     * @return uint256 Total stake for the epoch
+     */
     function getTotalStakeForEpoch(
         address domain,
         uint256 epoch,
@@ -226,7 +344,12 @@ contract MovementStaking is
         return epochTotalStakeByDomain[domain][epoch][custodian];
     }
 
-    // gets the total stake for the current epoch
+    /**
+     * @notice Gets the total stake for the current epoch and custodian
+     * @param domain The domain address
+     * @param custodian The custodian address
+     * @return uint256 Total stake for current epoch
+     */
     function getTotalStakeForCurrentEpoch(
         address domain,
         address custodian
@@ -235,32 +358,36 @@ contract MovementStaking is
             getTotalStakeForEpoch(domain, getCurrentEpoch(domain), custodian);
     }
 
-    // stakes for the next epoch
+    /**
+     * @notice Stakes tokens for the next epoch
+     * @param domain The domain to stake for
+     * @param custodian The custodian token contract
+     * @param amount The amount to stake
+     */
     function stake(
         address domain,
         IERC20 custodian,
         uint256 amount
     ) external onlyRole(WHITELIST_ROLE) nonReentrant {
-        // add the attester to the list of attesters
+        // Add the attester to the list of attesters
         attestersByDomain[domain].add(msg.sender);
 
-        // add the custodian to the list of custodians
-        // custodiansByDomain[domain].add(address(custodian)); // Note: we don't want this to take place by default as it opens up an opportunity for a gas attack by generating a large number of custodians for the domain contract to track
+        // Note: We don't add the custodian by default to prevent gas attacks
+        // custodiansByDomain[domain].add(address(custodian));
 
-        // check the balance of the token before transfer
+        // Check the balance of the token before transfer
         uint256 balanceBefore = token.balanceOf(address(this));
 
-        // transfer the stake to the contract
-        // if the transfer is not using a custodian, the custodian is the token itself
-        // hence this works
-        // ! In general with this pattern, the custodian must be careful about not over-approving the token.
+        // Transfer the stake to the contract
+        // If the transfer is not using a custodian, the custodian is the token itself
+        // @dev The custodian must be careful about not over-approving the token
         custodian.transferFrom(msg.sender, address(this), amount);
 
-        // require that the balance of the actual token has increased by the amount
+        // Require that the balance of the actual token has increased by the amount
         if (token.balanceOf(address(this)) != balanceBefore + amount)
             revert CustodianTransferAmountMismatch();
 
-        // set the attester to stake for the next epoch
+        // Set the attester to stake for the next epoch
         _addStake(
             domain,
             getNextEpochByBlockTime(domain),
@@ -269,7 +396,7 @@ contract MovementStaking is
             amount
         );
 
-        // Let the world know that the attester has staked
+        // Emit stake event
         emit AttesterStaked(
             domain,
             getNextEpoch(domain),
@@ -279,15 +406,20 @@ contract MovementStaking is
         );
     }
 
-    // unstakes an amount for the next epoch
+    /**
+     * @notice Initiates unstaking of tokens for the next epoch
+     * @dev This doesn't actually unstake immediately, but marks tokens for unstaking in the next epoch
+     * @param domain The domain to unstake from
+     * @param custodian The custodian address
+     * @param amount The amount to unstake
+     */
     function unstake(
         address domain,
         address custodian,
         uint256 amount
     ) external onlyRole(WHITELIST_ROLE) nonReentrant {
-        // indicate that we are going to unstake this amount in the next epoch
-        // ! this doesn't actually happen until we roll over the epoch
-        // note: by tracking in the next epoch we need to make sure when we roll over an epoch we check the amount rolled over from stake by the unstake in the next epoch
+        // Mark tokens for unstaking in the next epoch
+        // Actual unstaking happens during epoch rollover
         _addUnstake(
             domain,
             getNextEpochByBlockTime(domain),
@@ -305,14 +437,20 @@ contract MovementStaking is
         );
     }
 
-    // rolls over the stake and unstake for a given attester
+    /**
+     * @notice Rolls over staking and unstaking for a specific attester
+     * @param domain The domain address
+     * @param epochNumber The current epoch number
+     * @param custodian The custodian address
+     * @param attester The attester address
+     */
     function _rollOverAttester(
         address domain,
         uint256 epochNumber,
         address custodian,
         address attester
     ) internal {
-        // the amount of stake rolled over is stake[currentEpoch] - unstake[nextEpoch]
+        // Calculate the amount of stake to roll over: stake[currentEpoch] - unstake[nextEpoch]
         uint256 stakeAmount = getStakeAtEpoch(
             domain,
             epochNumber,
@@ -332,10 +470,9 @@ contract MovementStaking is
 
         _addStake(domain, epochNumber + 1, custodian, attester, remainder);
 
-        // the unstake is then paid out
-        // note: this is the only place this takes place
-        // there's not risk of double payout, so long as rollOverattester is only called once per epoch
-        // this should be guaranteed by the implementation, but we may want to create a withdrawal mapping to ensure this
+        // Process unstaking payout
+        // @dev This is the only place unstaking happens - no risk of double payout
+        // as long as rollOverAttester is only called once per epoch
         _payAttester(address(this), attester, custodian, unstakeAmount);
 
         emit AttesterEpochRolledOver(
@@ -347,9 +484,14 @@ contract MovementStaking is
         );
     }
 
+    /**
+     * @notice Rolls over an epoch for a domain
+     * @param domain The domain address
+     * @param epochNumber The epoch number to roll over
+     */
     function _rollOverEpoch(address domain, uint256 epochNumber) internal {
-        // iterate over the attester set
-        // * complexity here can be reduced by actually mapping attesters to their token and custodian
+        // Process all attesters and custodians
+        // @dev Complexity could be reduced by mapping attesters to their token and custodian
         for (uint256 i = 0; i < attestersByDomain[domain].length(); i++) {
             address attester = attestersByDomain[domain].at(i);
 
@@ -360,18 +502,21 @@ contract MovementStaking is
             }
         }
 
-        // increment the current epoch
+        // Increment the current epoch
         currentEpochByDomain[domain] = epochNumber + 1;
 
         emit EpochRolledOver(domain, epochNumber);
     }
 
+    /**
+     * @notice Public function to roll over the current epoch
+     */
     function rollOverEpoch() external {
         _rollOverEpoch(msg.sender, getCurrentEpoch(msg.sender));
     }
 
     /**
-     * @dev Slash an attester's stake
+     * @notice Slashes an attester's stake
      * @param domain The domain of the attester
      * @param epoch The epoch in which the slash is attempted
      * @param custodian The custodian of the token
@@ -385,7 +530,7 @@ contract MovementStaking is
         address attester,
         uint256 amount
     ) internal {
-        // stake slash will always target this epoch
+        // Slash will always target the current epoch
         uint256 targetEpoch = epoch;
         uint256 stakeForEpoch = getStakeAtEpoch(
             domain,
@@ -394,7 +539,7 @@ contract MovementStaking is
             attester
         );
 
-        // deduct the amount from the attester's stake, account for underflow
+        // Deduct the amount from the attester's stake, accounting for underflow
         if (stakeForEpoch < amount) {
             _removeStake(
                 domain,
@@ -409,9 +554,9 @@ contract MovementStaking is
     }
 
     /**
-     * @dev Slash an attester's unstake
+     * @notice Slashes an attester's unstake request
      * @param domain The domain of the attester
-     * @param epoch The epoch in which the slash is attempted, i.e., epoch - 1 of the epoch where the unstake will be removed
+     * @param epoch The epoch in which the slash is attempted
      * @param custodian The custodian of the token
      * @param attester The attester to slash
      */
@@ -421,7 +566,7 @@ contract MovementStaking is
         address custodian,
         address attester
     ) internal {
-        // unstake slash will always target the next epoch
+        // Unstake slash targets the next epoch
         uint256 stakeForEpoch = getStakeAtEpoch(
             domain,
             epoch,
@@ -437,8 +582,7 @@ contract MovementStaking is
         );
 
         if (unstakeForEpoch > stakeForEpoch) {
-            // if you are trying to unstake more than is staked
-
+            // If attester is trying to unstake more than is staked,
             // set the unstake to the maximum possible amount
             _setUnstake(
                 domain,
@@ -450,6 +594,13 @@ contract MovementStaking is
         }
     }
 
+    /**
+     * @notice Slashes multiple attesters
+     * @param custodians Array of custodian addresses
+     * @param attesters Array of attester addresses
+     * @param amounts Array of amounts to slash
+     * @param refundAmounts Array of refund amounts
+     */
     function slash(
         address[] calldata custodians,
         address[] calldata attesters,
@@ -457,8 +608,8 @@ contract MovementStaking is
         uint256[] calldata refundAmounts
     ) public nonReentrant {
         for (uint256 i = 0; i < attesters.length; i++) {
-            // issue a refund that is the min of the stake balance, the amount to be slashed, and the refund amount
-            // this is to prevent a Domain from trying to have this contract pay out more than has been staked
+            // Calculate refund as minimum of stake balance, slash amount, and refund amount
+            // This prevents a Domain from having this contract pay more than has been staked
             uint256 refundAmount = Math.min(
                 getStakeAtEpoch(
                     msg.sender,
@@ -469,13 +620,13 @@ contract MovementStaking is
                 Math.min(amounts[i], refundAmounts[i])
             );
             _payAttester(
-                address(this), // this contract is paying the attester, it should always have enough balance
+                address(this), // Contract is paying the attester
                 attesters[i],
                 custodians[i],
                 refundAmount
             );
 
-            // slash both stake and unstake so that the weight of the attester is reduced and they can't withdraw the unstake at the next epoch
+            // Slash both stake and unstake to reduce attester weight and prevent withdrawals
             _slashStake(
                 msg.sender,
                 getCurrentEpoch(msg.sender),
@@ -493,6 +644,13 @@ contract MovementStaking is
         }
     }
 
+    /**
+     * @notice Pays an attester with tokens
+     * @param from The address paying the attester
+     * @param attester The attester receiving payment
+     * @param custodian The custodian address
+     * @param amount The amount to pay
+     */
     function _payAttester(
         address from,
         address attester,
@@ -500,27 +658,25 @@ contract MovementStaking is
         uint256 amount
     ) internal {
         if (from == address(this)) {
-            // this contract is paying the attester
+            // Contract is paying the attester
             if (address(token) == custodian) {
-                // if there isn't a custodian...
-                token.transfer(attester, amount); // just transfer the token
+                // Direct token transfer if no custodian
+                token.transfer(attester, amount);
             } else {
-                // approve the custodian to spend the base token
+                // Approve custodian to spend base token
                 token.approve(custodian, amount);
 
-                // purchase the custodial token for the attester
+                // Purchase custodial token for the attester
                 ICustodianToken(custodian).buyCustodialToken(attester, amount);
             }
         } else {
-            // This can be used by the domain to pay the attester, but it's just as convenient for the domain to reward the attester directly.
-            // This is, currently, there is no added benefit of issuing a reward through this contract--other than Riccardian clarity.
-
-            // somebody else is trying to pay the attester, e.g., the domain
+            // External address is paying the attester
+            // @dev Domain could reward the attester directly; this provides Ricardian clarity
             if (address(token) == custodian) {
-                // if there isn't a custodian...
-                token.transferFrom(from, attester, amount); // just transfer the token
+                // Direct token transfer if no custodian
+                token.transferFrom(from, attester, amount);
             } else {
-                // purchase the custodial token for the attester
+                // Purchase custodial token for the attester
                 ICustodianToken(custodian).buyCustodialTokenFrom(
                     from,
                     attester,
@@ -530,24 +686,38 @@ contract MovementStaking is
         }
     }
 
+    /**
+     * @notice Rewards multiple attesters
+     * @dev Could be used to automatically add to attesters' stake with a restake policy
+     * @param attesters Array of attester addresses
+     * @param amounts Array of reward amounts
+     * @param custodians Array of custodian addresses
+     */
     function reward(
         address[] calldata attesters,
         uint256[] calldata amounts,
         address[] calldata custodians
     ) public nonReentrant {
-        // note: you may want to apply this directly to the attester's stake if the Domain sets an automatic restake policy
         for (uint256 i = 0; i < attesters.length; i++) {
-            // pay the attester
+            // Pay the attester
             _payAttester(msg.sender, attesters[i], custodians[i], amounts[i]);
         }
     }
 
+    /**
+     * @notice Adds an address to the whitelist
+     * @param addr The address to whitelist
+     */
     function whitelistAddress(
         address addr
     ) external onlyRole(DEFAULT_ADMIN_ROLE) {
         grantRole(WHITELIST_ROLE, addr);
     }
 
+    /**
+     * @notice Removes an address from the whitelist
+     * @param addr The address to remove
+     */
     function removeAddressFromWhitelist(
         address addr
     ) external onlyRole(DEFAULT_ADMIN_ROLE) {

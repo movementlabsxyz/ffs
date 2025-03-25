@@ -4,49 +4,59 @@ import {EnumerableSet} from "@openzeppelin/contracts/utils/structs/EnumerableSet
 import "forge-std/console.sol";
 import {MovementStaking, IMovementStaking} from "../staking/MovementStaking.sol";
 
+/**
+ * @title MCRStorage
+ * @notice Storage contract for Movement Chain Relay (MCR) data structures
+ */
 contract MCRStorage {
 
+    /// @notice Reference to the staking contract
     IMovementStaking public stakingContract;
 
-    // the number of blocks that can be submitted ahead of the lastAcceptedBlockHeight
-    // this allows for things like batching to take place without some attesters locking down the attester set by pushing too far ahead
-    // ? this could be replaced by a 2/3 stake vote on the block height to epoch assignment
-    // ? however, this protocol becomes more complex as you to take steps to ensure that...
-    // ? 1. Block heights have a non-decreasing mapping to epochs
-    // ? 2. Votes get accumulated reasonable near the end of the epoch (i.e., your vote is cast for the epoch you vote fore and the next)
-    // ? if howevever, you simply allow a race with the tolerance below, both of these are satisfied without the added complexity
+    /// @notice The number of blocks that can be submitted ahead of the lastAcceptedBlockHeight
+    /// @dev This allows for batching without attesters locking down the set by pushing too far ahead
+    /// @dev Could be replaced by a 2/3 stake vote on block height to epoch assignment, but would require:
+    /// @dev 1. Block heights have a non-decreasing mapping to epochs
+    /// @dev 2. Votes get accumulated reasonably near the end of the epoch
+    /// @dev Using a race with tolerance is simpler and satisfies these constraints
     uint256 public leadingBlockTolerance;
 
-    // track the last accepted block height, so that we can require blocks are submitted in order and handle staking effectively
+    /// @notice Tracks the last accepted block height
+    /// @dev Used to ensure blocks are submitted in order and handle staking effectively
     uint256 public lastAcceptedBlockHeight;
 
+    /**
+     * @notice Structure representing a block commitment
+     * @dev Height 0 represents uncommitted; all other values are legitimate heights
+     */
     struct BlockCommitment {
-        // currently, to simplify the api, we'll say 0 is uncommitted all other numbers are legitimate heights
-
         uint256 height;
         bytes32 commitment;
         bytes32 blockId;
     }
 
-    // map each block height to an epoch
+    /// @notice Maps each block height to its corresponding epoch
     mapping(uint256 blockHeight => uint256 epoch) public blockHeightEpochAssignments;
 
-    // track each commitment from each attester for each block height
+    /// @notice Tracks commitments from each attester for each block height
     mapping(uint256 blockHeight => mapping(address attester => BlockCommitment)) public commitments;
 
-    // track the total stake accumulate for each commitment for each block height
+    /// @notice Tracks total stake accumulated for each commitment at each block height
     mapping(uint256 blockHeight => mapping(bytes32 commitement => uint256 stake)) public commitmentStakes;
 
-    // map block height to accepted block hash 
+    /// @notice Maps block height to accepted block commitment
     mapping(uint256 blockHeight => BlockCommitment) public acceptedBlocks;
 
-    // whether we allow open attestation
+    /// @notice Whether open attestation is enabled
     bool public openAttestationEnabled;
 
-    // versioned scheme for accepted blocks
+    /// @notice Versioned mapping of accepted blocks
     mapping(uint256 => mapping(uint256 blockHeight => BlockCommitment)) public versionedAcceptedBlocks;
+    
+    /// @notice Current version for accepted blocks
     uint256 public acceptedBlocksVersion;
 
+    /// @dev Reserved storage gap for future upgrades
     uint256[47] internal __gap;
 
 }

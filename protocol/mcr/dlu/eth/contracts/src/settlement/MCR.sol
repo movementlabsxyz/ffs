@@ -9,15 +9,32 @@ import {MCRStorage} from "./MCRStorage.sol";
 import {BaseSettlement} from "./settlement/BaseSettlement.sol";
 import {IMCR} from "./interfaces/IMCR.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+import {IMcrReward} from "./interfaces/IMcrReward.sol";
 
+/**
+ * @title MCR - Movement Chain Relay
+ * @notice Contract for handling block commitments and consensus in a multi-validator environment
+ */
 contract MCR is Initializable, BaseSettlement, MCRStorage, IMCR {
 
-    /** @dev The role for commitment admin */
+    /// @notice The role for commitment admin
     bytes32 public constant COMMITMENT_ADMIN = keccak256("COMMITMENT_ADMIN");
 
-    /** @dev The role for trusted attester */
+    /// @notice The role for trusted attester
     bytes32 public constant TRUSTED_ATTESTER = keccak256("TRUSTED_ATTESTER");
 
+    /// @notice The reward contract address
+    /// @dev Should implement IMcrReward, the default implementation is McrARO (Asymptotic Reward One)
+    address public rewardContract;
+
+    /**
+     * @notice Initializes the MCR contract
+     * @param _stakingContract The staking contract to use
+     * @param _lastAcceptedBlockHeight The last accepted block height
+     * @param _leadingBlockTolerance The tolerance for leading blocks
+     * @param _epochDuration The duration of each epoch
+     * @param _custodians Array of custodian addresses
+     */
     function initialize(
         IMovementStaking _stakingContract,
         uint256 _lastAcceptedBlockHeight,
@@ -34,6 +51,10 @@ contract MCR is Initializable, BaseSettlement, MCRStorage, IMCR {
         grantTrustedAttester(msg.sender);
     }
 
+    /**
+     * @notice Grants commitment admin role to an account
+     * @param account Address to grant the role to
+     */
     function grantCommitmentAdmin(address account) public {
         console.log("grantCommitmentAdmin called by:", msg.sender);
         require(
@@ -45,6 +66,10 @@ contract MCR is Initializable, BaseSettlement, MCRStorage, IMCR {
 
     }
 
+    /**
+     * @notice Grants commitment admin role to multiple accounts in batch
+     * @param accounts Array of addresses to grant the role to
+     */
     function batchGrantCommitmentAdmin(address[] memory accounts) public {
         require(
             hasRole(DEFAULT_ADMIN_ROLE, msg.sender),
@@ -55,7 +80,13 @@ contract MCR is Initializable, BaseSettlement, MCRStorage, IMCR {
         }
     }
 
-    // creates a commitment
+    /**
+     * @notice Creates a new block commitment structure
+     * @param height Block height
+     * @param commitment Commitment hash
+     * @param blockId Unique identifier for the block
+     * @return BlockCommitment memory
+     */
     function createBlockCommitment(
         uint256 height,
         bytes32 commitment,
@@ -64,27 +95,45 @@ contract MCR is Initializable, BaseSettlement, MCRStorage, IMCR {
         return BlockCommitment(height, commitment, blockId);
     }
 
-    // gets the max tolerable block height
+    /**
+     * @notice Calculates the maximum tolerable block height based on tolerance
+     * @return uint256 Maximum tolerable block height
+     */
     function getMaxTolerableBlockHeight() public view returns (uint256) {
         return lastAcceptedBlockHeight + leadingBlockTolerance;
     }
 
-    // gets the would be epoch for the current block time
+    /**
+     * @notice Gets the epoch for the current block time
+     * @return uint256 Current epoch by block time
+     */
     function getEpochByBlockTime() public view returns (uint256) {
         return stakingContract.getEpochByBlockTime(address(this));
     }
 
-    // gets the current epoch up to which blocks have been accepted
+    /**
+     * @notice Gets the current epoch up to which blocks have been accepted
+     * @return uint256 Current epoch
+     */
     function getCurrentEpoch() public view returns (uint256) {
         return stakingContract.getCurrentEpoch(address(this));
     }
 
-    // gets the next epoch
+    /**
+     * @notice Gets the next epoch
+     * @return uint256 Next epoch
+     */
     function getNextEpoch() public view returns (uint256) {
         return stakingContract.getNextEpoch(address(this));
     }
 
-    // gets the stake for a given attester at a given epoch
+    /**
+     * @notice Gets the stake for a given attester at a specific epoch
+     * @param epoch The epoch to check
+     * @param custodian The custodian address
+     * @param attester The attester address
+     * @return uint256 Stake amount
+     */
     function getStakeAtEpoch(
         uint256 epoch,
         address custodian,
@@ -99,7 +148,13 @@ contract MCR is Initializable, BaseSettlement, MCRStorage, IMCR {
             );
     }
 
-    // todo: memoize this
+    /**
+     * @notice Computes the total stake across all custodians for an attester at a specific epoch
+     * @dev TODO: Consider memoizing this function for efficiency
+     * @param epoch The epoch to check
+     * @param attester The attester address
+     * @return uint256 Total stake amount
+     */
     function computeAllStakeAtEpoch(
         uint256 epoch,
         address attester
@@ -109,13 +164,18 @@ contract MCR is Initializable, BaseSettlement, MCRStorage, IMCR {
         );
         uint256 totalStake = 0;
         for (uint256 i = 0; i < custodians.length; i++) {
-            // for now, each custodian has weight of 1
+            // Each custodian currently has a weight of 1
             totalStake += getStakeAtEpoch(epoch, custodians[i], attester);
         }
         return totalStake;
     }
 
-    // gets the stake for a given attester at the current epoch
+    /**
+     * @notice Gets the stake for a given attester at the current epoch
+     * @param custodian The custodian address
+     * @param attester The attester address
+     * @return uint256 Current epoch stake
+     */
     function getCurrentEpochStake(
         address custodian,
         address attester
@@ -123,13 +183,23 @@ contract MCR is Initializable, BaseSettlement, MCRStorage, IMCR {
         return getStakeAtEpoch(getCurrentEpoch(), custodian, attester);
     }
 
+    /**
+     * @notice Computes the total stake across all custodians for an attester at the current epoch
+     * @param attester The attester address
+     * @return uint256 Total current epoch stake
+     */
     function computeAllCurrentEpochStake(
         address attester
     ) public view returns (uint256) {
         return computeAllStakeAtEpoch(getCurrentEpoch(), attester);
     }
 
-    // gets the total stake for a given epoch
+    /**
+     * @notice Gets the total stake for a given epoch and custodian
+     * @param epoch The epoch to check
+     * @param custodian The custodian address
+     * @return uint256 Total stake for epoch
+     */
     function getTotalStakeForEpoch(
         uint256 epoch,
         address custodian
@@ -142,6 +212,10 @@ contract MCR is Initializable, BaseSettlement, MCRStorage, IMCR {
             );
     }
 
+    /**
+     * @notice Accepts the genesis ceremony
+     * @dev Only callable by admin
+     */
     function acceptGenesisCeremony() public {
         require(
             hasRole(DEFAULT_ADMIN_ROLE, msg.sender),
@@ -150,6 +224,11 @@ contract MCR is Initializable, BaseSettlement, MCRStorage, IMCR {
         stakingContract.acceptGenesisCeremony();
     }
 
+    /**
+     * @notice Computes the total stake across all custodians for a specific epoch
+     * @param epoch The epoch to check
+     * @return uint256 Total stake for the epoch
+     */
     function computeAllTotalStakeForEpoch(
         uint256 epoch
     ) public view returns (uint256) {
@@ -158,19 +237,27 @@ contract MCR is Initializable, BaseSettlement, MCRStorage, IMCR {
         );
         uint256 totalStake = 0;
         for (uint256 i = 0; i < custodians.length; i++) {
-            // for now, each custodian has weight of 1
+            // Each custodian currently has a weight of 1
             totalStake += getTotalStakeForEpoch(epoch, custodians[i]);
         }
         return totalStake;
     }
 
-    // gets the total stake for the current epoch
+    /**
+     * @notice Gets the total stake for a custodian at the current epoch
+     * @param custodian The custodian address
+     * @return uint256 Total stake for current epoch
+     */
     function getTotalStakeForCurrentEpoch(
         address custodian
     ) public view returns (uint256) {
         return getTotalStakeForEpoch(getCurrentEpoch(), custodian);
     }
 
+    /**
+     * @notice Computes the total stake across all custodians for the current epoch
+     * @return uint256 Total stake for current epoch
+     */
     function computeAllTotalStakeForCurrentEpoch()
         public
         view
@@ -179,6 +266,12 @@ contract MCR is Initializable, BaseSettlement, MCRStorage, IMCR {
         return computeAllTotalStakeForEpoch(getCurrentEpoch());
     }
 
+    /**
+     * @notice Gets a validator's commitment at a specific block height
+     * @param height Block height
+     * @param attester Attester address
+     * @return BlockCommitment memory
+     */
     function getValidatorCommitmentAtBlockHeight(
         uint256 height,
         address attester
@@ -186,7 +279,10 @@ contract MCR is Initializable, BaseSettlement, MCRStorage, IMCR {
         return commitments[height][attester];
     }
 
-    // Sets the accepted commitment at a give block height
+    /**
+     * @notice Sets the accepted commitment at a given block height
+     * @param blockCommitment The block commitment to set
+     */
     function setAcceptedCommitmentAtBlockHeight(BlockCommitment memory blockCommitment) public {
         require(
             hasRole(COMMITMENT_ADMIN, msg.sender),
@@ -195,7 +291,10 @@ contract MCR is Initializable, BaseSettlement, MCRStorage, IMCR {
         versionedAcceptedBlocks[acceptedBlocksVersion][blockCommitment.height] = blockCommitment;  
     }
 
-    // Sets the last accepted block height. 
+    /**
+     * @notice Sets the last accepted block height
+     * @param height New last accepted block height
+     */
     function setLastAcceptedBlockHeight(uint256 height) public {
         require(
             hasRole(COMMITMENT_ADMIN, msg.sender),
@@ -204,8 +303,11 @@ contract MCR is Initializable, BaseSettlement, MCRStorage, IMCR {
         lastAcceptedBlockHeight = height;
     }
 
-    // Forces the latest attestation by setting the block height
-    // Note: this only safe when we are running with a single validator as it does not zero out follow-on commitments.
+    /**
+     * @notice Forces the latest attestation by setting the block height
+     * @dev Only safe when running with a single validator as it does not zero out follow-on commitments
+     * @param blockCommitment The block commitment to force
+     */
     function forceLatestCommitment(BlockCommitment memory blockCommitment) public {
         console.log("forceLatestCommitment called by:", msg.sender);
         require(
@@ -213,22 +315,34 @@ contract MCR is Initializable, BaseSettlement, MCRStorage, IMCR {
             "FORCE_LATEST_COMMITMENT_IS_COMMITMENT_ADMIN_ONLY"
         );
 
-        // increment the acceptedBlocksVersion (effectively removing all other accepted blocks)
+        // Increment the acceptedBlocksVersion (effectively removing all other accepted blocks)
         acceptedBlocksVersion += 1;
         versionedAcceptedBlocks[acceptedBlocksVersion][blockCommitment.height] = blockCommitment;
         lastAcceptedBlockHeight = blockCommitment.height; 
     }
 
+    /**
+     * @notice Gets the accepted commitment at a specific block height
+     * @param height Block height
+     * @return BlockCommitment memory
+     */
     function getAcceptedCommitmentAtBlockHeight(uint256 height) public view returns (BlockCommitment memory) {
         return versionedAcceptedBlocks[acceptedBlocksVersion][height];
     }
 
+    /**
+     * @notice Gets all attesters for this domain
+     * @return address[] memory Array of attester addresses
+     */
     function getAttesters() public view returns (address[] memory) {
         return stakingContract.getAttestersByDomain(address(this));
     }
 
     /**
-     * @dev submits a block commitment for an attester.
+     * @notice Submits a block commitment for a specific attester
+     * @dev Internal function used by public submission methods
+     * @param attester The attester submitting the commitment
+     * @param blockCommitment The block commitment being submitted
      */
     function submitBlockCommitmentForAttester(
         address attester,
@@ -238,27 +352,28 @@ contract MCR is Initializable, BaseSettlement, MCRStorage, IMCR {
         if (commitments[blockCommitment.height][attester].height != 0)
             revert AttesterAlreadyCommitted();
 
-        // note: do no uncomment the below, we want to allow this in case we have lagging attesters
-        // Attester has committed to an already accepted block
-        // if ( lastAcceptedBlockHeight > blockCommitment.height) revert AlreadyAcceptedBlock();
-        // Attester has committed to a block too far ahead of the last accepted block
+        // We allow commitments to already accepted blocks to support lagging attesters
+        // If uncommented, this would prevent commitments to already accepted blocks:
+        // if (lastAcceptedBlockHeight > blockCommitment.height) revert AlreadyAcceptedBlock();
+        
+        // Prevent commitments to blocks too far ahead of the last accepted block
         if (
             lastAcceptedBlockHeight + leadingBlockTolerance <
             blockCommitment.height
         ) revert AttesterAlreadyCommitted();
 
-        // assign the block height to the current epoch if it hasn't been assigned yet
+        // Assign the block height to the current epoch if it hasn't been assigned yet
         if (blockHeightEpochAssignments[blockCommitment.height] == 0) {
-            // note: this is an intended race condition, but it is benign because of the tolerance
+            // This is an intended race condition, but it is benign because of the tolerance
             blockHeightEpochAssignments[
                 blockCommitment.height
             ] = getEpochByBlockTime();
         }
 
-        // register the attester's commitment
+        // Register the attester's commitment
         commitments[blockCommitment.height][attester] = blockCommitment;
 
-        // increment the commitment count by stake
+        // Increment the commitment count by stake
         uint256 allCurrentEpochStake = computeAllCurrentEpochStake(attester);
         commitmentStakes[blockCommitment.height][
             blockCommitment.commitment
@@ -270,53 +385,56 @@ contract MCR is Initializable, BaseSettlement, MCRStorage, IMCR {
             allCurrentEpochStake
         );
 
-        // keep ticking through to find accepted blocks
-        // note: this is what allows for batching to be successful
-        // we can commit to blocks out to the tolerance point
-        // then we can accept them in order
-        // ! however, this does potentially become very costly for whomever submits this last block
-        // ! rewards need to be managed accordingly
+        // Keep ticking through to find accepted blocks
+        // This allows for batching to be successful:
+        // We can commit to blocks out to the tolerance point then accept them in order
+        // Note: this could become costly for whoever submits the last block
+        // Rewards should be managed accordingly
         while (tickOnBlockHeight(lastAcceptedBlockHeight + 1)) {}
     }
 
     /**
+     * @notice Processes a specific block height to check for consensus
+     * @dev Returns true if a commitment was accepted at this height
+     * @param blockHeight The block height to process
+     * @return bool True if a commitment was accepted
      */
     function tickOnBlockHeight(uint256 blockHeight) internal returns (bool) {
-        // get the epoch assigned to the block height
+        // Get the epoch assigned to the block height
         uint256 blockEpoch = blockHeightEpochAssignments[blockHeight];
 
-        // if the current epoch is far behind, that's okay that just means there weren't blocks submitted
-        // so long as we ensure that we go through the blocks in order and that the block to epoch assignment is non-decreasing, we're good
-        // so, we'll just keep rolling over the epoch until we catch up
+        // If the current epoch is behind, roll it over until we catch up
+        // This is fine as long as we process blocks in order and the block-to-epoch 
+        // assignment is non-decreasing
         while (getCurrentEpoch() < blockEpoch) {
             rollOverEpoch();
         }
 
-        // note: we could keep track of seen commitments in a set
-        // but since the operations we're doing are very cheap, the set actually adds overhead
+        // We could track seen commitments in a set, but since our operations
+        // are very cheap, the set would actually add overhead
         uint256 supermajority = (2 * computeAllTotalStakeForEpoch(blockEpoch)) /
             3;
         address[] memory attesters = getAttesters();
 
-        // iterate over the attester set
+        // Iterate over the attester set
         for (uint256 i = 0; i < attesters.length; i++) {
             address attester = attesters[i];
 
-            // get a commitment for the attester at the block height
+            // Get the commitment for this attester at the block height
             BlockCommitment memory blockCommitment = commitments[blockHeight][
                 attester
             ];
 
-            // check the total stake on the commitment
+            // Check the total stake on the commitment
             uint256 totalStakeOnCommitment = commitmentStakes[
                 blockCommitment.height
             ][blockCommitment.commitment];
 
             if (totalStakeOnCommitment > supermajority) {
-                // accept the block commitment (this may trigger a roll over of the epoch)
+                // Accept the block commitment (may trigger epoch rollover)
                 _acceptBlockCommitment(blockCommitment);
 
-                // we found a commitment that was accepted
+                // We found a commitment that was accepted
                 return true;
             }
         }
@@ -324,10 +442,18 @@ contract MCR is Initializable, BaseSettlement, MCRStorage, IMCR {
         return false;
     }
 
+    /**
+     * @notice Grants trusted attester role to an account
+     * @param attester Address to grant the role to
+     */
     function grantTrustedAttester(address attester) public onlyRole(COMMITMENT_ADMIN) {
         grantRole(TRUSTED_ATTESTER, attester);
     }
 
+    /**
+     * @notice Grants trusted attester role to multiple accounts in batch
+     * @param attesters Array of addresses to grant the role to
+     */
     function batchGrantTrustedAttester(address[] memory attesters) public onlyRole(COMMITMENT_ADMIN) {
         for (uint256 i = 0; i < attesters.length; i++) {
             grantRole(TRUSTED_ATTESTER, attesters[i]);
@@ -335,10 +461,18 @@ contract MCR is Initializable, BaseSettlement, MCRStorage, IMCR {
 
     }
 
+    /**
+     * @notice Enables or disables open attestation
+     * @param enabled Boolean indicating if open attestation should be enabled
+     */
     function setOpenAttestationEnabled(bool enabled) public onlyRole(COMMITMENT_ADMIN) {
         openAttestationEnabled = enabled;
     }
 
+    /**
+     * @notice Submits a single block commitment
+     * @param blockCommitment The block commitment to submit
+     */
     function submitBlockCommitment(BlockCommitment memory blockCommitment) public {
         require(
             openAttestationEnabled || hasRole(TRUSTED_ATTESTER, msg.sender),
@@ -347,6 +481,10 @@ contract MCR is Initializable, BaseSettlement, MCRStorage, IMCR {
         submitBlockCommitmentForAttester(msg.sender, blockCommitment);
     }
 
+    /**
+     * @notice Submits multiple block commitments in batch
+     * @param blockCommitments Array of block commitments to submit
+     */
     function submitBatchBlockCommitment(BlockCommitment[] memory blockCommitments) public {
         require(
             openAttestationEnabled || hasRole(TRUSTED_ATTESTER, msg.sender),
@@ -358,50 +496,107 @@ contract MCR is Initializable, BaseSettlement, MCRStorage, IMCR {
     }
 
     /**
-     * @dev Accepts a block commitment.
-     * @dev Under the current implementation this shares in recursion with the tickOnBlockHeight, so it should be reentrant.
+     * @notice Accepts a block commitment
+     * @dev This shares recursion with tickOnBlockHeight, so it should be reentrant
+     * @param blockCommitment The block commitment to accept
      */
     function _acceptBlockCommitment(
         BlockCommitment memory blockCommitment
     ) internal {
         uint256 currentEpoch = getCurrentEpoch();
-        // get the epoch for the block commitment
-        //  Block commitment is not in the current epoch, it cannot be accepted. This indicates a bug in the protocol.
+        
+        // Block commitment must be in the current epoch to be accepted
+        // If not, this indicates a bug in the protocol
         if (blockHeightEpochAssignments[blockCommitment.height] != currentEpoch)
             revert UnacceptableBlockCommitment();
 
-        // set accepted block commitment
+        // Set accepted block commitment
         versionedAcceptedBlocks[acceptedBlocksVersion][blockCommitment.height] = blockCommitment;
 
-        // set last accepted block height
+        // Set last accepted block height
         lastAcceptedBlockHeight = blockCommitment.height;
 
-        // slash minority attesters w.r.t. to the accepted block commitment
+        // Slash minority attesters with respect to the accepted block commitment
         slashMinority(blockCommitment);
 
-        // emit the block accepted event
+        // Emit the block accepted event
         emit BlockAccepted(
             blockCommitment.blockId,
             blockCommitment.commitment,
             blockCommitment.height
         );
 
-        // if the timestamp epoch is greater than the current epoch, roll over the epoch
+        // Distribute rewards for the block commitment if reward contract is set
+        if (rewardContract != address(0)) {
+            // Find the attester who made this commitment
+            address[] memory attesters = stakingContract.getAttestersByDomain(address(this));
+            for (uint256 i = 0; i < attesters.length; i++) {
+                address attester = attesters[i];
+                if (commitments[blockCommitment.height][attester].commitment == blockCommitment.commitment) {
+                    // Use delegatecall to maintain MCR as msg.sender for the reward call
+                    (bool success, ) = rewardContract.delegatecall(
+                        abi.encodeWithSelector(
+                            IMcrReward.rewardBlockCommitment.selector,
+                            blockCommitment.height,
+                            blockCommitment.commitment,
+                            blockCommitment.blockId,
+                            attester
+                        )
+                    );
+                    // We don't handle the success case specially as rewards are optional
+                    break;
+                }
+            }
+        }
+
+        // If the timestamp epoch is greater than the current epoch, roll over the epoch
         if (getEpochByBlockTime() > currentEpoch) {
             rollOverEpoch();
         }
     }
 
     /**
+     * @notice Slashes minority attesters who committed to different blocks
+     * @dev Currently a placeholder for future implementation
+     * @param blockCommitment The accepted block commitment
      */
     function slashMinority(BlockCommitment memory blockCommitment) internal {
+        // Future implementation:
         // stakingContract.slash(custodians, attesters, amounts, refundAmounts);
     }
 
     /**
-     * @dev nonReentrant because there is no need to reenter this function. It should be called iteratively. Marked on the internal method to simplify risks from complex calling patterns. This also calls an external contract.
+     * @notice Rolls over to the next epoch
+     * @dev Non-reentrant because there is no need to reenter this function.
+     *      It should be called iteratively. Marked on the internal method to
+     *      simplify risks from complex calling patterns. This also calls an external contract.
      */
     function rollOverEpoch() internal {
+        uint256 currentEpoch = getCurrentEpoch();
+        
+        // Call the staking contract to roll over the epoch
         stakingContract.rollOverEpoch();
+        
+        // Distribute epoch rewards if reward contract is set
+        if (rewardContract != address(0)) {
+            // Use delegatecall to maintain MCR as msg.sender for the reward call
+            (bool success, ) = rewardContract.delegatecall(
+                abi.encodeWithSelector(
+                    IMcrReward.rewardEpochRollover.selector,
+                    currentEpoch,
+                    currentEpoch + 1
+                )
+            );
+            // We don't handle the success case specially as rewards are optional
+        }
+    }
+
+    /**
+     * @notice Sets the reward contract address
+     * @dev Only callable by admin
+     * @param _rewardContract The address of the reward contract that implements IMcrReward
+     */
+    function setRewardContract(address _rewardContract) external onlyRole(DEFAULT_ADMIN_ROLE) {
+        rewardContract = _rewardContract;
     }
 }
