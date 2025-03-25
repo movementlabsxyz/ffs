@@ -14,25 +14,7 @@ f ------ | 5e771e3e47 |
 
 Movement Labs' Fast Finality Settlement is a proof of stake settlement system.
 
-## Getting started
-
-We develop in nix. Hence start by entering the nix shell:
-
-```bash
-nix develop
-```
-
-The easiest entry point for all protocols and use cases is the [`ffs-dev`](sdk/cli/ffs-dev/README.md) CLI. Subcomponents of `ffs-dev` will have their own CLIs and these CLIs have their core libraries.
-
-For example, to spin up a network with Anvil, you can run the following command (after you build the `ffs-dev` binary):
-
-```bash
-./target/release/ffs-dev mcr network coordinator eth anvil up
-```
-
-For a more in-depth usage guide, see [Usage of CLI](sdk/cli/README.md).
-
-## Contributing
+## Contributing and getting started
 
 | Task | Description |
 |------|-------------|
