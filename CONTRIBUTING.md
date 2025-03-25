@@ -1,4 +1,4 @@
-# Contribution Guidelines
+# Contribution And Starting Guide
 
 | Task | Description |
 |------|-------------|
@@ -7,6 +7,7 @@
 | [Features & Bugs](https://github.com/movementlabsxyz/ffs/issues?q=is%3Aissue%20state%3Aopen%20label%3Afeature%2Cbug%20label%3Apriority%3Aurgent%2Cpriority%3Ahigh) | High-priority `feature` and `bug` issues. |
 
 ## How to contribute
+
 We welcome contributions to this project. We manage active development via issues. You may either submit and issue for triage or begin working on something already in the backlog. In both cases, we recommend you follow the initial steps below:
 
 1. **Identify upcoming Events:** check for `priority:urgent` and `priority:high` issues tagged with `event` label [here](https://github.com/movementlabsxyz/ffs/issues?q=is%3Aissue%20state%3Aopen%20label%3Apriority%3Ahigh%2Cpriority%3Amedium%20label%3Aevent%20). These issues mark upcoming events with a planned date for completion and thus a focus of active development. The events will also be sequenced. 
@@ -18,3 +19,21 @@ We welcome contributions to this project. We manage active development via issue
 **Experienced contributors** should prioritize issues tagged with `feature` and facilitate the onboarding of new contributors to bug fixes.
 
 Those looking to add to the suggest new `features` and `bugs` should identify whether their idea is suitable by considering the existing release candidates and their sub-issues.
+
+## Getting started
+
+We develop in nix. Hence start by entering the nix shell:
+
+```bash
+nix develop
+```
+
+The easiest entry point for all protocols and use cases is the [`ffs-dev`](sdk/cli/ffs-dev/README.md) CLI. Subcomponents of `ffs-dev` will have their own CLIs and these CLIs have their core libraries.
+
+For example, to spin up a network with Anvil, you can run the following command (after you build the `ffs-dev` binary):
+
+```bash
+./target/release/ffs-dev mcr network coordinator eth anvil up
+```
+
+For a more in-depth usage guide, see [Usage of CLI](sdk/cli/README.md).

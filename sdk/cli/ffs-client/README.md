@@ -2,6 +2,8 @@
 
 The command line tool for interacting with live FFS services.
 
+For CLI implementation guidelines, see our [CLI Conventions](../README.md).
+
 The `ffs-client` relies on the implementation of the following components in each of the sub-protocols in the `[protocol/](../protocol/README.md)` directory:
 
 - `cli/client/` - Command line interface tools for interacting with the protocol
