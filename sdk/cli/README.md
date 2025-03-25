@@ -65,8 +65,8 @@ where
 - `mcr`: uses the `mcr` sub-protocol
 - `network` and `coordinator`: some parameters the sub-protocol
 - `eth anvil up`: uses Ethereum Anvil local testnet
-- `using`: uses the example config file
-- passes the fork url to anvil
+- `using --config-path ./example/using.json`: uses the example config file
+- `-- --fork-url http://localhost:8545`: passes the fork url to anvil
 
 ## CLI Conventions
 
@@ -85,7 +85,7 @@ Modules are implemented as subdirectories in the `cli` directory of a given prot
 ```
 cli/
   mod.rs           # Main CLI structure
-  post_commitment/ # Command-specific module
+  post_commitment/ # Specific subcommand
   eth/
 ```
 
@@ -102,6 +102,33 @@ This structure keeps related code together and makes it easy to add new commands
 - Use doc comments to explain command purpose
 - Include examples in complex commands
 - Document any environment variables or config files needed
+
+**Auto documentation**
+We use `clap-markdown-ext` to automatically generate documentation for all CLI commands. This ensures documentation stays in sync with the actual implementation.
+
+> [!NOTE]
+> Always regenerate documentation when changing CLI commands to keep docs in sync with code.
+
+Every CLI implements a `markdown` subcommand that generates documentation:
+
+```bash
+# Generate docs for ffs-dev CLI
+./target/release/ffs-dev markdown generate
+```
+
+**Git Hook**
+A pre-commit hook ensures CLI documentation is always up to date. The hook:
+
+1. Generates fresh documentation
+2. Fails if documentation is outdated
+
+To install the hook:
+
+```bash
+# From repository root
+cp .githooks/pre-commit .git/hooks/
+chmod +x .git/hooks/pre-commit
+```
 
 ### Nested Commands (Command Hierarchy)
 

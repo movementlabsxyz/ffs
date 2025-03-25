@@ -7,6 +7,7 @@
 | [Features & Bugs](https://github.com/movementlabsxyz/ffs/issues?q=is%3Aissue%20state%3Aopen%20label%3Afeature%2Cbug%20label%3Apriority%3Aurgent%2Cpriority%3Ahigh) | High-priority `feature` and `bug` issues. |
 
 ## How to contribute
+
 We welcome contributions to this project. We manage active development via issues. You may either submit and issue for triage or begin working on something already in the backlog. In both cases, we recommend you follow the initial steps below:
 
 1. **Identify upcoming Events:** check for `priority:urgent` and `priority:high` issues tagged with `event` label [here](https://github.com/movementlabsxyz/ffs/issues?q=is%3Aissue%20state%3Aopen%20label%3Apriority%3Ahigh%2Cpriority%3Amedium%20label%3Aevent%20). These issues mark upcoming events with a planned date for completion and thus a focus of active development. The events will also be sequenced. 
