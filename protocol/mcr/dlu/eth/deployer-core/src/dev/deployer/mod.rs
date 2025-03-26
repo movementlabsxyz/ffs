@@ -69,7 +69,7 @@ impl McrRewardContract {
 		match self {
 			Self::None => 0,
 			Self::Aro => 1,
-			Self::Address(addr) => 2,
+			Self::Address(_addr) => 2,
 		}
 	}
 
