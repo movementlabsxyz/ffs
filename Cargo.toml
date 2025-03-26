@@ -110,6 +110,7 @@ hex = { version = "0.4.3", default-features = false, features = [
   "alloc",
   "serde",
 ] }
+sha3 = "0.10"
 zip = { version = "2.4.2", features = ["flate2"] }
 walkdir = "2.3.2"
 tempfile = "3.5.0"
@@ -184,6 +185,10 @@ clap-markdown-ext = { path = "util/clap-markdown-ext" }
 orfile = { path = "util/orfile/orfile" }
 orfile-util = { path = "util/orfile/util" }
 orfile-macro = { path = "util/orfile/macro" }
+
+# Movement dependencies
+dot-movement = { git = "https://github.com/movementlabsxyz/movement.git", branch = "main" }
+movement-types = { git = "https://github.com/movementlabsxyz/movement.git", branch = "main" }
 
 [workspace.lints.clippy]
 debug_assert_with_mut_call = "deny"

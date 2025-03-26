@@ -2,6 +2,9 @@
 cache/
 out/
 broadcast/
+artifacts/
+typechain-types/
+cache_hardhat/
 
 lib/
 
