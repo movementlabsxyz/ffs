@@ -1,5 +1,5 @@
 use crate::contracts::ContractWorkspace;
-use crate::dev::deployer::Deployer;
+use crate::dev::deployer::{DeployConfig, Deployer};
 use clap::Parser;
 use jsonlvar::Jsonl;
 use secure_signer::key::TryFromCanonicalString;
@@ -13,12 +13,12 @@ pub struct Config {
 	#[arg(value_parser = SignerIdentifier::try_from_canonical_string)]
 	#[arg(long)]
 	pub signer_identifier: SignerIdentifier,
-	/// Whether to run in settlement admin mode.
+	/// The fork url for deployment.
 	#[arg(long)]
 	pub fork_url: String,
-	/// The gas limit for transactions.
-	#[arg(long)]
-	pub contract_admin: String,
+	/// The deployer config.
+	#[clap(flatten)]
+	pub deployer_config: DeployConfig,
 	/// The JSONL prefix to give to the output from the deployer.
 	#[arg(long)]
 	pub jsonl_prefix: Option<String>,
@@ -29,10 +29,10 @@ impl Config {
 	pub fn new(
 		signer_identifier: SignerIdentifier,
 		fork_url: String,
-		contract_admin: String,
+		deployer_config: DeployConfig,
 		jsonl_prefix: Option<String>,
 	) -> Self {
-		Config { signer_identifier, fork_url, contract_admin, jsonl_prefix }
+		Config { signer_identifier, fork_url, deployer_config, jsonl_prefix }
 	}
 
 	pub fn build(&self) -> Result<Deployer, anyhow::Error> {
@@ -43,7 +43,7 @@ impl Config {
 			workspace: ContractWorkspace::try_temp_tip()?,
 			raw_private_key,
 			fork_url: self.fork_url.clone(),
-			contract_admin: self.contract_admin.clone(),
+			config: self.deployer_config.clone(),
 			jsonl_prefix: self.jsonl_prefix.clone(),
 		})
 	}

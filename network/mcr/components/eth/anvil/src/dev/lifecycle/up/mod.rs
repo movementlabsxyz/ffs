@@ -47,7 +47,7 @@ impl Up {
 			.to_string();
 		self.config.signer_identifier = SignerIdentifier::Local(Local { private_key_hex_bytes });
 
-		self.config.contract_admin =
+		self.config.deployer_config.contract_admin =
 			anvil_data.signers.get(1).cloned().ok_or(anyhow::anyhow!("no signers found"))?;
 
 		// build the deployer

@@ -189,8 +189,36 @@ Run up with all parameters passed explicitly as CLI flags
 ###### **Options:**
 
 * `--signer-identifier <SIGNER_IDENTIFIER>` — The signer identifier
-* `--fork-url <FORK_URL>` — Whether to run in settlement admin mode
-* `--contract-admin <CONTRACT_ADMIN>` — The gas limit for transactions
+* `--fork-url <FORK_URL>` — The fork url for deployment
+* `--contract-admin <CONTRACT_ADMIN>` — Admin address for deployed contracts
+* `--token-name <TOKEN_NAME>` — The token name
+
+  Default value: `Move Token`
+* `--token-symbol <TOKEN_SYMBOL>` — The token symbol
+
+  Default value: `MOVE`
+* `--initial-token-mint <INITIAL_TOKEN_MINT>` — The initial token mint
+
+  Default value: `1000000000000000000000000`
+* `--custodians <CUSTODIANS>` — The custodians By default this should be an empty vector
+* `--initial-block-height <INITIAL_BLOCK_HEIGHT>` — The initial block height
+
+  Default value: `1`
+* `--leading-block-tolerance <LEADING_BLOCK_TOLERANCE>` — The leading block tolerance
+
+  Default value: `10`
+* `--epoch-duration <EPOCH_DURATION>` — The epoch duration
+
+  Default value: `1000000`
+* `--reward-contract <REWARD_CONTRACT>` — The reward contract
+* `--existing-proxy-admin <EXISTING_PROXY_ADMIN>` — The existing proxy admin
+* `--existing-move-token-proxy <EXISTING_MOVE_TOKEN_PROXY>` — The existing move token proxy
+* `--existing-staking-proxy <EXISTING_STAKING_PROXY>` — The existing staking proxy
+* `--existing-mcr-proxy <EXISTING_MCR_PROXY>` — The existing MCR proxy
+* `--existing-reward-proxy <EXISTING_REWARD_PROXY>` — The existing ARO proxy
+* `--destroy-mode` — Whether to destroy the contracts
+
+  Default value: `false`
 * `--jsonl-prefix <JSONL_PREFIX>` — The JSONL prefix to give to the output from the deployer
 * `--write-artifacts-path <WRITE_ARTIFACTS_PATH>` — Path to the configuration file
 * `--write-anvil-data-path <WRITE_ANVIL_DATA_PATH>` — Path to write the anvil data as json
@@ -221,19 +249,49 @@ Run up with parameters from environment variables, config files, and CLI flags
 
 ###### **Subcommands:**
 
-* `up` — 
+* `up` — Configuration for MCR deployment, matching the Solidity struct
 
 
 
 ## `ffs-dev mcr network coordinator eth live up`
+
+Configuration for MCR deployment, matching the Solidity struct
 
 **Usage:** `ffs-dev mcr network coordinator eth live up [OPTIONS] --signer-identifier <SIGNER_IDENTIFIER> --fork-url <FORK_URL> --contract-admin <CONTRACT_ADMIN>`
 
 ###### **Options:**
 
 * `--signer-identifier <SIGNER_IDENTIFIER>` — The signer identifier
-* `--fork-url <FORK_URL>` — Whether to run in settlement admin mode
-* `--contract-admin <CONTRACT_ADMIN>` — The gas limit for transactions
+* `--fork-url <FORK_URL>` — The fork url for deployment
+* `--contract-admin <CONTRACT_ADMIN>` — Admin address for deployed contracts
+* `--token-name <TOKEN_NAME>` — The token name
+
+  Default value: `Move Token`
+* `--token-symbol <TOKEN_SYMBOL>` — The token symbol
+
+  Default value: `MOVE`
+* `--initial-token-mint <INITIAL_TOKEN_MINT>` — The initial token mint
+
+  Default value: `1000000000000000000000000`
+* `--custodians <CUSTODIANS>` — The custodians By default this should be an empty vector
+* `--initial-block-height <INITIAL_BLOCK_HEIGHT>` — The initial block height
+
+  Default value: `1`
+* `--leading-block-tolerance <LEADING_BLOCK_TOLERANCE>` — The leading block tolerance
+
+  Default value: `10`
+* `--epoch-duration <EPOCH_DURATION>` — The epoch duration
+
+  Default value: `1000000`
+* `--reward-contract <REWARD_CONTRACT>` — The reward contract
+* `--existing-proxy-admin <EXISTING_PROXY_ADMIN>` — The existing proxy admin
+* `--existing-move-token-proxy <EXISTING_MOVE_TOKEN_PROXY>` — The existing move token proxy
+* `--existing-staking-proxy <EXISTING_STAKING_PROXY>` — The existing staking proxy
+* `--existing-mcr-proxy <EXISTING_MCR_PROXY>` — The existing MCR proxy
+* `--existing-reward-proxy <EXISTING_REWARD_PROXY>` — The existing ARO proxy
+* `--destroy-mode` — Whether to destroy the contracts
+
+  Default value: `false`
 * `--jsonl-prefix <JSONL_PREFIX>` — The JSONL prefix to give to the output from the deployer
 
 

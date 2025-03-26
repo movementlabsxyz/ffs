@@ -33,6 +33,14 @@ contract MovementStaking is
     }
 
     /**
+     * @notice Returns the token being staked
+     * @return The token being staked
+     */
+    function getToken() external view returns (IERC20) {
+        return token;
+    }
+
+    /**
      * @notice Registers a domain with the staking contract
      * @param epochDuration Duration of each epoch for this domain
      * @param custodians Array of custodian addresses for this domain

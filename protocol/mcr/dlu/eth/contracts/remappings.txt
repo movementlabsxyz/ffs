@@ -9,6 +9,5 @@ openzeppelin-contracts-upgradeable/=lib/openzeppelin-contracts-upgradeable/
 openzeppelin-contracts/=lib/openzeppelin-contracts/
 openzeppelin-foundry-upgrades/=lib/openzeppelin-foundry-upgrades/src/
 openzeppelin/=lib/createx/lib/openzeppelin-contracts/contracts/
-@safe-smart-account/=lib/safe-smart-account/
 solady/=lib/createx/lib/solady/
 solidity-stringutils/=lib/openzeppelin-foundry-upgrades/lib/solidity-stringutils/

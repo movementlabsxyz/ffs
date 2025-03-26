@@ -23,9 +23,9 @@ contract MCR is Initializable, BaseSettlement, MCRStorage, IMCR {
     /// @notice The role for trusted attester
     bytes32 public constant TRUSTED_ATTESTER = keccak256("TRUSTED_ATTESTER");
 
-    /// @notice The reward contract address
-    /// @dev Should implement IMcrReward, the default implementation is McrARO (Asymptotic Reward One)
-    address public rewardContract;
+    /// @notice The reward contract
+    /// @dev Default implementation is McrARO (Asymptotic Reward One)
+    IMcrReward public rewardContract;
 
     /**
      * @notice Initializes the MCR contract
@@ -527,14 +527,14 @@ contract MCR is Initializable, BaseSettlement, MCRStorage, IMCR {
         );
 
         // Distribute rewards for the block commitment if reward contract is set
-        if (rewardContract != address(0)) {
+        if (address(rewardContract) != address(0)) {
             // Find the attester who made this commitment
             address[] memory attesters = stakingContract.getAttestersByDomain(address(this));
             for (uint256 i = 0; i < attesters.length; i++) {
                 address attester = attesters[i];
                 if (commitments[blockCommitment.height][attester].commitment == blockCommitment.commitment) {
                     // Use delegatecall to maintain MCR as msg.sender for the reward call
-                    (bool success, ) = rewardContract.delegatecall(
+                    (bool success, ) = address(rewardContract).delegatecall(
                         abi.encodeWithSelector(
                             IMcrReward.rewardBlockCommitment.selector,
                             blockCommitment.height,
@@ -578,9 +578,9 @@ contract MCR is Initializable, BaseSettlement, MCRStorage, IMCR {
         stakingContract.rollOverEpoch();
         
         // Distribute epoch rewards if reward contract is set
-        if (rewardContract != address(0)) {
+        if (address(rewardContract) != address(0)) {
             // Use delegatecall to maintain MCR as msg.sender for the reward call
-            (bool success, ) = rewardContract.delegatecall(
+            (bool success, ) = address(rewardContract).delegatecall(
                 abi.encodeWithSelector(
                     IMcrReward.rewardEpochRollover.selector,
                     currentEpoch,
@@ -592,11 +592,11 @@ contract MCR is Initializable, BaseSettlement, MCRStorage, IMCR {
     }
 
     /**
-     * @notice Sets the reward contract address
+     * @notice Sets the reward contract
      * @dev Only callable by admin
-     * @param _rewardContract The address of the reward contract that implements IMcrReward
+     * @param _rewardContract The contract that implements IMcrReward
      */
-    function setRewardContract(address _rewardContract) external onlyRole(DEFAULT_ADMIN_ROLE) {
+    function setRewardContract(IMcrReward _rewardContract) external onlyRole(DEFAULT_ADMIN_ROLE) {
         rewardContract = _rewardContract;
     }
 }

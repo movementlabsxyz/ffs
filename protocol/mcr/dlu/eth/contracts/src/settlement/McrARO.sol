@@ -164,7 +164,7 @@ contract McrARO is MCRStorage, IMcrReward {
      */
     function getAvailableBalance() internal view returns (uint256) {
         // Get token used for staking from the staking contract
-        IERC20 token = IERC20(address(stakingContract.token()));
+        IERC20 token = IERC20(address(stakingContract.getToken()));
         
         // Return the MCR contract's balance of this token
         return token.balanceOf(address(this));
@@ -227,10 +227,11 @@ contract McrARO is MCRStorage, IMcrReward {
         
         // Calculate stake-based bonus
         uint256 epoch = blockHeightEpochAssignments[blockHeight];
-        uint256 attesterStake = stakingContract.computeAllStakeAtEpoch(
+        uint256 attesterStake = stakingContract.getStakeAtEpoch(
             address(this),
             epoch,
-            attester
+            attester,
+            address(stakingContract.getToken())
         );
         
         // Apply stake multiplier in basis points
@@ -318,7 +319,11 @@ contract McrARO is MCRStorage, IMcrReward {
         address[] memory rewardCustodians = new address[](attesters.length);
         
         // Get total stake in the epoch for relative reward calculation
-        uint256 totalEpochStake = stakingContract.computeAllTotalStakeForEpoch(address(this), previousEpoch);
+        uint256 totalEpochStake = stakingContract.getTotalStakeForEpoch(
+            address(this), 
+            previousEpoch, 
+            address(stakingContract.getToken())
+        );
         
         // Calculate base participation reward
         uint256 baseParticipationReward = calculateAsymptoticReward(
@@ -335,10 +340,11 @@ contract McrARO is MCRStorage, IMcrReward {
             
             // Get attester's stats for reward calculation
             uint256 commitCount = epochCommitments[previousEpoch][attester];
-            uint256 attesterStake = stakingContract.computeAllStakeAtEpoch(
+            uint256 attesterStake = stakingContract.getStakeAtEpoch(
                 address(this),
                 previousEpoch,
-                attester
+                attester,
+                address(stakingContract.getToken())
             );
             
             // Skip attesters with no commitments
