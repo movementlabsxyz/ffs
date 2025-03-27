@@ -1,5 +1,5 @@
 use super::{
-	super::{artifacts, ForgeDeployer},
+	super::{applier::Applier, artifacts, ForgeDeployer},
 	Arguments,
 };
 use lifecycle::{DestroyOperations, LifecycleError};
@@ -13,10 +13,9 @@ pub struct Destroyer {
 
 impl DestroyOperations for Destroyer {
 	type DestroyArguments = Arguments;
-	type InputArtifacts = artifacts::input::Artifacts;
-	type OutputArtifacts = artifacts::output::Artifacts;
+	type Applier = Applier;
 
-	async fn destroy(&self) -> Result<Self::InputArtifacts, LifecycleError> {
+	async fn destroy(&self) -> Result<artifacts::output::Artifacts, LifecycleError> {
 		todo!()
 	}
 }
