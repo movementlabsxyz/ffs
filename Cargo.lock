@@ -5610,6 +5610,34 @@ dependencies = [
 ]
 
 [[package]]
+name = "service"
+version = "0.0.1"
+dependencies = [
+ "service-macro",
+ "service-util",
+ "tempfile",
+ "thiserror 1.0.69",
+]
+
+[[package]]
+name = "service-macro"
+version = "0.0.1"
+dependencies = [
+ "proc-macro-error",
+ "proc-macro2",
+ "quote",
+ "syn 2.0.100",
+]
+
+[[package]]
+name = "service-util"
+version = "0.0.1"
+dependencies = [
+ "tempfile",
+ "thiserror 1.0.69",
+]
+
+[[package]]
 name = "sha1"
 version = "0.10.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"

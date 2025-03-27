@@ -51,6 +51,7 @@ members = [
   "util/clap-markdown-ext",
   "util/orfile/*",
   "util/lifecycle/*",
+  "util/service/*",
 ]
 
 [workspace.package]
@@ -190,6 +191,10 @@ orfile-macro = { path = "util/orfile/macro" }
 lifecycle = { path = "util/lifecycle/lifecycle" }
 lifecycle-util = { path = "util/lifecycle/util" }
 lifecycle-macro = { path = "util/lifecycle/macro" }
+
+service-util = { path = "util/service/util" }
+service-macro = { path = "util/service/macro" }
+service-lifecycle = { path = "util/service/lifecycle" }
 
 [workspace.lints.clippy]
 debug_assert_with_mut_call = "deny"
