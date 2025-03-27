@@ -1,6 +1,6 @@
 use anyhow::Context;
 use clap::Parser;
-use pcp_protocol_deployer_core_eth::dev::config::Config;
+use pcp_dlu_eth_deployer_core::dev::config::Config;
 use serde::{Deserialize, Serialize};
 
 #[derive(Parser, Serialize, Deserialize, Debug, Clone)]

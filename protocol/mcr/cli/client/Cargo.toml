@@ -17,7 +17,8 @@ anyhow = { workspace = true, version = "1.0.75" }
 mcr-protocol-client-core-util = { workspace = true }
 mcr-protocol-client-eth-core = { workspace = true }
 mcr-types = { workspace = true }
-mcr-dlu-eth-deployer-eth-core = { path = "../../dlu/eth/deployer-core" }
+# TODO : the naming here may not be according to the standard
+mcr-dlu-eth-deployer-core = { path = "../../dlu/eth/deployer-core" }
 
 [lints]
 workspace = true

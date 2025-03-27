@@ -14,7 +14,7 @@ serde = { workspace = true, features = ["derive"] }
 clap = { workspace = true}
 dotenv = { workspace = true }
 anyhow = { workspace = true }
-mcr-dlu-eth-deployer-eth-core = { workspace = true }
+mcr-dlu-eth-deployer-core = { workspace = true }
 mcr-network-anvil-component-core = { workspace = true }
 mcr-network-eth-live-component-core = { workspace = true }
 kestrel = { workspace = true }

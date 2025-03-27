@@ -82,7 +82,7 @@ impl ContractWorkspace {
 		Ok(())
 	}
 
-	pub async fn run_command<C, I, S>(&self, command: C, args: I) -> Result<(), anyhow::Error>
+	pub async fn run_command<C, I, S>(&self, command: C, args: I) -> Result<String, anyhow::Error>
 	where
 		C: AsRef<OsStr>,
 		I: IntoIterator<Item = S>,
@@ -90,8 +90,6 @@ impl ContractWorkspace {
 	{
 		// Implementation of the run_command function
 		let path = self.get_workspace_path();
-		commander::run_command(command, args, Some(path)).await?;
-
-		Ok(())
+		commander::run_command(command, args, Some(path)).await
 	}
 }

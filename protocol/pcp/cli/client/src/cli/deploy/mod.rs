@@ -1,5 +1,5 @@
 use clap::Subcommand;
-use mcr_dlu_eth_deployer_core::contracts::ContractWorkspace;
+use pcp_dlu_eth_deployer_core::contracts::ContractWorkspace;
 use std::format;
 
 #[derive(Subcommand)]
@@ -44,7 +44,7 @@ impl Deploy {
                 // - existingProxyAdmin: Admin contract for proxies
                 // - existingMoveTokenProxy: MOVE token proxy
                 // - existingStakingProxy: Staking contract proxy
-                // - existingMcrProxy: MCR protocol proxy
+                // - existingPcpProxy: PCP protocol proxy
                 // - existingAroProxy: ARO reward proxy
                 // - destroyMode: If true, nullifies all proxies (for cleanup)
                 let config = format!(
@@ -62,7 +62,7 @@ impl Deploy {
                         "existingProxyAdmin": "0x0000000000000000000000000000000000000000",
                         "existingMoveTokenProxy": "0x0000000000000000000000000000000000000000",
                         "existingStakingProxy": "0x0000000000000000000000000000000000000000",
-                        "existingMcrProxy": "0x0000000000000000000000000000000000000000",
+                        "existingPcpProxy": "0x0000000000000000000000000000000000000000",
                         "existingAroProxy": "0x0000000000000000000000000000000000000000",
                         "destroyMode": false
                     }}"#,
@@ -76,8 +76,8 @@ impl Deploy {
                     "forge",
                     [
                         "script",
-                        "script/DeployMCRDev.s.sol",
-                        "--tc", "DeployMCRDev",
+                        "script/DeployPCPDev.s.sol",
+                        "--tc", "DeployPCPDev",
                         "--rpc-url", rpc_url,
                         "--broadcast",
                         "--private-key", private_key,

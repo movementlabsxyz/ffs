@@ -14,8 +14,9 @@ serde = { workspace = true, features = ["derive"] }
 clap = { workspace = true}
 dotenv = { workspace = true }
 anyhow = { workspace = true }
-pcp-protocol-deployer-core-eth = { workspace = true }
 pcp-types = { workspace = true }
+# TODO : the naming here may not be according to the standard
+pcp-dlu-eth-deployer-core = { path = "../../dlu/eth/deployer-core" }
 
 [lints]
 workspace = true
