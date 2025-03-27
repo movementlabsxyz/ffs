@@ -1,4 +1,4 @@
-# Contribution And Starting Guide
+# Contribution Guide
 
 | Task | Description |
 |------|-------------|
@@ -19,21 +19,3 @@ We welcome contributions to this project. We manage active development via issue
 **Experienced contributors** should prioritize issues tagged with `feature` and facilitate the onboarding of new contributors to bug fixes.
 
 Those looking to add to the suggest new `features` and `bugs` should identify whether their idea is suitable by considering the existing release candidates and their sub-issues.
-
-## Getting started
-
-We develop in nix. Hence start by entering the nix shell:
-
-```bash
-nix develop
-```
-
-The easiest entry point for all protocols and use cases is the [`ffs-dev`](sdk/cli/ffs-dev/README.md) CLI. Subcomponents of `ffs-dev` will have their own CLIs and these CLIs have their core libraries.
-
-For example, to spin up a network with Anvil, you can run the following command (after you build the `ffs-dev` binary):
-
-```bash
-./target/release/ffs-dev mcr network coordinator eth anvil up
-```
-
-For a more in-depth usage guide, see [Usage of CLI](sdk/cli/README.md).

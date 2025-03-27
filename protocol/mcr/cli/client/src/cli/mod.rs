@@ -1,5 +1,6 @@
 pub mod eth;
 pub mod post_commitment;
+pub mod deploy;
 use clap::{Parser, Subcommand};
 
 /// The `mcr-protocol-client` CLI.
@@ -19,6 +20,9 @@ pub enum McrProtocolClientSubcommand {
 	Eth(eth::Eth),
 	/// Post a commitment to an MCR implementation
 	PostCommitment(post_commitment::PostCommitment),
+	/// Deploy MCR contracts using deployer-core
+	#[clap(subcommand)]
+	Deploy(deploy::Deploy),
 }
 
 /// Implement the `From` trait for `McrProtocolClient` to convert it into a `McrProtocolClientSubcommand`.
@@ -48,6 +52,7 @@ impl McrProtocolClientSubcommand {
 			McrProtocolClientSubcommand::PostCommitment(post_commitment) => {
 				post_commitment.execute().await?
 			}
+			McrProtocolClientSubcommand::Deploy(deploy) => deploy.execute().await?,
 		}
 		Ok(())
 	}

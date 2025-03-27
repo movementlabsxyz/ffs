@@ -24,7 +24,7 @@ serde_json = { workspace = true }
 mcr-types = { workspace = true }
 mcr-config = { workspace = true }
 kestrel = { workspace = true }
-mcr-protocol-deployer-eth-core = { workspace = true }
+mcr-dlu-eth-deployer-eth-core = { workspace = true }
 secure-signer-loader = { workspace = true }
 
 [dev-dependencies]

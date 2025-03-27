@@ -14,7 +14,7 @@ serde = { workspace = true, features = ["derive"] }
 clap = { workspace = true}
 dotenv = { workspace = true }
 anyhow = { workspace = true }
-mcr-protocol-deployer-eth-core = { workspace = true }
+mcr-dlu-eth-deployer-eth-core = { workspace = true }
 mcr-types = { workspace = true }
 jsonlvar = { workspace = true }
 

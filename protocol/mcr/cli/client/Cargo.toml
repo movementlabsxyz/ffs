@@ -11,12 +11,13 @@ rust-version = { workspace = true }
 [dependencies]
 tokio = { workspace = true }
 serde = { workspace = true, features = ["derive"] }
-clap = { workspace = true}
+clap = { workspace = true, version = "4.4.11", features = ["derive"] }
 dotenv = { workspace = true }
-anyhow = { workspace = true }
+anyhow = { workspace = true, version = "1.0.75" }
 mcr-protocol-client-core-util = { workspace = true }
 mcr-protocol-client-eth-core = { workspace = true }
 mcr-types = { workspace = true }
+mcr-dlu-eth-deployer-eth-core = { path = "../../dlu/eth/deployer-core" }
 
 [lints]
 workspace = true

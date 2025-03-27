@@ -1,5 +1,5 @@
 [package]
-name = "mcr-protocol-deployer-eth-core"
+name = "mcr-dlu-eth-deployer-eth-core"
 version = { workspace = true }
 edition  = { workspace = true }
 license  = { workspace = true }

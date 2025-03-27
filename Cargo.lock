@@ -3680,6 +3680,34 @@ dependencies = [
 ]
 
 [[package]]
+name = "mcr-dlu-eth-deployer-eth-core"
+version = "0.0.1"
+dependencies = [
+ "anyhow",
+ "async-stream",
+ "async-trait",
+ "clap",
+ "commander 0.0.1",
+ "futures",
+ "hex",
+ "jsonlvar",
+ "mcr-config",
+ "mcr-protocol-client-core-mock",
+ "mcr-protocol-client-core-util",
+ "mcr-types",
+ "secure-signer",
+ "secure-signer-loader",
+ "serde",
+ "serde_json",
+ "tempfile",
+ "thiserror 1.0.69",
+ "tokio",
+ "tokio-stream",
+ "walkdir",
+ "zip",
+]
+
+[[package]]
 name = "mcr-network"
 version = "0.0.1"
 dependencies = [
@@ -3702,9 +3730,9 @@ dependencies = [
  "futures",
  "kestrel",
  "mcr-config",
+ "mcr-dlu-eth-deployer-eth-core",
  "mcr-protocol-client-core-mock",
  "mcr-protocol-client-core-util",
- "mcr-protocol-deployer-eth-core",
  "mcr-types",
  "network-anvil-component-core",
  "secure-signer-loader",
@@ -3734,9 +3762,9 @@ dependencies = [
  "dotenv",
  "jsonlvar",
  "kestrel",
+ "mcr-dlu-eth-deployer-eth-core",
  "mcr-network-anvil-component-core",
  "mcr-network-eth-live-component-core",
- "mcr-protocol-deployer-eth-core",
  "orfile",
  "serde",
  "serde_json",
@@ -3753,9 +3781,9 @@ dependencies = [
  "futures",
  "kestrel",
  "mcr-config",
+ "mcr-dlu-eth-deployer-eth-core",
  "mcr-protocol-client-core-mock",
  "mcr-protocol-client-core-util",
- "mcr-protocol-deployer-eth-core",
  "mcr-types",
  "secure-signer-loader",
  "serde_json",
@@ -3782,6 +3810,7 @@ dependencies = [
  "anyhow",
  "clap",
  "dotenv",
+ "mcr-dlu-eth-deployer-eth-core",
  "mcr-protocol-client-core-util",
  "mcr-protocol-client-eth-core",
  "mcr-types",
@@ -3857,7 +3886,7 @@ dependencies = [
  "clap",
  "dotenv",
  "jsonlvar",
- "mcr-protocol-deployer-eth-core",
+ "mcr-dlu-eth-deployer-eth-core",
  "mcr-types",
  "serde",
  "tokio",
@@ -3878,34 +3907,6 @@ dependencies = [
  "serde_json",
  "tokio",
  "tokio-stream",
-]
-
-[[package]]
-name = "mcr-protocol-deployer-eth-core"
-version = "0.0.1"
-dependencies = [
- "anyhow",
- "async-stream",
- "async-trait",
- "clap",
- "commander 0.0.1",
- "futures",
- "hex",
- "jsonlvar",
- "mcr-config",
- "mcr-protocol-client-core-mock",
- "mcr-protocol-client-core-util",
- "mcr-types",
- "secure-signer",
- "secure-signer-loader",
- "serde",
- "serde_json",
- "tempfile",
- "thiserror 1.0.69",
- "tokio",
- "tokio-stream",
- "walkdir",
- "zip",
 ]
 
 [[package]]
@@ -3981,9 +3982,9 @@ dependencies = [
  "jsonlvar",
  "kestrel",
  "mcr-config",
+ "mcr-dlu-eth-deployer-eth-core",
  "mcr-protocol-client-core-mock",
  "mcr-protocol-client-core-util",
- "mcr-protocol-deployer-eth-core",
  "mcr-types",
  "serde",
  "serde_json",

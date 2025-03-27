@@ -150,7 +150,7 @@ mcr-protocol-client-eth-core = { path = "protocol/mcr/clients/eth" }
 mcr-protocol-client-core-mock = { path = "protocol/mcr/clients/mock" }
 mcr-protocol-client = { path = "protocol/mcr/cli/client" }
 mcr-protocol = { path = "protocol/mcr/cli/protocol"}
-mcr-protocol-deployer-eth-core = { path = "protocol/mcr/dlu/eth/deployer-core" }
+mcr-dlu-eth-deployer-eth-core = { path = "protocol/mcr/dlu/eth/deployer-core" }
 ### network
 mcr-network-client = { path = "network/mcr/cli/client" }
 mcr-network-coordinator = { path = "network/mcr/cli/coordinator" }

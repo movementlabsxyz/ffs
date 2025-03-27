@@ -1,5 +1,5 @@
 use kestrel::State;
-pub use mcr_protocol_deployer_eth_core::dev::{artifacts::Artifacts, config::Config};
+pub use mcr_dlu_eth_deployer_eth_core::dev::{artifacts::Artifacts, config::Config};
 
 /// Up struct for managing the MCR deployment process against Anvil.
 pub struct Up {

@@ -58,6 +58,15 @@ contract DeployMCRDev is Script {
     }
     
     /**
+     * @notice Default run function required by forge script
+     */
+    function run() public returns (DeployedAddresses memory) {
+        // Default configuration for Anvil deployment
+        string memory defaultConfig = vm.envString("DEPLOY_CONFIG");
+        return run(defaultConfig);
+    }
+    
+    /**
      * @notice Main deployment function that accepts a JSON string
      * @param jsonConfig JSON string containing deployment configuration
      * @return addresses Struct containing addresses of deployed contracts
