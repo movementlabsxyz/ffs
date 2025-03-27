@@ -1,5 +1,5 @@
 [package]
-name = "pcp-protocol-deployer-core-eth"
+name = "pcp-dlu-eth-deployer-core"
 version = { workspace = true }
 edition  = { workspace = true }
 license  = { workspace = true }
@@ -31,6 +31,8 @@ serde = { workspace = true }
 secure-signer = { workspace = true }
 secure-signer-loader = { workspace = true }
 hex = { workspace = true }
+jsonlvar = { workspace = true }
+thiserror = { workspace = true }
 
 [build-dependencies]
 zip = { workspace = true }

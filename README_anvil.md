@@ -51,15 +51,21 @@ export ADDRESS_B=0x70997970C51812dc3A010C7d01b50e0d17dc79C8
 Deploy the contracts using `signer_a` as deployer and `signer_b` as admin:
 
 ```bash
-./target/debug/ffs-dev mcr protocol client deploy anvil \
+./target/debug/ffs-dev pcp protocol client deploy anvil \
   --admin $ADDRESS_B \
   --private-key $PRIVATE_KEY_A
 ```
 
-After deployment, you'll see the addresses of all deployed contracts. Set the MOVE token address (`moveTokenProxy`). The default value is:
+After deployment, you'll see the addresses of all deployed contracts. Set the MOVE token address (`moveTokenProxy`).
 
+The default value for MCR is currently:
 ```bash
 export MOVE_TOKEN=0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9
+```
+
+The default value for PCP is:
+```bash
+export MOVE_TOKEN=0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9
 ```
 
 Then verify the deployment:

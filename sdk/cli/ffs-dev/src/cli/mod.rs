@@ -1,4 +1,5 @@
 pub mod mcr;
+pub mod pcp;
 
 use clap::Parser;
 use clap_markdown_ext::Markdown;
@@ -10,6 +11,8 @@ pub enum FfsDev {
 	Markdown(Markdown),
 	#[clap(subcommand)]
 	Mcr(mcr::Mcr),
+	#[clap(subcommand)]
+	Pcp(pcp::Pcp),
 }
 
 impl FfsDev {
@@ -20,6 +23,9 @@ impl FfsDev {
 			}
 			FfsDev::Mcr(mcr) => {
 				mcr.execute().await?;
+			}
+			FfsDev::Pcp(pcp) => {
+				pcp.execute().await?;
 			}
 		}
 

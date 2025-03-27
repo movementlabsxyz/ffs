@@ -6,6 +6,7 @@ members = [
 
   # common
   "network/common/components/*",
+  "sdk/cli/*",
 
   # mcr
   "protocol/mcr/util/*",
@@ -19,31 +20,21 @@ members = [
   # pcp
   "protocol/pcp/util/*",
   "protocol/pcp/clients/*",
-  "protocol/pcp/cli/*",
   "protocol/pcp/dlu/eth/deployer-core",
-  ## node
-  "node/pcp/cli/*",
-  ## network
+  "protocol/pcp/cli/*",
   "network/pcp/cli/*",
+#  "node/pcp/cli/*",
 
-  # fcp
-  ## protocol
-  "protocol/fcp/cli/*",
-  ## node
-  "node/fcp/cli/*",
-  ## network
-  "network/fcp/cli/*",
+  # # fcp
+  # "protocol/fcp/cli/*",
+  # "node/fcp/cli/*",
+  # "network/fcp/cli/*",
 
-  # ffs
-  ## protocol
-  "protocol/ffs/cli/*",
-  ## node
-  "node/ffs/cli/*",
-  ## network
-  "network/ffs/cli/*",
-  ## sdk
-  "sdk/cli/*",
-
+  # # ffs
+  # "protocol/ffs/cli/*",
+  # "node/ffs/cli/*",
+  # "network/ffs/cli/*",
+  
   # util
   "util/signing/eth",
   "util/environment",
@@ -150,7 +141,7 @@ mcr-protocol-client-eth-core = { path = "protocol/mcr/clients/eth" }
 mcr-protocol-client-core-mock = { path = "protocol/mcr/clients/mock" }
 mcr-protocol-client = { path = "protocol/mcr/cli/client" }
 mcr-protocol = { path = "protocol/mcr/cli/protocol"}
-mcr-dlu-eth-deployer-eth-core = { path = "protocol/mcr/dlu/eth/deployer-core" }
+mcr-dlu-eth-deployer-core = { path = "protocol/mcr/dlu/eth/deployer-core" }
 ### network
 mcr-network-client = { path = "network/mcr/cli/client" }
 mcr-network-coordinator = { path = "network/mcr/cli/coordinator" }
@@ -166,12 +157,14 @@ pcp-protocol-client-core-util = { path = "protocol/pcp/clients/util" }
 pcp-protocol-client-core-eth = { path = "protocol/pcp/clients/eth" }
 pcp-protocol-client-core-mock = { path = "protocol/pcp/clients/mock" }
 pcp-protocol-client = { path = "protocol/pcp/cli/client" }
-pcp-protocol = { path = "protocol/pcp/cli"}
-pcp-protocol-deployer-core-eth = { path = "protocol/pcp/dlu/eth/deployer-core" }
+pcp-protocol = { path = "protocol/pcp/cli/protocol"}
+pcp-dlu-eth-deployer-core = { path = "protocol/pcp/dlu/eth/deployer-core" }
 ### network
 pcp-network-client = { path = "network/pcp/cli/client" }
 pcp-network-coordinator = { path = "network/pcp/cli/coordinator" }
 pcp-network = { path = "network/pcp/cli/network" }
+pcp-network-anvil-component-core = { path = "network/pcp/components/eth/anvil" }
+pcp-network-eth-live-component-core = { path = "network/pcp/components/eth/live" }
 
 # sdk
 ffs-dev = { path = "sdk/cli/ffs-dev" }
