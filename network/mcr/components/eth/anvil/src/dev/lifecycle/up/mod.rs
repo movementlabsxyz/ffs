@@ -1,5 +1,5 @@
 use kestrel::State;
-pub use mcr_protocol_deployer_eth_core::dev::{artifacts::Artifacts, config::Config};
+pub use mcr_protocol_deployer_eth_core::{applier::config::Config, artifacts::output::Artifacts};
 use network_anvil_component_core::{lifecycle::up::Up as AnvilUp, util::parser::AnvilData};
 use secure_signer_loader::identifiers::{local::Local, SignerIdentifier};
 
@@ -47,12 +47,11 @@ impl Up {
 			.to_string();
 		self.config.signer_identifier = SignerIdentifier::Local(Local { private_key_hex_bytes });
 
-		self.config.deployer_config.contract_admin =
+		self.config.script_args.args.contract_admin =
 			anvil_data.signers.get(1).cloned().ok_or(anyhow::anyhow!("no signers found"))?;
 
 		// build the deployer
-		let deployer = self.config.build()?;
-		let artifacts = deployer.deploy().await?;
+		let artifacts = self.config.apply().await?;
 
 		// for composability, set the artifacts in the state
 		self.artifacts.write().set(artifacts).await;

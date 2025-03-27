@@ -12,7 +12,7 @@ members = [
   "protocol/mcr/clients/*",
   "protocol/mcr/manager",
   "protocol/mcr/cli/*",
-  "protocol/mcr/dlu/eth/deployer-core",
+  "protocol/mcr/dlu/eth/deployer",
   "network/mcr/cli/*",
   "network/mcr/components/eth/*",
 
@@ -49,7 +49,8 @@ members = [
   "util/environment",
   "util/commander",
   "util/clap-markdown-ext",
-  "util/orfile/*"
+  "util/orfile/*",
+  "util/lifecycle/*",
 ]
 
 [workspace.package]
@@ -118,6 +119,7 @@ regex = "1.9.0"
 syn = { version = "2.0", features = ["full"] }
 quote = "1.0.23"
 proc-macro2 = "1.0.32"
+proc-macro-error = { version = "1.0.4", features = ["syn-error"] }
 strip-ansi-escapes = "0.2.1"
 cargo_metadata = "0.19.2"
 
@@ -150,7 +152,7 @@ mcr-protocol-client-eth-core = { path = "protocol/mcr/clients/eth" }
 mcr-protocol-client-core-mock = { path = "protocol/mcr/clients/mock" }
 mcr-protocol-client = { path = "protocol/mcr/cli/client" }
 mcr-protocol = { path = "protocol/mcr/cli/protocol"}
-mcr-protocol-deployer-eth-core = { path = "protocol/mcr/dlu/eth/deployer-core" }
+mcr-protocol-deployer-eth-core = { path = "protocol/mcr/dlu/eth/deployer" }
 ### network
 mcr-network-client = { path = "network/mcr/cli/client" }
 mcr-network-coordinator = { path = "network/mcr/cli/coordinator" }
@@ -184,6 +186,10 @@ clap-markdown-ext = { path = "util/clap-markdown-ext" }
 orfile = { path = "util/orfile/orfile" }
 orfile-util = { path = "util/orfile/util" }
 orfile-macro = { path = "util/orfile/macro" }
+
+lifecycle = { path = "util/lifecycle/lifecycle" }
+lifecycle-util = { path = "util/lifecycle/util" }
+lifecycle-macro = { path = "util/lifecycle/macro" }
 
 [workspace.lints.clippy]
 debug_assert_with_mut_call = "deny"

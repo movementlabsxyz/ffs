@@ -1,5 +1,5 @@
 use kestrel::State;
-pub use mcr_protocol_deployer_eth_core::dev::{artifacts::Artifacts, config::Config};
+pub use mcr_protocol_deployer_eth_core::{applier::config::Config, artifacts::output::Artifacts};
 
 /// Up struct for managing the MCR deployment process against Anvil.
 pub struct Up {
@@ -17,9 +17,8 @@ impl Up {
 	}
 
 	pub async fn run(self) -> Result<(), anyhow::Error> {
-		// build the deployer
-		let deployer = self.config.build()?;
-		let artifacts = deployer.deploy().await?;
+		// apply the config to the live network
+		let artifacts = self.config.apply().await?;
 
 		// for composability, set the artifacts in the state
 		self.artifacts.write().set(artifacts).await;

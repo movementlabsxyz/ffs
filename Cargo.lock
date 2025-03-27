@@ -3578,6 +3578,34 @@ dependencies = [
 ]
 
 [[package]]
+name = "lifecycle"
+version = "0.0.1"
+dependencies = [
+ "lifecycle-macro",
+ "lifecycle-util",
+ "tempfile",
+ "thiserror 1.0.69",
+]
+
+[[package]]
+name = "lifecycle-macro"
+version = "0.0.1"
+dependencies = [
+ "proc-macro-error",
+ "proc-macro2",
+ "quote",
+ "syn 2.0.100",
+]
+
+[[package]]
+name = "lifecycle-util"
+version = "0.0.1"
+dependencies = [
+ "tempfile",
+ "thiserror 1.0.69",
+]
+
+[[package]]
 name = "linux-raw-sys"
 version = "0.4.15"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3892,6 +3920,7 @@ dependencies = [
  "futures",
  "hex",
  "jsonlvar",
+ "lifecycle",
  "mcr-config",
  "mcr-protocol-client-core-mock",
  "mcr-protocol-client-core-util",

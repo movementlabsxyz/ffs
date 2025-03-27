@@ -211,14 +211,11 @@ Run up with all parameters passed explicitly as CLI flags
 
   Default value: `1000000`
 * `--reward-contract <REWARD_CONTRACT>` — The reward contract
-* `--existing-proxy-admin <EXISTING_PROXY_ADMIN>` — The existing proxy admin
-* `--existing-move-token-proxy <EXISTING_MOVE_TOKEN_PROXY>` — The existing move token proxy
-* `--existing-staking-proxy <EXISTING_STAKING_PROXY>` — The existing staking proxy
-* `--existing-mcr-proxy <EXISTING_MCR_PROXY>` — The existing MCR proxy
-* `--existing-reward-proxy <EXISTING_REWARD_PROXY>` — The existing ARO proxy
-* `--destroy-mode` — Whether to destroy the contracts
-
-  Default value: `false`
+* `--proxy-admin <PROXY_ADMIN>` — The existing proxy admin
+* `--move-token-proxy <MOVE_TOKEN_PROXY>` — The existing move token proxy
+* `--staking-proxy <STAKING_PROXY>` — The existing staking proxy
+* `--mcr-proxy <MCR_PROXY>` — The existing MCR proxy
+* `--reward-proxy <REWARD_PROXY>` — The existing ARO proxy
 * `--jsonl-prefix <JSONL_PREFIX>` — The JSONL prefix to give to the output from the deployer
 * `--write-artifacts-path <WRITE_ARTIFACTS_PATH>` — Path to the configuration file
 * `--write-anvil-data-path <WRITE_ANVIL_DATA_PATH>` — Path to write the anvil data as json
@@ -249,13 +246,13 @@ Run up with parameters from environment variables, config files, and CLI flags
 
 ###### **Subcommands:**
 
-* `up` — Configuration for MCR deployment, matching the Solidity struct
+* `up` — The arguments to be passed to the Forge Apply script
 
 
 
 ## `ffs-dev mcr network coordinator eth live up`
 
-Configuration for MCR deployment, matching the Solidity struct
+The arguments to be passed to the Forge Apply script
 
 **Usage:** `ffs-dev mcr network coordinator eth live up [OPTIONS] --signer-identifier <SIGNER_IDENTIFIER> --fork-url <FORK_URL> --contract-admin <CONTRACT_ADMIN>`
 
@@ -284,14 +281,11 @@ Configuration for MCR deployment, matching the Solidity struct
 
   Default value: `1000000`
 * `--reward-contract <REWARD_CONTRACT>` — The reward contract
-* `--existing-proxy-admin <EXISTING_PROXY_ADMIN>` — The existing proxy admin
-* `--existing-move-token-proxy <EXISTING_MOVE_TOKEN_PROXY>` — The existing move token proxy
-* `--existing-staking-proxy <EXISTING_STAKING_PROXY>` — The existing staking proxy
-* `--existing-mcr-proxy <EXISTING_MCR_PROXY>` — The existing MCR proxy
-* `--existing-reward-proxy <EXISTING_REWARD_PROXY>` — The existing ARO proxy
-* `--destroy-mode` — Whether to destroy the contracts
-
-  Default value: `false`
+* `--proxy-admin <PROXY_ADMIN>` — The existing proxy admin
+* `--move-token-proxy <MOVE_TOKEN_PROXY>` — The existing move token proxy
+* `--staking-proxy <STAKING_PROXY>` — The existing staking proxy
+* `--mcr-proxy <MCR_PROXY>` — The existing MCR proxy
+* `--reward-proxy <REWARD_PROXY>` — The existing ARO proxy
 * `--jsonl-prefix <JSONL_PREFIX>` — The JSONL prefix to give to the output from the deployer
 
 
