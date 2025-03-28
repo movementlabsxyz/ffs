@@ -4,6 +4,7 @@ use mcr_protocol::cli::McrProtocolSubcommand;
 
 #[derive(Parser)]
 #[clap(rename_all = "kebab-case")]
+#[clap(after_help = concat!("KEEP THIS UNTIL PRODUCTION-READY : Defined in: ", file!()))]
 pub enum Mcr {
 	/// ???
 	#[clap(subcommand)]

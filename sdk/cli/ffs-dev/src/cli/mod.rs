@@ -6,6 +6,7 @@ use clap_markdown_ext::Markdown;
 
 #[derive(Parser)]
 #[clap(rename_all = "kebab-case")]
+#[clap(after_help = concat!("KEEP THIS UNTIL PRODUCTION-READY : Defined in: ", file!()))]
 pub enum FfsDev {
 	/// Generate CLI documentation
 	#[clap(subcommand)]

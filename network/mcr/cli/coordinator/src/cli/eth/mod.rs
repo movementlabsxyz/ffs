@@ -5,6 +5,7 @@ use clap::Subcommand;
 
 #[derive(Subcommand)]
 #[clap(rename_all = "kebab-case")]
+#[clap(after_help = concat!("KEEP THIS UNTIL PRODUCTION-READY : Defined in: ", file!()))]
 pub enum Eth {
 	/// ???
 	#[clap(subcommand)]
