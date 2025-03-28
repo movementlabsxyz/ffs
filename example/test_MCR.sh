@@ -5,6 +5,10 @@
 # The contract should be deployed in a separate terminal using
 # UP_CONTRACT_ADMIN=0x911 ./target/debug/ffs-dev mcr network coordinator eth anvil up using --config-path ./example/using.json -- --fork-url http://localhost:8545
 
+# - - - - - - - - - - - - - - - - - - - - - - - - 
+# - - - - - - - Definitions - - - - - - - - - - - 
+# - - - - - - - - - - - - - - - - - - - - - - - - 
+
 # At this point, the contracts should be deployed and the following environment variables should be set:
 export PRIVATE_KEY_A=0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
 export PRIVATE_KEY_B=0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d
@@ -26,6 +30,10 @@ export MOVE_TOKEN=0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9
 export MOVEMENT_STAKING=0x5FC8d32690cc91D4c39d9d3abcBD16989F875707
 # mcrProxy
 export MCR=0x0165878A594ca255338adfa4d48449f69242Eb8F
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# - - - - - - - Provide accounts with MOVE tokens - - - - - - 
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 # Some basic tests
 echo -n "Token Symbol: "
@@ -73,5 +81,3 @@ for letter in {A..F}; do
     echo -n "MOVE Balance of Address $letter: "
     cast call $MOVE_TOKEN "balanceOf(address)" $(eval echo \$ADDRESS_$letter) --rpc-url http://localhost:8545 | cast --to-dec | xargs -I {} echo "scale=8; {}/100000000" | bc
 done
-
-
