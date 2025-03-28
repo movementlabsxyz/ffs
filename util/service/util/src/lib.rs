@@ -11,6 +11,9 @@ pub enum ServiceError {
 
 	#[error("invalid service configuration: {0}")]
 	Config(#[source] Box<dyn std::error::Error + Send + Sync>),
+
+	#[error("unsupported service operation: {0}")]
+	Unsupported(#[source] Box<dyn std::error::Error + Send + Sync>),
 }
 
 /// A service must be able to be created from a set of arguments and input artifacts
