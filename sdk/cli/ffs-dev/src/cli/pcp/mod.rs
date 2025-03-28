@@ -5,8 +5,10 @@ use pcp_protocol::cli::PcpProtocolSubcommand;
 #[derive(Parser)]
 #[clap(rename_all = "kebab-case")]
 pub enum Pcp {
+	/// ???
 	// #[clap(subcommand)]
 	// Network(PcpNetworkSubcommand),
+	/// ???
 	#[clap(subcommand)]
 	Protocol(PcpProtocolSubcommand),
 }

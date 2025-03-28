@@ -6,8 +6,10 @@ use clap::Subcommand;
 #[derive(Subcommand)]
 #[clap(rename_all = "kebab-case")]
 pub enum Eth {
+	/// ???
 	#[clap(subcommand)]
 	Anvil(anvil::Anvil),
+	/// ???
 	#[clap(subcommand)]
 	Live(live::Live),
 }

@@ -13,7 +13,9 @@ pub struct McrProtocolDeployer {
 #[derive(Subcommand)]
 #[clap(rename_all = "kebab-case")]
 pub enum McrProtocolDeployerSubcommand {
+	/// ???
 	Run,
+	/// ???
 	#[clap(subcommand)]
 	Eth(eth::Eth),
 }

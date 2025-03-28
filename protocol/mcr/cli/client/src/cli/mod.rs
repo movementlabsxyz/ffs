@@ -15,7 +15,9 @@ pub struct McrProtocolClient {
 #[derive(Subcommand)]
 #[clap(rename_all = "kebab-case")]
 pub enum McrProtocolClientSubcommand {
+	/// ??? 
 	Run,
+	/// ??? 
 	#[clap(subcommand)]
 	Eth(eth::Eth),
 	/// Post a commitment to an MCR implementation

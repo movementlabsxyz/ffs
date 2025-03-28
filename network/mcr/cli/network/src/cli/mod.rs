@@ -14,9 +14,12 @@ pub struct McrNetwork {
 #[derive(Subcommand)]
 #[clap(rename_all = "kebab-case")]
 pub enum McrNetworkSubcommand {
+	/// ???
 	Run,
+	/// ???
 	#[clap(subcommand)]
 	Client(McrNetworkClientSubcommand),
+	/// ???
 	#[clap(subcommand)]
 	Coordinator(McrNetworkCoordinatorSubcommand),
 }

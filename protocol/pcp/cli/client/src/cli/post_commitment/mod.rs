@@ -1,4 +1,4 @@
-use clap::{Parser, Subcommand};
+use clap::Parser;
 use pcp_protocol_client_core_eth::config::Config;
 use pcp_protocol_client_core_util::PcpClientOperations;
 use pcp_types::block_commitment::{SuperBlockCommitment, Commitment, Id};

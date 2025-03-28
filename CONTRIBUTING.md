@@ -19,3 +19,6 @@ We welcome contributions to this project. We manage active development via issue
 **Experienced contributors** should prioritize issues tagged with `feature` and facilitate the onboarding of new contributors to bug fixes.
 
 Those looking to add to the suggest new `features` and `bugs` should identify whether their idea is suitable by considering the existing release candidates and their sub-issues.
+
+**Documentation**
+Visit [sdk/cli/README.md](sdk/cli/README.md) for instructions on how do document when working with the CLI.

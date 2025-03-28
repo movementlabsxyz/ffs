@@ -99,9 +99,20 @@ This structure keeps related code together and makes it easy to add new commands
 
 ### Documentation
 
-- Use doc comments to explain command purpose
 - Include examples in complex commands
 - Document any environment variables or config files needed
+- Use doc comments (`///`) to explain command purpose
+
+**Example**
+In the `mod.rs` file, add a doc comment to the enum that describes the command.
+
+```rust
+pub enum HigherCommandLevel {
+    /// Command one does ...
+    LowerCommandOne(command::CommandOne),
+    /// Command two does ...
+    LowerCommandTwo(command::CommandTwo),
+}
 
 **Auto documentation**
 We use `clap-markdown-ext` to automatically generate documentation for all CLI commands. This ensures documentation stays in sync with the actual implementation.

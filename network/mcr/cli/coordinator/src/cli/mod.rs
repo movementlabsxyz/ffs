@@ -14,7 +14,9 @@ pub struct McrNetworkCoordinator {
 #[derive(Subcommand)]
 #[clap(rename_all = "kebab-case")]
 pub enum McrNetworkCoordinatorSubcommand {
+	/// ???
 	Run,
+	/// ???
 	#[clap(subcommand)]
 	Eth(eth::Eth),
 }

@@ -5,8 +5,10 @@ use mcr_protocol::cli::McrProtocolSubcommand;
 #[derive(Parser)]
 #[clap(rename_all = "kebab-case")]
 pub enum Mcr {
+	/// ???
 	#[clap(subcommand)]
 	Network(McrNetworkSubcommand),
+	/// The subcommands of the `mcr-protocol` CLI 2.
 	#[clap(subcommand)]
 	Protocol(McrProtocolSubcommand),
 }
