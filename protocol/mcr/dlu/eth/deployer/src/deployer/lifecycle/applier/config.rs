@@ -7,21 +7,21 @@ use crate::contracts::ContractWorkspace;
 use clap::Parser;
 use jsonlvar::Jsonl;
 use lifecycle::{ApplyOperations, LifecycleApplyFrontend, LifecycleError, LifecycleOperations};
-use secure_signer::key::TryFromCanonicalString;
+use orfile::Orfile;
 use secure_signer_loader::identifiers::SignerIdentifier;
 use serde::{Deserialize, Serialize};
 
-#[derive(Parser, Debug, Serialize, Deserialize, Clone, Jsonl)]
+#[derive(Parser, Debug, Serialize, Deserialize, Clone, Jsonl, Orfile)]
 #[clap(help_expected = true)]
 pub struct Config {
 	/// The signer identifier.
-	#[arg(value_parser = SignerIdentifier::try_from_canonical_string)]
 	#[arg(long)]
 	pub signer_identifier: SignerIdentifier,
 	/// The fork url for deployment.
 	#[arg(long)]
 	pub fork_url: String,
 	/// The deployer config.
+	#[orfile(config)]
 	#[clap(flatten)]
 	pub script_args: ScriptArgs,
 	/// The JSONL prefix to give to the output from the deployer.
@@ -108,5 +108,17 @@ impl LifecycleApplyFrontend for Config {
 		let artifacts = self.script_args.artifacts.clone();
 
 		Ok((lifecyle, args, artifacts))
+	}
+}
+
+impl LifecycleApplyFrontend for or_file::Config {
+	type Lifecycle = Lifecycle;
+
+	async fn to_applier_parts(
+		&self,
+	) -> Result<(Self::Lifecycle, Arguments, artifacts::input::Artifacts), LifecycleError> {
+		let config = self.clone().resolve().await.map_err(|e| LifecycleError::Config(e.into()))?;
+
+		config.to_applier_parts().await
 	}
 }

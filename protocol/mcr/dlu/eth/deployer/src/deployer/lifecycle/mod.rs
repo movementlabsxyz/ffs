@@ -48,6 +48,6 @@ impl LifecycleOperations for Lifecycle {
 }
 
 impl LifecycleFrontend for Lifecycle {
-	type ApplyFrontend = applier::Config;
+	type ApplyFrontend = applier::or_file::Config;
 	type DestroyFrontend = destroyer::Config;
 }

@@ -235,8 +235,8 @@ Run up with parameters from environment variables, config files, and CLI flags
 ###### **Options:**
 
 * `--config-path <CONFIG_PATH>`
-* `--write-artifacts-path <WRITE_ARTIFACTS_PATH>`
-* `--write-anvil-data-path <WRITE_ANVIL_DATA_PATH>`
+* `--write-artifacts-path <WRITE_ARTIFACTS_PATH>` — Path to the configuration file
+* `--write-anvil-data-path <WRITE_ANVIL_DATA_PATH>` — Path to write the anvil data as json
 
 
 

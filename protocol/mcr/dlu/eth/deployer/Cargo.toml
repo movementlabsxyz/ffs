@@ -34,6 +34,7 @@ hex = { workspace = true }
 jsonlvar = { workspace = true }
 thiserror = { workspace = true }
 lifecycle = { workspace = true }
+orfile = { workspace = true }
 
 [build-dependencies]
 zip = { workspace = true }

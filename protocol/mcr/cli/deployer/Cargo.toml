@@ -18,6 +18,7 @@ mcr-protocol-deployer-eth-core = { workspace = true }
 mcr-types = { workspace = true }
 jsonlvar = { workspace = true }
 lifecycle = { workspace = true }
+clap-markdown-ext = { workspace = true }
 
 [lints]
 workspace = true

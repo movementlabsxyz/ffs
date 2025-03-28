@@ -1,13 +1,19 @@
-use clap::Parser;
+use clap::{CommandFactory, Parser};
 
 #[derive(Parser)]
 #[clap(help_expected = true)]
 pub struct Print {}
 
+impl Default for Print {
+	fn default() -> Self {
+		Self {}
+	}
+}
+
 impl Print {
 	pub async fn execute<C>(&self) -> Result<(), anyhow::Error>
 	where
-		C: Parser,
+		C: CommandFactory,
 	{
 		let markdown = clap_markdown::help_markdown::<C>();
 		println!("{}", markdown);

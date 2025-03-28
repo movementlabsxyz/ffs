@@ -23,10 +23,12 @@ pub fn impl_orfile(input: TokenStream) -> TokenStream {
 	));
 
 	let (config_fields, other_fields): (Vec<_>, Vec<_>) = match &input.data {
-		Data::Struct(data) => data
-			.fields
-			.iter()
-			.partition(|f| f.ident.as_ref().map_or(false, |id| id.to_string().ends_with("config"))),
+		Data::Struct(data) => data.fields.iter().partition(|f| {
+			f.attrs.iter().any(|attr| {
+				attr.path().is_ident("orfile")
+					&& attr.parse_args::<syn::Path>().map(|p| p.is_ident("config")).unwrap_or(false)
+			})
+		}),
 		_ => panic!("Orfile can only be derived for structs"),
 	};
 
@@ -40,7 +42,15 @@ pub fn impl_orfile(input: TokenStream) -> TokenStream {
 		.map(|f| {
 			let id = &f.ident;
 			let ty = &f.ty;
+			let attrs = f.attrs.iter().filter(|attr| {
+				!(attr.path().is_ident("orfile")
+					&& attr
+						.parse_args::<syn::Path>()
+						.map(|p| p.is_ident("config"))
+						.unwrap_or(false))
+			});
 			quote! {
+				#(#attrs)*
 				#[clap(long)]
 				pub #id: #ty,
 			}

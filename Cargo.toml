@@ -128,9 +128,9 @@ cargo_metadata = "0.19.2"
 
 
 # secure-signing
-secure-signer = { git = "https://github.com/movementlabsxyz/secure-signing.git", rev = "62d9ae5fd098d2c0d2a2da2004ada91681e0df53" }
-secure-signer-loader = { git = "https://github.com/movementlabsxyz/secure-signing.git", rev = "62d9ae5fd098d2c0d2a2da2004ada91681e0df53"  }
-secure-signer-aws-kms = { git = "https://github.com/movementlabsxyz/secure-signing.git", rev = "62d9ae5fd098d2c0d2a2da2004ada91681e0df53"  }
+secure-signer = { git = "https://github.com/movementlabsxyz/secure-signing.git", rev = "f37eebd6d494d21b26b2faa44e1188de42ff1007" }
+secure-signer-loader = { git = "https://github.com/movementlabsxyz/secure-signing.git", rev = "f37eebd6d494d21b26b2faa44e1188de42ff1007"  }
+secure-signer-aws-kms = { git = "https://github.com/movementlabsxyz/secure-signing.git", rev = "f37eebd6d494d21b26b2faa44e1188de42ff1007"  }
 
 # kestrel 
 kestrel = { git = "https://github.com/movementlabsxyz/kestrel.git", rev = "c5c9b30ba2532f606485ad5a08da40d2940491fa" }

@@ -2,7 +2,7 @@ pub mod file;
 pub mod print;
 pub mod workspace;
 
-use clap::{Parser, Subcommand};
+use clap::{CommandFactory, Subcommand};
 
 #[derive(Subcommand)]
 #[clap(rename_all = "kebab-case")]
@@ -15,7 +15,7 @@ pub enum Markdown {
 impl Markdown {
 	pub async fn execute<C>(&self) -> Result<(), anyhow::Error>
 	where
-		C: Parser,
+		C: CommandFactory,
 	{
 		match self {
 			Markdown::File(file) => file.execute::<C>().await?,
@@ -23,5 +23,11 @@ impl Markdown {
 			Markdown::Workspace(workspace) => workspace.execute::<C>().await?,
 		}
 		Ok(())
+	}
+}
+
+impl Default for Markdown {
+	fn default() -> Self {
+		Self::Print(print::Print::default())
 	}
 }

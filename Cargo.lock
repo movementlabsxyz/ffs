@@ -3883,6 +3883,7 @@ version = "0.0.1"
 dependencies = [
  "anyhow",
  "clap",
+ "clap-markdown-ext",
  "dotenv",
  "jsonlvar",
  "lifecycle",
@@ -3926,6 +3927,7 @@ dependencies = [
  "mcr-protocol-client-core-mock",
  "mcr-protocol-client-core-util",
  "mcr-types",
+ "orfile",
  "secure-signer",
  "secure-signer-loader",
  "serde",
@@ -5365,7 +5367,7 @@ dependencies = [
 [[package]]
 name = "secure-signer"
 version = "0.0.2"
-source = "git+https://github.com/movementlabsxyz/secure-signing.git?rev=62d9ae5fd098d2c0d2a2da2004ada91681e0df53#62d9ae5fd098d2c0d2a2da2004ada91681e0df53"
+source = "git+https://github.com/movementlabsxyz/secure-signing.git?rev=f37eebd6d494d21b26b2faa44e1188de42ff1007#f37eebd6d494d21b26b2faa44e1188de42ff1007"
 dependencies = [
  "anyhow",
  "async-trait",
@@ -5380,7 +5382,7 @@ dependencies = [
 [[package]]
 name = "secure-signer-aws-kms"
 version = "0.0.2"
-source = "git+https://github.com/movementlabsxyz/secure-signing.git?rev=62d9ae5fd098d2c0d2a2da2004ada91681e0df53#62d9ae5fd098d2c0d2a2da2004ada91681e0df53"
+source = "git+https://github.com/movementlabsxyz/secure-signing.git?rev=f37eebd6d494d21b26b2faa44e1188de42ff1007#f37eebd6d494d21b26b2faa44e1188de42ff1007"
 dependencies = [
  "anyhow",
  "async-trait",
@@ -5413,7 +5415,7 @@ dependencies = [
 [[package]]
 name = "secure-signer-hashicorp-vault"
 version = "0.0.2"
-source = "git+https://github.com/movementlabsxyz/secure-signing.git?rev=62d9ae5fd098d2c0d2a2da2004ada91681e0df53#62d9ae5fd098d2c0d2a2da2004ada91681e0df53"
+source = "git+https://github.com/movementlabsxyz/secure-signing.git?rev=f37eebd6d494d21b26b2faa44e1188de42ff1007#f37eebd6d494d21b26b2faa44e1188de42ff1007"
 dependencies = [
  "anyhow",
  "async-trait",
@@ -5427,7 +5429,7 @@ dependencies = [
 [[package]]
 name = "secure-signer-loader"
 version = "0.0.2"
-source = "git+https://github.com/movementlabsxyz/secure-signing.git?rev=62d9ae5fd098d2c0d2a2da2004ada91681e0df53#62d9ae5fd098d2c0d2a2da2004ada91681e0df53"
+source = "git+https://github.com/movementlabsxyz/secure-signing.git?rev=f37eebd6d494d21b26b2faa44e1188de42ff1007#f37eebd6d494d21b26b2faa44e1188de42ff1007"
 dependencies = [
  "anyhow",
  "async-trait",
@@ -5444,7 +5446,7 @@ dependencies = [
 [[package]]
 name = "secure-signer-local"
 version = "0.0.2"
-source = "git+https://github.com/movementlabsxyz/secure-signing.git?rev=62d9ae5fd098d2c0d2a2da2004ada91681e0df53#62d9ae5fd098d2c0d2a2da2004ada91681e0df53"
+source = "git+https://github.com/movementlabsxyz/secure-signing.git?rev=f37eebd6d494d21b26b2faa44e1188de42ff1007#f37eebd6d494d21b26b2faa44e1188de42ff1007"
 dependencies = [
  "anyhow",
  "async-trait",
