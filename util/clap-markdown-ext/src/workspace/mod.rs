@@ -2,6 +2,7 @@ use cargo_metadata::MetadataCommand;
 use clap::{CommandFactory, Parser};
 use std::path::Path;
 
+/// Write the CLI documentation to a file in the workspace.
 #[derive(Parser)]
 #[clap(help_expected = true)]
 pub struct Workspace {

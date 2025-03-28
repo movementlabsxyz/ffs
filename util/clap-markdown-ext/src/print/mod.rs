@@ -1,5 +1,6 @@
 use clap::{CommandFactory, Parser};
 
+/// Print the CLI documentation to the console.
 #[derive(Parser)]
 #[clap(help_expected = true)]
 pub struct Print {}

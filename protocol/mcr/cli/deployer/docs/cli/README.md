@@ -34,13 +34,15 @@ The `mcr-protocol-client` CLI
 
 ###### **Subcommands:**
 
-* `file` — 
-* `print` — 
-* `workspace` — 
+* `file` — Write the CLI documentation to a file
+* `print` — Print the CLI documentation to the console
+* `workspace` — Write the CLI documentation to a file in the workspace
 
 
 
 ## `mcr-protocol-deployer markdown file`
+
+Write the CLI documentation to a file
 
 **Usage:** `mcr-protocol-deployer markdown file --file <FILE>`
 
@@ -52,11 +54,15 @@ The `mcr-protocol-client` CLI
 
 ## `mcr-protocol-deployer markdown print`
 
+Print the CLI documentation to the console
+
 **Usage:** `mcr-protocol-deployer markdown print`
 
 
 
 ## `mcr-protocol-deployer markdown workspace`
+
+Write the CLI documentation to a file in the workspace
 
 **Usage:** `mcr-protocol-deployer markdown workspace --relative-path <RELATIVE_PATH>`
 

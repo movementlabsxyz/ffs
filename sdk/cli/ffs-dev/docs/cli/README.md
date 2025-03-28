@@ -48,13 +48,15 @@ This document contains the help content for the `ffs-dev` command-line program.
 
 ###### **Subcommands:**
 
-* `file` — 
-* `print` — 
-* `workspace` — 
+* `file` — Write the CLI documentation to a file
+* `print` — Print the CLI documentation to the console
+* `workspace` — Write the CLI documentation to a file in the workspace
 
 
 
 ## `ffs-dev markdown file`
+
+Write the CLI documentation to a file
 
 **Usage:** `ffs-dev markdown file --file <FILE>`
 
@@ -66,11 +68,15 @@ This document contains the help content for the `ffs-dev` command-line program.
 
 ## `ffs-dev markdown print`
 
+Print the CLI documentation to the console
+
 **Usage:** `ffs-dev markdown print`
 
 
 
 ## `ffs-dev markdown workspace`
+
+Write the CLI documentation to a file in the workspace
 
 **Usage:** `ffs-dev markdown workspace --relative-path <RELATIVE_PATH>`
 

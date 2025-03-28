@@ -6,14 +6,19 @@ use serde::{Deserialize, Serialize};
 #[clap(rename_all = "kebab-case")]
 #[clap(help_expected = true)]
 pub struct Artifacts {
+	/// The proxy admin
 	#[arg(long)]
 	pub proxy_admin: String,
+	/// The move token proxy
 	#[arg(long)]
 	pub move_token_proxy: String,
+	/// The staking proxy
 	#[arg(long)]
 	pub staking_proxy: String,
+	/// The mcr proxy
 	#[arg(long)]
 	pub mcr_proxy: String,
+	/// The reward proxy
 	#[arg(long)]
 	pub reward_proxy: String,
 }
