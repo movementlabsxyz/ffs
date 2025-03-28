@@ -1,6 +1,6 @@
 use clap::Parser;
 use jsonlvar::Jsonl;
-use mcr_protocol_deployer_eth_core::applier::Config;
+use mcr_protocol_deployer_eth_core::Lifecycle;
 use serde::{Deserialize, Serialize};
 
 #[derive(Parser, Serialize, Deserialize, Debug, Clone)]

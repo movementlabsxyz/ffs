@@ -1,18 +1,8 @@
-pub mod deploy;
-
 use clap::Subcommand;
+use lifecycle::{LifecycleFrontend, LifecycleSubcommand};
+use mcr_protocol_deployer_eth_core::Lifecycle;
 
-#[derive(Subcommand)]
+#[derive(LifecycleSubcommand, Subcommand)]
+#[lifecycle_subcommand(Lifecycle)]
 #[clap(rename_all = "kebab-case")]
-pub enum Eth {
-	Deploy(deploy::Deploy),
-}
-
-impl Eth {
-	pub async fn execute(&self) -> Result<(), anyhow::Error> {
-		match self {
-			Eth::Deploy(cmd) => cmd.execute().await?,
-		}
-		Ok(())
-	}
-}
+pub enum Eth {}

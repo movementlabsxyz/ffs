@@ -3,7 +3,7 @@ pub mod artifacts;
 pub mod destroyer;
 
 use crate::contracts::ContractWorkspace;
-use lifecycle::{LifecycleError, LifecycleOperations};
+use lifecycle::{LifecycleError, LifecycleFrontend, LifecycleOperations};
 use std::sync::Arc;
 
 #[derive(Debug, Clone)]
@@ -45,4 +45,9 @@ impl LifecycleOperations for Lifecycle {
 	) -> Result<Self::Destroyer, LifecycleError> {
 		Ok(destroyer::Destroyer { args, artifacts, forge_deployer: self.forge_deployer.clone() })
 	}
+}
+
+impl LifecycleFrontend for Lifecycle {
+	type ApplyFrontend = applier::Config;
+	type DestroyFrontend = destroyer::Config;
 }

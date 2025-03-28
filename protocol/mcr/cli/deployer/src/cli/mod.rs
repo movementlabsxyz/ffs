@@ -15,7 +15,7 @@ pub struct McrProtocolDeployer {
 pub enum McrProtocolDeployerSubcommand {
 	Run,
 	#[clap(subcommand)]
-	Eth(eth::Eth),
+	Eth(eth::lifecycle_subcommand::Eth),
 }
 
 /// Implement the `From` trait for `McrProtocolDeployer` to convert it into a `McrProtocolDeployerSubcommand`.
@@ -41,7 +41,9 @@ impl McrProtocolDeployerSubcommand {
 			McrProtocolDeployerSubcommand::Run => {
 				println!("mcr-protocol-client is under development. Please check back later.");
 			}
-			McrProtocolDeployerSubcommand::Eth(eth) => eth.execute().await?,
+			McrProtocolDeployerSubcommand::Eth(eth) => {
+				eth.execute().await?;
+			}
 		}
 		Ok(())
 	}

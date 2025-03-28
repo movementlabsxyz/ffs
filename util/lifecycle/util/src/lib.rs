@@ -11,6 +11,9 @@ pub enum LifecycleError {
 
 	#[error("invalid lifecycle configuration: {0}")]
 	Config(#[source] Box<dyn std::error::Error + Send + Sync>),
+
+	#[error("method is unsupported: {0}")]
+	Unsupported(#[source] Box<dyn std::error::Error + Send + Sync>),
 }
 
 /// An applier must be able to be created from a set of arguments and input artifacts
@@ -76,7 +79,7 @@ pub trait LifecycleFrontend: LifecycleOperations {
 
 	/// Applies the frontend via the lifecycle
 	fn apply(
-		frontend: Self::ApplyFrontend,
+		frontend: &Self::ApplyFrontend,
 	) -> impl Future<
 		Output = Result<
 			<<Self as LifecycleOperations>::Applier as ApplyOperations>::OutputArtifacts,
@@ -93,7 +96,7 @@ pub trait LifecycleFrontend: LifecycleOperations {
 
 	/// Destroys the frontend via the lifecycle
 	fn destroy(
-		frontend: Self::DestroyFrontend,
+		frontend: &Self::DestroyFrontend,
 	) -> impl Future<
 		Output = Result<
 			<<Self as LifecycleOperations>::Applier as ApplyOperations>::OutputArtifacts,

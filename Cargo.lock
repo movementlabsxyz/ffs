@@ -3885,6 +3885,7 @@ dependencies = [
  "clap",
  "dotenv",
  "jsonlvar",
+ "lifecycle",
  "mcr-protocol-deployer-eth-core",
  "mcr-types",
  "serde",
