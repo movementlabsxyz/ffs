@@ -29,11 +29,7 @@ The commands are composed as follows:
 
 ```
 ./target/release/ffs-dev 
-  <protocol> // the protocol to run
-  <commands> // hierarchical organized commands, see #Nested-Commands below for more details
-  eth anvil up // the anvil command to run
-  <using/where> // the using or where command to run
-  --config-path <config-file> // only if `using` 
+    <command series> // hierarchical organized commands, see #Nested-Commands below for more details
   -- <any anvil data> // any anvil data to pass to anvil
 ```
 
@@ -52,21 +48,7 @@ Many of our CLI subcommands share a common pattern where `where` and `using` sub
 - **`where`**: Explicitly requires parameters to be passed in as args. This is best for when you're learning to use a given command, or want to see what is necessary to run a command.
 - **`using`**: Allows parameters to be passed in a hierarchy from environment variables, to config files, to command line args in order of override. This is useful for production settings. The subcommand will still validate the config.
 
-**Example**
-For an example for `using`, observe the config logged at the top, when running the following command:
-
-```bash
-UP_CONTRACT_ADMIN=0x911 ./target/release/ffs-dev mcr network coordinator eth anvil up using --config-path ./example/using.json -- --fork-url http://localhost:8545
-```
-
-where
-
-- `UP_CONTRACT_ADMIN`: sets an environment variable
-- `mcr`: uses the `mcr` sub-protocol
-- `network` and `coordinator`: some parameters the sub-protocol
-- `eth anvil up`: uses Ethereum Anvil local testnet
-- `using --config-path ./example/using.json`: uses the example config file
-- `-- --fork-url http://localhost:8545`: passes the fork url to anvil
+For an example for `using`, check out [README_anvil.md](../../README_anvil.md).
 
 ## CLI Conventions
 

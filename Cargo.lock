@@ -4154,8 +4154,32 @@ dependencies = [
  "anyhow",
  "clap",
  "dotenv",
+ "pcp-network-client",
+ "pcp-network-coordinator",
  "serde",
  "tokio",
+]
+
+[[package]]
+name = "pcp-network-anvil-component-core"
+version = "0.0.1"
+dependencies = [
+ "anyhow",
+ "async-stream",
+ "async-trait",
+ "futures",
+ "kestrel",
+ "network-anvil-component-core",
+ "pcp-config",
+ "pcp-dlu-eth-deployer-core",
+ "pcp-protocol-client-core-mock",
+ "pcp-protocol-client-core-util",
+ "pcp-types",
+ "secure-signer-loader",
+ "serde_json",
+ "strip-ansi-escapes",
+ "tokio",
+ "tokio-stream",
 ]
 
 [[package]]
@@ -4176,8 +4200,35 @@ dependencies = [
  "anyhow",
  "clap",
  "dotenv",
+ "jsonlvar",
+ "kestrel",
+ "orfile",
+ "pcp-dlu-eth-deployer-core",
+ "pcp-network-anvil-component-core",
+ "pcp-network-eth-live-component-core",
  "serde",
+ "serde_json",
  "tokio",
+]
+
+[[package]]
+name = "pcp-network-eth-live-component-core"
+version = "0.0.1"
+dependencies = [
+ "anyhow",
+ "async-stream",
+ "async-trait",
+ "futures",
+ "kestrel",
+ "pcp-config",
+ "pcp-dlu-eth-deployer-core",
+ "pcp-protocol-client-core-mock",
+ "pcp-protocol-client-core-util",
+ "pcp-types",
+ "secure-signer-loader",
+ "serde_json",
+ "tokio",
+ "tokio-stream",
 ]
 
 [[package]]

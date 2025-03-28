@@ -1,5 +1,5 @@
 use clap::Parser;
-// use pcp_network::cli::PcpNetworkSubcommand;
+use pcp_network::cli::PcpNetworkSubcommand;
 use pcp_protocol::cli::PcpProtocolSubcommand;
 
 #[derive(Parser)]
@@ -7,8 +7,8 @@ use pcp_protocol::cli::PcpProtocolSubcommand;
 #[clap(after_help = concat!("KEEP THIS UNTIL PRODUCTION-READY : Defined in: ", file!()))]
 pub enum Pcp {
 	/// ???
-	// #[clap(subcommand)]
-	// Network(PcpNetworkSubcommand),
+	#[clap(subcommand)]
+	Network(PcpNetworkSubcommand),
 	/// ???
 	#[clap(subcommand)]
 	Protocol(PcpProtocolSubcommand),
@@ -17,9 +17,9 @@ pub enum Pcp {
 impl Pcp {
 	pub async fn execute(&self) -> Result<(), anyhow::Error> {
 		match self {
-			// Pcp::Network(network) => {
-			// 	network.execute().await?;
-			// }
+			Pcp::Network(network) => {
+				network.execute().await?;
+			}
 			Pcp::Protocol(protocol) => {
 				protocol.execute().await?;
 			}
