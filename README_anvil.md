@@ -26,13 +26,21 @@ cargo build
 
 ## Setup Instructions
 
-**Start Anvil**
+The following command starts anvil and sets the contract admin to `0x911`.
+
+```bash
+UP_CONTRACT_ADMIN=0x911 ./target/debug/ffs-dev mcr network coordinator eth anvil up using --config-path ./example/using.json -- --fork-url http://localhost:8545
+```
+
+**Alternative:**
+
+Start Anvil
 
 ```bash
 anvil
 ```
 
-Use the first Anvil account as the deployer (`signer_a`), and the second as the admin (`signer_b`). The following values are the default values provided by Anvil. In production, you should never use these keys.
+Deploy the contracts using `signer_a` as deployer and `signer_b` as admin:
 
 ```bash
 export PRIVATE_KEY_A=0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
@@ -41,13 +49,6 @@ export ADDRESS_A=0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266
 export ADDRESS_B=0x70997970C51812dc3A010C7d01b50e0d17dc79C8
 ```
 
-<!--Then start the local Anvil network:
-```bash
-./target/debug/ffs-dev mcr network coordinator eth anvil up
-```
--->
-
-**Deploy Contracts**
 Deploy the contracts using `signer_a` as deployer and `signer_b` as admin:
 
 ```bash
@@ -56,6 +57,8 @@ Deploy the contracts using `signer_a` as deployer and `signer_b` as admin:
   --private-key $PRIVATE_KEY_A
 ```
 
+**Verify Deployment**
+
 After deployment, you'll see the addresses of all deployed contracts. Set the MOVE token address (`moveTokenProxy`).
 
 The default value for MCR is currently:
@@ -63,12 +66,14 @@ The default value for MCR is currently:
 export MOVE_TOKEN=0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9
 ```
 
-The default value for PCP is:
+The default value for PCP is currently:
 ```bash
 export MOVE_TOKEN=0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9
 ```
 
 Then verify the deployment:
+
+Use the first Anvil account as the deployer (`signer_a`), and the second as the admin (`signer_b`). The following values are the default values provided by Anvil. In production, you should never use these keys.
 
 ```bash
 echo -n " Token Symbol: "
