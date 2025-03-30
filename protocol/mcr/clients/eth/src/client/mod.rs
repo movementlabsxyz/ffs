@@ -15,6 +15,7 @@ use std::path::Path;
 use tokio_stream::StreamExt;
 use async_trait::async_trait;
 use std::future::Future;
+use std::str::FromStr;
 
 // Note: we prefer using the ABI because the [`sol!`](alloy_sol_types::sol) macro, when used with smart contract code directly, will not handle inheritance.
 sol!(
@@ -46,6 +47,8 @@ pub struct Client<R, W> {
 	pub(crate) ws_provider: W,
 	pub(crate) signer_address: Address,
 	pub(crate) contract_address: Address,
+	pub(crate) move_token_address: Address,
+	pub(crate) staking_address: Address,
 	pub(crate) send_transaction_error_rules: Vec<Box<dyn VerifyRule>>,
 	pub(crate) gas_limit: u64,
 	pub(crate) send_transaction_retries: u32,
@@ -287,11 +290,11 @@ where
 
 	fn stake(&self, amount: u64) -> impl Future<Output = Result<(), McrClientError>> + Send {
 		async move {
-			let move_token = MOVEToken::new(self.contract_address, &self.rpc_provider);
-			let staking = MovementStaking::new(self.contract_address, &self.rpc_provider);
+			let move_token = MOVEToken::new(self.move_token_address, &self.rpc_provider);
+			let staking = MovementStaking::new(self.staking_address, &self.rpc_provider);
 
 			// First approve the staking contract to spend our MOVE tokens
-			let approve_call = move_token.approve(Address::from(self.contract_address), U256::from(amount));
+			let approve_call = move_token.approve(self.staking_address, U256::from(amount));
 			send_transaction(
 				self.signer_address,
 				approve_call,

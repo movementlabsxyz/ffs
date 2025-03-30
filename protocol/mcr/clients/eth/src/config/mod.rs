@@ -53,6 +53,18 @@ pub struct Config {
 	/// The number of retries for sending transactions.
 	#[arg(long)]
 	pub transaction_send_retries: u32,
+	/// The MCR address.
+	#[arg(long)]
+	pub mcr_address: String,
+	/// The block lead tolerance.
+	#[arg(long)]
+	pub block_lead_tolerance: u64,
+	/// The move token address.
+	#[arg(long)]
+	pub move_token_address: String,
+	/// The staking address.
+	#[arg(long)]
+	pub staking_address: String,
 }
 
 impl Config {
@@ -66,6 +78,10 @@ impl Config {
 		run_commitment_admin_mode: bool,
 		gas_limit: u64,
 		transaction_send_retries: u32,
+		mcr_address: String,
+		block_lead_tolerance: u64,
+		move_token_address: String,
+		staking_address: String,
 	) -> Self {
 		Config {
 			mcr_contract_address,
@@ -76,6 +92,10 @@ impl Config {
 			run_commitment_admin_mode,
 			gas_limit,
 			transaction_send_retries,
+			mcr_address,
+			block_lead_tolerance,
+			move_token_address,
+			staking_address,
 		}
 	}
 
@@ -149,6 +169,8 @@ impl Config {
 			ws_provider,
 			signer_address,
 			contract_address,
+			self.move_token_address.parse()?,
+			self.staking_address.parse()?,
 			self.gas_limit,
 			self.transaction_send_retries,
 		)
@@ -166,6 +188,8 @@ impl Config {
 		ws_provider: W,
 		signer_address: Address,
 		contract_address: Address,
+		move_token_address: Address,
+		staking_address: Address,
 		gas_limit: u64,
 		send_transaction_retries: u32,
 	) -> Result<Client<R, W>, anyhow::Error>
@@ -184,6 +208,8 @@ impl Config {
 			ws_provider,
 			signer_address,
 			contract_address,
+			move_token_address,
+			staking_address,
 			send_transaction_error_rules,
 			gas_limit,
 			send_transaction_retries,

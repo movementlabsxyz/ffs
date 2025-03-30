@@ -34,11 +34,15 @@ impl CheckPostconfirmation {
             self.args.rpc_url.replace("http", "ws"),
             1,
             SignerIdentifier::Local(Local {
-                private_key_hex_bytes: "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef".to_string(),
+                private_key_hex_bytes: "0000000000000000000000000000000000000000000000000000000000000000".to_string(),
             }),
             false,
             100000,
             3,
+            self.args.mcr_address.clone(),
+            16,
+            "0x0000000000000000000000000000000000000000".to_string(),
+            "0x0000000000000000000000000000000000000000".to_string(),
         );
 
         let client = config.build().await?;

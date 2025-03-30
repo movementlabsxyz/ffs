@@ -144,7 +144,9 @@ echo "Staking MOVE tokens..."
 ./target/debug/ffs-dev mcr protocol client stake \
     --amount 0.1 \
     --private-key $PRIVATE_KEY_C \
-    --mcr-address $MCR
+    --mcr-address $MCR \
+    --move-token-address $MOVE_TOKEN \
+    --staking-address $MOVEMENT_STAKING
 
 # Verify stake
 echo -n "Staked amount for Address C: "

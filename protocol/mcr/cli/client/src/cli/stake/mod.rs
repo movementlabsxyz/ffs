@@ -1,6 +1,7 @@
 use clap::Parser;
 use secure_signer_loader::identifiers::{SignerIdentifier, local::Local};
 use mcr_protocol_client_eth_core::config::Config;
+use mcr_protocol_client_core_util::McrClientOperations;
 
 #[derive(Parser)]
 #[clap(help_expected = true)]
@@ -26,6 +27,14 @@ pub struct StakeArgs {
     /// RPC URL (optional, defaults to http://localhost:8545)
     #[clap(long, default_value = "http://localhost:8545")]
     rpc_url: String,
+
+    /// Move token address
+    #[clap(long)]
+    move_token_address: String,
+
+    /// Staking address
+    #[clap(long)]
+    staking_address: String,
 }
 
 impl Stake {
@@ -46,6 +55,10 @@ impl Stake {
             false,
             100000,
             3,
+            self.args.mcr_address.clone(),
+            16,  // block_lead_tolerance
+            self.args.move_token_address.clone(),
+            self.args.staking_address.clone(),
         );
 
         let client = config.build().await?;
@@ -54,7 +67,7 @@ impl Stake {
         let amount = (self.args.amount * 100_000_000.0) as u64;
         
         println!("Staking {} MOVE tokens...", self.args.amount);
-        // TODO: Call client.stake() with the amount
+        client.stake(amount).await?;
         
         Ok(())
     }

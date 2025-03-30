@@ -54,6 +54,10 @@ impl PostCommitment {
             false,
             100000,
             3,
+            self.args.mcr_address.clone(),
+            16,
+            "0x0000000000000000000000000000000000000000".to_string(),
+            "0x0000000000000000000000000000000000000000".to_string(),
         );
 
         let client = config.build().await?;
