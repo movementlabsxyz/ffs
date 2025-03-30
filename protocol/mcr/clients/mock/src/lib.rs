@@ -4,6 +4,7 @@ use std::collections::BTreeMap;
 use std::sync::{Arc, Mutex};
 use tokio::sync::{mpsc, RwLock};
 use tokio_stream::wrappers::ReceiverStream;
+use std::future::Future;
 
 #[derive(Clone)]
 pub struct Client {
@@ -149,6 +150,13 @@ impl McrClientOperations for Client {
 		_attester: String,
 	) -> Result<Option<BlockCommitment>, McrClientError> {
 		unimplemented!()
+	}
+
+	fn stake(&self, amount: u64) -> impl Future<Output = Result<(), McrClientError>> + Send {
+		async move {
+			println!("Mock client: Staking {} tokens", amount);
+			Ok(())
+		}
 	}
 }
 

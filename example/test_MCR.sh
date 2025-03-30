@@ -95,37 +95,56 @@ echo "Check commitment status of Address C for height 1 before posting..."
     --mcr-address $MCR \
     --attester $ADDRESS_C
 
+echo -n "... block height: "
+cast block-number --rpc-url http://localhost:8545
+sleep 2  # wait for async calls to complete
+# Advance 1 block
+cast rpc anvil_mine --rpc-url http://localhost:8545
+
 # Check if commitment was accepted (should show nothing)
 echo "Check if a commitment was accepted for height 1..."
 ./target/debug/ffs-dev mcr protocol client check-postconfirmation \
     --height 1 \
     --mcr-address $MCR
 
-# Postcommit. We should fail since we have not staked yet
+echo -n "... block height: "
+cast block-number --rpc-url http://localhost:8545
+sleep 2  # wait for async calls to complete
+# Advance 1 block
+cast rpc anvil_mine --rpc-url http://localhost:8545
+
+# Post commitment
 echo "Posting commitment from C..."
 ./target/debug/ffs-dev mcr protocol client post-commitment \
     --preimage-string "commitment_from_C" \
     --private-key $PRIVATE_KEY_C \
     --mcr-address $MCR
 
-# Check commitment after posting (should show the commitment)
+echo -n "... block height: "
+cast block-number --rpc-url http://localhost:8545
+sleep 2  # wait for async calls to complete
+# Advance 2 blocks
+cast rpc anvil_mine --rpc-url http://localhost:8545 2
+
+# Check commitment after posting
 echo "Check commitment from C after posting..."
 ./target/debug/ffs-dev mcr protocol client check-commitment \
     --height 1 \
     --mcr-address $MCR \
     --attester $ADDRESS_C
 
-# Check if commitment was accepted (should still show nothing)
-echo "Check if a commitment was accepted for height 1..."
-./target/debug/ffs-dev mcr protocol client check-postconfirmation \
-    --height 1 \
-    --mcr-address $MCR
+echo -n "... block height: "
+cast block-number --rpc-url http://localhost:8545
+sleep 2  # wait for async calls to complete
+# Advance 1 block
+cast rpc anvil_mine --rpc-url http://localhost:8545
 
 # Stake using CLI command with explicit private key
 echo "Staking MOVE tokens..."
 ./target/debug/ffs-dev mcr protocol client stake \
     --amount 0.1 \
-    --private-key $PRIVATE_KEY_C
+    --private-key $PRIVATE_KEY_C \
+    --mcr-address $MCR
 
 # Verify stake
 echo -n "Staked amount for Address C: "

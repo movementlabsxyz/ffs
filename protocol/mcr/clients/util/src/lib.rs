@@ -69,4 +69,10 @@ pub trait McrClientOperations {
 		height: u64,
 		attester: String,
 	) -> impl Future<Output = Result<Option<BlockCommitment>, McrClientError>> + Send;
+
+	/// Stakes the specified amount of MOVE tokens
+	fn stake(
+		&self,
+		amount: u64,
+	) -> impl Future<Output = Result<(), McrClientError>> + Send;
 }

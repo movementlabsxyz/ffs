@@ -3,6 +3,7 @@ pub mod post_commitment;
 pub mod deploy;
 pub mod check_commitment;
 pub mod check_postconfirmation;
+pub mod stake;
 use clap::{Parser, Subcommand};
 use mcr_protocol_client_eth_core::config::Config;
 use mcr_protocol_client_core_util::McrClientOperations;
@@ -35,6 +36,8 @@ pub enum McrProtocolClientSubcommand {
 	/// Deploy MCR contracts using deployer-core
 	#[clap(subcommand)]
 	Deploy(deploy::Deploy),
+	/// Stake MOVE tokens
+	Stake(stake::Stake),
 }
 
 /// Implement the `From` trait for `McrProtocolClient` to convert it into a `McrProtocolClientSubcommand`.
@@ -71,6 +74,7 @@ impl McrProtocolClientSubcommand {
 				check_postconfirmation.execute().await?
 			}
 			McrProtocolClientSubcommand::Deploy(deploy) => deploy.execute().await?,
+			McrProtocolClientSubcommand::Stake(stake) => stake.execute().await?,
 		}
 		Ok(())
 	}
