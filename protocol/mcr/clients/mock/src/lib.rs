@@ -142,6 +142,14 @@ impl McrClientOperations for Client {
 	async fn get_max_tolerable_block_height(&self) -> Result<u64, McrClientError> {
 		Ok(*self.current_height.read().await + self.block_lead_tolerance)
 	}
+
+	async fn get_validator_commitment_at_height(
+		&self,
+		_height: u64,
+		_attester: String,
+	) -> Result<Option<BlockCommitment>, McrClientError> {
+		unimplemented!()
+	}
 }
 
 #[cfg(test)]

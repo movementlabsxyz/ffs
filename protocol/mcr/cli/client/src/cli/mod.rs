@@ -1,7 +1,12 @@
 pub mod eth;
 pub mod post_commitment;
 pub mod deploy;
+pub mod check_commitment;
+pub mod check_postconfirmation;
 use clap::{Parser, Subcommand};
+use mcr_protocol_client_eth_core::config::Config;
+use mcr_protocol_client_core_util::McrClientOperations;
+use mcr_types::block_commitment::BlockCommitment;
 
 /// The `mcr-protocol-client` CLI.
 #[derive(Parser)]
@@ -21,8 +26,12 @@ pub enum McrProtocolClientSubcommand {
 	/// ??? 
 	#[clap(subcommand)]
 	Eth(eth::Eth),
-	/// Post a commitment to an MCR implementation
+	/// Post a commitment
 	PostCommitment(post_commitment::PostCommitment),
+	/// Check a commitment for a given height and attester
+	CheckCommitment(check_commitment::CheckCommitment),
+	/// Check postconfirmation for a height
+	CheckPostconfirmation(check_postconfirmation::CheckPostconfirmation),
 	/// Deploy MCR contracts using deployer-core
 	#[clap(subcommand)]
 	Deploy(deploy::Deploy),
@@ -54,6 +63,12 @@ impl McrProtocolClientSubcommand {
 			McrProtocolClientSubcommand::Eth(eth) => eth.execute().await?,
 			McrProtocolClientSubcommand::PostCommitment(post_commitment) => {
 				post_commitment.execute().await?
+			}
+			McrProtocolClientSubcommand::CheckCommitment(check_commitment) => {
+				check_commitment.execute().await?
+			}
+			McrProtocolClientSubcommand::CheckPostconfirmation(check_postconfirmation) => {
+				check_postconfirmation.execute().await?
 			}
 			McrProtocolClientSubcommand::Deploy(deploy) => deploy.execute().await?,
 		}

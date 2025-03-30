@@ -3636,11 +3636,14 @@ dependencies = [
  "anyhow",
  "clap",
  "dotenv",
+ "hex",
  "mcr-dlu-eth-deployer-core",
  "mcr-protocol-client-core-util",
  "mcr-protocol-client-eth-core",
  "mcr-types",
+ "secure-signer-loader",
  "serde",
+ "sha3",
  "tokio",
 ]
 

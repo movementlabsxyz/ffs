@@ -250,6 +250,38 @@ where
 			.context("Failed to convert the max tolerable block height from U256 to u64")
 			.map_err(|e| McrClientError::Internal(e.into()))?)
 	}
+
+	async fn get_validator_commitment_at_height(
+		&self,
+		height: u64,
+		attester: String,
+	) -> Result<Option<BlockCommitment>, McrClientError> {
+		let contract = MCR::new(self.contract_address, &self.ws_provider);
+		let attester_addr = attester.parse()
+			.map_err(|e| McrClientError::Internal(Box::new(e)))?;
+
+		let MCR::getValidatorCommitmentAtBlockHeightReturn { _0: commitment } = contract
+			.getValidatorCommitmentAtBlockHeight(U256::from(height), attester_addr)
+			.call()
+			.await
+			.map_err(|e| McrClientError::Internal(Box::new(e)))?;
+
+		let return_height: u64 = commitment
+			.height
+			.try_into()
+			.context("failed to convert the commitment height from U256 to u64")
+			.map_err(|e| McrClientError::Internal(e.into()))?;
+
+		Ok((return_height != 0).then_some(BlockCommitment::new(
+			commitment
+				.height
+				.try_into()
+				.context("failed to convert the commitment height from U256 to u64")
+				.map_err(|e| McrClientError::Internal(e.into()))?,
+			Id::new(commitment.blockId.into()),
+			Commitment::new(commitment.commitment.into()),
+		)))
+	}
 }
 
 pub struct AnvilAddressEntry {

@@ -62,4 +62,11 @@ pub trait McrClientOperations {
 	fn get_max_tolerable_block_height(
 		&self,
 	) -> impl Future<Output = Result<u64, McrClientError>> + Send;
+
+	/// Gets the commitment for a specific validator at a given height
+	fn get_validator_commitment_at_height(
+		&self,
+		height: u64,
+		attester: String,
+	) -> impl Future<Output = Result<Option<BlockCommitment>, McrClientError>> + Send;
 }

@@ -19,6 +19,9 @@ mcr-protocol-client-eth-core = { workspace = true }
 mcr-types = { workspace = true }
 # TODO : the naming here may not be according to the standard
 mcr-dlu-eth-deployer-core = { path = "../../dlu/eth/deployer-core" }
+hex = { workspace = true }
+sha3 = "0.10.0"
+secure-signer-loader = { workspace = true }
 
 [lints]
 workspace = true

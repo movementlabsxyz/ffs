@@ -81,3 +81,75 @@ for letter in {A..F}; do
     echo -n "MOVE Balance of Address $letter: "
     cast call $MOVE_TOKEN "balanceOf(address)" $(eval echo \$ADDRESS_$letter) --rpc-url http://localhost:8545 | cast --to-dec | xargs -I {} echo "scale=8; {}/100000000" | bc
 done
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# - - - - - - - Staking and Commitment Setup - - - - - - - - 
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+echo -e "\n=== Staking and Commitment Setup for Address C ==="
+
+# Check commitment before posting (should show nothing)
+echo "Check commitment status of Address C for height 1 before posting..."
+./target/debug/ffs-dev mcr protocol client check-commitment \
+    --height 1 \
+    --mcr-address $MCR \
+    --attester $ADDRESS_C
+
+# Check if commitment was accepted (should show nothing)
+echo "Check if a commitment was accepted for height 1..."
+./target/debug/ffs-dev mcr protocol client check-postconfirmation \
+    --height 1 \
+    --mcr-address $MCR
+
+# Postcommit. We should fail since we have not staked yet
+echo "Posting commitment from C..."
+./target/debug/ffs-dev mcr protocol client post-commitment \
+    --preimage-string "commitment_from_C" \
+    --private-key $PRIVATE_KEY_C \
+    --mcr-address $MCR
+
+# Check commitment after posting (should show the commitment)
+echo "Check commitment from C after posting..."
+./target/debug/ffs-dev mcr protocol client check-commitment \
+    --height 1 \
+    --mcr-address $MCR \
+    --attester $ADDRESS_C
+
+# Check if commitment was accepted (should still show nothing)
+echo "Check if a commitment was accepted for height 1..."
+./target/debug/ffs-dev mcr protocol client check-postconfirmation \
+    --height 1 \
+    --mcr-address $MCR
+
+# Stake using CLI command with explicit private key
+echo "Staking MOVE tokens..."
+./target/debug/ffs-dev mcr protocol client stake \
+    --amount 0.1 \
+    --private-key $PRIVATE_KEY_C
+
+# Verify stake
+echo -n "Staked amount for Address C: "
+cast call $MOVEMENT_STAKING "getStake(address)" $ADDRESS_C --rpc-url http://localhost:8545 | cast --to-dec | xargs -I {} echo "scale=8; {}/100000000" | bc
+
+# Post commitment using the CLI
+echo -e "\n=== Posting Commitment ==="
+echo "Posting commitment for Address C..."
+./target/debug/ffs-dev mcr protocol client post-commitment \
+    --preimage-string "commitment_from_C" \
+    --private-key $PRIVATE_KEY_C \
+    --mcr-address $MCR
+
+# Check attester's commitment after posting
+echo "Checking attester's commitment after posting..."
+./target/debug/ffs-dev mcr protocol client check-commitment \
+    --height 1 \
+    --mcr-address $MCR \
+    --attester $ADDRESS_C
+
+# Check if commitment was accepted
+echo "Checking if commitment was accepted..."
+./target/debug/ffs-dev mcr protocol client check-postconfirmation \
+    --height 1 \
+    --mcr-address $MCR
+
+echo "Setup complete!"
