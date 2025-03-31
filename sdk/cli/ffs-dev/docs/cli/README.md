@@ -181,14 +181,14 @@ The subcommands of the `mcr-network-coordinator` CLI
 
 ###### **Subcommands:**
 
-* `where` — Run up with all parameters passed explicitly as CLI flags
-* `using` — Run up with parameters from environment variables, config files, and CLI flags
+* `where` — Run up with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+* `using` — Run up with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
 
 
 
 ## `ffs-dev mcr network coordinator eth anvil up where`
 
-Run up with all parameters passed explicitly as CLI flags
+Run up with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
 
 **Usage:** `ffs-dev mcr network coordinator eth anvil up where [OPTIONS] --signer-identifier <SIGNER_IDENTIFIER> --fork-url <FORK_URL> --contract-admin <CONTRACT_ADMIN>`
 
@@ -230,7 +230,7 @@ Run up with all parameters passed explicitly as CLI flags
 
 ## `ffs-dev mcr network coordinator eth anvil up using`
 
-Run up with parameters from environment variables, config files, and CLI flags
+Run up with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
 
 **Usage:** `ffs-dev mcr network coordinator eth anvil up using [OPTIONS] [EXTRA_ARGS]...`
 

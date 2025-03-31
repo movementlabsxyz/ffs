@@ -89,14 +89,14 @@ Write the CLI documentation to a file in the workspace
 
 ###### **Subcommands:**
 
-* `where` — Run config with all parameters passed explicitly as CLI flags
-* `using` — Run config with parameters from environment variables, config files, and CLI flags
+* `where` — Run config with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+* `using` — Run config with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
 
 
 
 ## `mcr-protocol-deployer eth apply where`
 
-Run config with all parameters passed explicitly as CLI flags
+Run config with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
 
 **Usage:** `mcr-protocol-deployer eth apply where [OPTIONS] --signer-identifier <SIGNER_IDENTIFIER> --fork-url <FORK_URL> --contract-admin <CONTRACT_ADMIN>`
 
@@ -136,7 +136,7 @@ Run config with all parameters passed explicitly as CLI flags
 
 ## `mcr-protocol-deployer eth apply using`
 
-Run config with parameters from environment variables, config files, and CLI flags
+Run config with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
 
 **Usage:** `mcr-protocol-deployer eth apply using [OPTIONS] --signer-identifier <SIGNER_IDENTIFIER> --fork-url <FORK_URL> [EXTRA_ARGS]...`
 
