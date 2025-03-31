@@ -49,7 +49,6 @@ members = [
   "util/environment",
   "util/commander",
   "util/clap-markdown-ext",
-  "util/orfile/*",
   "util/lifecycle/*",
   "util/service/*",
 ]
@@ -184,9 +183,9 @@ secure-signer-eth = { path = "util/signing/eth" }
 ffs-environment = { path = "util/environment" }
 commander = { path = "util/commander" }
 clap-markdown-ext = { path = "util/clap-markdown-ext" }
-orfile = { path = "util/orfile/orfile" }
-orfile-util = { path = "util/orfile/util" }
-orfile-macro = { path = "util/orfile/macro" }
+orfile = { git = "https://github.com/movementlabsxyz/orfile.git", rev = "6de622abc517d9e3c22d1df00723be6c135fae73" }
+orfile-util = { git = "https://github.com/movementlabsxyz/orfile.git", rev = "6de622abc517d9e3c22d1df00723be6c135fae73" }
+orfile-macro = { git = "https://github.com/movementlabsxyz/orfile.git", rev = "6de622abc517d9e3c22d1df00723be6c135fae73" }
 
 lifecycle = { path = "util/lifecycle/lifecycle" }
 lifecycle-util = { path = "util/lifecycle/util" }
