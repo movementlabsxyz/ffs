@@ -65,28 +65,24 @@ cast send --private-key $PRIVATE_KEY_B $MOVE_TOKEN "transfer(address,uint256)" $
 echo "Transfers complete!"
 
 # Check initial balances
-echo "=== Initial Balances ==="
+echo "=================== Balances and transfers ==================="
 for letter in {A..C}; do
-    echo -n "MOVE Balance of Address $letter: "
+    echo -n "Initial MOVE Balance of Address $letter: "
     cast call $MOVE_TOKEN "balanceOf(address)" $(eval echo \$ADDRESS_$letter) --rpc-url http://localhost:8545 | cast --to-dec | xargs -I {} echo "scale=8; {}/100000000" | bc
 done
 
-# Make some test transfers
-echo -e "\n=== Making test transfers ==="
-# C transfers 100 MOVE to B
+# Test transfer C -> B
 SENDAMOUNT=$((AMOUNT/10))
 echo "C -> B: $(echo "scale=8; $SENDAMOUNT/100000000" | bc) MOVE"
 cast send --private-key $PRIVATE_KEY_C $MOVE_TOKEN "transfer(address,uint256)" $ADDRESS_B $SENDAMOUNT --rpc-url http://localhost:8545 > /dev/null
-
-# B transfers 10 MOVE to C
+# Test transfer B -> C
 SENDAMOUNT=$((AMOUNT/100))
 echo "B -> C: $(echo "scale=8; $SENDAMOUNT/100000000" | bc) MOVE"
 cast send --private-key $PRIVATE_KEY_B $MOVE_TOKEN "transfer(address,uint256)" $ADDRESS_C $SENDAMOUNT --rpc-url http://localhost:8545 > /dev/null
 
 # Check final balances
-echo -e "\n=== Final Balances ==="
 for letter in {A..C}; do
-    echo -n "MOVE Balance of Address $letter: "
+    echo -n "Final MOVE Balance of Address $letter: "
     cast call $MOVE_TOKEN "balanceOf(address)" $(eval echo \$ADDRESS_$letter) --rpc-url http://localhost:8545 | cast --to-dec | xargs -I {} echo "scale=8; {}/100000000" | bc
 done
 

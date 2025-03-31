@@ -58,7 +58,6 @@ impl CheckPostconfirmation {
 
         let client = config.build().await?;
 
-        println!("Checking accepted commitment at height {}", self.args.height);
         let commitment = client.get_commitment_at_height(
             self.args.height
         ).await?;
