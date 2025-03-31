@@ -82,4 +82,10 @@ pub trait McrClientOperations {
 		custodian: String,
 		attester: String,
 	) -> impl Future<Output = Result<u64, McrClientError>> + Send;
+
+	/// Get the balance of the specified address
+	fn get_balance(
+		&self,
+		address: String,
+	) -> impl Future<Output = Result<u64, McrClientError>> + Send;
 }

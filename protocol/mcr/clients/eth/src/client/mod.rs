@@ -290,7 +290,19 @@ where
 		let move_token = MOVEToken::new(self.move_token_address, &self.rpc_provider);
 		let staking = MovementStaking::new(self.staking_address, &self.rpc_provider);
 
+		// First check current stake
+		let initial_stake = staking.getCurrentEpochStake(
+			self.contract_address,  // domain
+			self.move_token_address,  // custodian
+			self.signer_address  // attester
+		)
+			.call()
+			.await
+			.map_err(|e| McrClientError::Internal(Box::new(e)))?;
+		println!("Debug [stake] - Initial stake: {}", initial_stake._0);
+
 		// First approve the staking contract to spend our MOVE tokens
+		println!("Debug [stake] - Approving staking contract to spend tokens");
 		let approve_call = move_token.approve(self.staking_address, U256::from(amount));
 		send_transaction(
 			self.signer_address,
@@ -301,10 +313,11 @@ where
 		).await?;
 
 		// Then stake the tokens
+		println!("Debug [stake] - Staking tokens to the staking contract");
 		let stake_call = staking.stake(
-			self.contract_address,  // domain (MCR contract address)
-			*move_token.address(),  // custodian (MOVE token address)
-			U256::from(amount),     // amount to stake
+			self.contract_address,  // domain
+			self.move_token_address,  // custodian token
+			U256::from(amount)  // amount
 		);
 		send_transaction(
 			self.signer_address,
@@ -313,6 +326,25 @@ where
 			self.send_transaction_retries,
 			self.gas_limit as u128,
 		).await?;
+
+		// Verify the stake was successful by checking if it increased
+		let final_stake = staking.getCurrentEpochStake(
+			self.contract_address,  // domain
+			self.move_token_address,  // custodian
+			self.signer_address  // attester
+		)
+			.call()
+			.await
+			.map_err(|e| McrClientError::Internal(Box::new(e)))?;
+		println!("Debug [stake] - Final stake: {}", final_stake._0);
+
+		// If stake didn't increase, the staking failed
+		if final_stake._0 <= initial_stake._0 {
+			return Err(McrClientError::Internal(Box::new(std::io::Error::new(
+				std::io::ErrorKind::Other,
+				"Staking failed - stake amount did not increase"
+			))))
+		}
 
 		Ok(())
 	}
@@ -333,6 +365,21 @@ where
 			.map_err(|e| McrClientError::Internal(Box::new(e)))?;
 
 		Ok(stake.try_into().map_err(|e| McrClientError::Internal(Box::new(e)))?)
+	}
+
+	/// Get the MOVE octas token balance of the specified address
+	async fn get_balance(&self, address: String) -> Result<u64, McrClientError> {
+		let token = MOVEToken::new(self.move_token_address, &self.rpc_provider);
+		let addr = address.parse::<Address>()
+			.map_err(|e| McrClientError::Internal(Box::new(e)))?;
+
+		println!("Debug [get_balance] - Getting balance of address: {}", addr);
+		let balance = token.balanceOf(addr)
+			.call()
+			.await
+			.map_err(|e| McrClientError::Internal(Box::new(e)))?;
+
+		Ok(balance._0.try_into().map_err(|e| McrClientError::Internal(Box::new(e)))?)
 	}
 }
 

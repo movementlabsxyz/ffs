@@ -160,6 +160,10 @@ impl McrClientOperations for Client {
 		// For mock client, just return 0 as the stake amount
 		Ok(0)
 	}
+
+	async fn get_balance(&self, address: String) -> Result<u64, McrClientError> {
+		Ok(0)
+	}
 }
 
 #[cfg(test)]

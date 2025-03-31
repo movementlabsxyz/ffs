@@ -1,5 +1,10 @@
 #!/bin/bash
 
+
+# NOTE: 
+# the raw functions are positioned in 
+# ./protocol/mcr/clients/eth/src/client/mod.rs
+
 # Exit on error
 # set -e
 # Print each command before executing
@@ -50,9 +55,11 @@ cast call $MOVE_TOKEN "balanceOf(address)" $ADDRESS_B --rpc-url http://localhost
 
 # Transfer 1000 MOVE tokens to each address
 echo "Transferring 1000 MOVE tokens to each address..."
-
-# Convert 10,000 MOVE to the correct decimals (8 decimals 10,000 MOVE -> 1000000000000)
-AMOUNT=1000000000000
+# Calculate amount: 1000 MOVE tokens with 8 decimals
+# 1000 * (10^8)
+AMOUNT=$((1000 * 100000000))  # = 100000000000
+# Print the amount
+echo "Amount: $AMOUNT"
 
 cast send --private-key $PRIVATE_KEY_B $MOVE_TOKEN "transfer(address,uint256)" $ADDRESS_C $AMOUNT --rpc-url http://localhost:8545 > /dev/null
 cast send --private-key $PRIVATE_KEY_B $MOVE_TOKEN "transfer(address,uint256)" $ADDRESS_D $AMOUNT --rpc-url http://localhost:8545 > /dev/null
@@ -75,7 +82,7 @@ SENDAMOUNT=$((AMOUNT/10))
 echo "C -> D: $(echo "scale=8; $SENDAMOUNT/100000000" | bc) MOVE"
 cast send --private-key $PRIVATE_KEY_C $MOVE_TOKEN "transfer(address,uint256)" $ADDRESS_D $SENDAMOUNT --rpc-url http://localhost:8545 > /dev/null
 
-# E transfers 50 MOVE to F
+# E transfers 10 MOVE to F
 SENDAMOUNT=$((AMOUNT/100))
 echo "E -> F: $(echo "scale=8; $SENDAMOUNT/100000000" | bc) MOVE"
 cast send --private-key $PRIVATE_KEY_E $MOVE_TOKEN "transfer(address,uint256)" $ADDRESS_F $SENDAMOUNT --rpc-url http://localhost:8545 > /dev/null
@@ -98,8 +105,11 @@ echo "=== Debug Checks ==="
 echo -n "MOVE token balance of Address C: "
 cast call $MOVE_TOKEN "balanceOf(address)" $ADDRESS_C --rpc-url http://localhost:8545 | cast --to-dec | xargs -I {} echo "scale=8; {}/100000000" | bc
 
-echo -n "Current allowance for staking contract: "
+echo -n "Current MOVE allowance for staking contract: "
 cast call $MOVE_TOKEN "allowance(address,address)" $ADDRESS_C $MOVEMENT_STAKING --rpc-url http://localhost:8545 | cast --to-dec | xargs -I {} echo "scale=8; {}/100000000" | bc
+if [ $(cast call $MOVE_TOKEN "allowance(address,address)" $ADDRESS_C $MOVEMENT_STAKING --rpc-url http://localhost:8545 | cast --to-dec) -ne 0 ]; then
+    echo "!!!  WARNING: MOVE token allowance is not 0. We may be rerunning this script."
+fi
 
 # Check commitment before posting (should show nothing)
 echo "Check commitment status of Address C for height 1 before posting..."
@@ -164,7 +174,7 @@ echo -n "Stake for Address C: "
     --rpc-url http://localhost:8545
 
 # Stake using CLI command with explicit private key
-echo "Staking MOVE tokens..."
+echo "Approving MOVE tokens..."
 # Approve staking contract to spend MOVE tokens
 cast send --private-key $PRIVATE_KEY_C $MOVE_TOKEN "approve(address,uint256)" $MOVEMENT_STAKING 10000000 --rpc-url http://localhost:8545 > /dev/null
 if [ $? -ne 0 ]; then
@@ -172,11 +182,61 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
+# check if token is approved
+echo -n "Current MOVE allowance for staking contract: "
+cast call $MOVE_TOKEN "allowance(address,address)" $ADDRESS_C $MOVEMENT_STAKING --rpc-url http://localhost:8545 | cast --to-dec | xargs -I {} echo "scale=8; {}/100000000" | bc
+# current MOVE balance of Address C
+echo -n "Current MOVE balance of Address C: "
+cast call $MOVE_TOKEN "balanceOf(address)" $ADDRESS_C --rpc-url http://localhost:8545 | cast --to-dec | xargs -I {} echo "scale=8; {}/100000000" | bc
+
+# Check if address C is whitelisted
+echo "Verifying whitelist status for Address C..."
+WHITELIST_CHECK=$(cast call $MOVEMENT_STAKING "hasRole(bytes32,address)" \
+    $(cast keccak "WHITELIST_ROLE") \
+    $ADDRESS_C \
+    --rpc-url http://localhost:8545)
+if [ "$WHITELIST_CHECK" = "0x0000000000000000000000000000000000000000000000000000000000000000" ]; then
+    echo "Address C is not whitelisted"
+    # If not whitelisted, whitelist it using admin account
+    echo "Whitelisting Address C..."
+    cast send --private-key $PRIVATE_KEY_A $MOVEMENT_STAKING "whitelistAddress(address)" \
+        $ADDRESS_C \
+        --rpc-url http://localhost:8545 > /dev/null
+fi
+
+# cast call if address C is whitelisted
+# we dont need to print the result, we just want to check if it is whitelisted
+cast call $MOVEMENT_STAKING "hasRole(bytes32,address)" \
+    $(cast keccak "WHITELIST_ROLE") \
+    $ADDRESS_C \
+    --rpc-url http://localhost:8545
+if [ $? -ne 0 ]; then
+    echo "Error: Address C still not whitelisted"
+    exit 1
+else
+    echo "Address C is whitelisted"
+fi
+
+
+# Stake using cast
+# cast send --private-key $PRIVATE_KEY_C $MOVEMENT_STAKING "stake(address,address,uint256)" \
+#     $MCR \
+#     $ADDRESS_C \
+#     1000000 \
+#     --rpc-url http://localhost:8545 > /dev/null
+# # if the stake did not work we should exit
+# if [ $? -ne 0 ]; then
+#     echo "Error: Failed to stake tokens"
+#     exit 1
+# fi
+
+# Stake 1000 MOVE octas
 ./target/debug/ffs-dev mcr protocol client stake \
-    --amount 0.1 \
+    --amount 1002 \
     --private-key $PRIVATE_KEY_C \
     --mcr-address $MCR \
     --move-token-address $MOVE_TOKEN \
+    --address $ADDRESS_C \
     --staking-address $MOVEMENT_STAKING
 if [ $? -ne 0 ]; then
     echo "Error: Failed to stake tokens"
@@ -189,8 +249,12 @@ sleep 2  # wait for async calls to complete
 cast rpc anvil_mine --rpc-url http://localhost:8545 # Advance 1 block
 
 # Verify stake
-echo -n "Staked amount for Address C: "
-cast call $MOVEMENT_STAKING "getStake(address)" $ADDRESS_C --rpc-url http://localhost:8545 | cast --to-dec | xargs -I {} echo "scale=8; {}/100000000" | bc
+echo -n "Staked MOVE for Address C: "
+cast call $MOVEMENT_STAKING "getCurrentEpochStake(address,address,address)" \
+    $MCR \
+    $MOVE_TOKEN \
+    $ADDRESS_C \
+    --rpc-url http://localhost:8545 | cast --to-dec | xargs -I {} echo "scale=8; {}/100000000" | bc
 
 # Post commitment using the CLI
 echo -e "\n=== Posting Commitment ==="

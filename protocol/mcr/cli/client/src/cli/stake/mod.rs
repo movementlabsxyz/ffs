@@ -12,13 +12,17 @@ pub struct Stake {
 
 #[derive(Parser)]
 pub struct StakeArgs {
-    /// Amount of MOVE tokens to stake
+    /// Amount of MOVE octas to stake
     #[clap(long, required = true)]
-    amount: f64,
+    amount: u64,
 
     /// Private key for signing transactions
     #[clap(long, required = true)]
     private_key: String,
+
+    /// Address of the signer
+    #[clap(long, required = true)]
+    address: String,
 
     /// MCR contract address
     #[clap(long, required = true)]
@@ -44,6 +48,8 @@ impl Stake {
             .unwrap_or(&self.args.private_key)
             .to_string();
 
+        let signer_address = self.args.address.clone();
+
         let config = Config::new(
             self.args.mcr_address.clone(),
             self.args.rpc_url.clone(),
@@ -63,13 +69,19 @@ impl Stake {
 
         let client = config.build().await?;
         
-        // Convert amount from float to uint256
-        let amount = (self.args.amount * 100_000_000.0) as u64;
-        
-        println!("Staking {} MOVE tokens...", self.args.amount);
-        println!("Debug - Amount in raw units: {}", amount);
+        let amount = self.args.amount as u64;
+        println!("Debug - Staking {} MOVE octas...", amount);
         println!("Debug - MCR address: {}", self.args.mcr_address);
         println!("Debug - Staking address: {}", self.args.staking_address);
+
+        // check if the balance is enough
+        println!("Debug - This address is {}", signer_address);
+        let balance = client.get_balance(signer_address.to_string()).await?;
+        println!("Debug - Balance: {}", balance);
+        if balance < amount {
+            return Err(anyhow::anyhow!("Balance is not enough to stake {} MOVE octas...", amount));
+        }
+
         client.stake(amount).await?;
         
         Ok(())
