@@ -60,14 +60,7 @@ where
 		&self,
 		block_commitment: BlockCommitment,
 	) -> Result<(), McrClientError> {
-		println!("Debug [post_block_commitment] - Starting post_block_commitment");
-		println!("Debug [post_block_commitment] - Block height: {}", block_commitment.height());
-		println!("Debug [post_block_commitment] - Block ID: {:?}", block_commitment.block_id());
-		println!("Debug [post_block_commitment] - Commitment: {:?}", block_commitment.commitment());
-
 		let contract = MCR::new(self.contract_address, &self.rpc_provider);
-		println!("Debug [post_block_commitment] - Contract instance created");
-
 		let eth_block_commitment = MCRStorage::BlockCommitment {
 			// Currently, to simplify the API, we'll say 0 is uncommitted all other numbers are legitimate heights
 			height: U256::from(block_commitment.height()),
@@ -76,13 +69,8 @@ where
 			),
 			blockId: alloy_primitives::FixedBytes(block_commitment.block_id().as_bytes().clone()),
 		};
-		println!("Debug [post_block_commitment] - Created eth_block_commitment");
-		println!("Debug [post_block_commitment] - Height: {}", eth_block_commitment.height);
-		println!("Debug [post_block_commitment] - Commitment: {:?}", eth_block_commitment.commitment);
-		println!("Debug [post_block_commitment] - Block ID: {:?}", eth_block_commitment.blockId);
 
 		if self.run_commitment_admin_mode {
-			println!("Debug [post_block_commitment] - Running in admin mode");
 			let call_builder = contract.forceLatestCommitment(eth_block_commitment);
 			send_transaction(
 				self.signer_address.clone(),
@@ -93,10 +81,7 @@ where
 			)
 			.await
 		} else {
-			println!("Debug [post_block_commitment] - Running in normal mode");
-			println!("Debug [post_block_commitment] - The signer address is {}", self.signer_address);
 			let call_builder = contract.submitBlockCommitment(eth_block_commitment).from(self.signer_address);
-			println!("Debug [post_block_commitment] - Created submitBlockCommitment call");
 
 			println!("Debug [post_block_commitment] - About to send transaction");
 			send_transaction(
@@ -302,7 +287,6 @@ where
 	}
 
 	async fn stake(&self, amount: u64) -> Result<(), McrClientError> {
-		println!("Debug - Calling stake with amount: {}", amount);
 		let move_token = MOVEToken::new(self.move_token_address, &self.rpc_provider);
 		let staking = MovementStaking::new(self.staking_address, &self.rpc_provider);
 
@@ -315,10 +299,8 @@ where
 			.call()
 			.await
 			.map_err(|e| McrClientError::Internal(Box::new(e)))?;
-		println!("Debug [stake] - Initial stake: {}", initial_stake._0);
 
 		// First approve the staking contract to spend our MOVE tokens
-		println!("Debug [stake] - Approving staking contract to spend tokens");
 		let approve_call = move_token.approve(self.staking_address, U256::from(amount));
 		send_transaction(
 			self.signer_address,
@@ -329,7 +311,6 @@ where
 		).await?;
 
 		// Then stake the tokens
-		println!("Debug [stake] - Staking tokens to the staking contract");
 		let stake_call = staking.stake(
 			self.contract_address,  // domain
 			self.move_token_address,  // custodian token
@@ -352,7 +333,6 @@ where
 			.call()
 			.await
 			.map_err(|e| McrClientError::Internal(Box::new(e)))?;
-		println!("Debug [stake] - Final stake: {}", final_stake._0);
 
 		// If stake didn't increase, the staking failed
 		if final_stake._0 <= initial_stake._0 {
@@ -389,7 +369,6 @@ where
 		let addr = address.parse::<Address>()
 			.map_err(|e| McrClientError::Internal(Box::new(e)))?;
 
-		println!("Debug [get_balance] - Getting balance of address: {}", addr);
 		let balance = token.balanceOf(addr)
 			.call()
 			.await
@@ -417,7 +396,6 @@ where
 		&self,
 		attester: String,
 	) -> Result<(), McrClientError> {
-		println!("Debug [grant_trusted_attester] - Granting TRUSTED_ATTESTER role to {}", attester);
 		
 		let contract = MCR::new(self.contract_address, &self.rpc_provider);
 		let attester_addr = attester.parse()
@@ -435,7 +413,6 @@ where
 			self.gas_limit as u128,
 		).await.map_err(|e| McrClientError::AdminFunction(Box::new(e)))?;
 		
-		println!("Debug [grant_trusted_attester] - Role granted successfully");
 		Ok(())
 	}
 }

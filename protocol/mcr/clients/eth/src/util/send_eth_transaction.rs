@@ -97,16 +97,11 @@ pub async fn send_transaction<P: Provider + Clone, D: CallDecoder + Clone>(
 ) -> Result<(), McrClientError> {
 	let base_call_builder = base_call_builder.from(signer_address);
 
-	println!("Debug [send_transaction] - Starting send_transaction");
-	println!("Debug [send_transaction] - Signer address: {}", signer_address);
-	println!("Debug [send_transaction] - Gas limit: {}", gas_limit);
-
 	// Fetch initial gas estimate
 	let mut estimate_gas = base_call_builder
 		.estimate_gas()
 		.await
 		.map_err(|e| {
-			println!("Debug [send_transaction] - Gas estimation failed with error: {:?}", e);
 			McrEthConnectorError::GasEstimationFailed(e.to_string())
 		})?
 		as u128;
@@ -116,10 +111,7 @@ pub async fn send_transaction<P: Provider + Clone, D: CallDecoder + Clone>(
 	let max_gas_limit = 30_000_000; // Cap max gas to avoid runaway values
 	estimate_gas = estimate_gas.min(max_gas_limit);
 
-	println!("Debug [send_transaction] - Estimated gas: {}", estimate_gas);
-
 	if estimate_gas > gas_limit {
-		println!("Debug [send_transaction] - Gas estimation too high: {} > {}", estimate_gas, gas_limit);
 		return Err(McrEthConnectorError::GasEstimationTooHigh {
 			estimated: estimate_gas,
 			limit: gas_limit,

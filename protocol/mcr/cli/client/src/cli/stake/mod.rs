@@ -70,14 +70,9 @@ impl Stake {
         let client = config.build().await?;
         
         let amount = self.args.amount as u64;
-        println!("Debug - Staking {} MOVE octas...", amount);
-        println!("Debug - MCR address: {}", self.args.mcr_address);
-        println!("Debug - Staking address: {}", self.args.staking_address);
 
         // check if the balance is enough
-        println!("Debug - This address is {}", signer_address);
         let balance = client.get_balance(signer_address.to_string()).await?;
-        println!("Debug - Balance: {}", balance);
         if balance < amount {
             return Err(anyhow::anyhow!("Balance is not enough to stake {} MOVE octas...", amount));
         }
