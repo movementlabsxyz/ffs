@@ -8,7 +8,8 @@ use serde::{Deserialize, Serialize};
 #[derive(Parser, Serialize, Deserialize, Debug, Clone, Orfile)]
 #[clap(help_expected = true)]
 pub struct Up {
-	/// ???
+	/// Path to the configuration file
+	#[orfile(config)]
 	#[clap(flatten)]
 	pub config: Config,
 	/// Path to the configuration file

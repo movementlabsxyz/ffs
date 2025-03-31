@@ -23,7 +23,7 @@ impl FfsDev {
 	pub async fn execute(&self) -> Result<(), anyhow::Error> {
 		match self {
 			FfsDev::Markdown(markdown) => {
-				markdown.execute::<Self>("ffs-dev").await?;
+				markdown.execute::<Self>().await?;
 			}
 			FfsDev::Mcr(mcr) => {
 				mcr.execute().await?;

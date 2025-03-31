@@ -1,5 +1,5 @@
 [package]
-name = "mcr-dlu-eth-deployer-core"
+name = "mcr-protocol-deployer-eth-core"
 version = { workspace = true }
 edition  = { workspace = true }
 license  = { workspace = true }
@@ -33,6 +33,8 @@ secure-signer-loader = { workspace = true }
 hex = { workspace = true }
 jsonlvar = { workspace = true }
 thiserror = { workspace = true }
+lifecycle = { workspace = true }
+orfile = { workspace = true }
 
 [build-dependencies]
 zip = { workspace = true }

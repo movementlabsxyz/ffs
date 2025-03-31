@@ -20,10 +20,13 @@ To build `ffs-dev` manually you can run the following command:
 cargo build -p ffs-dev --release
 ```
 
-The `ffs-dev` binary will then be available in `target/release/ffs-dev`.
+The `ffs-dev` binary will then be available in `target/release/ffs-dev`. 
 
 > [!NOTE]
 > We use [`clap`](https://docs.rs/clap/latest/clap/) to build our CLIs, so you can always call `--help` to get a list of available commands and their usage.
+
+> ![NOTE]
+> If you are developing in the nix shell, `target/release/*` and `target/debug/*` will both be on the path and you can use the CLIs directly. 
 
 The commands are composed as follows:
 
@@ -39,20 +42,14 @@ The following protocols are supported:
 - `mcr` (Multi-Commit Rollup Protocol)
 - `pcp` (Postconfirmation Protocol)
 
-**`where` and `using`**
-Many of our CLI subcommands share a common pattern where `where` and `using` subcommand variants are tied into the same logic, but accept different parameters.
-
-> [!NOTE]
-> A helpful pattern is to check command requirements with `where` and then develop with `using`.
-
-- **`where`**: Explicitly requires parameters to be passed in as args. This is best for when you're learning to use a given command, or want to see what is necessary to run a command.
-- **`using`**: Allows parameters to be passed in a hierarchy from environment variables, to config files, to command line args in order of override. This is useful for production settings. The subcommand will still validate the config.
-
-For an example for `using`, check out [README_anvil.md](../../README_anvil.md).
 
 ## CLI Conventions
 
 This section outlines the conventions used across FFS CLIs. Following these conventions ensures consistent user experience across all FFS CLIs and prevents namespace conflicts between protocols.
+
+### `orfile::Orfile`
+
+Many commands will use `orfile` to generate more ergonomic arg parsing. See the [`orfile`](https://github.com/movementlabsxyz/orfile) documentation for more detail. 
 
 ### Naming
 
@@ -109,19 +106,7 @@ Every CLI implements a `markdown` subcommand that generates documentation:
 ./target/release/ffs-dev markdown generate
 ```
 
-**Git Hook**
-A pre-commit hook ensures CLI documentation is always up to date. The hook:
-
-1. Generates fresh documentation
-2. Fails if documentation is outdated
-
-To install the hook:
-
-```bash
-# From repository root
-cp .githooks/pre-commit .git/hooks/
-chmod +x .git/hooks/pre-commit
-```
+This is called by a pre-commit git hook in this repository. 
 
 ### Nested Commands (Command Hierarchy)
 
@@ -172,26 +157,3 @@ This structure ensures:
 - each protocol gets its own namespace (e.g., `mcr` commands won't conflict with `pcp` commands)
 - users can discover commands by moving from general to specific (e.g., protocol → component → action)
 - each protocol can add its own specific commands without affecting others
-
-**Example:**
-❌ Bad:
-
-```rust
-// Conflicts when multiple protocols have "run" command
-enum Commands {
-    Run,
-    Start,
-}
-```
-
-✅ Good:
-
-```rust
-enum McrCommands {
-    Run,
-}
-
-enum PcpCommands {
-    Run,
-}
-```
