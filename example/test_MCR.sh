@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# Exit on error
+# set -e
+# Print each command before executing
+# set -x
+
 # This script tests the MCR contracts using anvil.
 
 # The contract should be deployed in a separate terminal using
@@ -46,13 +51,13 @@ cast call $MOVE_TOKEN "balanceOf(address)" $ADDRESS_B --rpc-url http://localhost
 # Transfer 1000 MOVE tokens to each address
 echo "Transferring 1000 MOVE tokens to each address..."
 
-# Convert 1000 to the correct decimals (8 decimals 1 MOVE -> 100000000)
-AMOUNT=100000000
+# Convert 10,000 MOVE to the correct decimals (8 decimals 10,000 MOVE -> 1000000000000)
+AMOUNT=1000000000000
 
-cast send --private-key $PRIVATE_KEY_B $MOVE_TOKEN "transfer(address,uint256)" $ADDRESS_C $AMOUNT --rpc-url http://localhost:8545
-cast send --private-key $PRIVATE_KEY_B $MOVE_TOKEN "transfer(address,uint256)" $ADDRESS_D $AMOUNT --rpc-url http://localhost:8545
-cast send --private-key $PRIVATE_KEY_B $MOVE_TOKEN "transfer(address,uint256)" $ADDRESS_E $AMOUNT --rpc-url http://localhost:8545
-cast send --private-key $PRIVATE_KEY_B $MOVE_TOKEN "transfer(address,uint256)" $ADDRESS_F $AMOUNT --rpc-url http://localhost:8545
+cast send --private-key $PRIVATE_KEY_B $MOVE_TOKEN "transfer(address,uint256)" $ADDRESS_C $AMOUNT --rpc-url http://localhost:8545 > /dev/null
+cast send --private-key $PRIVATE_KEY_B $MOVE_TOKEN "transfer(address,uint256)" $ADDRESS_D $AMOUNT --rpc-url http://localhost:8545 > /dev/null
+cast send --private-key $PRIVATE_KEY_B $MOVE_TOKEN "transfer(address,uint256)" $ADDRESS_E $AMOUNT --rpc-url http://localhost:8545 > /dev/null
+cast send --private-key $PRIVATE_KEY_B $MOVE_TOKEN "transfer(address,uint256)" $ADDRESS_F $AMOUNT --rpc-url http://localhost:8545 > /dev/null
 
 echo "Transfers complete!"
 
@@ -67,13 +72,13 @@ done
 echo -e "\n=== Making test transfers ==="
 # C transfers 100 MOVE to D
 SENDAMOUNT=$((AMOUNT/10))
-echo "C -> D: $SENDAMOUNT MOVE"
-cast send --private-key $PRIVATE_KEY_C $MOVE_TOKEN "transfer(address,uint256)" $ADDRESS_D $SENDAMOUNT --rpc-url http://localhost:8545
+echo "C -> D: $(echo "scale=8; $SENDAMOUNT/100000000" | bc) MOVE"
+cast send --private-key $PRIVATE_KEY_C $MOVE_TOKEN "transfer(address,uint256)" $ADDRESS_D $SENDAMOUNT --rpc-url http://localhost:8545 > /dev/null
 
 # E transfers 50 MOVE to F
 SENDAMOUNT=$((AMOUNT/100))
-echo "E -> F: $SENDAMOUNT MOVE"
-cast send --private-key $PRIVATE_KEY_E $MOVE_TOKEN "transfer(address,uint256)" $ADDRESS_F $SENDAMOUNT --rpc-url http://localhost:8545
+echo "E -> F: $(echo "scale=8; $SENDAMOUNT/100000000" | bc) MOVE"
+cast send --private-key $PRIVATE_KEY_E $MOVE_TOKEN "transfer(address,uint256)" $ADDRESS_F $SENDAMOUNT --rpc-url http://localhost:8545 > /dev/null
 
 # Check final balances
 echo -e "\n=== Final Balances ==="
@@ -87,6 +92,14 @@ done
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 echo -e "\n=== Staking and Commitment Setup for Address C ==="
+
+# Debug checks before staking
+echo "=== Debug Checks ==="
+echo -n "MOVE token balance of Address C: "
+cast call $MOVE_TOKEN "balanceOf(address)" $ADDRESS_C --rpc-url http://localhost:8545 | cast --to-dec | xargs -I {} echo "scale=8; {}/100000000" | bc
+
+echo -n "Current allowance for staking contract: "
+cast call $MOVE_TOKEN "allowance(address,address)" $ADDRESS_C $MOVEMENT_STAKING --rpc-url http://localhost:8545 | cast --to-dec | xargs -I {} echo "scale=8; {}/100000000" | bc
 
 # Check commitment before posting (should show nothing)
 echo "Check commitment status of Address C for height 1 before posting..."
@@ -141,10 +154,23 @@ cast rpc anvil_mine --rpc-url http://localhost:8545 # Advance 1 block
 # # Advance 1 block
 # cast rpc anvil_mine --rpc-url http://localhost:8545
 
+
+# get the stake for address C and print it
+echo -n "Stake for Address C: "
+./target/debug/ffs-dev mcr protocol client get-stake \
+    --custodian $ADDRESS_C \
+    --attester $ADDRESS_C \
+    --mcr-address $MCR \
+    --rpc-url http://localhost:8545
+
 # Stake using CLI command with explicit private key
 echo "Staking MOVE tokens..."
-# Approve MCR contract to spend MOVE tokens
-cast send --private-key $PRIVATE_KEY_C $MOVE_TOKEN "approve(address,uint256)" $MCR 1000000000000000 --rpc-url http://localhost:8545
+# Approve staking contract to spend MOVE tokens
+cast send --private-key $PRIVATE_KEY_C $MOVE_TOKEN "approve(address,uint256)" $MOVEMENT_STAKING 10000000 --rpc-url http://localhost:8545 > /dev/null
+if [ $? -ne 0 ]; then
+    echo "Error: Failed to approve MOVE tokens"
+    exit 1
+fi
 
 ./target/debug/ffs-dev mcr protocol client stake \
     --amount 0.1 \
@@ -152,6 +178,10 @@ cast send --private-key $PRIVATE_KEY_C $MOVE_TOKEN "approve(address,uint256)" $M
     --mcr-address $MCR \
     --move-token-address $MOVE_TOKEN \
     --staking-address $MOVEMENT_STAKING
+if [ $? -ne 0 ]; then
+    echo "Error: Failed to stake tokens"
+    exit 1
+fi
 
 echo -n "... block height: "
 cast block-number --rpc-url http://localhost:8545

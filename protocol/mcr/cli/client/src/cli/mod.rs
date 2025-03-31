@@ -1,3 +1,4 @@
+pub mod get_stake;
 pub mod eth;
 pub mod post_commitment;
 pub mod deploy;
@@ -38,6 +39,8 @@ pub enum McrProtocolClientSubcommand {
 	Deploy(deploy::Deploy),
 	/// Stake MOVE tokens
 	Stake(stake::Stake),
+	/// Get the current epoch stake for an attester
+	GetStake(get_stake::GetStake),
 }
 
 /// Implement the `From` trait for `McrProtocolClient` to convert it into a `McrProtocolClientSubcommand`.
@@ -75,6 +78,7 @@ impl McrProtocolClientSubcommand {
 			}
 			McrProtocolClientSubcommand::Deploy(deploy) => deploy.execute().await?,
 			McrProtocolClientSubcommand::Stake(stake) => stake.execute().await?,
+			McrProtocolClientSubcommand::GetStake(get_stake) => get_stake.execute().await?,
 		}
 		Ok(())
 	}

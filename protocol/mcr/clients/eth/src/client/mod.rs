@@ -316,6 +316,24 @@ where
 
 		Ok(())
 	}
+
+	/// Get the current epoch stake for an attester
+	async fn get_stake(&self, custodian: String, attester: String) -> Result<u64, McrClientError> {
+		let contract = MCR::new(self.contract_address, &self.rpc_provider);
+		
+		let custodian_addr = custodian.parse()
+			.map_err(|e| McrClientError::Internal(Box::new(e)))?;
+		let attester_addr = attester.parse()
+			.map_err(|e| McrClientError::Internal(Box::new(e)))?;
+		
+		let MCR::getCurrentEpochStakeReturn { _0: stake } = contract
+			.getCurrentEpochStake(custodian_addr, attester_addr)
+			.call()
+			.await
+			.map_err(|e| McrClientError::Internal(Box::new(e)))?;
+
+		Ok(stake.try_into().map_err(|e| McrClientError::Internal(Box::new(e)))?)
+	}
 }
 
 pub struct AnvilAddressEntry {

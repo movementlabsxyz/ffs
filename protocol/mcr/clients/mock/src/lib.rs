@@ -152,11 +152,13 @@ impl McrClientOperations for Client {
 		unimplemented!()
 	}
 
-	fn stake(&self, amount: u64) -> impl Future<Output = Result<(), McrClientError>> + Send {
-		async move {
-			println!("Mock client: Staking {} tokens", amount);
-			Ok(())
-		}
+	async fn stake(&self, amount: u64) -> Result<(), McrClientError> {
+		Ok(())
+	}
+
+	async fn get_stake(&self, custodian: String, attester: String) -> Result<u64, McrClientError> {
+		// For mock client, just return 0 as the stake amount
+		Ok(0)
 	}
 }
 

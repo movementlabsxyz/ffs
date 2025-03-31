@@ -75,4 +75,11 @@ pub trait McrClientOperations {
 		&self,
 		amount: u64,
 	) -> impl Future<Output = Result<(), McrClientError>> + Send;
+
+	/// Get the current epoch stake for an attester
+	fn get_stake(
+		&self,
+		custodian: String,
+		attester: String,
+	) -> impl Future<Output = Result<u64, McrClientError>> + Send;
 }
