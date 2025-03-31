@@ -49,8 +49,6 @@ members = [
   "util/environment",
   "util/commander",
   "util/clap-markdown-ext",
-  "util/lifecycle/*",
-  "util/service/*",
 ]
 
 [workspace.package]

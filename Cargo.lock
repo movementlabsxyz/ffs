@@ -3580,31 +3580,11 @@ dependencies = [
 [[package]]
 name = "lifecycle"
 version = "0.0.1"
-dependencies = [
- "lifecycle-macro 0.0.1 (git+https://github.com/movementlabsxyz/adud.git?rev=440cc81ecd69ba570a8bbdbaf3035e9d53fe6e84)",
- "lifecycle-util 0.0.1 (git+https://github.com/movementlabsxyz/adud.git?rev=440cc81ecd69ba570a8bbdbaf3035e9d53fe6e84)",
- "tempfile",
- "thiserror 1.0.69",
-]
-
-[[package]]
-name = "lifecycle"
-version = "0.0.1"
 source = "git+https://github.com/movementlabsxyz/adud.git?rev=440cc81ecd69ba570a8bbdbaf3035e9d53fe6e84#440cc81ecd69ba570a8bbdbaf3035e9d53fe6e84"
 dependencies = [
- "lifecycle-macro 0.0.1 (git+https://github.com/movementlabsxyz/adud.git?rev=440cc81ecd69ba570a8bbdbaf3035e9d53fe6e84)",
- "lifecycle-util 0.0.1 (git+https://github.com/movementlabsxyz/adud.git?rev=440cc81ecd69ba570a8bbdbaf3035e9d53fe6e84)",
+ "lifecycle-macro",
+ "lifecycle-util",
  "thiserror 1.0.69",
-]
-
-[[package]]
-name = "lifecycle-macro"
-version = "0.0.1"
-dependencies = [
- "proc-macro-error",
- "proc-macro2",
- "quote",
- "syn 2.0.100",
 ]
 
 [[package]]
@@ -3616,14 +3596,6 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn 2.0.100",
-]
-
-[[package]]
-name = "lifecycle-util"
-version = "0.0.1"
-dependencies = [
- "tempfile",
- "thiserror 1.0.69",
 ]
 
 [[package]]
@@ -3915,7 +3887,7 @@ dependencies = [
  "clap-markdown-ext",
  "dotenv",
  "jsonlvar",
- "lifecycle 0.0.1 (git+https://github.com/movementlabsxyz/adud.git?rev=440cc81ecd69ba570a8bbdbaf3035e9d53fe6e84)",
+ "lifecycle",
  "mcr-protocol-deployer-eth-core",
  "mcr-types",
  "serde",
@@ -3951,7 +3923,7 @@ dependencies = [
  "futures",
  "hex",
  "jsonlvar",
- "lifecycle 0.0.1 (git+https://github.com/movementlabsxyz/adud.git?rev=440cc81ecd69ba570a8bbdbaf3035e9d53fe6e84)",
+ "lifecycle",
  "mcr-config",
  "mcr-protocol-client-core-mock",
  "mcr-protocol-client-core-util",
@@ -5644,53 +5616,6 @@ checksum = "a84f14a19e9a014bb9f4512488d9829a68e04ecabffb0f9904cd1ace94598177"
 dependencies = [
  "base16ct",
  "serde",
-]
-
-[[package]]
-name = "service"
-version = "0.0.1"
-dependencies = [
- "service-macro 0.0.1 (git+https://github.com/movementlabsxyz/adud.git?rev=440cc81ecd69ba570a8bbdbaf3035e9d53fe6e84)",
- "service-util 0.0.1 (git+https://github.com/movementlabsxyz/adud.git?rev=440cc81ecd69ba570a8bbdbaf3035e9d53fe6e84)",
- "tempfile",
- "thiserror 1.0.69",
-]
-
-[[package]]
-name = "service-macro"
-version = "0.0.1"
-dependencies = [
- "proc-macro-error",
- "proc-macro2",
- "quote",
- "syn 2.0.100",
-]
-
-[[package]]
-name = "service-macro"
-version = "0.0.1"
-source = "git+https://github.com/movementlabsxyz/adud.git?rev=440cc81ecd69ba570a8bbdbaf3035e9d53fe6e84#440cc81ecd69ba570a8bbdbaf3035e9d53fe6e84"
-dependencies = [
- "proc-macro-error",
- "proc-macro2",
- "quote",
- "syn 2.0.100",
-]
-
-[[package]]
-name = "service-util"
-version = "0.0.1"
-dependencies = [
- "tempfile",
- "thiserror 1.0.69",
-]
-
-[[package]]
-name = "service-util"
-version = "0.0.1"
-source = "git+https://github.com/movementlabsxyz/adud.git?rev=440cc81ecd69ba570a8bbdbaf3035e9d53fe6e84#440cc81ecd69ba570a8bbdbaf3035e9d53fe6e84"
-dependencies = [
- "thiserror 1.0.69",
 ]
 
 [[package]]
