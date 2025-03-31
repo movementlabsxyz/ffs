@@ -51,6 +51,10 @@ The following protocols are supported:
 
 This section outlines the conventions used across FFS CLIs. Following these conventions ensures consistent user experience across all FFS CLIs and prevents namespace conflicts between protocols.
 
+### `orfile::Orfile`
+
+Many commands will use `orfile` to generate more ergonomic arg parsing. See the [`orfile`](https://github.com/movementlabsxyz/orfile) documentation for more detail. 
+
 ### Naming
 
 - CLI commands use kebab-case: `post-commitment` not `postCommitment`
