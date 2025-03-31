@@ -22,7 +22,11 @@ Movement Labs' Fast Finality Settlement is a proof of stake settlement system.
 | [Release Candidates](https://github.com/movementlabsxyz/ffs/issues?q=is%3Aissue%20state%3Aopen%20label%3Arelease-candidate) | Feature-complete versions linked to events. |
 | [Features & Bugs](https://github.com/movementlabsxyz/ffs/issues?q=is%3Aissue%20state%3Aopen%20label%3Afeature%2Cbug%20label%3Apriority%3Aurgent%2Cpriority%3Ahigh) | High-priority `feature` and `bug` issues. |
 
-Please see the [CONTRIBUTING.md](CONTRIBUTING.md) file for contribution guidelines.
+Please see 
+
+- the [CONTRIBUTING.md](CONTRIBUTING.md) file for contribution guidelines.
+- the [the CLI guide](sdk/cli/README.md) for getting started with the CLI
+- the [README_anvil.md](README_anvil.md) for getting started with development on Anvil
 
 ## Organization
 

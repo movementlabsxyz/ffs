@@ -4,7 +4,9 @@ use clap::Subcommand;
 
 #[derive(Subcommand)]
 #[clap(rename_all = "kebab-case")]
+#[clap(after_help = concat!("KEEP THIS UNTIL PRODUCTION-READY : Defined in: ", file!()))]
 pub enum Eth {
+	/// ???
 	PostAdminCommitment(post_admin_commitment::PostAdminCommitment),
 }
 

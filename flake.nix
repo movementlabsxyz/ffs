@@ -102,6 +102,15 @@
                 export CPPFLAGS="-I/opt/homebrew/opt/zlib/include"
               fi
 
+              # Add ./target/debug/* to PATH
+              export PATH="$PATH:$(pwd)/target/debug"
+
+              # Add ./target/release/* to PATH
+              export PATH="$PATH:$(pwd)/target/release"
+
+              # Copy over ./githooks/pre-commit to .git/hooks/pre-commit
+              cp ./githooks/pre-commit .git/hooks/pre-commit
+
               echo "Monza Aptos path: $MONZA_APTOS_PATH"
               cat <<'EOF'
                 _______________________________

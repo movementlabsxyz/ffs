@@ -2362,94 +2362,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "fcp-network"
-version = "0.0.1"
-dependencies = [
- "anyhow",
- "clap",
- "dotenv",
- "serde",
- "tokio",
-]
-
-[[package]]
-name = "fcp-network-client"
-version = "0.0.1"
-dependencies = [
- "anyhow",
- "clap",
- "dotenv",
- "serde",
- "tokio",
-]
-
-[[package]]
-name = "fcp-network-coordinator"
-version = "0.0.1"
-dependencies = [
- "anyhow",
- "clap",
- "dotenv",
- "serde",
- "tokio",
-]
-
-[[package]]
-name = "fcp-node"
-version = "0.0.1"
-dependencies = [
- "anyhow",
- "clap",
- "dotenv",
- "serde",
- "tokio",
-]
-
-[[package]]
-name = "fcp-node-client"
-version = "0.0.1"
-dependencies = [
- "anyhow",
- "clap",
- "dotenv",
- "serde",
- "tokio",
-]
-
-[[package]]
-name = "fcp-node-service"
-version = "0.0.1"
-dependencies = [
- "anyhow",
- "clap",
- "dotenv",
- "serde",
- "tokio",
-]
-
-[[package]]
-name = "fcp-protocol"
-version = "0.0.1"
-dependencies = [
- "anyhow",
- "clap",
- "dotenv",
- "serde",
- "tokio",
-]
-
-[[package]]
-name = "fcp-protocol-client"
-version = "0.0.1"
-dependencies = [
- "anyhow",
- "clap",
- "dotenv",
- "serde",
- "tokio",
-]
-
-[[package]]
 name = "ff"
 version = "0.13.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2493,6 +2405,8 @@ dependencies = [
  "dotenv",
  "mcr-network",
  "mcr-protocol",
+ "pcp-network",
+ "pcp-protocol",
  "serde",
  "tokio",
 ]
@@ -2500,94 +2414,6 @@ dependencies = [
 [[package]]
 name = "ffs-environment"
 version = "0.0.1"
-
-[[package]]
-name = "ffs-network"
-version = "0.0.1"
-dependencies = [
- "anyhow",
- "clap",
- "dotenv",
- "serde",
- "tokio",
-]
-
-[[package]]
-name = "ffs-network-client"
-version = "0.0.1"
-dependencies = [
- "anyhow",
- "clap",
- "dotenv",
- "serde",
- "tokio",
-]
-
-[[package]]
-name = "ffs-network-coordinator"
-version = "0.0.1"
-dependencies = [
- "anyhow",
- "clap",
- "dotenv",
- "serde",
- "tokio",
-]
-
-[[package]]
-name = "ffs-node"
-version = "0.0.1"
-dependencies = [
- "anyhow",
- "clap",
- "dotenv",
- "serde",
- "tokio",
-]
-
-[[package]]
-name = "ffs-node-client"
-version = "0.0.1"
-dependencies = [
- "anyhow",
- "clap",
- "dotenv",
- "serde",
- "tokio",
-]
-
-[[package]]
-name = "ffs-node-service"
-version = "0.0.1"
-dependencies = [
- "anyhow",
- "clap",
- "dotenv",
- "serde",
- "tokio",
-]
-
-[[package]]
-name = "ffs-protocol"
-version = "0.0.1"
-dependencies = [
- "anyhow",
- "clap",
- "dotenv",
- "serde",
- "tokio",
-]
-
-[[package]]
-name = "ffs-protocol-client"
-version = "0.0.1"
-dependencies = [
- "anyhow",
- "clap",
- "dotenv",
- "serde",
- "tokio",
-]
 
 [[package]]
 name = "fiat-crypto"
@@ -3813,6 +3639,7 @@ dependencies = [
  "dotenv",
  "mcr-protocol-client-core-util",
  "mcr-protocol-client-eth-core",
+ "mcr-protocol-deployer-eth-core",
  "mcr-types",
  "serde",
  "tokio",
@@ -4185,7 +4012,7 @@ dependencies = [
 [[package]]
 name = "orfile"
 version = "0.0.1"
-source = "git+https://github.com/movementlabsxyz/orfile.git?rev=0da8bb552ce518737c8164cb3a23972cc968d095#0da8bb552ce518737c8164cb3a23972cc968d095"
+source = "git+https://github.com/movementlabsxyz/orfile.git?rev=d02299214e5aa202130cd1eb9593ce8064d1ec69#d02299214e5aa202130cd1eb9593ce8064d1ec69"
 dependencies = [
  "anyhow",
  "orfile-macro",
@@ -4196,7 +4023,7 @@ dependencies = [
 [[package]]
 name = "orfile-macro"
 version = "0.0.1"
-source = "git+https://github.com/movementlabsxyz/orfile.git?rev=0da8bb552ce518737c8164cb3a23972cc968d095#0da8bb552ce518737c8164cb3a23972cc968d095"
+source = "git+https://github.com/movementlabsxyz/orfile.git?rev=d02299214e5aa202130cd1eb9593ce8064d1ec69#d02299214e5aa202130cd1eb9593ce8064d1ec69"
 dependencies = [
  "proc-macro-error",
  "proc-macro2",
@@ -4207,7 +4034,7 @@ dependencies = [
 [[package]]
 name = "orfile-util"
 version = "0.0.1"
-source = "git+https://github.com/movementlabsxyz/orfile.git?rev=0da8bb552ce518737c8164cb3a23972cc968d095#0da8bb552ce518737c8164cb3a23972cc968d095"
+source = "git+https://github.com/movementlabsxyz/orfile.git?rev=d02299214e5aa202130cd1eb9593ce8064d1ec69#d02299214e5aa202130cd1eb9593ce8064d1ec69"
 dependencies = [
  "serde",
  "serde_json",
@@ -4331,14 +4158,66 @@ dependencies = [
 ]
 
 [[package]]
+name = "pcp-dlu-eth-deployer-core"
+version = "0.0.1"
+dependencies = [
+ "anyhow",
+ "async-stream",
+ "async-trait",
+ "clap",
+ "commander 0.0.1",
+ "futures",
+ "hex",
+ "jsonlvar",
+ "pcp-config",
+ "pcp-protocol-client-core-mock",
+ "pcp-protocol-client-core-util",
+ "pcp-types",
+ "secure-signer",
+ "secure-signer-loader",
+ "serde",
+ "serde_json",
+ "tempfile",
+ "thiserror 1.0.69",
+ "tokio",
+ "tokio-stream",
+ "walkdir",
+ "zip",
+]
+
+[[package]]
 name = "pcp-network"
 version = "0.0.1"
 dependencies = [
  "anyhow",
  "clap",
  "dotenv",
+ "pcp-network-client",
+ "pcp-network-coordinator",
  "serde",
  "tokio",
+]
+
+[[package]]
+name = "pcp-network-anvil-component-core"
+version = "0.0.1"
+dependencies = [
+ "anyhow",
+ "async-stream",
+ "async-trait",
+ "futures",
+ "kestrel",
+ "network-anvil-component-core",
+ "pcp-config",
+ "pcp-dlu-eth-deployer-core",
+ "pcp-protocol-client-core-mock",
+ "pcp-protocol-client-core-util",
+ "pcp-types",
+ "secure-signer-loader",
+ "serde_json",
+ "strip-ansi-escapes",
+ "tokio",
+ "tokio-stream",
 ]
 
 [[package]]
@@ -4359,41 +4238,35 @@ dependencies = [
  "anyhow",
  "clap",
  "dotenv",
+ "jsonlvar",
+ "kestrel",
+ "orfile",
+ "pcp-dlu-eth-deployer-core",
+ "pcp-network-anvil-component-core",
+ "pcp-network-eth-live-component-core",
  "serde",
+ "serde_json",
  "tokio",
 ]
 
 [[package]]
-name = "pcp-node"
+name = "pcp-network-eth-live-component-core"
 version = "0.0.1"
 dependencies = [
  "anyhow",
- "clap",
- "dotenv",
- "serde",
+ "async-stream",
+ "async-trait",
+ "futures",
+ "kestrel",
+ "pcp-config",
+ "pcp-dlu-eth-deployer-core",
+ "pcp-protocol-client-core-mock",
+ "pcp-protocol-client-core-util",
+ "pcp-types",
+ "secure-signer-loader",
+ "serde_json",
  "tokio",
-]
-
-[[package]]
-name = "pcp-node-client"
-version = "0.0.1"
-dependencies = [
- "anyhow",
- "clap",
- "dotenv",
- "serde",
- "tokio",
-]
-
-[[package]]
-name = "pcp-node-service"
-version = "0.0.1"
-dependencies = [
- "anyhow",
- "clap",
- "dotenv",
- "serde",
- "tokio",
+ "tokio-stream",
 ]
 
 [[package]]
@@ -4416,6 +4289,7 @@ dependencies = [
  "clap",
  "dotenv",
  "hex",
+ "pcp-dlu-eth-deployer-core",
  "pcp-protocol-client-core-eth",
  "pcp-protocol-client-core-util",
  "pcp-types",
@@ -4492,36 +4366,10 @@ dependencies = [
  "anyhow",
  "clap",
  "dotenv",
- "pcp-protocol-deployer-core-eth",
+ "pcp-dlu-eth-deployer-core",
  "pcp-types",
  "serde",
  "tokio",
-]
-
-[[package]]
-name = "pcp-protocol-deployer-core-eth"
-version = "0.0.1"
-dependencies = [
- "anyhow",
- "async-stream",
- "async-trait",
- "clap",
- "commander 0.0.1",
- "futures",
- "hex",
- "pcp-config",
- "pcp-protocol-client-core-mock",
- "pcp-protocol-client-core-util",
- "pcp-types",
- "secure-signer",
- "secure-signer-loader",
- "serde",
- "serde_json",
- "tempfile",
- "tokio",
- "tokio-stream",
- "walkdir",
- "zip",
 ]
 
 [[package]]

@@ -20,6 +20,8 @@ pcp-types = { workspace = true }
 hex = { workspace = true }
 sha3 = "0.10.0"
 secure-signer-loader = { workspace = true }
+# TODO : the naming here may not be according to the standard
+pcp-dlu-eth-deployer-core = { workspace = true }
 
 [lints]
 workspace = true

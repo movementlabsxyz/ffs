@@ -6,6 +6,7 @@ members = [
 
   # common
   "network/common/components/*",
+  "sdk/cli/*",
 
   # mcr
   "protocol/mcr/util/*",
@@ -19,31 +20,21 @@ members = [
   # pcp
   "protocol/pcp/util/*",
   "protocol/pcp/clients/*",
-  "protocol/pcp/cli/*",
   "protocol/pcp/dlu/eth/deployer-core",
-  ## node
-  "node/pcp/cli/*",
-  ## network
+  "protocol/pcp/cli/*",
   "network/pcp/cli/*",
+#  "node/pcp/cli/*",
 
-  # fcp
-  ## protocol
-  "protocol/fcp/cli/*",
-  ## node
-  "node/fcp/cli/*",
-  ## network
-  "network/fcp/cli/*",
+  # # fcp
+  # "protocol/fcp/cli/*",
+  # "node/fcp/cli/*",
+  # "network/fcp/cli/*",
 
-  # ffs
-  ## protocol
-  "protocol/ffs/cli/*",
-  ## node
-  "node/ffs/cli/*",
-  ## network
-  "network/ffs/cli/*",
-  ## sdk
-  "sdk/cli/*",
-
+  # # ffs
+  # "protocol/ffs/cli/*",
+  # "node/ffs/cli/*",
+  # "network/ffs/cli/*",
+  
   # util
   "util/signing/eth",
   "util/environment",
@@ -134,9 +125,9 @@ kestrel = { git = "https://github.com/movementlabsxyz/kestrel.git", rev = "c5c9b
 jsonlvar = { git = "https://github.com/movementlabsxyz/kestrel.git", rev = "c5c9b30ba2532f606485ad5a08da40d2940491fa" }
 
 # orfile
-orfile = { git = "https://github.com/movementlabsxyz/orfile.git", rev = "0da8bb552ce518737c8164cb3a23972cc968d095" }
-orfile-util = { git = "https://github.com/movementlabsxyz/orfile.git", rev = "0da8bb552ce518737c8164cb3a23972cc968d095" }
-orfile-macro = { git = "https://github.com/movementlabsxyz/orfile.git", rev = "0da8bb552ce518737c8164cb3a23972cc968d095" }
+orfile = { git = "https://github.com/movementlabsxyz/orfile.git", rev = "d02299214e5aa202130cd1eb9593ce8064d1ec69" }
+orfile-util = { git = "https://github.com/movementlabsxyz/orfile.git", rev = "d02299214e5aa202130cd1eb9593ce8064d1ec69" }
+orfile-macro = { git = "https://github.com/movementlabsxyz/orfile.git", rev = "d02299214e5aa202130cd1eb9593ce8064d1ec69" }
 
 # adud
 lifecycle = { git = "https://github.com/movementlabsxyz/adud.git", rev = "440cc81ecd69ba570a8bbdbaf3035e9d53fe6e84" }
@@ -179,12 +170,14 @@ pcp-protocol-client-core-util = { path = "protocol/pcp/clients/util" }
 pcp-protocol-client-core-eth = { path = "protocol/pcp/clients/eth" }
 pcp-protocol-client-core-mock = { path = "protocol/pcp/clients/mock" }
 pcp-protocol-client = { path = "protocol/pcp/cli/client" }
-pcp-protocol = { path = "protocol/pcp/cli"}
-pcp-protocol-deployer-core-eth = { path = "protocol/pcp/dlu/eth/deployer-core" }
+pcp-protocol = { path = "protocol/pcp/cli/protocol"}
+pcp-dlu-eth-deployer-core = { path = "protocol/pcp/dlu/eth/deployer-core" }
 ### network
 pcp-network-client = { path = "network/pcp/cli/client" }
 pcp-network-coordinator = { path = "network/pcp/cli/coordinator" }
 pcp-network = { path = "network/pcp/cli/network" }
+pcp-network-anvil-component-core = { path = "network/pcp/components/eth/anvil" }
+pcp-network-eth-live-component-core = { path = "network/pcp/components/eth/live" }
 
 # sdk
 ffs-dev = { path = "sdk/cli/ffs-dev" }

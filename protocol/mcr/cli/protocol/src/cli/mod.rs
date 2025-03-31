@@ -9,11 +9,12 @@ pub struct McrProtocol {
 	command: Option<McrProtocolSubcommand>,
 }
 
-/// The subcommands of the `mcr-protocol` CLI.
 #[derive(Subcommand)]
 #[clap(rename_all = "kebab-case")]
 pub enum McrProtocolSubcommand {
+	/// ???
 	Run,
+	/// ???
 	#[clap(subcommand)]
 	Client(McrProtocolClientSubcommand),
 }

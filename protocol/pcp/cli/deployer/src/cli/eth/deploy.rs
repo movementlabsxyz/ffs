@@ -1,11 +1,12 @@
 use anyhow::Context;
 use clap::Parser;
-use pcp_protocol_deployer_core_eth::dev::config::Config;
+use pcp_dlu_eth_deployer_core::dev::config::Config;
 use serde::{Deserialize, Serialize};
 
 #[derive(Parser, Serialize, Deserialize, Debug, Clone)]
 #[clap(help_expected = true)]
 pub struct Deploy {
+	/// Config
 	#[clap(flatten)]
 	pub config: Option<Config>,
 }

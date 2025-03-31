@@ -14,6 +14,13 @@ serde = { workspace = true, features = ["derive"] }
 clap = { workspace = true}
 dotenv = { workspace = true }
 anyhow = { workspace = true }
+pcp-dlu-eth-deployer-core = { workspace = true }
+pcp-network-anvil-component-core = { workspace = true }
+pcp-network-eth-live-component-core = { workspace = true }
+kestrel = { workspace = true }
+jsonlvar = { workspace = true }
+orfile = { workspace = true }
+serde_json = { workspace = true }
 
 [lints]
 workspace = true

@@ -7,6 +7,7 @@ use serde::{Deserialize, Serialize};
 #[derive(Parser, Serialize, Deserialize, Debug, Clone)]
 #[clap(help_expected = true)]
 pub struct Up {
+	/// Config
 	#[clap(flatten)]
 	pub config: Option<Config>,
 }

@@ -6,6 +6,7 @@ This document contains the help content for the `mcr-protocol-deployer` command-
 
 * [`mcr-protocol-deployer`↴](#mcr-protocol-deployer)
 * [`mcr-protocol-deployer markdown`↴](#mcr-protocol-deployer-markdown)
+* [`mcr-protocol-deployer markdown generate`↴](#mcr-protocol-deployer-markdown-generate)
 * [`mcr-protocol-deployer markdown file`↴](#mcr-protocol-deployer-markdown-file)
 * [`mcr-protocol-deployer markdown print`↴](#mcr-protocol-deployer-markdown-print)
 * [`mcr-protocol-deployer markdown workspace`↴](#mcr-protocol-deployer-markdown-workspace)
@@ -34,15 +35,28 @@ The `mcr-protocol-client` CLI
 
 ###### **Subcommands:**
 
-* `file` — Write the CLI documentation to a file
-* `print` — Print the CLI documentation to the console
-* `workspace` — Write the CLI documentation to a file in the workspace
+* `generate` — Generate and update the documentation
+* `file` — Print the documentation to a file (providing the file path)
+* `print` — Print the documentation in the shell
+* `workspace` — Generate the documentation for the workspace
+
+
+
+## `mcr-protocol-deployer markdown generate`
+
+Generate and update the documentation
+
+**Usage:** `mcr-protocol-deployer markdown generate [OPTIONS]`
+
+###### **Options:**
+
+* `--file <FILE>` — Override the default docs location
 
 
 
 ## `mcr-protocol-deployer markdown file`
 
-Write the CLI documentation to a file
+Print the documentation to a file (providing the file path)
 
 **Usage:** `mcr-protocol-deployer markdown file --file <FILE>`
 
@@ -54,7 +68,7 @@ Write the CLI documentation to a file
 
 ## `mcr-protocol-deployer markdown print`
 
-Print the CLI documentation to the console
+Print the documentation in the shell
 
 **Usage:** `mcr-protocol-deployer markdown print`
 
@@ -62,7 +76,7 @@ Print the CLI documentation to the console
 
 ## `mcr-protocol-deployer markdown workspace`
 
-Write the CLI documentation to a file in the workspace
+Generate the documentation for the workspace
 
 **Usage:** `mcr-protocol-deployer markdown workspace --relative-path <RELATIVE_PATH>`
 
@@ -142,7 +156,7 @@ Run config with parameters from environment variables, config files, and CLI fla
 
 ###### **Arguments:**
 
-* `<EXTRA_ARGS>`
+* `<EXTRA_ARGS>` — Extra arguments to be passed to the CLI
 
 ###### **Options:**
 

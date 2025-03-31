@@ -32,11 +32,7 @@ The commands are composed as follows:
 
 ```
 ./target/release/ffs-dev 
-  <protocol> // the protocol to run
-  <commands> // hierarchical organized commands, see #Nested-Commands below for more details
-  eth anvil up // the anvil command to run
-  <using/where> // the using or where command to run
-  --config-path <config-file> // only if `using` 
+    <command series> // hierarchical organized commands, see #Nested-Commands below for more details
   -- <any anvil data> // any anvil data to pass to anvil
 ```
 
@@ -82,9 +78,20 @@ This structure keeps related code together and makes it easy to add new commands
 
 ### Documentation
 
-- Use doc comments to explain command purpose
 - Include examples in complex commands
 - Document any environment variables or config files needed
+- Use doc comments (`///`) to explain command purpose
+
+**Example**
+In the `mod.rs` file, add a doc comment to the enum that describes the command.
+
+```rust
+pub enum HigherCommandLevel {
+    /// Command one does ...
+    LowerCommandOne(command::CommandOne),
+    /// Command two does ...
+    LowerCommandTwo(command::CommandTwo),
+}
 
 **Auto documentation**
 We use `clap-markdown-ext` to automatically generate documentation for all CLI commands. This ensures documentation stays in sync with the actual implementation.

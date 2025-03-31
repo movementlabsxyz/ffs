@@ -13,10 +13,14 @@ pub struct McrNetwork {
 /// The subcommands of the `mcr-network` CLI.
 #[derive(Subcommand)]
 #[clap(rename_all = "kebab-case")]
+#[clap(after_help = concat!("KEEP THIS UNTIL PRODUCTION-READY : Defined in: ", file!()))]
 pub enum McrNetworkSubcommand {
+	/// ???
 	Run,
+	/// ???
 	#[clap(subcommand)]
 	Client(McrNetworkClientSubcommand),
+	/// ???
 	#[clap(subcommand)]
 	Coordinator(McrNetworkCoordinatorSubcommand),
 }
