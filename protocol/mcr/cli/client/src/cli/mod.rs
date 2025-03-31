@@ -5,6 +5,7 @@ pub mod deploy;
 pub mod check_commitment;
 pub mod check_postconfirmation;
 pub mod stake;
+pub mod grant_trusted_attester;
 use clap::{Parser, Subcommand};
 use mcr_protocol_client_eth_core::config::Config;
 use mcr_protocol_client_core_util::McrClientOperations;
@@ -41,6 +42,8 @@ pub enum McrProtocolClientSubcommand {
 	Stake(stake::Stake),
 	/// Get the current epoch stake for an attester
 	GetStake(get_stake::GetStake),
+	/// Grant TRUSTED_ATTESTER role to an attester
+	GrantTrustedAttester(grant_trusted_attester::GrantTrustedAttester),
 }
 
 /// Implement the `From` trait for `McrProtocolClient` to convert it into a `McrProtocolClientSubcommand`.
@@ -79,6 +82,9 @@ impl McrProtocolClientSubcommand {
 			McrProtocolClientSubcommand::Deploy(deploy) => deploy.execute().await?,
 			McrProtocolClientSubcommand::Stake(stake) => stake.execute().await?,
 			McrProtocolClientSubcommand::GetStake(get_stake) => get_stake.execute().await?,
+			McrProtocolClientSubcommand::GrantTrustedAttester(grant_trusted_attester) => {
+				grant_trusted_attester.execute().await?
+			}
 		}
 		Ok(())
 	}

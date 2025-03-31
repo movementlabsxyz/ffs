@@ -161,8 +161,24 @@ impl McrClientOperations for Client {
 		Ok(0)
 	}
 
-	async fn get_balance(&self, address: String) -> Result<u64, McrClientError> {
+	async fn get_balance(&self, _address: String) -> Result<u64, McrClientError> {
 		Ok(0)
+	}
+
+	async fn get_last_accepted_block_height(&self) -> Result<u64, McrClientError> {
+		Ok(0) // Mock implementation returns 0
+	}
+
+	async fn get_leading_block_tolerance(&self) -> Result<u64, McrClientError> {
+		Ok(10) // Mock implementation returns default tolerance of 10
+	}
+
+	async fn grant_trusted_attester(
+		&self,
+		_attester: String,
+	) -> Result<(), McrClientError> {
+		// Mock implementation - just return Ok
+		Ok(())
 	}
 }
 

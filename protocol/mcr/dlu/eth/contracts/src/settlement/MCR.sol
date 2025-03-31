@@ -348,27 +348,34 @@ contract MCR is Initializable, BaseSettlement, MCRStorage, IMCR {
         address attester,
         BlockCommitment memory blockCommitment
     ) internal {
-        // Attester has already committed to a block at this height
-        if (commitments[blockCommitment.height][attester].height != 0)
-            revert AttesterAlreadyCommitted();
-
-        // We allow commitments to already accepted blocks to support lagging attesters
-        // If uncommented, this would prevent commitments to already accepted blocks:
-        // if (lastAcceptedBlockHeight > blockCommitment.height) revert AlreadyAcceptedBlock();
+        emit DebugCheckpoint("Start submitBlockCommitmentForAttester");
+        emit DebugValues("Values", attester, blockCommitment.height, lastAcceptedBlockHeight, leadingBlockTolerance);
         
-        // Prevent commitments to blocks too far ahead of the last accepted block
-        if (
-            lastAcceptedBlockHeight + leadingBlockTolerance <
-            blockCommitment.height
-        ) revert AttesterAlreadyCommitted();
+        emit DebugCheckpoint("Before existing commitment check");
+        uint256 existingCommitmentHeight = commitments[blockCommitment.height][attester].height;
+        emit DebugUint("Existing commitment height", existingCommitmentHeight);
+        
+        if (commitments[blockCommitment.height][attester].height != 0) {
+            emit DebugCheckpoint("Reverting: AttesterAlreadyCommitted - commitment exists");
+            revert AttesterAlreadyCommitted();
+        }
+        emit DebugCheckpoint("After existing commitment check");
+        
+        emit DebugCheckpoint("Before tolerance check");
+        if (lastAcceptedBlockHeight + leadingBlockTolerance < blockCommitment.height) {
+            emit DebugCheckpoint("Reverting: Height exceeds tolerance");
+            revert AttesterAlreadyCommitted();
+        }
+        emit DebugCheckpoint("After tolerance check");
 
+        emit DebugCheckpoint("Before epoch assignment");
         // Assign the block height to the current epoch if it hasn't been assigned yet
         if (blockHeightEpochAssignments[blockCommitment.height] == 0) {
-            // This is an intended race condition, but it is benign because of the tolerance
             blockHeightEpochAssignments[
                 blockCommitment.height
             ] = getEpochByBlockTime();
         }
+        emit DebugCheckpoint("After epoch assignment");
 
         // Register the attester's commitment
         commitments[blockCommitment.height][attester] = blockCommitment;
@@ -474,10 +481,17 @@ contract MCR is Initializable, BaseSettlement, MCRStorage, IMCR {
      * @param blockCommitment The block commitment to submit
      */
     function submitBlockCommitment(BlockCommitment memory blockCommitment) public {
+        emit DebugSubmitBlockCommitment(
+            msg.sender,
+            hasRole(TRUSTED_ATTESTER, msg.sender),
+            openAttestationEnabled
+        );
+        emit DebugCheckpoint("Before authorization check");
         require(
             openAttestationEnabled || hasRole(TRUSTED_ATTESTER, msg.sender),
             "UNAUTHORIZED_BLOCK_COMMITMENT"
         );
+        emit DebugCheckpoint("After authorization check");
         submitBlockCommitmentForAttester(msg.sender, blockCommitment);
     }
 
@@ -598,5 +612,40 @@ contract MCR is Initializable, BaseSettlement, MCRStorage, IMCR {
      */
     function setRewardContract(IMcrReward _rewardContract) external onlyRole(DEFAULT_ADMIN_ROLE) {
         rewardContract = _rewardContract;
+    }
+
+    event DebugSubmitBlockCommitment(
+        address caller,
+        bool hasTrustedAttesterRole,
+        bool openAttestationEnabled
+    );
+
+    event DebugSubmitBlockCommitmentForAttester(
+        address caller,
+        address attester,
+        uint256 height,
+        uint256 existingHeight
+    );
+
+    event DebugCheckpoint(string message);
+    
+    event DebugValues(string message, address attester, uint256 height, uint256 lastAccepted, uint256 tolerance);
+    event DebugUint(string message, uint256 value);
+    
+    function toString(uint256 value) internal pure returns (string memory) {
+        if (value == 0) return "0";
+        uint256 temp = value;
+        uint256 digits;
+        while (temp != 0) {
+            digits++;
+            temp /= 10;
+        }
+        bytes memory buffer = new bytes(digits);
+        while (value != 0) {
+            digits -= 1;
+            buffer[digits] = bytes1(uint8(48 + uint256(value % 10)));
+            value /= 10;
+        }
+        return string(buffer);
     }
 }

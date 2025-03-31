@@ -88,4 +88,20 @@ pub trait McrClientOperations {
 		&self,
 		address: String,
 	) -> impl Future<Output = Result<u64, McrClientError>> + Send;
+
+	/// Gets the last accepted block height.
+	fn get_last_accepted_block_height(
+		&self,
+	) -> impl Future<Output = Result<u64, McrClientError>> + Send;
+
+	/// Gets the leading block tolerance.
+	fn get_leading_block_tolerance(
+		&self,
+	) -> impl Future<Output = Result<u64, McrClientError>> + Send;
+
+	/// Grants TRUSTED_ATTESTER role to the specified address
+	fn grant_trusted_attester(
+		&self,
+		attester: String,
+	) -> impl Future<Output = Result<(), McrClientError>> + Send;
 }

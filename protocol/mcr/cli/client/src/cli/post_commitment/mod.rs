@@ -42,17 +42,32 @@ pub struct PostCommitmentArgs {
 
 impl PostCommitment {
     pub async fn execute(&self) -> Result<(), anyhow::Error> {
+        println!("Debug [post_commitment] - Creating commitment from input...");
         let commitment_bytes = self.create_commitment()?;
+        println!("Debug [post_commitment] - Commitment bytes: 0x{}", hex::encode(&commitment_bytes));
+        
+        // Create a unique block ID by hashing height with commitment
+        use sha3::{Digest, Keccak256};
+        let mut hasher = Keccak256::new();
+        hasher.update(&[0x01]); // Add prefix to make it different from commitment
+        hasher.update(&commitment_bytes);
+        hasher.update(&self.args.height.to_be_bytes());
+        let block_id = hasher.finalize().into();
+        
         let commitment = BlockCommitment::new(
             self.args.height,  // Use height from args
-            Id::new(commitment_bytes),
+            Id::new(block_id),
             Commitment::new(commitment_bytes),
         );
+        println!("Debug [post_commitment] - Block height: {}", commitment.height());
+        println!("Debug [post_commitment] - Block ID: {:?}", commitment.block_id());
+        println!("Debug [post_commitment] - Commitment: {:?}", commitment.commitment());
         
         // Strip '0x' prefix if present
         let private_key = self.args.private_key.strip_prefix("0x")
             .unwrap_or(&self.args.private_key)
             .to_string();
+        println!("Debug [post_commitment] - Using MCR address: {}", self.args.mcr_address);
 
         let config = Config::new(
             self.args.mcr_address.clone(),
@@ -63,7 +78,7 @@ impl PostCommitment {
                 private_key_hex_bytes: private_key,
             }),
             false,
-            100_000_000,
+            1_000_000_000_000_000_000,
             3,
             self.args.mcr_address.clone(),
             16,
@@ -74,6 +89,29 @@ impl PostCommitment {
         let client = config.build().await?;
         
         println!("Posting commitment to MCR contract...");
+        // Check block height tolerance
+        let last_accepted = client.get_last_accepted_block_height().await?;
+        let tolerance = client.get_leading_block_tolerance().await?;
+        println!("Debug [post_commitment] - Last accepted block height: {}", last_accepted);
+        println!("Debug [post_commitment] - Leading block tolerance: {}", tolerance);
+        println!("Debug [post_commitment] - Our block height: {}", self.args.height);
+        
+        // Check if we already have a commitment at this height
+        let existing = client.get_posted_commitment_at_height(self.args.height).await?;
+        println!("Debug [post_commitment] - Existing commitment at height {}: {:?}", self.args.height, existing);
+        if existing.is_some() {
+            println!("Debug [post_commitment] - Commitment already exists at height {}, skipping...", self.args.height);
+            return Ok(());
+        }
+        
+        println!("Debug [post_commitment] - About to call post_block_commitment...");
+        
+        // Check if cast is available
+        match std::process::Command::new("cast").arg("--version").output() {
+            Ok(output) => println!("Debug [post_commitment] - Cast version: {}", String::from_utf8_lossy(&output.stdout)),
+            Err(e) => println!("Debug [post_commitment] - Cast not found: {}", e),
+        }
+        
         client.post_block_commitment(commitment).await?;
         
         Ok(())

@@ -2,8 +2,10 @@
 
 
 # NOTE: 
-# the raw functions are positioned in 
+# the functions that we need, are defined in the following files:
 # ./protocol/mcr/clients/eth/src/client/mod.rs
+# ./protocol/mcr/clients/mock/src/lib.rs
+# ./protocol/mcr/clients/util/src/lib.rs
 
 # Exit on error
 # set -e
@@ -95,10 +97,10 @@ for letter in {A..F}; do
 done
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# - - - - - - - Staking and Commitment Setup - - - - - - - - 
+# - - - - - - - Staking - - - - - - - - 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-echo -e "\n=== Staking and Commitment Setup for Address C ==="
+echo -e "\n=== Staking for Address C ==="
 
 # Debug checks before staking
 echo "=== Debug Checks ==="
@@ -121,7 +123,7 @@ echo "Check commitment status of Address C for height 1 before posting..."
 
 echo -n "... block height: "
 cast block-number --rpc-url http://localhost:8545
-sleep 2  # wait for async calls to complete
+sleep 1  # wait for async calls to complete
 cast rpc anvil_mine --rpc-url http://localhost:8545 # Advance 1 block
 
 # Check if commitment was accepted (should show nothing)
@@ -133,37 +135,8 @@ echo "Check if a commitment was accepted for height 1..."
 
 echo -n "... block height: "
 cast block-number --rpc-url http://localhost:8545
-sleep 2  # wait for async calls to complete
+sleep 1  # wait for async calls to complete
 cast rpc anvil_mine --rpc-url http://localhost:8545 # Advance 1 block
-
-# # Post commitment from C
-# echo "Posting commitment from C..."
-# ./target/debug/ffs-dev mcr protocol client post-commitment \
-#     --preimage-string "commitment_from_C" \
-#     --private-key $PRIVATE_KEY_C \
-#     --height 1 \
-#     --mcr-address $MCR
-
-# echo -n "... block height: "
-# cast block-number --rpc-url http://localhost:8545
-# sleep 2  # wait for async calls to complete
-# # Advance 2 blocks
-# cast rpc anvil_mine --rpc-url http://localhost:8545 2
-
-# # Check commitment after posting
-# echo "Check commitment from C after posting..."
-# ./target/debug/ffs-dev mcr protocol client check-commitment \
-#     --height 1 \
-#     --mcr-address $MCR \
-#     --attester $ADDRESS_C \
-#     --private-key $PRIVATE_KEY_C
-
-# echo -n "... block height: "
-# cast block-number --rpc-url http://localhost:8545
-# sleep 2  # wait for async calls to complete
-# # Advance 1 block
-# cast rpc anvil_mine --rpc-url http://localhost:8545
-
 
 # get the stake for address C and print it
 echo -n "Stake for Address C: "
@@ -217,20 +190,7 @@ else
     echo "Address C is whitelisted"
 fi
 
-
-# Stake using cast
-# cast send --private-key $PRIVATE_KEY_C $MOVEMENT_STAKING "stake(address,address,uint256)" \
-#     $MCR \
-#     $ADDRESS_C \
-#     1000000 \
-#     --rpc-url http://localhost:8545 > /dev/null
-# # if the stake did not work we should exit
-# if [ $? -ne 0 ]; then
-#     echo "Error: Failed to stake tokens"
-#     exit 1
-# fi
-
-# Stake 1000 MOVE octas
+# Stake MOVE octas
 ./target/debug/ffs-dev mcr protocol client stake \
     --amount 1002 \
     --private-key $PRIVATE_KEY_C \
@@ -245,7 +205,7 @@ fi
 
 echo -n "... block height: "
 cast block-number --rpc-url http://localhost:8545
-sleep 2  # wait for async calls to complete
+sleep 1  # wait for async calls to complete
 cast rpc anvil_mine --rpc-url http://localhost:8545 # Advance 1 block
 
 # Verify stake
@@ -256,8 +216,91 @@ cast call $MOVEMENT_STAKING "getCurrentEpochStake(address,address,address)" \
     $ADDRESS_C \
     --rpc-url http://localhost:8545 | cast --to-dec | xargs -I {} echo "scale=8; {}/100000000" | bc
 
-# Post commitment using the CLI
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# - - - - - - - Granting roles - - - - - - - - 
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+echo -e "\n=== Granting roles ==="
+
+# Check if Attester is a coimmtment admin (it should not be!)
+COMMITMENT_ADMIN_CHECK=$(cast call $MCR "hasRole(bytes32,address)" \
+    $(cast keccak "COMMITMENT_ADMIN") \
+    $ADDRESS_C \
+    --rpc-url http://localhost:8545)
+echo "COMMITMENT_ADMIN_CHECK: $COMMITMENT_ADMIN_CHECK"
+# if it is a commitment admin, exit
+if [ "$COMMITMENT_ADMIN_CHECK" = "0x0000000000000000000000000000000000000000000000000000000000000001" ]; then
+    echo "Error: Address C is a commitment admin"
+    exit 1
+fi
+
+# Check if openAttestationEnabled is true
+echo "Checking if open attestation is enabled..."
+OPEN_ATTESTATION=$(cast call $MCR "openAttestationEnabled()" --rpc-url http://localhost:8545)
+if [ "$OPEN_ATTESTATION" = "0x0000000000000000000000000000000000000000000000000000000000000000" ]; then
+    echo "Open attestation is not enabled"
+
+    # Check if address C has TRUSTED_ATTESTER role
+    echo "Checking if Address C has TRUSTED_ATTESTER role..."
+    TRUSTED_ATTESTER_CHECK=$(cast call $MCR "hasRole(bytes32,address)" \
+        $(cast call $MCR "TRUSTED_ATTESTER()" --rpc-url http://localhost:8545) \
+        $ADDRESS_C \
+        --rpc-url http://localhost:8545)
+    if [ "$TRUSTED_ATTESTER_CHECK" = "0x0000000000000000000000000000000000000000000000000000000000000000" ]; then
+        echo "Address C is not a trusted attester"
+        echo "TRUSTED_ATTESTER_CHECK: $TRUSTED_ATTESTER_CHECK"
+        # Grant TRUSTED_ATTESTER role using admin account
+        echo "Granting TRUSTED_ATTESTER role to Address C..."
+        ./target/debug/ffs-dev mcr protocol client grant-trusted-attester \
+            --attester $ADDRESS_C \
+            --mcr-address $MCR \
+            --private-key ${PRIVATE_KEY_A#"0x"}
+        # Check if the transaction was successful
+        if [ $? -ne 0 ]; then
+            echo "Error: Failed to grant TRUSTED_ATTESTER role"
+            exit 1
+        fi
+        # now check again and if this did not work, exit
+        TRUSTED_ATTESTER_CHECK=$(cast call $MCR "hasRole(bytes32,address)" \
+            $(cast call $MCR "TRUSTED_ATTESTER()" --rpc-url http://localhost:8545) \
+            $ADDRESS_C \
+            --rpc-url http://localhost:8545)
+        if [ "$TRUSTED_ATTESTER_CHECK" = "0x0000000000000000000000000000000000000000000000000000000000000000" ]; then
+            echo "Error: Failed to grant TRUSTED_ATTESTER role to Address C"
+            echo "TRUSTED_ATTESTER_CHECK: $TRUSTED_ATTESTER_CHECK"
+            exit 1
+        else
+            echo "TRUSTED_ATTESTER_CHECK: $TRUSTED_ATTESTER_CHECK"
+        fi
+    else 
+        echo "Address C is a trusted attester"
+    fi
+else
+    echo "Open attestation is enabled"
+    # exit because it should not be enabled
+    exit 1
+fi
+
+echo -n "... block height: "
+cast block-number --rpc-url http://localhost:8545
+sleep 1  # wait for async calls to complete
+cast rpc anvil_mine --rpc-url http://localhost:8545 # Advance 1 block
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# - - - - - - - Posting commitment - - - - - - - - 
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
 echo -e "\n=== Posting Commitment ==="
+
+# Check if Address C has TRUSTED_ATTESTER role
+echo "Checking again, if Address C has TRUSTED_ATTESTER role..."
+TRUSTED_ATTESTER_CHECK=$(cast call $MCR "hasRole(bytes32,address)" \
+    $(cast call $MCR "TRUSTED_ATTESTER()" --rpc-url http://localhost:8545) \
+    $ADDRESS_C \
+    --rpc-url http://localhost:8545)
+echo "TRUSTED_ATTESTER_CHECK: $TRUSTED_ATTESTER_CHECK"
+
+# Post commitment using the CLI
 echo "Posting commitment for Address C..."
 ./target/debug/ffs-dev mcr protocol client post-commitment \
     --preimage-string "commitment_from_C" \
@@ -267,7 +310,7 @@ echo "Posting commitment for Address C..."
 
 echo -n "... block height: "
 cast block-number --rpc-url http://localhost:8545
-sleep 2  # wait for async calls to complete
+sleep 1  # wait for async calls to complete
 cast rpc anvil_mine --rpc-url http://localhost:8545 # Advance 1 block
 
 
