@@ -1,5 +1,6 @@
 pub mod eth;
 use clap::{Parser, Subcommand};
+use clap_markdown_ext::Markdown;
 
 /// The `mcr-protocol-client` CLI.
 #[derive(Parser)]
@@ -13,17 +14,18 @@ pub struct McrProtocolDeployer {
 #[derive(Subcommand)]
 #[clap(rename_all = "kebab-case")]
 pub enum McrProtocolDeployerSubcommand {
-	/// ???
-	Run,
-	/// ???
 	#[clap(subcommand)]
-	Eth(eth::Eth),
+	Markdown(Markdown),
+	#[clap(subcommand)]
+	Eth(eth::lifecycle_subcommand::Eth),
 }
 
 /// Implement the `From` trait for `McrProtocolDeployer` to convert it into a `McrProtocolDeployerSubcommand`.
 impl From<McrProtocolDeployer> for McrProtocolDeployerSubcommand {
 	fn from(client: McrProtocolDeployer) -> Self {
-		client.command.unwrap_or(McrProtocolDeployerSubcommand::Run)
+		client
+			.command
+			.unwrap_or(McrProtocolDeployerSubcommand::Markdown(Markdown::default()))
 	}
 }
 
@@ -40,10 +42,12 @@ impl McrProtocolDeployer {
 impl McrProtocolDeployerSubcommand {
 	pub async fn execute(&self) -> Result<(), anyhow::Error> {
 		match self {
-			McrProtocolDeployerSubcommand::Run => {
-				println!("mcr-protocol-client is under development. Please check back later.");
+			McrProtocolDeployerSubcommand::Markdown(markdown) => {
+				markdown.execute::<McrProtocolDeployer>().await?;
 			}
-			McrProtocolDeployerSubcommand::Eth(eth) => eth.execute().await?,
+			McrProtocolDeployerSubcommand::Eth(eth) => {
+				eth.execute().await?;
+			}
 		}
 		Ok(())
 	}

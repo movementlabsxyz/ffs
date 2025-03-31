@@ -1,14 +1,14 @@
 use anyhow::Context;
 use clap::Parser;
 use jsonlvar::Jsonl;
-use pcp_network_anvil_component_core::dev::lifecycle::up::{Config, Up as UpCore};
 use orfile::Orfile;
+use pcp_network_anvil_component_core::dev::lifecycle::up::{Config, Up as UpCore};
 use serde::{Deserialize, Serialize};
 
 #[derive(Parser, Serialize, Deserialize, Debug, Clone, Orfile)]
 #[clap(help_expected = true)]
 pub struct Up {
-	/// ???
+	/// Config
 	#[clap(flatten)]
 	pub config: Config,
 	/// Path to the configuration file
