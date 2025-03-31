@@ -93,60 +93,70 @@ echo "Check commitment status of Address C for height 1 before posting..."
 ./target/debug/ffs-dev mcr protocol client check-commitment \
     --height 1 \
     --mcr-address $MCR \
-    --attester $ADDRESS_C
+    --attester $ADDRESS_C \
+    --private-key $PRIVATE_KEY_C
 
 echo -n "... block height: "
 cast block-number --rpc-url http://localhost:8545
 sleep 2  # wait for async calls to complete
-# Advance 1 block
-cast rpc anvil_mine --rpc-url http://localhost:8545
+cast rpc anvil_mine --rpc-url http://localhost:8545 # Advance 1 block
 
 # Check if commitment was accepted (should show nothing)
 echo "Check if a commitment was accepted for height 1..."
 ./target/debug/ffs-dev mcr protocol client check-postconfirmation \
     --height 1 \
-    --mcr-address $MCR
-
-echo -n "... block height: "
-cast block-number --rpc-url http://localhost:8545
-sleep 2  # wait for async calls to complete
-# Advance 1 block
-cast rpc anvil_mine --rpc-url http://localhost:8545
-
-# Post commitment
-echo "Posting commitment from C..."
-./target/debug/ffs-dev mcr protocol client post-commitment \
-    --preimage-string "commitment_from_C" \
-    --private-key $PRIVATE_KEY_C \
-    --mcr-address $MCR
-
-echo -n "... block height: "
-cast block-number --rpc-url http://localhost:8545
-sleep 2  # wait for async calls to complete
-# Advance 2 blocks
-cast rpc anvil_mine --rpc-url http://localhost:8545 2
-
-# Check commitment after posting
-echo "Check commitment from C after posting..."
-./target/debug/ffs-dev mcr protocol client check-commitment \
-    --height 1 \
     --mcr-address $MCR \
-    --attester $ADDRESS_C
+    --private-key $PRIVATE_KEY_C
 
 echo -n "... block height: "
 cast block-number --rpc-url http://localhost:8545
 sleep 2  # wait for async calls to complete
-# Advance 1 block
-cast rpc anvil_mine --rpc-url http://localhost:8545
+cast rpc anvil_mine --rpc-url http://localhost:8545 # Advance 1 block
+
+# # Post commitment from C
+# echo "Posting commitment from C..."
+# ./target/debug/ffs-dev mcr protocol client post-commitment \
+#     --preimage-string "commitment_from_C" \
+#     --private-key $PRIVATE_KEY_C \
+#     --height 1 \
+#     --mcr-address $MCR
+
+# echo -n "... block height: "
+# cast block-number --rpc-url http://localhost:8545
+# sleep 2  # wait for async calls to complete
+# # Advance 2 blocks
+# cast rpc anvil_mine --rpc-url http://localhost:8545 2
+
+# # Check commitment after posting
+# echo "Check commitment from C after posting..."
+# ./target/debug/ffs-dev mcr protocol client check-commitment \
+#     --height 1 \
+#     --mcr-address $MCR \
+#     --attester $ADDRESS_C \
+#     --private-key $PRIVATE_KEY_C
+
+# echo -n "... block height: "
+# cast block-number --rpc-url http://localhost:8545
+# sleep 2  # wait for async calls to complete
+# # Advance 1 block
+# cast rpc anvil_mine --rpc-url http://localhost:8545
 
 # Stake using CLI command with explicit private key
 echo "Staking MOVE tokens..."
+# Approve MCR contract to spend MOVE tokens
+cast send --private-key $PRIVATE_KEY_C $MOVE_TOKEN "approve(address,uint256)" $MCR 1000000000000000 --rpc-url http://localhost:8545
+
 ./target/debug/ffs-dev mcr protocol client stake \
     --amount 0.1 \
     --private-key $PRIVATE_KEY_C \
     --mcr-address $MCR \
     --move-token-address $MOVE_TOKEN \
     --staking-address $MOVEMENT_STAKING
+
+echo -n "... block height: "
+cast block-number --rpc-url http://localhost:8545
+sleep 2  # wait for async calls to complete
+cast rpc anvil_mine --rpc-url http://localhost:8545 # Advance 1 block
 
 # Verify stake
 echo -n "Staked amount for Address C: "
@@ -158,19 +168,28 @@ echo "Posting commitment for Address C..."
 ./target/debug/ffs-dev mcr protocol client post-commitment \
     --preimage-string "commitment_from_C" \
     --private-key $PRIVATE_KEY_C \
+    --height 1 \
     --mcr-address $MCR
+
+echo -n "... block height: "
+cast block-number --rpc-url http://localhost:8545
+sleep 2  # wait for async calls to complete
+cast rpc anvil_mine --rpc-url http://localhost:8545 # Advance 1 block
+
 
 # Check attester's commitment after posting
 echo "Checking attester's commitment after posting..."
 ./target/debug/ffs-dev mcr protocol client check-commitment \
     --height 1 \
     --mcr-address $MCR \
-    --attester $ADDRESS_C
+    --attester $ADDRESS_C \
+    --private-key $PRIVATE_KEY_C
 
 # Check if commitment was accepted
 echo "Checking if commitment was accepted..."
 ./target/debug/ffs-dev mcr protocol client check-postconfirmation \
     --height 1 \
-    --mcr-address $MCR
+    --mcr-address $MCR \
+    --private-key $PRIVATE_KEY_C
 
 echo "Setup complete!"

@@ -24,20 +24,31 @@ pub struct CheckPostconfirmationArgs {
     /// RPC URL (optional, defaults to http://localhost:8545)
     #[clap(long, default_value = "http://localhost:8545")]
     rpc_url: String,
+
+    /// Private key for signing transactions (optional)
+    #[clap(long)]
+    private_key: Option<String>,
 }
 
 impl CheckPostconfirmation {
     pub async fn execute(&self) -> Result<(), anyhow::Error> {
+        // Use provided key or fallback to dummy key
+        let private_key = self.args.private_key
+            .as_ref()
+            .map(|k| k.strip_prefix("0x").unwrap_or(k))
+            .unwrap_or("0000000000000000000000000000000000000000000000000000000000000000")
+            .to_string();
+
         let config = Config::new(
             self.args.mcr_address.clone(),
             self.args.rpc_url.clone(),
             self.args.rpc_url.replace("http", "ws"),
             1,
             SignerIdentifier::Local(Local {
-                private_key_hex_bytes: "0000000000000000000000000000000000000000000000000000000000000000".to_string(),
+                private_key_hex_bytes: private_key,
             }),
             false,
-            100000,
+            10_000_000,
             3,
             self.args.mcr_address.clone(),
             16,

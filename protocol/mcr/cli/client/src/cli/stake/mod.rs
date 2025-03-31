@@ -53,7 +53,7 @@ impl Stake {
                 private_key_hex_bytes: private_key,
             }),
             false,
-            100000,
+            1_000_000_000_000_000,  // Try an even higher limit
             3,
             self.args.mcr_address.clone(),
             16,  // block_lead_tolerance
@@ -67,6 +67,9 @@ impl Stake {
         let amount = (self.args.amount * 100_000_000.0) as u64;
         
         println!("Staking {} MOVE tokens...", self.args.amount);
+        println!("Debug - Amount in raw units: {}", amount);
+        println!("Debug - MCR address: {}", self.args.mcr_address);
+        println!("Debug - Staking address: {}", self.args.staking_address);
         client.stake(amount).await?;
         
         Ok(())

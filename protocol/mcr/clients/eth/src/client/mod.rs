@@ -13,9 +13,6 @@ use std::array::TryFromSliceError;
 use std::fs;
 use std::path::Path;
 use tokio_stream::StreamExt;
-use async_trait::async_trait;
-use std::future::Future;
-use std::str::FromStr;
 
 // Note: we prefer using the ABI because the [`sol!`](alloy_sol_types::sol) macro, when used with smart contract code directly, will not handle inheritance.
 sol!(
@@ -288,37 +285,36 @@ where
 		)))
 	}
 
-	fn stake(&self, amount: u64) -> impl Future<Output = Result<(), McrClientError>> + Send {
-		async move {
-			let move_token = MOVEToken::new(self.move_token_address, &self.rpc_provider);
-			let staking = MovementStaking::new(self.staking_address, &self.rpc_provider);
+	async fn stake(&self, amount: u64) -> Result<(), McrClientError> {
+		println!("Debug - Calling stake with amount: {}", amount);
+		let move_token = MOVEToken::new(self.move_token_address, &self.rpc_provider);
+		let staking = MovementStaking::new(self.staking_address, &self.rpc_provider);
 
-			// First approve the staking contract to spend our MOVE tokens
-			let approve_call = move_token.approve(self.staking_address, U256::from(amount));
-			send_transaction(
-				self.signer_address,
-				approve_call,
-				&self.send_transaction_error_rules,
-				self.send_transaction_retries,
-				self.gas_limit as u128,
-			).await?;
+		// First approve the staking contract to spend our MOVE tokens
+		let approve_call = move_token.approve(self.staking_address, U256::from(amount));
+		send_transaction(
+			self.signer_address,
+			approve_call,
+			&self.send_transaction_error_rules,
+			self.send_transaction_retries,
+			self.gas_limit as u128,
+		).await?;
 
-			// Then stake the tokens
-			let stake_call = staking.stake(
-				self.contract_address,  // domain (MCR contract address)
-				*move_token.address(),  // custodian (MOVE token address)
-				U256::from(amount),     // amount to stake
-			);
-			send_transaction(
-				self.signer_address,
-				stake_call,
-				&self.send_transaction_error_rules,
-				self.send_transaction_retries,
-				self.gas_limit as u128,
-			).await?;
+		// Then stake the tokens
+		let stake_call = staking.stake(
+			self.contract_address,  // domain (MCR contract address)
+			*move_token.address(),  // custodian (MOVE token address)
+			U256::from(amount),     // amount to stake
+		);
+		send_transaction(
+			self.signer_address,
+			stake_call,
+			&self.send_transaction_error_rules,
+			self.send_transaction_retries,
+			self.gas_limit as u128,
+		).await?;
 
-			Ok(())
-		}
+		Ok(())
 	}
 }
 

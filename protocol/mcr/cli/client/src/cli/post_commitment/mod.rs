@@ -1,6 +1,8 @@
 use clap::Parser;
 use secure_signer_loader::identifiers::{SignerIdentifier, local::Local};
 use mcr_protocol_client_eth_core::config::Config;
+use mcr_protocol_client_core_util::McrClientOperations;
+use mcr_types::block_commitment::{BlockCommitment, Commitment, Id};
 
 #[derive(Parser)]
 #[clap(help_expected = true)]
@@ -11,6 +13,10 @@ pub struct PostCommitment {
 
 #[derive(Parser)]
 pub struct PostCommitmentArgs {
+    /// Block height to post commitment for
+    #[clap(long)]
+    height: u64,
+
     /// MCR contract address
     #[clap(long, required = true)]
     mcr_address: String,
@@ -36,7 +42,12 @@ pub struct PostCommitmentArgs {
 
 impl PostCommitment {
     pub async fn execute(&self) -> Result<(), anyhow::Error> {
-        let commitment = self.create_commitment()?;
+        let commitment_bytes = self.create_commitment()?;
+        let commitment = BlockCommitment::new(
+            self.args.height,  // Use height from args
+            Id::new(commitment_bytes),
+            Commitment::new(commitment_bytes),
+        );
         
         // Strip '0x' prefix if present
         let private_key = self.args.private_key.strip_prefix("0x")
@@ -52,7 +63,7 @@ impl PostCommitment {
                 private_key_hex_bytes: private_key,
             }),
             false,
-            100000,
+            100_000_000,
             3,
             self.args.mcr_address.clone(),
             16,
@@ -63,7 +74,7 @@ impl PostCommitment {
         let client = config.build().await?;
         
         println!("Posting commitment to MCR contract...");
-        // TODO: Call client.post_block_commitment() with the commitment
+        client.post_block_commitment(commitment).await?;
         
         Ok(())
     }
