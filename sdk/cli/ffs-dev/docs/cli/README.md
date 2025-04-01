@@ -31,8 +31,13 @@ This document contains the help content for the `ffs-dev` command-line program.
 * [`ffs-dev mcr protocol client eth`↴](#ffs-dev-mcr-protocol-client-eth)
 * [`ffs-dev mcr protocol client eth post-admin-commitment`↴](#ffs-dev-mcr-protocol-client-eth-post-admin-commitment)
 * [`ffs-dev mcr protocol client post-commitment`↴](#ffs-dev-mcr-protocol-client-post-commitment)
+* [`ffs-dev mcr protocol client check-commitment`↴](#ffs-dev-mcr-protocol-client-check-commitment)
+* [`ffs-dev mcr protocol client check-postconfirmation`↴](#ffs-dev-mcr-protocol-client-check-postconfirmation)
 * [`ffs-dev mcr protocol client deploy`↴](#ffs-dev-mcr-protocol-client-deploy)
 * [`ffs-dev mcr protocol client deploy anvil`↴](#ffs-dev-mcr-protocol-client-deploy-anvil)
+* [`ffs-dev mcr protocol client stake`↴](#ffs-dev-mcr-protocol-client-stake)
+* [`ffs-dev mcr protocol client get-stake`↴](#ffs-dev-mcr-protocol-client-get-stake)
+* [`ffs-dev mcr protocol client grant-trusted-attester`↴](#ffs-dev-mcr-protocol-client-grant-trusted-attester)
 * [`ffs-dev pcp`↴](#ffs-dev-pcp)
 * [`ffs-dev pcp network`↴](#ffs-dev-pcp-network)
 * [`ffs-dev pcp network run`↴](#ffs-dev-pcp-network-run)
@@ -401,8 +406,13 @@ KEEP THIS UNTIL PRODUCTION-READY : Defined in: protocol/mcr/cli/client/src/cli/m
 
 * `run` — ???
 * `eth` — ???
-* `post-commitment` — Post a commitment to an MCR implementation
+* `post-commitment` — Post a commitment
+* `check-commitment` — Check a commitment for a given height and attester
+* `check-postconfirmation` — Check postconfirmation for a height
 * `deploy` — Deploy MCR contracts using deployer-core
+* `stake` — Stake MOVE tokens
+* `get-stake` — Get the current epoch stake for an attester
+* `grant-trusted-attester` — Grant TRUSTED_ATTESTER role to an attester
 
 
 
@@ -432,7 +442,7 @@ KEEP THIS UNTIL PRODUCTION-READY : Defined in: protocol/mcr/cli/client/src/cli/e
 
 ???
 
-**Usage:** `ffs-dev mcr protocol client eth post-admin-commitment [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --signer-identifier <SIGNER_IDENTIFIER> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES>`
+**Usage:** `ffs-dev mcr protocol client eth post-admin-commitment [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --signer-identifier <SIGNER_IDENTIFIER> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --block-lead-tolerance <BLOCK_LEAD_TOLERANCE> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS>`
 
 ###### **Options:**
 
@@ -444,19 +454,64 @@ KEEP THIS UNTIL PRODUCTION-READY : Defined in: protocol/mcr/cli/client/src/cli/e
 * `--run-commitment-admin-mode` — Whether to run in settlement admin mode
 * `--gas-limit <GAS_LIMIT>` — The gas limit for transactions
 * `--transaction-send-retries <TRANSACTION_SEND_RETRIES>` — The number of retries for sending transactions
+* `--mcr-address <MCR_ADDRESS>` — The MCR address
+* `--block-lead-tolerance <BLOCK_LEAD_TOLERANCE>` — The block lead tolerance
+* `--move-token-address <MOVE_TOKEN_ADDRESS>` — The move token address
+* `--staking-address <STAKING_ADDRESS>` — The staking address
 
 
 
 ## `ffs-dev mcr protocol client post-commitment`
 
-Post a commitment to an MCR implementation
+Post a commitment
 
-**Usage:** `ffs-dev mcr protocol client post-commitment [OPTIONS]`
+**Usage:** `ffs-dev mcr protocol client post-commitment [OPTIONS] --height <HEIGHT> --mcr-address <MCR_ADDRESS> --private-key <PRIVATE_KEY>`
 
 ###### **Options:**
 
+* `--height <HEIGHT>` — Block height to post commitment for
+* `--mcr-address <MCR_ADDRESS>` — MCR contract address
 * `--commitment-hex <COMMITMENT_HEX>` — Hex-encoded commitment
 * `--preimage-string <PREIMAGE_STRING>` — String to be hashed into a commitment
+* `--private-key <PRIVATE_KEY>` — Private key for signing transactions
+* `--rpc-url <RPC_URL>` — RPC URL (optional, defaults to http://localhost:8545)
+
+  Default value: `http://localhost:8545`
+
+
+
+## `ffs-dev mcr protocol client check-commitment`
+
+Check a commitment for a given height and attester
+
+**Usage:** `ffs-dev mcr protocol client check-commitment [OPTIONS] --height <HEIGHT> --attester <ATTESTER> --mcr-address <MCR_ADDRESS>`
+
+###### **Options:**
+
+* `--height <HEIGHT>` — Block height to check commitment for
+* `--attester <ATTESTER>` — Attester address to check commitment for
+* `--mcr-address <MCR_ADDRESS>` — MCR contract address
+* `--rpc-url <RPC_URL>` — RPC URL (optional, defaults to http://localhost:8545)
+
+  Default value: `http://localhost:8545`
+* `--private-key <PRIVATE_KEY>` — Private key for signing transactions (optional)
+
+
+
+## `ffs-dev mcr protocol client check-postconfirmation`
+
+Check postconfirmation for a height
+
+**Usage:** `ffs-dev mcr protocol client check-postconfirmation [OPTIONS] --height <HEIGHT> --mcr-address <MCR_ADDRESS>`
+
+###### **Options:**
+
+* `--height <HEIGHT>` — Block height to check postconfirmation for
+* `--mcr-address <MCR_ADDRESS>` — MCR contract address
+* `--rpc-url <RPC_URL>` — RPC URL (optional, defaults to http://localhost:8545)
+
+  Default value: `http://localhost:8545`
+* `--private-key <PRIVATE_KEY>` — Private key for signing transactions (optional)
 
 
 
@@ -487,6 +542,60 @@ Deploy to local Anvil network
 
   Default value: `http://localhost:8545`
 * `--private-key <PRIVATE_KEY>` — Private key for deployment
+
+
+
+## `ffs-dev mcr protocol client stake`
+
+Stake MOVE tokens
+
+**Usage:** `ffs-dev mcr protocol client stake [OPTIONS] --amount <AMOUNT> --private-key <PRIVATE_KEY> --address <ADDRESS> --mcr-address <MCR_ADDRESS> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS>`
+
+###### **Options:**
+
+* `--amount <AMOUNT>` — Amount of MOVE octas to stake
+* `--private-key <PRIVATE_KEY>` — Private key for signing transactions
+* `--address <ADDRESS>` — Address of the signer
+* `--mcr-address <MCR_ADDRESS>` — MCR contract address
+* `--rpc-url <RPC_URL>` — RPC URL (optional, defaults to http://localhost:8545)
+
+  Default value: `http://localhost:8545`
+* `--move-token-address <MOVE_TOKEN_ADDRESS>` — Move token address
+* `--staking-address <STAKING_ADDRESS>` — Staking address
+
+
+
+## `ffs-dev mcr protocol client get-stake`
+
+Get the current epoch stake for an attester
+
+**Usage:** `ffs-dev mcr protocol client get-stake [OPTIONS] --attester <ATTESTER> --custodian <CUSTODIAN> --mcr-address <MCR_ADDRESS>`
+
+###### **Options:**
+
+* `--private-key <PRIVATE_KEY>` — Private key for signing transactions (optional)
+
+  Default value: `0x1111111111111111111111111111111111111111111111111111111111111111`
+* `--rpc-url <RPC_URL>` — RPC URL (optional, defaults to http://localhost:8545)
+
+  Default value: `http://localhost:8545`
+* `--attester <ATTESTER>` — The attester address
+* `--custodian <CUSTODIAN>` — The custodian (MOVE token) address
+* `--mcr-address <MCR_ADDRESS>` — The MCR contract address
+
+
+
+## `ffs-dev mcr protocol client grant-trusted-attester`
+
+Grant TRUSTED_ATTESTER role to an attester
+
+**Usage:** `ffs-dev mcr protocol client grant-trusted-attester --attester <ATTESTER> --mcr-address <MCR_ADDRESS> --private-key <PRIVATE_KEY>`
+
+###### **Options:**
+
+* `--attester <ATTESTER>` — The address to grant TRUSTED_ATTESTER role to
+* `--mcr-address <MCR_ADDRESS>` — The MCR contract address
+* `--private-key <PRIVATE_KEY>` — The private key to use for signing transactions
 
 
 
