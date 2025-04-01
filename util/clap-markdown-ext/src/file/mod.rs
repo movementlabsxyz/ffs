@@ -1,5 +1,6 @@
-use clap::Parser;
+use clap::{CommandFactory, Parser};
 
+/// Write the CLI documentation to a file.
 #[derive(Parser)]
 #[clap(help_expected = true)]
 pub struct File {
@@ -11,7 +12,7 @@ pub struct File {
 impl File {
 	pub async fn execute<C>(&self) -> Result<(), anyhow::Error>
 	where
-		C: Parser,
+		C: CommandFactory,
 	{
 		let markdown = clap_markdown::help_markdown::<C>();
 		std::fs::write(&self.file, markdown)?;

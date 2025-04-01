@@ -64,28 +64,15 @@ Generate CLI documentation
 
 ###### **Subcommands:**
 
-* `generate` — Generate and update the documentation
-* `file` — Print the documentation to a file (providing the file path)
-* `print` — Print the documentation in the shell
-* `workspace` — ???
-
-
-
-## `ffs-dev markdown generate`
-
-Generate and update the documentation
-
-**Usage:** `ffs-dev markdown generate [OPTIONS]`
-
-###### **Options:**
-
-* `--file <FILE>` — Override the default docs location
+* `file` — Write the CLI documentation to a file
+* `print` — Print the CLI documentation to the console
+* `workspace` — Write the CLI documentation to a file in the workspace
 
 
 
 ## `ffs-dev markdown file`
 
-Print the documentation to a file (providing the file path)
+Write the CLI documentation to a file
 
 **Usage:** `ffs-dev markdown file --file <FILE>`
 
@@ -97,7 +84,7 @@ Print the documentation to a file (providing the file path)
 
 ## `ffs-dev markdown print`
 
-Print the documentation in the shell
+Print the CLI documentation to the console
 
 **Usage:** `ffs-dev markdown print`
 
@@ -105,7 +92,7 @@ Print the documentation in the shell
 
 ## `ffs-dev markdown workspace`
 
-???
+Write the CLI documentation to a file in the workspace
 
 **Usage:** `ffs-dev markdown workspace --relative-path <RELATIVE_PATH>`
 
@@ -224,14 +211,14 @@ Manage MCR
 
 ###### **Subcommands:**
 
-* `where` — Run up with all parameters passed explicitly as CLI flags
-* `using` — Run up with parameters from environment variables, config files, and CLI flags
+* `where` — Run up with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+* `using` — Run up with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
 
 
 
 ## `ffs-dev mcr network coordinator eth anvil up where`
 
-Run up with all parameters passed explicitly as CLI flags
+Run up with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
 
 **Usage:** `ffs-dev mcr network coordinator eth anvil up where [OPTIONS] --signer-identifier <SIGNER_IDENTIFIER> --fork-url <FORK_URL> --contract-admin <CONTRACT_ADMIN>`
 
@@ -260,14 +247,11 @@ Run up with all parameters passed explicitly as CLI flags
 
   Default value: `1000000`
 * `--reward-contract <REWARD_CONTRACT>` — The reward contract
-* `--existing-proxy-admin <EXISTING_PROXY_ADMIN>` — The existing proxy admin
-* `--existing-move-token-proxy <EXISTING_MOVE_TOKEN_PROXY>` — The existing move token proxy
-* `--existing-staking-proxy <EXISTING_STAKING_PROXY>` — The existing staking proxy
-* `--existing-mcr-proxy <EXISTING_MCR_PROXY>` — The existing MCR proxy
-* `--existing-reward-proxy <EXISTING_REWARD_PROXY>` — The existing ARO proxy
-* `--destroy-mode` — Whether to destroy the contracts
-
-  Default value: `false`
+* `--proxy-admin <PROXY_ADMIN>` — The existing proxy admin
+* `--move-token-proxy <MOVE_TOKEN_PROXY>` — The existing move token proxy
+* `--staking-proxy <STAKING_PROXY>` — The existing staking proxy
+* `--mcr-proxy <MCR_PROXY>` — The existing MCR proxy
+* `--reward-proxy <REWARD_PROXY>` — The existing ARO proxy
 * `--jsonl-prefix <JSONL_PREFIX>` — The JSONL prefix to give to the output from the deployer
 * `--write-artifacts-path <WRITE_ARTIFACTS_PATH>` — Path to the configuration file
 * `--write-anvil-data-path <WRITE_ANVIL_DATA_PATH>` — Path to write the anvil data as json
@@ -276,7 +260,7 @@ Run up with all parameters passed explicitly as CLI flags
 
 ## `ffs-dev mcr network coordinator eth anvil up using`
 
-Run up with parameters from environment variables, config files, and CLI flags
+Run up with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
 
 **Usage:** `ffs-dev mcr network coordinator eth anvil up using [OPTIONS] [EXTRA_ARGS]...`
 
@@ -287,8 +271,8 @@ Run up with parameters from environment variables, config files, and CLI flags
 ###### **Options:**
 
 * `--config-path <CONFIG_PATH>`
-* `--write-artifacts-path <WRITE_ARTIFACTS_PATH>`
-* `--write-anvil-data-path <WRITE_ANVIL_DATA_PATH>`
+* `--write-artifacts-path <WRITE_ARTIFACTS_PATH>` — Path to the configuration file
+* `--write-anvil-data-path <WRITE_ANVIL_DATA_PATH>` — Path to write the anvil data as json
 
 
 
@@ -300,13 +284,13 @@ Run up with parameters from environment variables, config files, and CLI flags
 
 ###### **Subcommands:**
 
-* `up` — ???
+* `up` — The arguments to be passed to the Forge Apply script
 
 
 
 ## `ffs-dev mcr network coordinator eth live up`
 
-???
+The arguments to be passed to the Forge Apply script
 
 **Usage:** `ffs-dev mcr network coordinator eth live up [OPTIONS] --signer-identifier <SIGNER_IDENTIFIER> --fork-url <FORK_URL> --contract-admin <CONTRACT_ADMIN>`
 
@@ -335,14 +319,11 @@ Run up with parameters from environment variables, config files, and CLI flags
 
   Default value: `1000000`
 * `--reward-contract <REWARD_CONTRACT>` — The reward contract
-* `--existing-proxy-admin <EXISTING_PROXY_ADMIN>` — The existing proxy admin
-* `--existing-move-token-proxy <EXISTING_MOVE_TOKEN_PROXY>` — The existing move token proxy
-* `--existing-staking-proxy <EXISTING_STAKING_PROXY>` — The existing staking proxy
-* `--existing-mcr-proxy <EXISTING_MCR_PROXY>` — The existing MCR proxy
-* `--existing-reward-proxy <EXISTING_REWARD_PROXY>` — The existing ARO proxy
-* `--destroy-mode` — Whether to destroy the contracts
-
-  Default value: `false`
+* `--proxy-admin <PROXY_ADMIN>` — The existing proxy admin
+* `--move-token-proxy <MOVE_TOKEN_PROXY>` — The existing move token proxy
+* `--staking-proxy <STAKING_PROXY>` — The existing staking proxy
+* `--mcr-proxy <MCR_PROXY>` — The existing MCR proxy
+* `--reward-proxy <REWARD_PROXY>` — The existing ARO proxy
 * `--jsonl-prefix <JSONL_PREFIX>` — The JSONL prefix to give to the output from the deployer
 
 

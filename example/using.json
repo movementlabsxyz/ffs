@@ -4,16 +4,21 @@
             "private_key_hex_bytes" : "112348042980898023423"
         }
     },
-    "deployer_config": {
-        "contract_admin": "0x911",
-        "fork_url": "http://localhost:8545",
-        "token_name": "Move Token",
-        "token_symbol": "MOVE",
-        "initial_token_mint": "100000000000000000000000",
-        "custodians": [],
-        "initial_block_height": "0",
-        "leading_block_tolerance": "10",
-        "epoch_duration": "4",
-        "destroy_mode": false
-    }
+    "script_args" : {
+        "args" : {
+            "contract_admin": "0x911",
+            "token_name": "Move Token",
+            "token_symbol": "MOVE",
+            "initial_token_mint": "100000000000000000000000",
+            "custodians": [],
+            "initial_block_height": "0",
+            "leading_block_tolerance": "10",
+            "epoch_duration": "4",
+            "destroy_mode": false
+        },
+        "artifacts" : {
+            
+        }
+    },
+    "fork_url": "http://localhost:8545"
 }

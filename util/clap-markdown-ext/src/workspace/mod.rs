@@ -1,7 +1,8 @@
 use cargo_metadata::MetadataCommand;
-use clap::Parser;
+use clap::{CommandFactory, Parser};
 use std::path::Path;
 
+/// Write the CLI documentation to a file in the workspace.
 #[derive(Parser)]
 #[clap(help_expected = true)]
 pub struct Workspace {
@@ -13,7 +14,7 @@ pub struct Workspace {
 impl Workspace {
 	pub async fn execute<C>(&self) -> Result<(), anyhow::Error>
 	where
-		C: Parser,
+		C: CommandFactory,
 	{
 		// Get the currently executing binary's name
 		let binary_path = std::env::args().next().unwrap_or_default();

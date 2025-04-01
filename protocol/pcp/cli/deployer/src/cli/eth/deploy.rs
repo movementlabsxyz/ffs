@@ -6,6 +6,7 @@ use serde::{Deserialize, Serialize};
 #[derive(Parser, Serialize, Deserialize, Debug, Clone)]
 #[clap(help_expected = true)]
 pub struct Deploy {
+	/// Config
 	#[clap(flatten)]
 	pub config: Option<Config>,
 }
