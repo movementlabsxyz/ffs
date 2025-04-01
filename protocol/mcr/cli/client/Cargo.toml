@@ -16,12 +16,11 @@ dotenv = { workspace = true }
 anyhow = { workspace = true, version = "1.0.75" }
 mcr-protocol-client-core-util = { workspace = true }
 mcr-protocol-client-eth-core = { workspace = true }
+mcr-protocol-deployer-eth-core = { workspace = true }
 mcr-types = { workspace = true }
-# TODO : the naming here may not be according to the standard
 hex = { workspace = true }
 sha3 = "0.10.0"
 secure-signer-loader = { workspace = true }
-mcr-protocol-deployer-eth-core = { workspace = true}
 
 [lints]
 workspace = true
