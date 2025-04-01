@@ -51,10 +51,7 @@ contract DeployMCRDev is Script {
         address existingMoveTokenProxy;  // If set, will upgrade this instead of deploying new
         address existingStakingProxy;    // If set, will upgrade this instead of deploying new
         address existingMcrProxy;        // If set, will upgrade this instead of deploying new
-        address existingAroProxy;        // If set, will upgrade this instead of deploying new
-
-        // Destruction flags (for destroying/nullifying contracts)
-        bool destroyMode;                // If true, will nullify the proxies
+        address existingAroProxy;        // If set, will upgrade this instead of deploying new// If true, will nullify the proxies
     }
     
     /**
@@ -101,7 +98,6 @@ contract DeployMCRDev is Script {
         address existingStakingProxy = vm.parseJsonAddress(jsonConfig, ".existingStakingProxy");
         address existingMcrProxy = vm.parseJsonAddress(jsonConfig, ".existingMcrProxy");
         address existingAroProxy = vm.parseJsonAddress(jsonConfig, ".existingAroProxy");
-        bool destroyMode = vm.parseJsonBool(jsonConfig, ".destroyMode");
 
         return DeployConfig({
             contractAdmin: contractAdmin,
@@ -118,8 +114,7 @@ contract DeployMCRDev is Script {
             existingMoveTokenProxy: existingMoveTokenProxy,
             existingStakingProxy: existingStakingProxy,
             existingMcrProxy: existingMcrProxy,
-            existingAroProxy: existingAroProxy,
-            destroyMode: destroyMode
+            existingAroProxy: existingAroProxy
         });
     }
     
@@ -147,54 +142,6 @@ contract DeployMCRDev is Script {
             console.log("JSONL proxy_admin_deployed = %s", address(proxyAdmin));
         }
         addresses.proxyAdmin = address(proxyAdmin);
-
-        // If in destroy mode, nullify all proxies and return
-        if (config.destroyMode) {
-            console.log("JSONL operation = destroy");
-            
-            // Create empty implementation
-            address emptyImpl = address(new EmptyImplementation());
-            console.log("JSONL empty_implementation = %s", emptyImpl);
-            
-            // Nullify Move Token Proxy if it exists
-            if (config.existingMoveTokenProxy != address(0)) {
-                try proxyAdmin.upgradeAndCall(ITransparentUpgradeableProxy(config.existingMoveTokenProxy), emptyImpl, "") {
-                    console.log("JSONL nullified_token_proxy = %s", config.existingMoveTokenProxy);
-                } catch {
-                    console.log("JSONL failed_to_nullify_token_proxy = %s", config.existingMoveTokenProxy);
-                }
-            }
-            
-            // Nullify Staking Proxy if it exists
-            if (config.existingStakingProxy != address(0)) {
-                try proxyAdmin.upgradeAndCall(ITransparentUpgradeableProxy(config.existingStakingProxy), emptyImpl, "") {
-                    console.log("JSONL nullified_staking_proxy = %s", config.existingStakingProxy);
-                } catch {
-                    console.log("JSONL failed_to_nullify_staking_proxy = %s", config.existingStakingProxy);
-                }
-            }
-            
-            // Nullify MCR Proxy if it exists
-            if (config.existingMcrProxy != address(0)) {
-                try proxyAdmin.upgradeAndCall(ITransparentUpgradeableProxy(config.existingMcrProxy), emptyImpl, "") {
-                    console.log("JSONL nullified_mcr_proxy = %s", config.existingMcrProxy);
-                } catch {
-                    console.log("JSONL failed_to_nullify_mcr_proxy = %s", config.existingMcrProxy);
-                }
-            }
-            
-            // Nullify ARO Proxy if it exists
-            if (config.existingAroProxy != address(0)) {
-                try proxyAdmin.upgradeAndCall(ITransparentUpgradeableProxy(config.existingAroProxy), emptyImpl, "") {
-                    console.log("JSONL nullified_aro_proxy = %s", config.existingAroProxy);
-                } catch {
-                    console.log("JSONL failed_to_nullify_aro_proxy = %s", config.existingAroProxy);
-                }
-            }
-            
-            vm.stopBroadcast();
-            return addresses;
-        }
 
         // Deploy or use existing implementations
         
@@ -357,28 +304,6 @@ contract DeployMCRDev is Script {
     }
     
     /**
-     * @notice Destroys/nullifies all proxies in an existing deployment
-     * @param existingAddresses Addresses of existing proxies to nullify
-     * @return addresses The same addresses, for consistency
-     */
-    function destroy(
-        DeployedAddresses memory existingAddresses
-    ) public returns (DeployedAddresses memory) {
-        DeployConfig memory config = getDefaultConfig();
-        
-        // Set up the destruction configuration
-        config.destroyMode = true;
-        config.contractAdmin = address(0);
-        config.existingProxyAdmin = existingAddresses.proxyAdmin;
-        config.existingMoveTokenProxy = existingAddresses.moveTokenProxy;
-        config.existingStakingProxy = existingAddresses.movementStakingProxy;
-        config.existingMcrProxy = existingAddresses.mcrProxy;
-        config.existingAroProxy = existingAddresses.aroProxy;
-        
-        return runWithConfig(config);
-    }
-    
-    /**
      * @notice Upgrades an existing deployment
      * @param config Configuration including contractAdmin and existing addresses to upgrade
      * @return addresses Updated contract addresses
@@ -415,9 +340,6 @@ contract DeployMCRDev is Script {
         config.existingStakingProxy = address(0);
         config.existingMcrProxy = address(0);
         config.existingAroProxy = address(0);
-        
-        // Default destroy mode
-        config.destroyMode = false;
         
         return config;
     }
