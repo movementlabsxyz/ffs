@@ -27,6 +27,18 @@ pub struct Artifacts {
 	pub reward_proxy: Option<String>,
 }
 
+impl Default for Artifacts {
+	fn default() -> Self {
+		Self {
+			proxy_admin: None,
+			move_token_proxy: None,
+			staking_proxy: None,
+			mcr_proxy: None,
+			reward_proxy: None,
+		}
+	}
+}
+
 impl TryFrom<OutputArtifacts> for Artifacts {
 	type Error = LifecycleError;
 
