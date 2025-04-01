@@ -34,7 +34,7 @@ impl ScriptArgs {
 			"rewardOption": reward_contract.reward_option(),
 			"existingRewardContract": reward_contract.reward_contract().unwrap_or_else(|| zero_address.to_string()),
 			"existingProxyAdmin": self.artifacts.proxy_admin.as_deref().unwrap_or(zero_address),
-			"existingMoveTokenProxy": self.artifacts.move_token_proxy.as_deref().unwrap_or(zero_address),
+			"existingMoveTokenProxy": self.artifacts.token_proxy.as_deref().unwrap_or(zero_address),
 			"existingStakingProxy": self.artifacts.staking_proxy.as_deref().unwrap_or(zero_address),
 			"existingMcrProxy": self.artifacts.mcr_proxy.as_deref().unwrap_or(zero_address),
 			"existingAroProxy": self.artifacts.reward_proxy.as_deref().unwrap_or(zero_address),
@@ -43,6 +43,11 @@ impl ScriptArgs {
 		// Convert to a compact JSON string
 		let json_str = json.to_string();
 		json_str
+	}
+
+	/// Returns a new instance of [ScriptArgs] which is designed to be filled in some fields.
+	pub fn to_be_filled() -> Self {
+		Self { args: Arguments::to_be_filled(), artifacts: artifacts::input::Artifacts::default() }
 	}
 }
 

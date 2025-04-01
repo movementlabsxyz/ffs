@@ -144,7 +144,7 @@ pub struct DeployConfig {
 
 	/// The existing move token proxy
 	#[arg(long)]
-	pub existing_move_token_proxy: Option<String>,
+	pub existing_token_proxy: Option<String>,
 
 	/// The existing staking proxy
 	#[arg(long)]
@@ -181,7 +181,7 @@ impl DeployConfig {
 			"rewardOption": reward_contract.reward_option(),
 			"existingRewardContract": reward_contract.existing_reward_contract().unwrap_or_else(|| zero_address.to_string()),
 			"existingProxyAdmin": self.existing_proxy_admin.as_deref().unwrap_or(zero_address),
-			"existingMoveTokenProxy": self.existing_move_token_proxy.as_deref().unwrap_or(zero_address),
+			"existingMoveTokenProxy": self.existing_token_proxy.as_deref().unwrap_or(zero_address),
 			"existingStakingProxy": self.existing_staking_proxy.as_deref().unwrap_or(zero_address),
 			"existingPcpProxy": self.existing_pcp_proxy.as_deref().unwrap_or(zero_address),
 			"existingAroProxy": self.existing_reward_proxy.as_deref().unwrap_or(zero_address),

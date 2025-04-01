@@ -137,9 +137,10 @@ contract DeployMCRDev is Script {
         if (config.existingProxyAdmin != address(0)) {
             proxyAdmin = ProxyAdmin(config.existingProxyAdmin);
             console.log("JSONL using_existing_proxy_admin = %s", address(proxyAdmin));
+            console.log("JSONL proxy_admin = %s", address(proxyAdmin));
         } else {
             proxyAdmin = new ProxyAdmin(config.contractAdmin);
-            console.log("JSONL proxy_admin_deployed = %s", address(proxyAdmin));
+            console.log("JSONL proxy_admin = %s", address(proxyAdmin));
         }
         addresses.proxyAdmin = address(proxyAdmin);
 
@@ -167,7 +168,7 @@ contract DeployMCRDev is Script {
             
             // Upgrade the implementation
             proxyAdmin.upgradeAndCall(ITransparentUpgradeableProxy(address(moveTokenProxy)), address(moveTokenImplementation), "");
-            console.log("JSONL upgraded_token_proxy = %s", address(moveTokenProxy));
+            console.log("JSONL token_proxy = %s", address(moveTokenProxy));
         } else {
             // Deploy the Move Token Proxy
             bytes memory moveTokenData = abi.encodeCall(
@@ -177,7 +178,7 @@ contract DeployMCRDev is Script {
             moveTokenProxy = new TransparentUpgradeableProxy(
                 address(moveTokenImplementation), address(proxyAdmin), moveTokenData
             );
-            console.log("JSONL deployed_token_proxy = %s", address(moveTokenProxy));
+            console.log("JSONL token_proxy = %s", address(moveTokenProxy));
         }
         addresses.moveTokenProxy = address(moveTokenProxy);
 
@@ -188,7 +189,7 @@ contract DeployMCRDev is Script {
             
             // Upgrade the implementation
             proxyAdmin.upgradeAndCall(ITransparentUpgradeableProxy(address(movementStakingProxy)), address(stakingImplementation), "");
-            console.log("JSONL upgraded_staking_proxy = %s", address(movementStakingProxy));
+            console.log("JSONL staking_proxy = %s", address(movementStakingProxy));
         } else {
             // Deploy the Movement Staking Proxy
             bytes memory movementStakingData =
@@ -196,7 +197,7 @@ contract DeployMCRDev is Script {
             movementStakingProxy = new TransparentUpgradeableProxy(
                 address(stakingImplementation), address(proxyAdmin), movementStakingData
             );
-            console.log("JSONL deployed_staking_proxy = %s", address(movementStakingProxy));
+            console.log("JSONL staking_proxy = %s", address(movementStakingProxy));
         }
         addresses.movementStakingProxy = address(movementStakingProxy);
 
@@ -207,7 +208,7 @@ contract DeployMCRDev is Script {
             
             // Upgrade the implementation
             proxyAdmin.upgradeAndCall(ITransparentUpgradeableProxy(address(mcrProxy)), address(mcrImplementation), "");
-            console.log("JSONL upgraded_mcr_proxy = %s", address(mcrProxy));
+            console.log("JSONL mcr_proxy = %s", address(mcrProxy));
         } else {
             // Deploy the MCR Proxy
             bytes memory mcrData = abi.encodeCall(
@@ -223,7 +224,7 @@ contract DeployMCRDev is Script {
             mcrProxy = new TransparentUpgradeableProxy(
                 address(mcrImplementation), address(proxyAdmin), mcrData
             );
-            console.log("JSONL deployed_mcr_proxy = %s", address(mcrProxy));
+            console.log("JSONL mcr_proxy = %s", address(mcrProxy));
         }
         addresses.mcrProxy = address(mcrProxy);
         
@@ -241,14 +242,14 @@ contract DeployMCRDev is Script {
                 
                 // Upgrade the implementation
                 proxyAdmin.upgradeAndCall(ITransparentUpgradeableProxy(address(aroProxy)), address(aroImplementation), "");
-                console.log("JSONL upgraded_aro_proxy = %s", address(aroProxy));
+                console.log("JSONL aro_proxy = %s", address(aroProxy));
             } else {
                 // Deploy the ARO Proxy
                 bytes memory aroData = abi.encodeCall(McrARO.initializeRewardConfig, ());
                 aroProxy = new TransparentUpgradeableProxy(
                     address(aroImplementation), address(proxyAdmin), aroData
                 );
-                console.log("JSONL deployed_aro_proxy = %s", address(aroProxy));
+                console.log("JSONL aro_proxy = %s", address(aroProxy));
             }
             addresses.aroProxy = address(aroProxy);
             
@@ -257,15 +258,18 @@ contract DeployMCRDev is Script {
             console.log("JSONL reward_contract_set = true");
             console.log("JSONL reward_contract_address = %s", address(aroProxy));
             console.log("JSONL reward_contract_type = %s", "McrARO");
+            console.log("JSONL reward_proxy = %s", address(aroProxy));
         } else if (config.rewardOption == 2) {
             // Link MCR to the existing reward contract
             MCR(address(mcrProxy)).setRewardContract(IMcrReward(config.existingRewardContract));
             console.log("JSONL reward_contract_set = true");
             console.log("JSONL reward_contract_address = %s", config.existingRewardContract);
             console.log("JSONL reward_contract_type = %s", "External");
+            console.log("JSONL reward_proxy = %s", config.existingRewardContract);
         } else {
             // No reward contract
             console.log("JSONL reward_contract_set = false");
+            console.log("JSONL reward_proxy = %s", address(0));
         }
 
         // Only do these steps for fresh deployments
@@ -358,17 +362,4 @@ contract DeployMCRDev is Script {
         address aroImplementation;
         address aroProxy;
     }
-}
-
-/**
- * @title EmptyImplementation
- * @notice Empty contract used to nullify proxies during destruction
- * @dev Implements initialize function to satisfy proxies but doesn't do anything
- */
-contract EmptyImplementation is Initializable {
-    function initialize() external initializer {}
-    
-    // Fallback to avoid reverting on any calls
-    fallback() external payable {}
-    receive() external payable {}
 }

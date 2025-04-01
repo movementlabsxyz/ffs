@@ -286,7 +286,7 @@ Run up with all parameters passed explicitly as CLI flags. See Orfile documentat
   Default value: `1000000`
 * `--reward-contract <REWARD_CONTRACT>` — The reward contract
 * `--proxy-admin <PROXY_ADMIN>` — The existing proxy admin
-* `--move-token-proxy <MOVE_TOKEN_PROXY>` — The existing move token proxy
+* `--token-proxy <TOKEN_PROXY>` — The existing move token proxy
 * `--staking-proxy <STAKING_PROXY>` — The existing staking proxy
 * `--mcr-proxy <MCR_PROXY>` — The existing MCR proxy
 * `--reward-proxy <REWARD_PROXY>` — The existing ARO proxy
@@ -360,7 +360,7 @@ KEEP THIS UNTIL PRODUCTION-READY : Defined in: network/mcr/cli/coordinator/src/c
   Default value: `1000000`
 * `--reward-contract <REWARD_CONTRACT>` — The reward contract
 * `--proxy-admin <PROXY_ADMIN>` — The existing proxy admin
-* `--move-token-proxy <MOVE_TOKEN_PROXY>` — The existing move token proxy
+* `--token-proxy <TOKEN_PROXY>` — The existing move token proxy
 * `--staking-proxy <STAKING_PROXY>` — The existing staking proxy
 * `--mcr-proxy <MCR_PROXY>` — The existing MCR proxy
 * `--reward-proxy <REWARD_PROXY>` — The existing ARO proxy
@@ -646,7 +646,7 @@ Run up with all parameters passed explicitly as CLI flags. See Orfile documentat
   Default value: `1000000`
 * `--reward-contract <REWARD_CONTRACT>` — The reward contract
 * `--existing-proxy-admin <EXISTING_PROXY_ADMIN>` — The existing proxy admin
-* `--existing-move-token-proxy <EXISTING_MOVE_TOKEN_PROXY>` — The existing move token proxy
+* `--existing-token-proxy <EXISTING_TOKEN_PROXY>` — The existing move token proxy
 * `--existing-staking-proxy <EXISTING_STAKING_PROXY>` — The existing staking proxy
 * `--existing-pcp-proxy <EXISTING_PCP_PROXY>` — The existing PCP proxy
 * `--existing-reward-proxy <EXISTING_REWARD_PROXY>` — The existing ARO proxy
@@ -695,7 +695,7 @@ Run up with parameters from environment variables, config files, and CLI flags. 
   Default value: `1000000`
 * `--reward-contract <REWARD_CONTRACT>` — The reward contract
 * `--existing-proxy-admin <EXISTING_PROXY_ADMIN>` — The existing proxy admin
-* `--existing-move-token-proxy <EXISTING_MOVE_TOKEN_PROXY>` — The existing move token proxy
+* `--existing-token-proxy <EXISTING_TOKEN_PROXY>` — The existing move token proxy
 * `--existing-staking-proxy <EXISTING_STAKING_PROXY>` — The existing staking proxy
 * `--existing-pcp-proxy <EXISTING_PCP_PROXY>` — The existing PCP proxy
 * `--existing-reward-proxy <EXISTING_REWARD_PROXY>` — The existing ARO proxy
@@ -754,7 +754,7 @@ KEEP THIS UNTIL PRODUCTION-READY : Defined in: network/pcp/cli/coordinator/src/c
   Default value: `1000000`
 * `--reward-contract <REWARD_CONTRACT>` — The reward contract
 * `--existing-proxy-admin <EXISTING_PROXY_ADMIN>` — The existing proxy admin
-* `--existing-move-token-proxy <EXISTING_MOVE_TOKEN_PROXY>` — The existing move token proxy
+* `--existing-token-proxy <EXISTING_TOKEN_PROXY>` — The existing move token proxy
 * `--existing-staking-proxy <EXISTING_STAKING_PROXY>` — The existing staking proxy
 * `--existing-pcp-proxy <EXISTING_PCP_PROXY>` — The existing PCP proxy
 * `--existing-reward-proxy <EXISTING_REWARD_PROXY>` — The existing ARO proxy

@@ -86,3 +86,20 @@ pub struct Arguments {
 	#[arg(long)]
 	pub reward_contract: Option<McrRewardContract>,
 }
+
+impl Arguments {
+	/// Returns a new instance of [Arguments] which is designed to be filled in some fields.
+	pub fn to_be_filled() -> Self {
+		Self {
+			contract_admin: "".to_string(),
+			token_name: "Move Token".to_string(),
+			token_symbol: "MOVE".to_string(),
+			initial_token_mint: "1000000000000000000000000".to_string(),
+			custodians: None,
+			initial_block_height: "1".to_string(),
+			leading_block_tolerance: "10".to_string(),
+			epoch_duration: "1000000".to_string(),
+			reward_contract: None,
+		}
+	}
+}

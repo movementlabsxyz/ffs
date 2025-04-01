@@ -11,7 +11,7 @@ pub struct Artifacts {
 	pub proxy_admin: String,
 	/// The move token proxy
 	#[arg(long)]
-	pub move_token_proxy: String,
+	pub token_proxy: String,
 	/// The staking proxy
 	#[arg(long)]
 	pub staking_proxy: String,
