@@ -1,0 +1,112 @@
+pub mod client;
+pub mod config;
+
+use anyhow::Context;
+use client::{Act, Client};
+use config::Config;
+use futures::future::{AbortHandle, Abortable};
+use mcr_network_anvil_component_core::dev::lifecycle::up::Up;
+use mcr_protocol_client_eth_core::config::Config as EthConfig;
+use mcr_protocol_deployer_eth_core::artifacts::output::Artifacts;
+use mcr_types::block_commitment::BlockCommitment;
+use network_anvil_component_core::util::parser::AnvilData;
+use secure_signer::key::TryFromCanonicalString;
+use secure_signer_loader::identifiers::SignerIdentifier;
+
+pub struct Basic {
+	up: Up,
+}
+
+// todo: perhaps move into Up API.
+pub struct UpState {
+	pub anvil_data: AnvilData,
+	pub artifacts: Artifacts,
+}
+
+impl UpState {
+	pub fn try_to_default_mcr_protocol_client_config(&self) -> Result<EthConfig, anyhow::Error> {
+		// todo: this should be retrieved from the anvil data.
+		let rpc_url = "http://localhost:8545".to_string();
+		let ws_url = "ws://localhost:8545".to_string();
+		let chain_id = self.anvil_data.chain_id;
+
+		// get the signer identifier
+		let signer_identifier_hex_key = self.anvil_data.private_keys[0].clone();
+		let canonical_identifier_string = format!(
+			"local::{}",
+			signer_identifier_hex_key
+				.strip_prefix("0x")
+				.context("invalid signer identifier")?
+		);
+		let signer_identifier =
+			SignerIdentifier::try_from_canonical_string(&canonical_identifier_string)
+				.map_err(|_| anyhow::anyhow!("invalid signer identifier"))?;
+
+		let mcr_contract_address = self.artifacts.mcr_proxy.clone();
+
+		Ok(EthConfig {
+			rpc_url,
+			ws_url,
+			chain_id,
+			signer_identifier,
+			mcr_contract_address,
+			run_commitment_admin_mode: false,
+			gas_limit: 323924465909782,
+			transaction_send_retries: 3,
+		})
+	}
+
+	pub async fn try_build_default_mcr_protocol_client(&self) -> Result<Client, anyhow::Error> {
+		let mcr_protocol_client_config = self.try_to_default_mcr_protocol_client_config()?;
+		let mcr_protocol_client = mcr_protocol_client_config.build().await?;
+		Ok(Client::new(mcr_protocol_client))
+	}
+}
+
+impl Basic {
+	pub fn new(config: Config) -> Self {
+		Basic { up: Up::new(config.up) }
+	}
+
+	pub async fn run(self) -> Result<(), anyhow::Error> {
+		// clone the anvil data and artifacts from up
+		let anvil_data = self.up.anvil_data().clone();
+		let artifacts = self.up.artifacts().clone();
+
+		// start the up task
+		let (abort_handle, abort_reg) = AbortHandle::new_pair();
+		let up_task = kestrel::task(Abortable::new(async move { self.up.run().await }, abort_reg));
+
+		// wait for the anvil data and artifacts
+		println!("waiting for anvil data");
+		let anvil_data = anvil_data.read().wait_for().await;
+		println!("waiting for artifacts");
+		let artifacts = artifacts.read().wait_for().await;
+		println!("up state");
+		let up_state = UpState { anvil_data, artifacts };
+
+		// get the mcr protocol client
+		let mcr_protocol_client = up_state.try_build_default_mcr_protocol_client().await?;
+
+		// act with the client
+		mcr_protocol_client.act(Act::PostCommitment(BlockCommitment::default())).await?;
+
+		println!("act complete");
+
+		// cancel the up task
+		abort_handle.abort();
+
+		// expect up task aborted
+		// todo: remove better abort handlers into kestrel::task
+		match up_task.await {
+			Ok(result) => {
+				println!("up task completed: {:?}", result);
+			}
+			Err(e) => {
+				println!("up task aborted successfully: {:?}", e);
+			}
+		}
+
+		Ok(())
+	}
+}
