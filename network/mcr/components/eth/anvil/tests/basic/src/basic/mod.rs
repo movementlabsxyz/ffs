@@ -28,6 +28,7 @@ impl UpState {
 		let rpc_url = "http://localhost:8545".to_string();
 		let ws_url = "ws://localhost:8545".to_string();
 		let chain_id = self.anvil_data.chain_id;
+		let block_lead_tolerance = 100;
 
 		// get the signer identifier
 		let signer_identifier_hex_key = self.anvil_data.private_keys[0].clone();
@@ -41,17 +42,19 @@ impl UpState {
 			SignerIdentifier::try_from_canonical_string(&canonical_identifier_string)
 				.map_err(|_| anyhow::anyhow!("invalid signer identifier"))?;
 
-		let mcr_contract_address = self.artifacts.mcr_proxy.clone();
-
 		Ok(EthConfig {
-			rpc_url,
-			ws_url,
-			chain_id,
-			signer_identifier,
-			mcr_contract_address,
+			mcr_contract_address: self.artifacts.mcr_proxy.clone(),
+			rpc_url: rpc_url.clone(),
+			ws_url: ws_url.clone(),
+			chain_id: chain_id,
+			signer_identifier: signer_identifier,
 			run_commitment_admin_mode: false,
 			gas_limit: 323924465909782,
 			transaction_send_retries: 3,
+			mcr_address: self.artifacts.mcr_proxy.clone(),
+			block_lead_tolerance: block_lead_tolerance,
+			move_token_address: self.artifacts.token_proxy.clone(),
+			staking_address: self.artifacts.staking_proxy.clone(),
 		})
 	}
 

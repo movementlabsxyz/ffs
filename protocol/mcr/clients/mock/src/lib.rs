@@ -5,7 +5,7 @@ use std::collections::BTreeMap;
 use std::sync::{Arc, Mutex};
 use tokio::sync::{mpsc, RwLock};
 use tokio_stream::wrappers::ReceiverStream;
-use std::future::Future;
+// use std::future::Future;
 
 #[derive(Clone)]
 pub struct Client {
@@ -173,17 +173,17 @@ impl McrClientOperations for Client {
 		Ok(())
 	}
 
-	async fn stake(&self, amount: U256) -> Result<(), McrClientError> {
+	async fn stake(&self, _amount: U256) -> Result<(), McrClientError> {
 		// Mock implementation - just return Ok
 		Ok(())
 	}
 
-	async fn get_stake(&self, custodian: String, attester: String) -> Result<u64, McrClientError> {
+	async fn get_stake(&self, _custodian: String, _attester: String) -> Result<u64, McrClientError> {
 		// For mock client, just return 0 as the stake amount
 		Ok(0)
 	}
 
-	async fn unstake(&self, amount: U256) -> Result<(), McrClientError> {
+	async fn unstake(&self, _amount: U256) -> Result<(), McrClientError> {
 		// Mock implementation - just return Ok
 		Ok(())
 	}

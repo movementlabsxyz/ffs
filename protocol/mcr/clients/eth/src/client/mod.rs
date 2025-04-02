@@ -44,7 +44,7 @@ pub struct Client<R, W> {
 	pub(crate) signer_address: Address,
 	pub(crate) contract_address: Address,
 	pub(crate) move_token_address: Address,
-	pub(crate) staking_address: Address,
+	// pub(crate) staking_address: Address,
 	pub(crate) send_transaction_error_rules: Vec<Box<dyn VerifyRule>>,
 	pub(crate) gas_limit: u64,
 	pub(crate) send_transaction_retries: u32,

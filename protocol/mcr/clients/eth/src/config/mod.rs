@@ -180,7 +180,7 @@ impl Config {
 		signer_address: Address,
 		contract_address: Address,
 		move_token_address: Address,
-		staking_address: Address,
+		_staking_address: Address,
 		gas_limit: u64,
 		send_transaction_retries: u32,
 	) -> Result<Client<R, W>, anyhow::Error>
@@ -200,7 +200,7 @@ impl Config {
 			signer_address,
 			contract_address,
 			move_token_address,
-			staking_address,
+			// staking_address,
 			send_transaction_error_rules,
 			gas_limit,
 			send_transaction_retries,
