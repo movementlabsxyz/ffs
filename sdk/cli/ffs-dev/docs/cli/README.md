@@ -31,8 +31,6 @@ This document contains the help content for the `ffs-dev` command-line program.
 * [`ffs-dev mcr protocol client eth`↴](#ffs-dev-mcr-protocol-client-eth)
 * [`ffs-dev mcr protocol client eth post-admin-commitment`↴](#ffs-dev-mcr-protocol-client-eth-post-admin-commitment)
 * [`ffs-dev mcr protocol client post-commitment`↴](#ffs-dev-mcr-protocol-client-post-commitment)
-* [`ffs-dev mcr protocol client deploy`↴](#ffs-dev-mcr-protocol-client-deploy)
-* [`ffs-dev mcr protocol client deploy anvil`↴](#ffs-dev-mcr-protocol-client-deploy-anvil)
 * [`ffs-dev pcp`↴](#ffs-dev-pcp)
 * [`ffs-dev pcp network`↴](#ffs-dev-pcp-network)
 * [`ffs-dev pcp network run`↴](#ffs-dev-pcp-network-run)
@@ -402,7 +400,6 @@ KEEP THIS UNTIL PRODUCTION-READY : Defined in: protocol/mcr/cli/client/src/cli/m
 * `run` — ???
 * `eth` — ???
 * `post-commitment` — Post a commitment to an MCR implementation
-* `deploy` — Deploy MCR contracts using deployer-core
 
 
 
@@ -457,36 +454,6 @@ Post a commitment to an MCR implementation
 
 * `--commitment-hex <COMMITMENT_HEX>` — Hex-encoded commitment
 * `--preimage-string <PREIMAGE_STRING>` — String to be hashed into a commitment
-
-
-
-## `ffs-dev mcr protocol client deploy`
-
-Deploy MCR contracts using deployer-core
-
-**Usage:** `ffs-dev mcr protocol client deploy <COMMAND>`
-
-KEEP THIS UNTIL PRODUCTION-READY : Defined in: protocol/mcr/cli/client/src/cli/deploy/mod.rs
-
-###### **Subcommands:**
-
-* `anvil` — Deploy to local Anvil network
-
-
-
-## `ffs-dev mcr protocol client deploy anvil`
-
-Deploy to local Anvil network
-
-**Usage:** `ffs-dev mcr protocol client deploy anvil [OPTIONS] --admin <ADMIN> --private-key <PRIVATE_KEY>`
-
-###### **Options:**
-
-* `--admin <ADMIN>` — Admin address for deployed contracts
-* `--rpc-url <RPC_URL>` — RPC URL (defaults to http://localhost:8545)
-
-  Default value: `http://localhost:8545`
-* `--private-key <PRIVATE_KEY>` — Private key for deployment
 
 
 
