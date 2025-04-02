@@ -173,7 +173,7 @@ pub mod test {
 	async fn test_post_block_commitment_batch() -> Result<(), PcpClientError> {
 		let client = Client::new();
 		let commitment = SuperBlockCommitment::new(1, Default::default(), Commitment::test());
-		let commitment2 = SuperBlockCommitment::new(1, Default::default(), Commitment::test());
+		let commitment2 = SuperBlockCommitment::new(2, Default::default(), Commitment::test());
 		client
 			.post_block_commitment_batch(vec![commitment.clone(), commitment2.clone()])
 			.await
