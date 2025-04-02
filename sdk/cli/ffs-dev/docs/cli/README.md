@@ -499,6 +499,10 @@ Stream block commitments
 * `--run-commitment-admin-mode` — Whether to run in settlement admin mode
 * `--gas-limit <GAS_LIMIT>` — The gas limit for transactions
 * `--transaction-send-retries <TRANSACTION_SEND_RETRIES>` — The number of retries for sending transactions
+* `--mcr-address <MCR_ADDRESS>` — The MCR address
+* `--block-lead-tolerance <BLOCK_LEAD_TOLERANCE>` — The block lead tolerance
+* `--move-token-address <MOVE_TOKEN_ADDRESS>` — The move token address
+* `--staking-address <STAKING_ADDRESS>` — The staking address
 
 
 
@@ -603,14 +607,55 @@ Unstake tokens from the MCR domain
 
 ## `ffs-dev mcr protocol client post-commitment`
 
-Post a commitment to an MCR implementation
+Post a commitment
 
-**Usage:** `ffs-dev mcr protocol client post-commitment [OPTIONS]`
+**Usage:** `ffs-dev mcr protocol client post-commitment [OPTIONS] --height <HEIGHT> --mcr-address <MCR_ADDRESS> --private-key <PRIVATE_KEY>`
 
 ###### **Options:**
 
+* `--height <HEIGHT>` — Block height to post commitment for
+* `--mcr-address <MCR_ADDRESS>` — MCR contract address
 * `--commitment-hex <COMMITMENT_HEX>` — Hex-encoded commitment
 * `--preimage-string <PREIMAGE_STRING>` — String to be hashed into a commitment
+* `--private-key <PRIVATE_KEY>` — Private key for signing transactions
+* `--rpc-url <RPC_URL>` — RPC URL (optional, defaults to http://localhost:8545)
+
+  Default value: `http://localhost:8545`
+
+
+
+## `ffs-dev mcr protocol client check-commitment`
+
+Check a commitment for a given height and attester
+
+**Usage:** `ffs-dev mcr protocol client check-commitment [OPTIONS] --height <HEIGHT> --attester <ATTESTER> --mcr-address <MCR_ADDRESS>`
+
+###### **Options:**
+
+* `--height <HEIGHT>` — Block height to check commitment for
+* `--attester <ATTESTER>` — Attester address to check commitment for
+* `--mcr-address <MCR_ADDRESS>` — MCR contract address
+* `--rpc-url <RPC_URL>` — RPC URL (optional, defaults to http://localhost:8545)
+
+  Default value: `http://localhost:8545`
+* `--private-key <PRIVATE_KEY>` — Private key for signing transactions (optional)
+
+
+
+## `ffs-dev mcr protocol client check-postconfirmation`
+
+Check postconfirmation for a height
+
+**Usage:** `ffs-dev mcr protocol client check-postconfirmation [OPTIONS] --height <HEIGHT> --mcr-address <MCR_ADDRESS>`
+
+###### **Options:**
+
+* `--height <HEIGHT>` — Block height to check postconfirmation for
+* `--mcr-address <MCR_ADDRESS>` — MCR contract address
+* `--rpc-url <RPC_URL>` — RPC URL (optional, defaults to http://localhost:8545)
+
+  Default value: `http://localhost:8545`
+* `--private-key <PRIVATE_KEY>` — Private key for signing transactions (optional)
 
 
 

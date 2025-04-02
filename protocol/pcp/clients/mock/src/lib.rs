@@ -132,7 +132,7 @@ impl PcpClientOperations for Client {
 		Ok(Box::pin(ReceiverStream::new(receiver)))
 	}
 
-	async fn get_commitment_at_height(
+	async fn get_accepted_commitment_at_height(
 		&self,
 		height: u64,
 	) -> Result<Option<SuperBlockCommitment>, PcpClientError> {

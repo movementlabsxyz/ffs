@@ -1,5 +1,8 @@
 pub mod eth;
 use clap::{Parser, Subcommand};
+// use mcr_protocol_client_eth_core::config::Config;
+// use mcr_protocol_client_core_util::McrClientOperations;
+// use mcr_types::block_commitment::BlockCommitment;
 
 /// The `mcr-protocol-client` CLI.
 #[derive(Parser)]

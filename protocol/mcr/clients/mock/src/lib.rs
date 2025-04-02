@@ -5,6 +5,7 @@ use std::collections::BTreeMap;
 use std::sync::{Arc, Mutex};
 use tokio::sync::{mpsc, RwLock};
 use tokio_stream::wrappers::ReceiverStream;
+// use std::future::Future;
 
 #[derive(Clone)]
 pub struct Client {
@@ -132,7 +133,7 @@ impl McrClientOperations for Client {
 		Ok(Box::pin(ReceiverStream::new(receiver)))
 	}
 
-	async fn get_commitment_at_height(
+	async fn get_accepted_commitment_at_height(
 		&self,
 		height: u64,
 	) -> Result<Option<BlockCommitment>, McrClientError> {
@@ -144,12 +145,45 @@ impl McrClientOperations for Client {
 		Ok(*self.current_height.read().await + self.block_lead_tolerance)
 	}
 
-	async fn stake(&self, amount: U256) -> Result<(), McrClientError> {
+	async fn get_validator_commitment_at_height(
+		&self,
+		_height: u64,
+		_attester: String,
+	) -> Result<Option<BlockCommitment>, McrClientError> {
+		unimplemented!()
+	}
+
+	async fn get_balance(&self, _address: String) -> Result<u64, McrClientError> {
+		Ok(0)
+	}
+
+	async fn get_last_accepted_block_height(&self) -> Result<u64, McrClientError> {
+		Ok(0) // Mock implementation returns 0
+	}
+
+	async fn get_leading_block_tolerance(&self) -> Result<u64, McrClientError> {
+		Ok(10) // Mock implementation returns default tolerance of 10
+	}
+
+	async fn grant_trusted_attester(
+		&self,
+		_attester: String,
+	) -> Result<(), McrClientError> {
 		// Mock implementation - just return Ok
 		Ok(())
 	}
 
-	async fn unstake(&self, amount: U256) -> Result<(), McrClientError> {
+	async fn stake(&self, _amount: U256) -> Result<(), McrClientError> {
+		// Mock implementation - just return Ok
+		Ok(())
+	}
+
+	async fn get_stake(&self, _custodian: String, _attester: String) -> Result<u64, McrClientError> {
+		// For mock client, just return 0 as the stake amount
+		Ok(0)
+	}
+
+	async fn unstake(&self, _amount: U256) -> Result<(), McrClientError> {
 		// Mock implementation - just return Ok
 		Ok(())
 	}

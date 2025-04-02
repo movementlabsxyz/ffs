@@ -47,7 +47,7 @@ pub trait PcpClientOperations {
 	) -> impl Future<Output = Result<CommitmentStream, PcpClientError>> + Send;
 
 	/// Gets the accepted commitment at the given height.
-	fn get_commitment_at_height(
+	fn get_accepted_commitment_at_height(
 		&self,
 		height: u64,
 	) -> impl Future<Output = Result<Option<SuperBlockCommitment>, PcpClientError>> + Send;
