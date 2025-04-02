@@ -18,6 +18,7 @@ mcr-protocol-client-core-util = { workspace = true }
 mcr-protocol-client-eth-core = { workspace = true }
 mcr-types = { workspace = true }
 mcr-protocol-deployer-eth-core = { workspace = true}
+tokio-stream = { workspace = true }
 
 [lints]
 workspace = true

@@ -1,3 +1,4 @@
+use alloy_primitives::U256;
 use mcr_protocol_client_core_util::{CommitmentStream, McrClientError, McrClientOperations};
 use mcr_types::block_commitment::BlockCommitment;
 use std::collections::BTreeMap;
@@ -141,6 +142,16 @@ impl McrClientOperations for Client {
 
 	async fn get_max_tolerable_block_height(&self) -> Result<u64, McrClientError> {
 		Ok(*self.current_height.read().await + self.block_lead_tolerance)
+	}
+
+	async fn stake(&self, amount: U256) -> Result<(), McrClientError> {
+		// Mock implementation - just return Ok
+		Ok(())
+	}
+
+	async fn unstake(&self, amount: U256) -> Result<(), McrClientError> {
+		// Mock implementation - just return Ok
+		Ok(())
 	}
 }
 

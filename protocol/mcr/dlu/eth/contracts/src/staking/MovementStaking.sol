@@ -23,6 +23,9 @@ contract MovementStaking is
 {
     using EnumerableSet for EnumerableSet.AddressSet;
 
+    /// @notice Mapping of domain addresses to their epoch durations
+    mapping(address => uint256) internal epochDurations;
+
     /**
      * @notice Initializes the staking contract
      * @param _token The token to be staked
@@ -367,29 +370,28 @@ contract MovementStaking is
     }
 
     /**
-     * @notice Stakes tokens for the next epoch
+     * @notice Internal helper for staking tokens
      * @param domain The domain to stake for
+     * @param attester The attester to stake for
      * @param custodian The custodian token contract
      * @param amount The amount to stake
+     * @param from The address to transfer tokens from
      */
-    function stake(
+    function _stake(
         address domain,
+        address attester,
         IERC20 custodian,
-        uint256 amount
-    ) external onlyRole(WHITELIST_ROLE) nonReentrant {
+        uint256 amount,
+        address from
+    ) internal {
         // Add the attester to the list of attesters
-        attestersByDomain[domain].add(msg.sender);
-
-        // Note: We don't add the custodian by default to prevent gas attacks
-        // custodiansByDomain[domain].add(address(custodian));
+        attestersByDomain[domain].add(attester);
 
         // Check the balance of the token before transfer
         uint256 balanceBefore = token.balanceOf(address(this));
 
         // Transfer the stake to the contract
-        // If the transfer is not using a custodian, the custodian is the token itself
-        // @dev The custodian must be careful about not over-approving the token
-        custodian.transferFrom(msg.sender, address(this), amount);
+        custodian.transferFrom(from, address(this), amount);
 
         // Require that the balance of the actual token has increased by the amount
         if (token.balanceOf(address(this)) != balanceBefore + amount)
@@ -400,7 +402,7 @@ contract MovementStaking is
             domain,
             getNextEpochByBlockTime(domain),
             address(custodian),
-            msg.sender,
+            attester,
             amount
         );
 
@@ -409,9 +411,69 @@ contract MovementStaking is
             domain,
             getNextEpoch(domain),
             address(custodian),
-            msg.sender,
+            attester,
             amount
         );
+    }
+
+    /**
+     * @notice Internal helper for unstaking tokens
+     * @param domain The domain to unstake from
+     * @param attester The attester to unstake for
+     * @param custodian The custodian address
+     * @param amount The amount to unstake
+     */
+    function _unstake(
+        address domain,
+        address attester,
+        address custodian,
+        uint256 amount
+    ) internal {
+        // Mark tokens for unstaking in the next epoch
+        _addUnstake(
+            domain,
+            getNextEpochByBlockTime(domain),
+            custodian,
+            attester,
+            amount
+        );
+
+        emit AttesterUnstaked(
+            domain,
+            getNextEpoch(domain),
+            custodian,
+            attester,
+            amount
+        );
+    }
+
+    /**
+     * @notice Stakes tokens for the next epoch
+     * @param domain The domain to stake for
+     * @param custodian The custodian token contract
+     * @param amount The amount to stake
+     */
+    function stake(
+        address domain,
+        IERC20 custodian,
+        uint256 amount
+    ) external onlyRole(WHITELIST_ROLE) nonReentrant {
+
+        // approve the staking contract to spend the tokens
+        custodian.approve(address(this), amount);
+        _stake(domain, msg.sender, custodian, amount, msg.sender);
+    }
+
+    /**
+     * @notice Allows a domain to stake tokens for a user under its own domain
+     * @param user The user to stake for
+     * @param custodian The custodian token contract
+     * @param amount The amount to stake
+     */
+    function stakeFor(address user, IERC20 custodian, uint256 amount) external {
+        address domain = msg.sender;
+        require(epochDurationByDomain[domain] > 0, "DOMAIN_NOT_REGISTERED");
+        _stake(domain, user, custodian, amount, domain);
     }
 
     /**
@@ -426,23 +488,19 @@ contract MovementStaking is
         address custodian,
         uint256 amount
     ) external onlyRole(WHITELIST_ROLE) nonReentrant {
-        // Mark tokens for unstaking in the next epoch
-        // Actual unstaking happens during epoch rollover
-        _addUnstake(
-            domain,
-            getNextEpochByBlockTime(domain),
-            custodian,
-            msg.sender,
-            amount
-        );
+        _unstake(domain, msg.sender, custodian, amount);
+    }
 
-        emit AttesterUnstaked(
-            domain,
-            getNextEpoch(domain),
-            custodian,
-            msg.sender,
-            amount
-        );
+    /**
+     * @notice Allows a domain to unstake tokens for a user under its own domain
+     * @param user The user to unstake for
+     * @param custodian The custodian address
+     * @param amount The amount to unstake
+     */
+    function unstakeFor(address user, address custodian, uint256 amount) external {
+        address domain = msg.sender;
+        require(epochDurationByDomain[domain] > 0, "DOMAIN_NOT_REGISTERED");
+        _unstake(domain, user, custodian, amount);
     }
 
     /**

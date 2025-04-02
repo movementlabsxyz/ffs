@@ -16,12 +16,8 @@ rust-version = { workspace = true }
 
 [dependencies]
 serde = { workspace = true }
-
-[features]
-default = ["eth"]
-e2e = ["eth"]
-eth = []
-mock = []
+anyhow = { workspace = true }
+hex = { workspace = true }
 
 [lints]
 workspace = true

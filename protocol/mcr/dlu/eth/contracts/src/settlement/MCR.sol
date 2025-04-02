@@ -10,6 +10,7 @@ import {BaseSettlement} from "./settlement/BaseSettlement.sol";
 import {IMCR} from "./interfaces/IMCR.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import {IMcrReward} from "./interfaces/IMcrReward.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 /**
  * @title MCR - Movement Chain Relay
@@ -598,5 +599,32 @@ contract MCR is Initializable, BaseSettlement, MCRStorage, IMCR {
      */
     function setRewardContract(IMcrReward _rewardContract) external onlyRole(DEFAULT_ADMIN_ROLE) {
         rewardContract = _rewardContract;
+    }
+
+    /**
+     * @notice Allows users to stake tokens for the MCR domain
+     * @param amount The amount to stake
+     */
+    function stake(uint256 amount) external {
+        // Get the token from the staking contract
+        IERC20 token = stakingContract.getToken();
+
+        // approve the staking contract to spend the tokens
+        token.approve(address(stakingContract), amount);
+        
+        // Call stakeFor on the staking contract to stake for the user
+        stakingContract.stakeFor(msg.sender, token, amount);
+    }
+
+    /**
+     * @notice Allows users to unstake tokens from the MCR domain
+     * @param amount The amount to unstake
+     */
+    function unstake(uint256 amount) external {
+        // Get the token from the staking contract
+        IERC20 token = stakingContract.getToken();
+
+        // Call unstake on the staking contract
+        stakingContract.unstakeFor(msg.sender, address(token), amount);
     }
 }
