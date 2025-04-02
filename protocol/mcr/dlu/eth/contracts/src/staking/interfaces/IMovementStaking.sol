@@ -46,11 +46,13 @@ interface IMovementStaking {
         address custodian
     ) external view returns (uint256);
     function stake(address domain, IERC20 custodian, uint256 amount) external;
+    function stakeFor(address user, IERC20 custodian, uint256 amount) external;
     function unstake(
         address domain,
         address custodian,
         uint256 amount
     ) external;
+    function unstakeFor(address user, address custodian, uint256 amount) external;
     function getCustodiansByDomain(
         address domain
     ) external view returns (address[] memory);
