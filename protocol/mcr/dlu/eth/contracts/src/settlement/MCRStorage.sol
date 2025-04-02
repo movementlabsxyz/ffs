@@ -38,23 +38,23 @@ contract MCRStorage {
     /// @notice Maps each block height to its corresponding epoch
     mapping(uint256 blockHeight => uint256 epoch) public blockHeightEpochAssignments;
 
-    /// @notice Tracks commitments from each attester for each block height
-    mapping(uint256 blockHeight => mapping(address attester => BlockCommitment)) public commitments;
+    /// @notice Tracks block commitments from each attester for each block height
+    mapping(uint256 blockHeight => mapping(address attester => BlockCommitment)) public blockCommitments;
 
     /// @notice Tracks total stake accumulated for each commitment at each block height
     mapping(uint256 blockHeight => mapping(bytes32 commitement => uint256 stake)) public commitmentStakes;
 
     /// @notice Maps block height to accepted block commitment
-    mapping(uint256 blockHeight => BlockCommitment) public acceptedBlocks;
+    mapping(uint256 blockHeight => BlockCommitment) public acceptedBlockCommitments;
 
     /// @notice Whether open attestation is enabled
     bool public openAttestationEnabled;
 
-    /// @notice Versioned mapping of accepted blocks
-    mapping(uint256 => mapping(uint256 blockHeight => BlockCommitment)) public versionedAcceptedBlocks;
+    /// @notice Versioned mapping of accepted block commitments
+    mapping(uint256 => mapping(uint256 blockHeight => BlockCommitment)) public versionedAcceptedBlockCommitments;
     
-    /// @notice Current version for accepted blocks
-    uint256 public acceptedBlocksVersion;
+    /// @notice Current version for accepted block commitments
+    uint256 public acceptedBlockCommitmentsVersion;
 
     /// @dev Reserved storage gap for future upgrades
     uint256[47] internal __gap;

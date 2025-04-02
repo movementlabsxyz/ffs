@@ -277,7 +277,7 @@ contract MCR is Initializable, BaseSettlement, MCRStorage, IMCR {
         uint256 height,
         address attester
     ) public view returns (BlockCommitment memory) {
-        return commitments[height][attester];
+        return blockCommitments[height][attester];
     }
 
     /**
@@ -289,7 +289,7 @@ contract MCR is Initializable, BaseSettlement, MCRStorage, IMCR {
             hasRole(COMMITMENT_ADMIN, msg.sender),
             "SET_LAST_ACCEPTED_COMMITMENT_AT_HEIGHT_IS_COMMITMENT_ADMIN_ONLY"
         );
-        versionedAcceptedBlocks[acceptedBlocksVersion][blockCommitment.height] = blockCommitment;  
+        versionedAcceptedBlockCommitments[acceptedBlockCommitmentsVersion][blockCommitment.height] = blockCommitment;  
     }
 
     /**
@@ -316,9 +316,9 @@ contract MCR is Initializable, BaseSettlement, MCRStorage, IMCR {
             "FORCE_LATEST_COMMITMENT_IS_COMMITMENT_ADMIN_ONLY"
         );
 
-        // Increment the acceptedBlocksVersion (effectively removing all other accepted blocks)
-        acceptedBlocksVersion += 1;
-        versionedAcceptedBlocks[acceptedBlocksVersion][blockCommitment.height] = blockCommitment;
+        // Increment the acceptedBlockCommitmentsVersion (effectively removing all other accepted blocks)
+        acceptedBlockCommitmentsVersion += 1;
+        versionedAcceptedBlockCommitments[acceptedBlockCommitmentsVersion][blockCommitment.height] = blockCommitment;
         lastAcceptedBlockHeight = blockCommitment.height; 
     }
 
@@ -328,7 +328,7 @@ contract MCR is Initializable, BaseSettlement, MCRStorage, IMCR {
      * @return BlockCommitment memory
      */
     function getAcceptedCommitmentAtBlockHeight(uint256 height) public view returns (BlockCommitment memory) {
-        return versionedAcceptedBlocks[acceptedBlocksVersion][height];
+        return versionedAcceptedBlockCommitments[acceptedBlockCommitmentsVersion][height];
     }
 
     /**
@@ -350,7 +350,7 @@ contract MCR is Initializable, BaseSettlement, MCRStorage, IMCR {
         BlockCommitment memory blockCommitment
     ) internal {
         // Attester has already committed to a block at this height
-        if (commitments[blockCommitment.height][attester].height != 0)
+        if (blockCommitments[blockCommitment.height][attester].height != 0)
             revert AttesterAlreadyCommitted();
 
         // We allow commitments to already accepted blocks to support lagging attesters
@@ -372,7 +372,7 @@ contract MCR is Initializable, BaseSettlement, MCRStorage, IMCR {
         }
 
         // Register the attester's commitment
-        commitments[blockCommitment.height][attester] = blockCommitment;
+        blockCommitments[blockCommitment.height][attester] = blockCommitment;
 
         // Increment the commitment count by stake
         uint256 allCurrentEpochStake = computeAllCurrentEpochStake(attester);
@@ -422,7 +422,7 @@ contract MCR is Initializable, BaseSettlement, MCRStorage, IMCR {
             address attester = attesters[i];
 
             // Get the commitment for this attester at the block height
-            BlockCommitment memory blockCommitment = commitments[blockHeight][
+            BlockCommitment memory blockCommitment = blockCommitments[blockHeight][
                 attester
             ];
 
@@ -512,7 +512,7 @@ contract MCR is Initializable, BaseSettlement, MCRStorage, IMCR {
             revert UnacceptableBlockCommitment();
 
         // Set accepted block commitment
-        versionedAcceptedBlocks[acceptedBlocksVersion][blockCommitment.height] = blockCommitment;
+        versionedAcceptedBlockCommitments[acceptedBlockCommitmentsVersion][blockCommitment.height] = blockCommitment;
 
         // Set last accepted block height
         lastAcceptedBlockHeight = blockCommitment.height;
@@ -533,7 +533,7 @@ contract MCR is Initializable, BaseSettlement, MCRStorage, IMCR {
             address[] memory attesters = stakingContract.getAttestersByDomain(address(this));
             for (uint256 i = 0; i < attesters.length; i++) {
                 address attester = attesters[i];
-                if (commitments[blockCommitment.height][attester].commitment == blockCommitment.commitment) {
+                if (blockCommitments[blockCommitment.height][attester].commitment == blockCommitment.commitment) {
                     // Use delegatecall to maintain MCR as msg.sender for the reward call
                     (bool success, ) = address(rewardContract).delegatecall(
                         abi.encodeWithSelector(

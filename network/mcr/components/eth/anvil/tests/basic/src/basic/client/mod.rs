@@ -4,7 +4,7 @@ use mcr_types::block_commitment::BlockCommitment;
 
 #[derive(Debug, Clone)]
 pub enum Act {
-	PostCommitment(BlockCommitment),
+	PostBlockCommitment(BlockCommitment),
 }
 
 pub struct Client {
@@ -20,8 +20,8 @@ impl Client {
 		println!("acting on {:?}", act);
 
 		match act {
-			Act::PostCommitment(commitment) => {
-				self.mcr_protocol_client.post_block_commitment(commitment).await?;
+			Act::PostBlockCommitment(block_commitment) => {
+				self.mcr_protocol_client.post_block_commitment(block_commitment).await?;
 				Ok(())
 			}
 		}

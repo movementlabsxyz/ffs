@@ -86,7 +86,7 @@ impl Basic {
 		let mcr_protocol_client = up_state.try_build_default_mcr_protocol_client().await?;
 
 		// act with the client
-		mcr_protocol_client.act(Act::PostCommitment(BlockCommitment::default())).await?;
+		mcr_protocol_client.act(Act::PostBlockCommitment(BlockCommitment::default())).await?;
 
 		// end the up task
 		kestrel::end!(up_task)?;

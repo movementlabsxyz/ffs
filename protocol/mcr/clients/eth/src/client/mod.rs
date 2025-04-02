@@ -59,6 +59,7 @@ where
 	) -> Result<(), McrClientError> {
 		let contract = MCR::new(self.contract_address, &self.rpc_provider);
 
+		// block commitment that is made ready for eth
 		let eth_block_commitment = MCRStorage::BlockCommitment {
 			// Currently, to simplify the API, we'll say 0 is uncommitted all other numbers are legitimate heights
 			height: U256::from(block_commitment.height()),
@@ -97,6 +98,7 @@ where
 	) -> Result<(), McrClientError> {
 		let contract = MCR::new(self.contract_address, &self.rpc_provider);
 
+		// batch of block commitment that is made ready for eth
 		let eth_block_commitment_batch: Vec<_> = block_commitments
 			.into_iter()
 			.map(|block_commitment| {
