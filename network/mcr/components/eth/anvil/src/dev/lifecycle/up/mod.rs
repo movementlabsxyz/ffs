@@ -30,7 +30,7 @@ impl Up {
 		let deployer_future = kestrel::task(async move { self.anvil_deploy.run().await });
 
 		// Wait on the anvil data
-		let anvil_data = anvil_data.read().wait_for().await;
+		let anvil_data = anvil_data.read().wait_forever().await;
 
 		// Overwrite whatever was in self.config with Anvil data
 		self.config.fork_url = "http://localhost:8545".to_string();

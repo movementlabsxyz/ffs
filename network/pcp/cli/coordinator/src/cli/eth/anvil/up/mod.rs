@@ -31,7 +31,7 @@ impl Up {
 		let up_task = kestrel::task(async move { up.run().await });
 
 		// print the anvil data and write it as a json to the specified path
-		let anvil_data = anvil_state.read().wait_for().await;
+		let anvil_data = anvil_state.read().wait_forever().await;
 		println!("{}", anvil_data.try_to_jsonl_flat(None)?);
 		if let Some(path) = &self.write_anvil_data_path {
 			std::fs::write(path, serde_json::to_string(&anvil_data)?)
@@ -39,7 +39,7 @@ impl Up {
 		}
 
 		// print the artifacts and write it as a json to the specified path
-		let artifacts = artifacts_state.read().wait_for().await;
+		let artifacts = artifacts_state.read().wait_forever().await;
 		println!("{}", artifacts.try_to_jsonl_flat(None)?);
 		if let Some(path) = &self.write_artifacts_path {
 			std::fs::write(path, serde_json::to_string(&artifacts)?)

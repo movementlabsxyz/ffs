@@ -4,7 +4,6 @@ pub mod config;
 use anyhow::Context;
 use client::{Act, Client};
 use config::Config;
-use futures::future::{AbortHandle, Abortable};
 use mcr_network_anvil_component_core::dev::lifecycle::up::Up;
 use mcr_protocol_client_eth_core::config::Config as EthConfig;
 use mcr_protocol_deployer_eth_core::artifacts::output::Artifacts;
@@ -12,7 +11,7 @@ use mcr_types::block_commitment::BlockCommitment;
 use network_anvil_component_core::util::parser::AnvilData;
 use secure_signer::key::TryFromCanonicalString;
 use secure_signer_loader::identifiers::SignerIdentifier;
-
+use tokio::time::Duration;
 pub struct Basic {
 	up: Up,
 }
@@ -73,15 +72,13 @@ impl Basic {
 		let anvil_data = self.up.anvil_data().clone();
 		let artifacts = self.up.artifacts().clone();
 
-		// start the up task
-		let (abort_handle, abort_reg) = AbortHandle::new_pair();
-		let up_task = kestrel::task(Abortable::new(async move { self.up.run().await }, abort_reg));
+		let up_task = kestrel::task(async move { self.up.run().await });
 
-		// wait for the anvil data and artifacts
+		// wait for the anvil data and artifacts for up to 30 seconds
 		println!("waiting for anvil data");
-		let anvil_data = anvil_data.read().wait_for().await;
+		let anvil_data = anvil_data.read().wait_for(Duration::from_secs(30)).await?;
 		println!("waiting for artifacts");
-		let artifacts = artifacts.read().wait_for().await;
+		let artifacts = artifacts.read().wait_for(Duration::from_secs(30)).await?;
 		println!("up state");
 		let up_state = UpState { anvil_data, artifacts };
 
@@ -91,21 +88,8 @@ impl Basic {
 		// act with the client
 		mcr_protocol_client.act(Act::PostCommitment(BlockCommitment::default())).await?;
 
-		println!("act complete");
-
-		// cancel the up task
-		abort_handle.abort();
-
-		// expect up task aborted
-		// todo: remove better abort handlers into kestrel::task
-		match up_task.await {
-			Ok(result) => {
-				println!("up task completed: {:?}", result);
-			}
-			Err(e) => {
-				println!("up task aborted successfully: {:?}", e);
-			}
-		}
+		// end the up task
+		kestrel::end!(up_task)?;
 
 		Ok(())
 	}
