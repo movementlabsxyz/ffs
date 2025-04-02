@@ -42,8 +42,9 @@
           gcc
           rust
           zlib
-          fixDarwinDylibNames
           pandoc
+        ] ++ lib.optionals stdenv.isDarwin [
+          fixDarwinDylibNames
         ];
         
         sysDependencies = with pkgs; [] 
