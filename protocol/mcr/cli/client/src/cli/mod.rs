@@ -1,5 +1,4 @@
 pub mod eth;
-// pub mod deploy;
 use clap::{Parser, Subcommand};
 // use mcr_protocol_client_eth_core::config::Config;
 // use mcr_protocol_client_core_util::McrClientOperations;
@@ -23,9 +22,6 @@ pub enum McrProtocolClientSubcommand {
 	/// Ethereum-specific commands of the protocol, such as staking and committing
 	#[clap(subcommand)]
 	Eth(eth::Eth),
-	/// Deploy MCR contracts using deployer-core
-	#[clap(subcommand)]
-	Deploy(deploy::Deploy),
 }
 
 /// Implement the `From` trait for `McrProtocolClient` to convert it into a `McrProtocolClientSubcommand`.
@@ -52,7 +48,6 @@ impl McrProtocolClientSubcommand {
 				println!("mcr-protocol-client is under development. Please check back later.");
 			}
 			McrProtocolClientSubcommand::Eth(eth) => eth.execute().await?,
-			McrProtocolClientSubcommand::Deploy(deploy) => deploy.execute().await?,
 		}
 		Ok(())
 	}
