@@ -1,5 +1,6 @@
 use serde::{Deserialize, Serialize};
 use std::fmt;
+use std::str::FromStr;
 
 #[derive(
 	Serialize, Deserialize, Clone, Copy, Default, Debug, PartialEq, Eq, Hash, PartialOrd, Ord,
@@ -43,10 +44,27 @@ impl fmt::Display for Id {
 	}
 }
 
+impl FromStr for Id {
+	type Err = anyhow::Error;
+
+	fn from_str(s: &str) -> Result<Self, Self::Err> {
+		let bytes = hex::decode(s)?;
+		Ok(Self::new(bytes.try_into().map_err(|_| anyhow::anyhow!("invalid id: {}", s))?))
+	}
+}
 #[derive(
 	Serialize, Deserialize, Clone, Copy, Default, Debug, PartialEq, Eq, Hash, PartialOrd, Ord,
 )]
 pub struct Commitment([u8; 32]);
+
+impl FromStr for Commitment {
+	type Err = anyhow::Error;
+
+	fn from_str(s: &str) -> Result<Self, Self::Err> {
+		let bytes = hex::decode(s)?;
+		Ok(Self::new(bytes.try_into().map_err(|_| anyhow::anyhow!("invalid commitment: {}", s))?))
+	}
+}
 
 impl Commitment {
 	pub fn new(data: [u8; 32]) -> Self {
