@@ -1,0 +1,21 @@
+name: Checks and Tests
+
+on:
+  push:
+
+jobs:
+  run-nix-commands:
+    uses: ./.github/workflows/nix-command.yml
+    strategy:
+      matrix:
+        command:
+          # cargo checks and tests
+          - cargo check --all-targets
+          - cargo test
+
+          # mcr network tests
+          ## mcr network anvil component core
+          - cargo run -p test-basic-mcr-network-anvil-component-core
+    with:
+      command: ${{ matrix.command }}
+      nix_flake_path: '.' 

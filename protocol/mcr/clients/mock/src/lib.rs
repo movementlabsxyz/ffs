@@ -172,7 +172,7 @@ pub mod test {
 	async fn test_post_block_commitment_batch() -> Result<(), McrClientError> {
 		let client = Client::new();
 		let commitment = BlockCommitment::new(1, Default::default(), Commitment::test());
-		let commitment2 = BlockCommitment::new(1, Default::default(), Commitment::test());
+		let commitment2 = BlockCommitment::new(2, Default::default(), Commitment::test());
 		client
 			.post_block_commitment_batch(vec![commitment.clone(), commitment2.clone()])
 			.await
@@ -210,7 +210,7 @@ pub mod test {
 	#[tokio::test]
 	async fn test_pause() -> Result<(), McrClientError> {
 		let client = Client::new();
-		let commitment = BlockCommitment::new(2, Default::default(), Commitment::test());
+		let commitment = BlockCommitment::new(1, Default::default(), Commitment::test());
 		client.pause_after(1).await;
 		client.post_block_commitment(commitment.clone()).await?;
 		let commitment2 = BlockCommitment::new(2, Default::default(), Commitment::test());
@@ -228,7 +228,7 @@ pub mod test {
 	#[tokio::test]
 	async fn test_resume() -> Result<(), McrClientError> {
 		let client = Client::new();
-		let commitment = BlockCommitment::new(2, Default::default(), Commitment::test());
+		let commitment = BlockCommitment::new(1, Default::default(), Commitment::test());
 		client.pause_after(1).await;
 		client.post_block_commitment(commitment.clone()).await?;
 		let commitment2 = BlockCommitment::new(2, Default::default(), Commitment::test());
