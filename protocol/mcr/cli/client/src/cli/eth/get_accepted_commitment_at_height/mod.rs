@@ -5,7 +5,7 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Parser, Serialize, Deserialize, Debug, Clone)]
 #[clap(help_expected = true)]
-pub struct GetCommitmentAtHeight {
+pub struct GetAcceptedCommitmentAtHeight {
 	/// Config
 	#[clap(flatten)]
 	pub config: Config,
@@ -14,7 +14,7 @@ pub struct GetCommitmentAtHeight {
 	height: u64,
 }
 
-impl GetCommitmentAtHeight {
+impl GetAcceptedCommitmentAtHeight {
 	pub async fn execute(&self) -> Result<(), anyhow::Error> {
 		let config = self.config.clone();
 		let client = config.build().await?;

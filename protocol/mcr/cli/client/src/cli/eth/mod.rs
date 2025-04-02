@@ -1,4 +1,4 @@
-pub mod get_commitment;
+pub mod get_block_commitment;
 pub mod get_accepted_commitment_at_height;
 pub mod get_max_tolerable_block_height;
 pub mod get_posted_commitment_at_height;
@@ -24,8 +24,8 @@ pub enum Eth {
 	PostCommitmentBatch(post_commitment_batch::PostCommitmentBatch),
 	/// Stream commitments
 	StreamCommitments(stream_commitments::StreamCommitments),
-	/// Get a commitment for a given height and attester
-	GetCommitment(get_commitment::GetCommitment),
+	/// Get a block commitment for a given height and attester
+	GetBlockCommitment(get_block_commitment::GetBlockCommitment),
 	/// Get accepted commitment at a specific height
 	GetAcceptedCommitmentAtHeight(get_accepted_commitment_at_height::GetAcceptedCommitmentAtHeight),
 	/// Get posted commitment at a specific height
@@ -45,7 +45,7 @@ pub enum Eth {
 impl Eth {
 	pub async fn execute(&self) -> Result<(), anyhow::Error> {
 		match self {
-			Eth::GetCommitment(cmd) => cmd.execute().await?,
+			Eth::GetBlockCommitment(cmd) => cmd.execute().await?,
 			Eth::PostAdminCommitment(cmd) => cmd.execute().await?,
 			Eth::PostCommitment(cmd) => cmd.execute().await?,
 			Eth::PostCommitmentBatch(cmd) => cmd.execute().await?,

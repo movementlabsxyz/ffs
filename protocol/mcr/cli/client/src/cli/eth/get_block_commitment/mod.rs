@@ -6,13 +6,13 @@ use secure_signer_loader::identifiers::{SignerIdentifier, local::Local};
 
 #[derive(Parser)]
 #[clap(help_expected = true)]
-pub struct CheckCommitment {
+pub struct GetBlockCommitment {
     #[clap(flatten)]
-    pub args: CheckCommitmentArgs,
+    pub args: GetBlockCommitmentArgs,
 }
 
 #[derive(Parser)]
-pub struct CheckCommitmentArgs {
+pub struct GetBlockCommitmentArgs {
     /// Block height to check commitment for
     #[clap(long)]
     height: u64,
@@ -34,7 +34,7 @@ pub struct CheckCommitmentArgs {
     private_key: Option<String>,
 }
 
-impl CheckCommitment {
+impl GetBlockCommitment {
     pub async fn execute(&self) -> Result<(), anyhow::Error> {
         // Use provided key or fallback to dummy key
         let private_key = self.args.private_key

@@ -153,15 +153,6 @@ impl McrClientOperations for Client {
 		unimplemented!()
 	}
 
-	async fn stake(&self, amount: u64) -> Result<(), McrClientError> {
-		Ok(())
-	}
-
-	async fn get_stake(&self, custodian: String, attester: String) -> Result<u64, McrClientError> {
-		// For mock client, just return 0 as the stake amount
-		Ok(0)
-	}
-
 	async fn get_balance(&self, _address: String) -> Result<u64, McrClientError> {
 		Ok(0)
 	}
@@ -185,6 +176,11 @@ impl McrClientOperations for Client {
 	async fn stake(&self, amount: U256) -> Result<(), McrClientError> {
 		// Mock implementation - just return Ok
 		Ok(())
+	}
+
+	async fn get_stake(&self, custodian: String, attester: String) -> Result<u64, McrClientError> {
+		// For mock client, just return 0 as the stake amount
+		Ok(0)
 	}
 
 	async fn unstake(&self, amount: U256) -> Result<(), McrClientError> {

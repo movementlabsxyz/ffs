@@ -288,84 +288,7 @@ where
 		)))
 	}
 
-	async fn stake(&self, amount: u64) -> Result<(), McrClientError> {
-		let move_token = MOVEToken::new(self.move_token_address, &self.rpc_provider);
-		let staking = MovementStaking::new(self.staking_address, &self.rpc_provider);
-
-		// First check current stake
-		let initial_stake = staking.getCurrentEpochStake(
-			self.contract_address,  // domain
-			self.move_token_address,  // custodian
-			self.signer_address  // attester
-		)
-			.call()
-			.await
-			.map_err(|e| McrClientError::Internal(Box::new(e)))?;
-
-		// First approve the staking contract to spend our MOVE tokens
-		let approve_call = move_token.approve(self.staking_address, U256::from(amount));
-		send_transaction(
-			self.signer_address,
-			approve_call,
-			&self.send_transaction_error_rules,
-			self.send_transaction_retries,
-			self.gas_limit as u128,
-		).await?;
-
-		// Then stake the tokens
-		let stake_call = staking.stake(
-			self.contract_address,  // domain
-			self.move_token_address,  // custodian token
-			U256::from(amount)  // amount
-		);
-		send_transaction(
-			self.signer_address,
-			stake_call,
-			&self.send_transaction_error_rules,
-			self.send_transaction_retries,
-			self.gas_limit as u128,
-		).await?;
-
-		// Verify the stake was successful by checking if it increased
-		let final_stake = staking.getCurrentEpochStake(
-			self.contract_address,  // domain
-			self.move_token_address,  // custodian
-			self.signer_address  // attester
-		)
-			.call()
-			.await
-			.map_err(|e| McrClientError::Internal(Box::new(e)))?;
-
-		// If stake didn't increase, the staking failed
-		if final_stake._0 <= initial_stake._0 {
-			return Err(McrClientError::Internal(Box::new(std::io::Error::new(
-				std::io::ErrorKind::Other,
-				"Staking failed - stake amount did not increase"
-			))))
-		}
-
-		Ok(())
-	}
-
-	/// Get the current epoch stake for an attester
-	async fn get_stake(&self, custodian: String, attester: String) -> Result<u64, McrClientError> {
-		let contract = MCR::new(self.contract_address, &self.rpc_provider);
-		
-		let custodian_addr = custodian.parse()
-			.map_err(|e| McrClientError::Internal(Box::new(e)))?;
-		let attester_addr = attester.parse()
-			.map_err(|e| McrClientError::Internal(Box::new(e)))?;
-		
-		let MCR::getCurrentEpochStakeReturn { _0: stake } = contract
-			.getCurrentEpochStake(custodian_addr, attester_addr)
-			.call()
-			.await
-			.map_err(|e| McrClientError::Internal(Box::new(e)))?;
-
-		Ok(stake.try_into().map_err(|e| McrClientError::Internal(Box::new(e)))?)
-	}
-
-	/// Get the MOVE octas token balance of the specified address
+	/// Get the MOVE-octas token balance of the specified address
 	async fn get_balance(&self, address: String) -> Result<u64, McrClientError> {
 		let token = MOVEToken::new(self.move_token_address, &self.rpc_provider);
 		let addr = address.parse::<Address>()
@@ -429,6 +352,83 @@ where
 			self.gas_limit as u128,
 		)
 		.await
+	}
+
+	// async fn stake(&self, amount: u64) -> Result<(), McrClientError> {
+	// 	let move_token = MOVEToken::new(self.move_token_address, &self.rpc_provider);
+	// 	let staking = MovementStaking::new(self.staking_address, &self.rpc_provider);
+
+	// 	// First check current stake
+	// 	let initial_stake = staking.getCurrentEpochStake(
+	// 		self.contract_address,  // domain
+	// 		self.move_token_address,  // custodian
+	// 		self.signer_address  // attester
+	// 	)
+	// 		.call()
+	// 		.await
+	// 		.map_err(|e| McrClientError::Internal(Box::new(e)))?;
+
+	// 	// First approve the staking contract to spend our MOVE tokens
+	// 	let approve_call = move_token.approve(self.staking_address, U256::from(amount));
+	// 	send_transaction(
+	// 		self.signer_address,
+	// 		approve_call,
+	// 		&self.send_transaction_error_rules,
+	// 		self.send_transaction_retries,
+	// 		self.gas_limit as u128,
+	// 	).await?;
+
+	// 	// Then stake the tokens
+	// 	let stake_call = staking.stake(
+	// 		self.contract_address,  // domain
+	// 		self.move_token_address,  // custodian token
+	// 		U256::from(amount)  // amount
+	// 	);
+	// 	send_transaction(
+	// 		self.signer_address,
+	// 		stake_call,
+	// 		&self.send_transaction_error_rules,
+	// 		self.send_transaction_retries,
+	// 		self.gas_limit as u128,
+	// 	).await?;
+
+	// 	// Verify the stake was successful by checking if it increased
+	// 	let final_stake = staking.getCurrentEpochStake(
+	// 		self.contract_address,  // domain
+	// 		self.move_token_address,  // custodian
+	// 		self.signer_address  // attester
+	// 	)
+	// 		.call()
+	// 		.await
+	// 		.map_err(|e| McrClientError::Internal(Box::new(e)))?;
+
+	// 	// If stake didn't increase, the staking failed
+	// 	if final_stake._0 <= initial_stake._0 {
+	// 		return Err(McrClientError::Internal(Box::new(std::io::Error::new(
+	// 			std::io::ErrorKind::Other,
+	// 			"Staking failed - stake amount did not increase"
+	// 		))))
+	// 	}
+
+	// 	Ok(())
+	// }
+
+	/// Get the current epoch stake for an attester
+	async fn get_stake(&self, custodian: String, attester: String) -> Result<u64, McrClientError> {
+		let contract = MCR::new(self.contract_address, &self.rpc_provider);
+		
+		let custodian_addr = custodian.parse()
+			.map_err(|e| McrClientError::Internal(Box::new(e)))?;
+		let attester_addr = attester.parse()
+			.map_err(|e| McrClientError::Internal(Box::new(e)))?;
+		
+		let MCR::getCurrentEpochStakeReturn { _0: stake } = contract
+			.getCurrentEpochStake(custodian_addr, attester_addr)
+			.call()
+			.await
+			.map_err(|e| McrClientError::Internal(Box::new(e)))?;
+
+		Ok(stake.try_into().map_err(|e| McrClientError::Internal(Box::new(e)))?)
 	}
 
 	async fn unstake(&self, amount: U256) -> Result<(), McrClientError> {

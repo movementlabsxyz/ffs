@@ -71,19 +71,6 @@ pub trait McrClientOperations {
 		attester: String,
 	) -> impl Future<Output = Result<Option<BlockCommitment>, McrClientError>> + Send;
 
-	/// Stakes the specified amount of MOVE tokens
-	fn stake(
-		&self,
-		amount: u64,
-	) -> impl Future<Output = Result<(), McrClientError>> + Send;
-
-	/// Get the current epoch stake for an attester
-	fn get_stake(
-		&self,
-		custodian: String,
-		attester: String,
-	) -> impl Future<Output = Result<u64, McrClientError>> + Send;
-
 	/// Get the balance of the specified address
 	fn get_balance(
 		&self,
@@ -105,9 +92,23 @@ pub trait McrClientOperations {
 		&self,
 		attester: String,
 	) -> impl Future<Output = Result<(), McrClientError>> + Send;
-	/// Stakes tokens for the MCR domain
-	fn stake(&self, amount: U256) -> impl Future<Output = Result<(), McrClientError>> + Send;
+	
+	/// Stakes tokens for the domain
+	fn stake(
+		&self, 
+		amount: U256
+	) -> impl Future<Output = Result<(), McrClientError>> + Send;
 
-	/// Unstakes tokens from the MCR domain
-	fn unstake(&self, amount: U256) -> impl Future<Output = Result<(), McrClientError>> + Send;
+	/// Get the current epoch stake for an attester
+	fn get_stake(
+		&self,
+		custodian: String,
+		attester: String,
+	) -> impl Future<Output = Result<u64, McrClientError>> + Send;
+
+	/// Unstakes tokens from the domain
+	fn unstake(
+		&self, 
+		amount: U256
+	) -> impl Future<Output = Result<(), McrClientError>> + Send;
 }
