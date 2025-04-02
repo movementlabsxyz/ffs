@@ -21,7 +21,7 @@ impl Up {
 
 		let up_task = kestrel::task(async move { up.run().await });
 
-		let artifacts = artifacts_state.read().wait_for().await;
+		let artifacts = artifacts_state.read().wait_forever().await;
 
 		println!("{}", artifacts.try_to_jsonl_flat(None)?);
 

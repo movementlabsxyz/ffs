@@ -11,7 +11,7 @@ use mcr_types::block_commitment::BlockCommitment;
 use network_anvil_component_core::util::parser::AnvilData;
 use secure_signer::key::TryFromCanonicalString;
 use secure_signer_loader::identifiers::SignerIdentifier;
-
+use tokio::time::Duration;
 pub struct Basic {
 	up: Up,
 }
@@ -74,11 +74,11 @@ impl Basic {
 
 		let up_task = kestrel::task(async move { self.up.run().await });
 
-		// wait for the anvil data and artifacts
+		// wait for the anvil data and artifacts for up to 30 seconds
 		println!("waiting for anvil data");
-		let anvil_data = anvil_data.read().wait_for().await;
+		let anvil_data = anvil_data.read().wait_for(Duration::from_secs(30)).await?;
 		println!("waiting for artifacts");
-		let artifacts = artifacts.read().wait_for().await;
+		let artifacts = artifacts.read().wait_for(Duration::from_secs(30)).await?;
 		println!("up state");
 		let up_state = UpState { anvil_data, artifacts };
 

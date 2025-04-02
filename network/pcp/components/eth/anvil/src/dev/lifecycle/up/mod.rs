@@ -1,6 +1,6 @@
 use kestrel::State;
-pub use pcp_dlu_eth_deployer_core::dev::{artifacts::Artifacts, config::Config};
 use network_anvil_component_core::{lifecycle::up::Up as AnvilUp, util::parser::AnvilData};
+pub use pcp_dlu_eth_deployer_core::dev::{artifacts::Artifacts, config::Config};
 use secure_signer_loader::identifiers::{local::Local, SignerIdentifier};
 
 /// Up struct for managing the PCP deployment process against Anvil.
@@ -30,7 +30,7 @@ impl Up {
 		let deployer_future = kestrel::task(async move { self.anvil_deploy.run().await });
 
 		// Wait on the anvil data
-		let anvil_data = anvil_data.read().wait_for().await;
+		let anvil_data = anvil_data.read().wait_forever().await;
 
 		// Overwrite whatever was in self.config with Anvil data
 		self.config.fork_url = "http://localhost:8545".to_string();
