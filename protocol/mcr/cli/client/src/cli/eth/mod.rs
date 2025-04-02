@@ -16,17 +16,17 @@ use clap::Subcommand;
 pub enum Eth {
 	/// Force a block commitment (admin only)
 	PostAdminCommitment(post_admin_commitment::PostAdminCommitment),
-	/// Post a single block commitment
+	/// Post a single commitment
 	PostCommitment(post_commitment::PostCommitment),
-	/// Post a batch of block commitments
+	/// Post a batch of commitments
 	PostCommitmentBatch(post_commitment_batch::PostCommitmentBatch),
-	/// Stream block commitments
+	/// Stream commitments
 	StreamCommitments(stream_commitments::StreamCommitments),
 	/// Get commitment at a specific height
 	GetCommitmentAtHeight(get_commitment_at_height::GetCommitmentAtHeight),
 	/// Get posted commitment at a specific height
 	GetPostedCommitmentAtHeight(get_posted_commitment_at_height::GetPostedCommitmentAtHeight),
-	/// Get max tolerable block height
+	/// Get max tolerable superBlock height
 	GetMaxTolerableBlockHeight(get_max_tolerable_block_height::GetMaxTolerableBlockHeight),
 	/// Stake tokens for the MCR domain
 	Stake(stake::Stake),
