@@ -10,10 +10,10 @@ pub struct PostCommitment {
 	/// Config
 	#[clap(flatten)]
 	pub config: Config,
-	/// The height of the block to commit
+	/// The height of the commitment block at which to commit
 	#[clap(long)]
 	height: u64,
-	/// The id of the block to commit
+	/// The id of the commitment block at which to commit
 	#[clap(long)]
 	id: Id,
 	/// The commitment to commit

@@ -26,7 +26,7 @@ contract MCRStorage {
     uint256 public lastAcceptedBlockHeight;
 
     /**
-     * @notice Structure representing a block commitment
+     * @notice Structure representing a block around a commitment
      * @dev Height 0 represents uncommitted; all other values are legitimate heights
      */
     struct BlockCommitment {

@@ -1,5 +1,4 @@
 pub mod eth;
-pub mod post_commitment;
 use clap::{Parser, Subcommand};
 
 /// The `mcr-protocol-client` CLI.
@@ -17,11 +16,9 @@ pub struct McrProtocolClient {
 pub enum McrProtocolClientSubcommand {
 	/// ???
 	Run,
-	/// ???
+	/// Ethereum-specific commands of the protocol, such as staking and committing
 	#[clap(subcommand)]
 	Eth(eth::Eth),
-	/// Post a commitment to an MCR implementation
-	PostCommitment(post_commitment::PostCommitment),
 }
 
 /// Implement the `From` trait for `McrProtocolClient` to convert it into a `McrProtocolClientSubcommand`.
