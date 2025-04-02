@@ -237,7 +237,6 @@ advance_by_a_block
 
 echo -e "\n================== Posting Commitment =================="
 
-
 # Check commitment before posting (should show nothing)
 ./target/debug/ffs-dev mcr protocol client eth check-commitment \
     --height 1 \
