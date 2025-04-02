@@ -69,7 +69,9 @@ impl Basic {
 
 	pub async fn run(self) -> Result<(), anyhow::Error> {
 		// clone the anvil data and artifacts from up
+		// We need the data from anvil...
 		let anvil_data = self.up.anvil_data().clone();
+		// ...and the artifacts from the eth deployment
 		let artifacts = self.up.artifacts().clone();
 
 		let up_task = kestrel::task(async move { self.up.run().await });
@@ -86,7 +88,9 @@ impl Basic {
 		let mcr_protocol_client = up_state.try_build_default_mcr_protocol_client().await?;
 
 		// act with the client
-		mcr_protocol_client.act(Act::PostBlockCommitment(BlockCommitment::default())).await?;
+		mcr_protocol_client
+			.act(Act::PostBlockCommitment(BlockCommitment::default()))
+			.await?;
 
 		// end the up task
 		kestrel::end!(up_task)?;

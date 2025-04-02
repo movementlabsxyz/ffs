@@ -30,6 +30,7 @@ This document contains the help content for the `ffs-dev` command-line program.
 * [`ffs-dev mcr protocol client run`↴](#ffs-dev-mcr-protocol-client-run)
 * [`ffs-dev mcr protocol client eth`↴](#ffs-dev-mcr-protocol-client-eth)
 * [`ffs-dev mcr protocol client eth post-admin-commitment`↴](#ffs-dev-mcr-protocol-client-eth-post-admin-commitment)
+* [`ffs-dev mcr protocol client eth post-commitment`↴](#ffs-dev-mcr-protocol-client-eth-post-commitment)
 * [`ffs-dev mcr protocol client eth post-commitment-batch`↴](#ffs-dev-mcr-protocol-client-eth-post-commitment-batch)
 * [`ffs-dev mcr protocol client eth stream-commitments`↴](#ffs-dev-mcr-protocol-client-eth-stream-commitments)
 * [`ffs-dev mcr protocol client eth get-commitment-at-height`↴](#ffs-dev-mcr-protocol-client-eth-get-commitment-at-height)
@@ -37,7 +38,6 @@ This document contains the help content for the `ffs-dev` command-line program.
 * [`ffs-dev mcr protocol client eth get-max-tolerable-block-height`↴](#ffs-dev-mcr-protocol-client-eth-get-max-tolerable-block-height)
 * [`ffs-dev mcr protocol client eth stake`↴](#ffs-dev-mcr-protocol-client-eth-stake)
 * [`ffs-dev mcr protocol client eth unstake`↴](#ffs-dev-mcr-protocol-client-eth-unstake)
-* [`ffs-dev mcr protocol client post-commitment`↴](#ffs-dev-mcr-protocol-client-post-commitment)
 * [`ffs-dev pcp`↴](#ffs-dev-pcp)
 * [`ffs-dev pcp network`↴](#ffs-dev-pcp-network)
 * [`ffs-dev pcp network run`↴](#ffs-dev-pcp-network-run)
@@ -405,8 +405,7 @@ KEEP THIS UNTIL PRODUCTION-READY : Defined in: protocol/mcr/cli/client/src/cli/m
 ###### **Subcommands:**
 
 * `run` — ???
-* `eth` — ???
-* `post-commitment` — Post a commitment to an MCR implementation
+* `eth` — Ethereum-specific commands of the protocol, such as staking and committing
 
 
 
@@ -420,7 +419,7 @@ KEEP THIS UNTIL PRODUCTION-READY : Defined in: protocol/mcr/cli/client/src/cli/m
 
 ## `ffs-dev mcr protocol client eth`
 
-???
+Ethereum-specific commands of the protocol, such as staking and committing
 
 **Usage:** `ffs-dev mcr protocol client eth <COMMAND>`
 
@@ -429,11 +428,12 @@ KEEP THIS UNTIL PRODUCTION-READY : Defined in: protocol/mcr/cli/client/src/cli/e
 ###### **Subcommands:**
 
 * `post-admin-commitment` — Force a block commitment (admin only)
-* `post-commitment-batch` — Post a batch of block commitments
-* `stream-commitments` — Stream block commitments
+* `post-commitment` — Post a single commitment
+* `post-commitment-batch` — Post a batch of commitments
+* `stream-commitments` — Stream commitments
 * `get-commitment-at-height` — Get commitment at a specific height
 * `get-posted-commitment-at-height` — Get posted commitment at a specific height
-* `get-max-tolerable-block-height` — Get max tolerable block height
+* `get-max-tolerable-block-height` — Get max tolerable superBlock height
 * `stake` — Stake tokens for the MCR domain
 * `unstake` — Unstake tokens from the MCR domain
 
@@ -455,15 +455,37 @@ Force a block commitment (admin only)
 * `--run-commitment-admin-mode` — Whether to run in settlement admin mode
 * `--gas-limit <GAS_LIMIT>` — The gas limit for transactions
 * `--transaction-send-retries <TRANSACTION_SEND_RETRIES>` — The number of retries for sending transactions
-* `--height <HEIGHT>` — The height of the block to commit
-* `--id <ID>` — The id of the block to commit
+* `--height <HEIGHT>` — The height of the commitment block at which to commit
+* `--id <ID>` — The id of the commitment block at which to commit
+* `--commitment <COMMITMENT>` — The commitment to commit
+
+
+
+## `ffs-dev mcr protocol client eth post-commitment`
+
+Post a single commitment
+
+**Usage:** `ffs-dev mcr protocol client eth post-commitment [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --signer-identifier <SIGNER_IDENTIFIER> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --height <HEIGHT> --id <ID> --commitment <COMMITMENT>`
+
+###### **Options:**
+
+* `--mcr-contract-address <MCR_CONTRACT_ADDRESS>` — The address of the MCR settlement contract
+* `--rpc-url <RPC_URL>` — The Ethereum RPC connection URL
+* `--ws-url <WS_URL>` — The Ethereum WebSocket connection URL
+* `--chain-id <CHAIN_ID>` — The Ethereum chain ID
+* `--signer-identifier <SIGNER_IDENTIFIER>` — The signer identifier
+* `--run-commitment-admin-mode` — Whether to run in settlement admin mode
+* `--gas-limit <GAS_LIMIT>` — The gas limit for transactions
+* `--transaction-send-retries <TRANSACTION_SEND_RETRIES>` — The number of retries for sending transactions
+* `--height <HEIGHT>` — The height of the commitment block at which to commit
+* `--id <ID>` — The id of the commitment block at which to commit
 * `--commitment <COMMITMENT>` — The commitment to commit
 
 
 
 ## `ffs-dev mcr protocol client eth post-commitment-batch`
 
-Post a batch of block commitments
+Post a batch of commitments
 
 **Usage:** `ffs-dev mcr protocol client eth post-commitment-batch [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --signer-identifier <SIGNER_IDENTIFIER> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --height <HEIGHT> --id <ID> --commitment <COMMITMENT>`
 
@@ -485,7 +507,7 @@ Post a batch of block commitments
 
 ## `ffs-dev mcr protocol client eth stream-commitments`
 
-Stream block commitments
+Stream commitments
 
 **Usage:** `ffs-dev mcr protocol client eth stream-commitments [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --signer-identifier <SIGNER_IDENTIFIER> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES>`
 
@@ -544,7 +566,7 @@ Get posted commitment at a specific height
 
 ## `ffs-dev mcr protocol client eth get-max-tolerable-block-height`
 
-Get max tolerable block height
+Get max tolerable superBlock height
 
 **Usage:** `ffs-dev mcr protocol client eth get-max-tolerable-block-height [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --signer-identifier <SIGNER_IDENTIFIER> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES>`
 
@@ -598,19 +620,6 @@ Unstake tokens from the MCR domain
 * `--gas-limit <GAS_LIMIT>` — The gas limit for transactions
 * `--transaction-send-retries <TRANSACTION_SEND_RETRIES>` — The number of retries for sending transactions
 * `--amount <AMOUNT>` — Amount to unstake
-
-
-
-## `ffs-dev mcr protocol client post-commitment`
-
-Post a commitment to an MCR implementation
-
-**Usage:** `ffs-dev mcr protocol client post-commitment [OPTIONS]`
-
-###### **Options:**
-
-* `--commitment-hex <COMMITMENT_HEX>` — Hex-encoded commitment
-* `--preimage-string <PREIMAGE_STRING>` — String to be hashed into a commitment
 
 
 
