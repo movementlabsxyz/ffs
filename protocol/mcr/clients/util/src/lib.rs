@@ -1,3 +1,4 @@
+pub use alloy_primitives::U256;
 use mcr_types::block_commitment::BlockCommitment;
 use std::future::Future;
 use tokio_stream::Stream;
@@ -104,4 +105,9 @@ pub trait McrClientOperations {
 		&self,
 		attester: String,
 	) -> impl Future<Output = Result<(), McrClientError>> + Send;
+	/// Stakes tokens for the MCR domain
+	fn stake(&self, amount: U256) -> impl Future<Output = Result<(), McrClientError>> + Send;
+
+	/// Unstakes tokens from the MCR domain
+	fn unstake(&self, amount: U256) -> impl Future<Output = Result<(), McrClientError>> + Send;
 }

@@ -1,3 +1,4 @@
+use alloy_primitives::U256;
 use mcr_protocol_client_core_util::{CommitmentStream, McrClientError, McrClientOperations};
 use mcr_types::block_commitment::BlockCommitment;
 use std::collections::BTreeMap;
@@ -100,10 +101,10 @@ impl McrClientOperations for Client {
 
 	async fn post_block_commitment_batch(
 		&self,
-		block_commitment: Vec<BlockCommitment>,
+		block_commitments: Vec<BlockCommitment>,
 	) -> Result<(), McrClientError> {
-		for commitment in block_commitment {
-			self.post_block_commitment(commitment).await?;
+		for block_commitment in block_commitments {
+			self.post_block_commitment(block_commitment).await?;
 		}
 		Ok(())
 	}
@@ -180,6 +181,16 @@ impl McrClientOperations for Client {
 		// Mock implementation - just return Ok
 		Ok(())
 	}
+
+	async fn stake(&self, amount: U256) -> Result<(), McrClientError> {
+		// Mock implementation - just return Ok
+		Ok(())
+	}
+
+	async fn unstake(&self, amount: U256) -> Result<(), McrClientError> {
+		// Mock implementation - just return Ok
+		Ok(())
+	}
 }
 
 #[cfg(test)]
@@ -210,7 +221,7 @@ pub mod test {
 	async fn test_post_block_commitment_batch() -> Result<(), McrClientError> {
 		let client = Client::new();
 		let commitment = BlockCommitment::new(1, Default::default(), Commitment::test());
-		let commitment2 = BlockCommitment::new(1, Default::default(), Commitment::test());
+		let commitment2 = BlockCommitment::new(2, Default::default(), Commitment::test());
 		client
 			.post_block_commitment_batch(vec![commitment.clone(), commitment2.clone()])
 			.await
@@ -248,7 +259,7 @@ pub mod test {
 	#[tokio::test]
 	async fn test_pause() -> Result<(), McrClientError> {
 		let client = Client::new();
-		let commitment = BlockCommitment::new(2, Default::default(), Commitment::test());
+		let commitment = BlockCommitment::new(1, Default::default(), Commitment::test());
 		client.pause_after(1).await;
 		client.post_block_commitment(commitment.clone()).await?;
 		let commitment2 = BlockCommitment::new(2, Default::default(), Commitment::test());
@@ -266,7 +277,7 @@ pub mod test {
 	#[tokio::test]
 	async fn test_resume() -> Result<(), McrClientError> {
 		let client = Client::new();
-		let commitment = BlockCommitment::new(2, Default::default(), Commitment::test());
+		let commitment = BlockCommitment::new(1, Default::default(), Commitment::test());
 		client.pause_after(1).await;
 		client.post_block_commitment(commitment.clone()).await?;
 		let commitment2 = BlockCommitment::new(2, Default::default(), Commitment::test());

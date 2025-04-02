@@ -12,7 +12,7 @@ pub struct Artifacts {
 
 	/// The existing move token proxy
 	#[arg(long)]
-	pub move_token_proxy: Option<String>,
+	pub token_proxy: Option<String>,
 
 	/// The existing staking proxy
 	#[arg(long)]
@@ -31,7 +31,7 @@ impl Default for Artifacts {
 	fn default() -> Self {
 		Self {
 			proxy_admin: None,
-			move_token_proxy: None,
+			token_proxy: None,
 			staking_proxy: None,
 			mcr_proxy: None,
 			reward_proxy: None,
@@ -45,7 +45,7 @@ impl TryFrom<OutputArtifacts> for Artifacts {
 	fn try_from(artifacts: OutputArtifacts) -> Result<Self, Self::Error> {
 		Ok(Self {
 			proxy_admin: Some(artifacts.proxy_admin),
-			move_token_proxy: Some(artifacts.move_token_proxy),
+			token_proxy: Some(artifacts.token_proxy),
 			staking_proxy: Some(artifacts.staking_proxy),
 			mcr_proxy: Some(artifacts.mcr_proxy),
 			reward_proxy: Some(artifacts.reward_proxy),

@@ -24,9 +24,9 @@ pub struct McrProtocolClient {
 #[clap(rename_all = "kebab-case")]
 #[clap(after_help = concat!("KEEP THIS UNTIL PRODUCTION-READY : Defined in: ", file!()))]
 pub enum McrProtocolClientSubcommand {
-	/// ??? 
+	/// ???
 	Run,
-	/// ??? 
+	/// Ethereum-specific commands of the protocol, such as staking and committing
 	#[clap(subcommand)]
 	Eth(eth::Eth),
 	/// Post a commitment

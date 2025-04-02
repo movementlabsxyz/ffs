@@ -10,6 +10,7 @@ use lifecycle::{ApplyOperations, LifecycleApplyFrontend, LifecycleError, Lifecyc
 use orfile::Orfile;
 use secure_signer_loader::identifiers::SignerIdentifier;
 use serde::{Deserialize, Serialize};
+use std::str::FromStr;
 
 #[derive(Parser, Debug, Serialize, Deserialize, Clone, Jsonl, Orfile)]
 #[clap(help_expected = true)]
@@ -40,6 +41,18 @@ impl Config {
 		Config { signer_identifier, fork_url, script_args, jsonl_prefix }
 	}
 
+	/// Returns a new instance of [Config] which is designed to be filled in some fields.
+	pub fn to_be_filled() -> Result<Self, anyhow::Error> {
+		Ok(Self {
+			signer_identifier: SignerIdentifier::from_str(
+				"local::0000000000000000000000000000000000000000",
+			)
+			.map_err(|e| anyhow::anyhow!("failed to parse signer identifier: {}", e))?,
+			fork_url: "http://localhost:8545".to_string(),
+			script_args: ScriptArgs::to_be_filled(),
+			jsonl_prefix: None,
+		})
+	}
 	pub async fn build(&self) -> Result<Applier, anyhow::Error> {
 		// get the raw private key
 		let raw_key = self.signer_identifier.try_raw_private_key()?;

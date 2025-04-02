@@ -3,10 +3,9 @@ use crate::util::send_eth_transaction::McrEthConnectorError;
 use crate::util::send_eth_transaction::VerifyRule;
 use alloy::providers::Provider;
 use alloy_primitives::Address;
-use alloy_primitives::U256;
 use alloy_sol_types::sol;
 use anyhow::Context;
-use mcr_protocol_client_core_util::{CommitmentStream, McrClientError, McrClientOperations};
+use mcr_protocol_client_core_util::{CommitmentStream, McrClientError, McrClientOperations, U256};
 use mcr_types::block_commitment::{BlockCommitment, Commitment, Id};
 use serde_json::Value as JsonValue;
 use std::array::TryFromSliceError;
@@ -61,6 +60,8 @@ where
 		block_commitment: BlockCommitment,
 	) -> Result<(), McrClientError> {
 		let contract = MCR::new(self.contract_address, &self.rpc_provider);
+
+		// block commitment that is made ready for eth
 		let eth_block_commitment = MCRStorage::BlockCommitment {
 			// Currently, to simplify the API, we'll say 0 is uncommitted all other numbers are legitimate heights
 			height: U256::from(block_commitment.height()),
@@ -101,7 +102,8 @@ where
 	) -> Result<(), McrClientError> {
 		let contract = MCR::new(self.contract_address, &self.rpc_provider);
 
-		let eth_block_commitment: Vec<_> = block_commitments
+		// batch of block commitment that is made ready for eth
+		let eth_block_commitment_batch: Vec<_> = block_commitments
 			.into_iter()
 			.map(|block_commitment| {
 				Ok(MCRStorage::BlockCommitment {
@@ -118,7 +120,7 @@ where
 			.collect::<Result<Vec<_>, TryFromSliceError>>()
 			.map_err(|e| McrClientError::Internal(Box::new(e)))?;
 
-		let call_builder = contract.submitBatchBlockCommitment(eth_block_commitment);
+		let call_builder = contract.submitBatchBlockCommitment(eth_block_commitment_batch);
 
 		send_transaction(
 			self.signer_address.clone(),
@@ -414,6 +416,32 @@ where
 		).await.map_err(|e| McrClientError::AdminFunction(Box::new(e)))?;
 		
 		Ok(())
+	}
+		
+	async fn stake(&self, amount: U256) -> Result<(), McrClientError> {
+		let contract = MCR::new(self.contract_address, &self.rpc_provider);
+		let call_builder = contract.stake(U256::from(amount));
+		send_transaction(
+			self.signer_address.clone(),
+			call_builder,
+			&self.send_transaction_error_rules,
+			self.send_transaction_retries,
+			self.gas_limit as u128,
+		)
+		.await
+	}
+
+	async fn unstake(&self, amount: U256) -> Result<(), McrClientError> {
+		let contract = MCR::new(self.contract_address, &self.rpc_provider);
+		let call_builder = contract.unstake(U256::from(amount));
+		send_transaction(
+			self.signer_address.clone(),
+			call_builder,
+			&self.send_transaction_error_rules,
+			self.send_transaction_retries,
+			self.gas_limit as u128,
+		)
+		.await
 	}
 }
 

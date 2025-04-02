@@ -329,9 +329,9 @@ dependencies = [
 
 [[package]]
 name = "alloy-primitives"
-version = "0.6.4"
+version = "0.4.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "600d34d8de81e23b6d909c094e23b3d357e01ca36b78a8c5424c501eedbe86f0"
+checksum = "a0628ec0ba5b98b3370bb6be17b12f23bfce8ee4ad83823325a20546d9b03b78"
 dependencies = [
  "alloy-rlp",
  "bytes",
@@ -340,8 +340,6 @@ dependencies = [
  "derive_more 0.99.19",
  "hex-literal",
  "itoa",
- "k256",
- "keccak-asm",
  "proptest",
  "rand 0.8.5",
  "ruint",
@@ -1817,8 +1815,8 @@ dependencies = [
 
 [[package]]
 name = "commander"
-version = "0.0.1"
-source = "git+https://github.com/movementlabsxyz/kestrel.git?rev=c5c9b30ba2532f606485ad5a08da40d2940491fa#c5c9b30ba2532f606485ad5a08da40d2940491fa"
+version = "0.1.0"
+source = "git+https://github.com/movementlabsxyz/kestrel.git?rev=85e2f681ae3e54b29bb18d4ed7ca750116173321#85e2f681ae3e54b29bb18d4ed7ca750116173321"
 dependencies = [
  "anyhow",
  "futures",
@@ -3263,8 +3261,8 @@ dependencies = [
 
 [[package]]
 name = "jsonlvar"
-version = "0.0.1"
-source = "git+https://github.com/movementlabsxyz/kestrel.git?rev=c5c9b30ba2532f606485ad5a08da40d2940491fa#c5c9b30ba2532f606485ad5a08da40d2940491fa"
+version = "0.1.0"
+source = "git+https://github.com/movementlabsxyz/kestrel.git?rev=85e2f681ae3e54b29bb18d4ed7ca750116173321#85e2f681ae3e54b29bb18d4ed7ca750116173321"
 dependencies = [
  "jsonlvar-core",
  "jsonlvar-macro",
@@ -3274,8 +3272,8 @@ dependencies = [
 
 [[package]]
 name = "jsonlvar-core"
-version = "0.0.1"
-source = "git+https://github.com/movementlabsxyz/kestrel.git?rev=c5c9b30ba2532f606485ad5a08da40d2940491fa#c5c9b30ba2532f606485ad5a08da40d2940491fa"
+version = "0.1.0"
+source = "git+https://github.com/movementlabsxyz/kestrel.git?rev=85e2f681ae3e54b29bb18d4ed7ca750116173321#85e2f681ae3e54b29bb18d4ed7ca750116173321"
 dependencies = [
  "regex",
  "serde",
@@ -3285,8 +3283,8 @@ dependencies = [
 
 [[package]]
 name = "jsonlvar-macro"
-version = "0.0.1"
-source = "git+https://github.com/movementlabsxyz/kestrel.git?rev=c5c9b30ba2532f606485ad5a08da40d2940491fa#c5c9b30ba2532f606485ad5a08da40d2940491fa"
+version = "0.1.0"
+source = "git+https://github.com/movementlabsxyz/kestrel.git?rev=85e2f681ae3e54b29bb18d4ed7ca750116173321#85e2f681ae3e54b29bb18d4ed7ca750116173321"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -3297,8 +3295,8 @@ dependencies = [
 
 [[package]]
 name = "jsonlvar-tokio"
-version = "0.0.1"
-source = "git+https://github.com/movementlabsxyz/kestrel.git?rev=c5c9b30ba2532f606485ad5a08da40d2940491fa#c5c9b30ba2532f606485ad5a08da40d2940491fa"
+version = "0.1.0"
+source = "git+https://github.com/movementlabsxyz/kestrel.git?rev=85e2f681ae3e54b29bb18d4ed7ca750116173321#85e2f681ae3e54b29bb18d4ed7ca750116173321"
 dependencies = [
  "anyhow",
  "jsonlvar",
@@ -3360,19 +3358,21 @@ dependencies = [
 
 [[package]]
 name = "kestrel"
-version = "0.0.1"
-source = "git+https://github.com/movementlabsxyz/kestrel.git?rev=c5c9b30ba2532f606485ad5a08da40d2940491fa#c5c9b30ba2532f606485ad5a08da40d2940491fa"
+version = "0.1.0"
+source = "git+https://github.com/movementlabsxyz/kestrel.git?rev=85e2f681ae3e54b29bb18d4ed7ca750116173321#85e2f681ae3e54b29bb18d4ed7ca750116173321"
 dependencies = [
+ "futures",
  "kestrel-macro",
  "kestrel-process",
  "kestrel-state",
+ "thiserror 1.0.69",
  "tokio",
 ]
 
 [[package]]
 name = "kestrel-macro"
-version = "0.0.1"
-source = "git+https://github.com/movementlabsxyz/kestrel.git?rev=c5c9b30ba2532f606485ad5a08da40d2940491fa#c5c9b30ba2532f606485ad5a08da40d2940491fa"
+version = "0.1.0"
+source = "git+https://github.com/movementlabsxyz/kestrel.git?rev=85e2f681ae3e54b29bb18d4ed7ca750116173321#85e2f681ae3e54b29bb18d4ed7ca750116173321"
 dependencies = [
  "convert_case 0.8.0",
  "proc-macro2",
@@ -3384,10 +3384,10 @@ dependencies = [
 
 [[package]]
 name = "kestrel-process"
-version = "0.0.1"
-source = "git+https://github.com/movementlabsxyz/kestrel.git?rev=c5c9b30ba2532f606485ad5a08da40d2940491fa#c5c9b30ba2532f606485ad5a08da40d2940491fa"
+version = "0.1.0"
+source = "git+https://github.com/movementlabsxyz/kestrel.git?rev=85e2f681ae3e54b29bb18d4ed7ca750116173321#85e2f681ae3e54b29bb18d4ed7ca750116173321"
 dependencies = [
- "commander 0.0.1 (git+https://github.com/movementlabsxyz/kestrel.git?rev=c5c9b30ba2532f606485ad5a08da40d2940491fa)",
+ "commander 0.1.0",
  "jsonlvar",
  "jsonlvar-tokio",
  "kestrel-state",
@@ -3398,9 +3398,10 @@ dependencies = [
 
 [[package]]
 name = "kestrel-state"
-version = "0.0.1"
-source = "git+https://github.com/movementlabsxyz/kestrel.git?rev=c5c9b30ba2532f606485ad5a08da40d2940491fa#c5c9b30ba2532f606485ad5a08da40d2940491fa"
+version = "0.1.0"
+source = "git+https://github.com/movementlabsxyz/kestrel.git?rev=85e2f681ae3e54b29bb18d4ed7ca750116173321#85e2f681ae3e54b29bb18d4ed7ca750116173321"
 dependencies = [
+ "thiserror 1.0.69",
  "tokio",
 ]
 
@@ -3693,12 +3694,14 @@ dependencies = [
  "serde",
  "sha3",
  "tokio",
+ "tokio-stream",
 ]
 
 [[package]]
 name = "mcr-protocol-client-core-mock"
 version = "0.0.1"
 dependencies = [
+ "alloy-primitives 0.8.23",
  "anyhow",
  "futures",
  "mcr-protocol-client-core-util",
@@ -3714,7 +3717,7 @@ dependencies = [
 name = "mcr-protocol-client-core-util"
 version = "0.0.1"
 dependencies = [
- "alloy-primitives 0.6.4",
+ "alloy-primitives 0.4.2",
  "mcr-types",
  "serde",
  "thiserror 1.0.69",
@@ -3823,6 +3826,8 @@ dependencies = [
 name = "mcr-types"
 version = "0.0.1"
 dependencies = [
+ "anyhow",
+ "hex",
  "serde",
 ]
 
@@ -5805,6 +5810,51 @@ dependencies = [
  "once_cell",
  "rustix 1.0.3",
  "windows-sys 0.59.0",
+]
+
+[[package]]
+name = "test-basic-mcr-network-anvil-component-core"
+version = "0.0.1"
+dependencies = [
+ "anyhow",
+ "async-stream",
+ "async-trait",
+ "futures",
+ "kestrel",
+ "mcr-config",
+ "mcr-network-anvil-component-core",
+ "mcr-protocol-client-core-mock",
+ "mcr-protocol-client-core-util",
+ "mcr-protocol-client-eth-core",
+ "mcr-protocol-deployer-eth-core",
+ "mcr-types",
+ "network-anvil-component-core",
+ "secure-signer",
+ "secure-signer-loader",
+ "serde_json",
+ "strip-ansi-escapes",
+ "tokio",
+ "tokio-stream",
+]
+
+[[package]]
+name = "test-basic-mcr-network-coordinator"
+version = "0.0.1"
+dependencies = [
+ "anyhow",
+ "clap",
+ "dotenv",
+ "jsonlvar",
+ "kestrel",
+ "mcr-network-anvil-component-core",
+ "mcr-network-coordinator",
+ "mcr-network-eth-live-component-core",
+ "mcr-protocol-client",
+ "mcr-protocol-deployer-eth-core",
+ "orfile",
+ "serde",
+ "serde_json",
+ "tokio",
 ]
 
 [[package]]

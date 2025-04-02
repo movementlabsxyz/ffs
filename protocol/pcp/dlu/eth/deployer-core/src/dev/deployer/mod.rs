@@ -1,41 +1,3 @@
-//! Calls a Solidity deployment script with a run method taking the following struct:
-//!
-//! struct DeployConfig {
-//!        // Admin configuration
-//!        address contractAdmin;        // Admin address for deployed contracts
-//!        
-//!        // Token configuration
-//!        string tokenName;
-//!        string tokenSymbol;
-//!        uint256 initialTokenMint;
-//!        
-//!        // Staking configuration
-//!        address[] custodians;
-//!        
-//!        // PCP configuration
-//!        uint256 initialBlockHeight;
-//!        uint256 leadingBlockTolerance;
-//!        uint256 epochDuration;
-//!        
-//!        // Reward configuration
-//!        uint8 rewardOption;              // 0=none, 1=deploy ARO, 2=existing
-//!        address existingRewardContract;  // Only used if rewardOption=2
-//!        
-//!        // Existing contracts (for upgrades)
-//!        address existingProxyAdmin;      // If set, will use this instead of deploying new
-//!        address existingMoveTokenProxy;  // If set, will upgrade this instead of deploying new
-//!        address existingStakingProxy;    // If set, will upgrade this instead of deploying new
-//!        address existingPcpProxy;        // If set, will upgrade this instead of deploying new
-//!        address existingAroProxy;        // If set, will upgrade this instead of deploying new
-//!
-//!        // Destruction flags (for destroying/nullifying contracts)
-//!        bool destroyMode;                // If true, will nullify the proxies
-//!    }
-//!
-//!
-//!
-//!
-
 use crate::contracts::ContractWorkspace;
 use crate::dev::artifacts::Artifacts;
 use clap::Parser;
@@ -144,7 +106,7 @@ pub struct DeployConfig {
 
 	/// The existing move token proxy
 	#[arg(long)]
-	pub existing_move_token_proxy: Option<String>,
+	pub existing_token_proxy: Option<String>,
 
 	/// The existing staking proxy
 	#[arg(long)]
@@ -181,7 +143,7 @@ impl DeployConfig {
 			"rewardOption": reward_contract.reward_option(),
 			"existingRewardContract": reward_contract.existing_reward_contract().unwrap_or_else(|| zero_address.to_string()),
 			"existingProxyAdmin": self.existing_proxy_admin.as_deref().unwrap_or(zero_address),
-			"existingMoveTokenProxy": self.existing_move_token_proxy.as_deref().unwrap_or(zero_address),
+			"existingMoveTokenProxy": self.existing_token_proxy.as_deref().unwrap_or(zero_address),
 			"existingStakingProxy": self.existing_staking_proxy.as_deref().unwrap_or(zero_address),
 			"existingPcpProxy": self.existing_pcp_proxy.as_deref().unwrap_or(zero_address),
 			"existingAroProxy": self.existing_reward_proxy.as_deref().unwrap_or(zero_address),

@@ -22,7 +22,7 @@ pub struct Artifacts {
 	pub pcp_implementation: String,
 
 	// Proxies
-	pub move_token_proxy: String,
+	pub token_proxy: String,
 	pub movement_staking_proxy: String,
 	pub pcp_proxy: String,
 

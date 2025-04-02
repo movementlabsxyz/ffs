@@ -25,6 +25,26 @@ use secure_signer_loader::{identifiers::SignerIdentifier /*Load*/};
 use serde::{Deserialize, Serialize};
 // use tracing::info;
 
+pub type StandardClient = Client<
+	FillProvider<
+		JoinFill<
+			JoinFill<
+				alloy::providers::Identity,
+				JoinFill<GasFiller, JoinFill<BlobGasFiller, JoinFill<NonceFiller, ChainIdFiller>>>,
+			>,
+			WalletFiller<EthereumWallet>,
+		>,
+		RootProvider,
+	>,
+	FillProvider<
+		JoinFill<
+			alloy::providers::Identity,
+			JoinFill<GasFiller, JoinFill<BlobGasFiller, JoinFill<NonceFiller, ChainIdFiller>>>,
+		>,
+		RootProvider,
+	>,
+>;
+
 #[derive(Parser, Debug, Serialize, Deserialize, Clone)]
 #[clap(help_expected = true)]
 pub struct Config {
@@ -100,36 +120,7 @@ impl Config {
 	}
 
 	/// Builds the MCR client.
-	pub async fn build(
-		self,
-	) -> Result<
-		Client<
-			FillProvider<
-				JoinFill<
-					JoinFill<
-						alloy::providers::Identity,
-						JoinFill<
-							GasFiller,
-							JoinFill<BlobGasFiller, JoinFill<NonceFiller, ChainIdFiller>>,
-						>,
-					>,
-					WalletFiller<EthereumWallet>,
-				>,
-				RootProvider,
-			>,
-			FillProvider<
-				JoinFill<
-					alloy::providers::Identity,
-					JoinFill<
-						GasFiller,
-						JoinFill<BlobGasFiller, JoinFill<NonceFiller, ChainIdFiller>>,
-					>,
-				>,
-				RootProvider,
-			>,
-		>,
-		anyhow::Error,
-	> {
+	pub async fn build(self) -> Result<StandardClient, anyhow::Error> {
 		let raw_key = self.signer_identifier.try_raw_private_key().context("failed to get the raw private key from the signer identifier; only local signers are currently supported")?;
 		// add the 0x
 		let raw_key_string = format!("0x{}", hex::encode(raw_key));

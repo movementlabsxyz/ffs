@@ -10,6 +10,7 @@ import {BaseSettlement} from "./settlement/BaseSettlement.sol";
 import {IMCR} from "./interfaces/IMCR.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import {IMcrReward} from "./interfaces/IMcrReward.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 /**
  * @title MCR - Movement Chain Relay
@@ -276,7 +277,7 @@ contract MCR is Initializable, BaseSettlement, MCRStorage, IMCR {
         uint256 height,
         address attester
     ) public view returns (BlockCommitment memory) {
-        return commitments[height][attester];
+        return blockCommitments[height][attester];
     }
 
     /**
@@ -288,7 +289,7 @@ contract MCR is Initializable, BaseSettlement, MCRStorage, IMCR {
             hasRole(COMMITMENT_ADMIN, msg.sender),
             "SET_LAST_ACCEPTED_COMMITMENT_AT_HEIGHT_IS_COMMITMENT_ADMIN_ONLY"
         );
-        versionedAcceptedBlocks[acceptedBlocksVersion][blockCommitment.height] = blockCommitment;  
+        versionedAcceptedBlockCommitments[acceptedBlockCommitmentsVersion][blockCommitment.height] = blockCommitment;  
     }
 
     /**
@@ -315,9 +316,9 @@ contract MCR is Initializable, BaseSettlement, MCRStorage, IMCR {
             "FORCE_LATEST_COMMITMENT_IS_COMMITMENT_ADMIN_ONLY"
         );
 
-        // Increment the acceptedBlocksVersion (effectively removing all other accepted blocks)
-        acceptedBlocksVersion += 1;
-        versionedAcceptedBlocks[acceptedBlocksVersion][blockCommitment.height] = blockCommitment;
+        // Increment the acceptedBlockCommitmentsVersion (effectively removing all other accepted blocks)
+        acceptedBlockCommitmentsVersion += 1;
+        versionedAcceptedBlockCommitments[acceptedBlockCommitmentsVersion][blockCommitment.height] = blockCommitment;
         lastAcceptedBlockHeight = blockCommitment.height; 
     }
 
@@ -327,7 +328,7 @@ contract MCR is Initializable, BaseSettlement, MCRStorage, IMCR {
      * @return BlockCommitment memory
      */
     function getAcceptedCommitmentAtBlockHeight(uint256 height) public view returns (BlockCommitment memory) {
-        return versionedAcceptedBlocks[acceptedBlocksVersion][height];
+        return versionedAcceptedBlockCommitments[acceptedBlockCommitmentsVersion][height];
     }
 
     /**
@@ -350,12 +351,19 @@ contract MCR is Initializable, BaseSettlement, MCRStorage, IMCR {
     ) internal {
         emit DebugCheckpoint("Start submitBlockCommitmentForAttester");
         emit DebugValues("Values", attester, blockCommitment.height, lastAcceptedBlockHeight, leadingBlockTolerance);
+        // Attester has already committed to a block at this height
+        if (blockCommitments[blockCommitment.height][attester].height != 0)
+            revert AttesterAlreadyCommitted();
+
+        // We allow commitments to already accepted blocks to support lagging attesters
+        // If uncommented, this would prevent commitments to already accepted blocks:
+        // if (lastAcceptedBlockHeight > blockCommitment.height) revert AlreadyAcceptedBlock();
         
         emit DebugCheckpoint("Before existing commitment check");
-        uint256 existingCommitmentHeight = commitments[blockCommitment.height][attester].height;
+        uint256 existingCommitmentHeight = blockCommitments[blockCommitment.height][attester].height;
         emit DebugUint("Existing commitment height", existingCommitmentHeight);
         
-        if (commitments[blockCommitment.height][attester].height != 0) {
+        if (blockCommitments[blockCommitment.height][attester].height != 0) {
             emit DebugCheckpoint("Reverting: AttesterAlreadyCommitted - commitment exists");
             revert AttesterAlreadyCommitted();
         }
@@ -378,7 +386,7 @@ contract MCR is Initializable, BaseSettlement, MCRStorage, IMCR {
         emit DebugCheckpoint("After epoch assignment");
 
         // Register the attester's commitment
-        commitments[blockCommitment.height][attester] = blockCommitment;
+        blockCommitments[blockCommitment.height][attester] = blockCommitment;
 
         // Increment the commitment count by stake
         uint256 allCurrentEpochStake = computeAllCurrentEpochStake(attester);
@@ -428,7 +436,7 @@ contract MCR is Initializable, BaseSettlement, MCRStorage, IMCR {
             address attester = attesters[i];
 
             // Get the commitment for this attester at the block height
-            BlockCommitment memory blockCommitment = commitments[blockHeight][
+            BlockCommitment memory blockCommitment = blockCommitments[blockHeight][
                 attester
             ];
 
@@ -525,7 +533,7 @@ contract MCR is Initializable, BaseSettlement, MCRStorage, IMCR {
             revert UnacceptableBlockCommitment();
 
         // Set accepted block commitment
-        versionedAcceptedBlocks[acceptedBlocksVersion][blockCommitment.height] = blockCommitment;
+        versionedAcceptedBlockCommitments[acceptedBlockCommitmentsVersion][blockCommitment.height] = blockCommitment;
 
         // Set last accepted block height
         lastAcceptedBlockHeight = blockCommitment.height;
@@ -546,7 +554,7 @@ contract MCR is Initializable, BaseSettlement, MCRStorage, IMCR {
             address[] memory attesters = stakingContract.getAttestersByDomain(address(this));
             for (uint256 i = 0; i < attesters.length; i++) {
                 address attester = attesters[i];
-                if (commitments[blockCommitment.height][attester].commitment == blockCommitment.commitment) {
+                if (blockCommitments[blockCommitment.height][attester].commitment == blockCommitment.commitment) {
                     // Use delegatecall to maintain MCR as msg.sender for the reward call
                     (bool _success, ) = address(rewardContract).delegatecall(
                         abi.encodeWithSelector(
@@ -651,5 +659,32 @@ contract MCR is Initializable, BaseSettlement, MCRStorage, IMCR {
             value /= 10;
         }
         return string(buffer);
+    }
+
+    /**
+     * @notice Allows users to stake tokens for the MCR domain
+     * @param amount The amount to stake
+     */
+    function stake(uint256 amount) external {
+        // Get the token from the staking contract
+        IERC20 token = stakingContract.getToken();
+
+        // approve the staking contract to spend the tokens
+        token.approve(address(stakingContract), amount);
+        
+        // Call stakeFor on the staking contract to stake for the user
+        stakingContract.stakeFor(msg.sender, token, amount);
+    }
+
+    /**
+     * @notice Allows users to unstake tokens from the MCR domain
+     * @param amount The amount to unstake
+     */
+    function unstake(uint256 amount) external {
+        // Get the token from the staking contract
+        IERC20 token = stakingContract.getToken();
+
+        // Call unstake on the staking contract
+        stakingContract.unstakeFor(msg.sender, address(token), amount);
     }
 }

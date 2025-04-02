@@ -15,7 +15,9 @@ members = [
   "protocol/mcr/cli/*",
   "protocol/mcr/dlu/eth/deployer",
   "network/mcr/cli/*",
+  "network/mcr/cli/coordinator/tests/*",
   "network/mcr/components/eth/*",
+  "network/mcr/components/eth/anvil/tests/*",
 
   # pcp
   "protocol/pcp/util/*",
@@ -121,8 +123,8 @@ secure-signer-loader = { git = "https://github.com/movementlabsxyz/secure-signin
 secure-signer-aws-kms = { git = "https://github.com/movementlabsxyz/secure-signing.git", rev = "f37eebd6d494d21b26b2faa44e1188de42ff1007"  }
 
 # kestrel 
-kestrel = { git = "https://github.com/movementlabsxyz/kestrel.git", rev = "c5c9b30ba2532f606485ad5a08da40d2940491fa" }
-jsonlvar = { git = "https://github.com/movementlabsxyz/kestrel.git", rev = "c5c9b30ba2532f606485ad5a08da40d2940491fa" }
+kestrel = { git = "https://github.com/movementlabsxyz/kestrel.git", rev = "85e2f681ae3e54b29bb18d4ed7ca750116173321" }
+jsonlvar = { git = "https://github.com/movementlabsxyz/kestrel.git", rev = "85e2f681ae3e54b29bb18d4ed7ca750116173321" }
 
 # orfile
 orfile = { git = "https://github.com/movementlabsxyz/orfile.git", rev = "d02299214e5aa202130cd1eb9593ce8064d1ec69" }

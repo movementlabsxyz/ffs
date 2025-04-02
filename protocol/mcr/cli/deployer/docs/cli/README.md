@@ -140,7 +140,7 @@ Run config with all parameters passed explicitly as CLI flags. See Orfile docume
   Default value: `1000000`
 * `--reward-contract <REWARD_CONTRACT>` — The reward contract
 * `--proxy-admin <PROXY_ADMIN>` — The existing proxy admin
-* `--move-token-proxy <MOVE_TOKEN_PROXY>` — The existing move token proxy
+* `--token-proxy <TOKEN_PROXY>` — The existing move token proxy
 * `--staking-proxy <STAKING_PROXY>` — The existing staking proxy
 * `--mcr-proxy <MCR_PROXY>` — The existing MCR proxy
 * `--reward-proxy <REWARD_PROXY>` — The existing ARO proxy
@@ -169,14 +169,14 @@ Run config with parameters from environment variables, config files, and CLI fla
 
 ## `mcr-protocol-deployer eth destroy`
 
-**Usage:** `mcr-protocol-deployer eth destroy [OPTIONS] --signer-identifier <SIGNER_IDENTIFIER> --fork-url <FORK_URL> --proxy-admin <PROXY_ADMIN> --move-token-proxy <MOVE_TOKEN_PROXY> --staking-proxy <STAKING_PROXY> --mcr-proxy <MCR_PROXY> --reward-proxy <REWARD_PROXY>`
+**Usage:** `mcr-protocol-deployer eth destroy [OPTIONS] --signer-identifier <SIGNER_IDENTIFIER> --fork-url <FORK_URL> --proxy-admin <PROXY_ADMIN> --token-proxy <TOKEN_PROXY> --staking-proxy <STAKING_PROXY> --mcr-proxy <MCR_PROXY> --reward-proxy <REWARD_PROXY>`
 
 ###### **Options:**
 
 * `--signer-identifier <SIGNER_IDENTIFIER>` — The signer identifier
 * `--fork-url <FORK_URL>` — The fork url for deployment
 * `--proxy-admin <PROXY_ADMIN>` — The proxy admin
-* `--move-token-proxy <MOVE_TOKEN_PROXY>` — The move token proxy
+* `--token-proxy <TOKEN_PROXY>` — The move token proxy
 * `--staking-proxy <STAKING_PROXY>` — The staking proxy
 * `--mcr-proxy <MCR_PROXY>` — The mcr proxy
 * `--reward-proxy <REWARD_PROXY>` — The reward proxy
