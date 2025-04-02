@@ -215,7 +215,7 @@ pub mod test {
 	#[tokio::test]
 	async fn test_pause() -> Result<(), PcpClientError> {
 		let client = Client::new();
-		let commitment = SuperBlockCommitment::new(2, Default::default(), Commitment::test());
+		let commitment = SuperBlockCommitment::new(1, Default::default(), Commitment::test());
 		client.pause_after(1).await;
 		client.post_block_commitment(commitment.clone()).await?;
 		let commitment2 = SuperBlockCommitment::new(2, Default::default(), Commitment::test());
@@ -233,7 +233,7 @@ pub mod test {
 	#[tokio::test]
 	async fn test_resume() -> Result<(), PcpClientError> {
 		let client = Client::new();
-		let commitment = SuperBlockCommitment::new(2, Default::default(), Commitment::test());
+		let commitment = SuperBlockCommitment::new(1, Default::default(), Commitment::test());
 		client.pause_after(1).await;
 		client.post_block_commitment(commitment.clone()).await?;
 		let commitment2 = SuperBlockCommitment::new(2, Default::default(), Commitment::test());
