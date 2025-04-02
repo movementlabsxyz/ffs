@@ -6,6 +6,7 @@ use kestrel::{
 
 use crate::util::parser::{AnvilData, ParseAnvilData};
 
+/// Used to manage running Anvil and filling in the [AnvilData] struct as [State]
 pub struct Up {
 	anvil_data: State<AnvilData>,
 }
@@ -19,6 +20,7 @@ impl Up {
 		&self.anvil_data
 	}
 
+	/// Runs the Anvil deployment process.
 	pub async fn run(self) -> Result<(), anyhow::Error> {
 		let anvil_data = self.anvil_data.clone();
 		let anvil = kestrel::task(async move {
