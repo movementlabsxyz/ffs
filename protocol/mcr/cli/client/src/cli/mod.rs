@@ -45,9 +45,6 @@ impl McrProtocolClientSubcommand {
 				println!("mcr-protocol-client is under development. Please check back later.");
 			}
 			McrProtocolClientSubcommand::Eth(eth) => eth.execute().await?,
-			McrProtocolClientSubcommand::PostCommitment(post_commitment) => {
-				post_commitment.execute().await?
-			}
 		}
 		Ok(())
 	}
