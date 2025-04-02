@@ -19,7 +19,7 @@ impl GetCommitmentAtHeight {
 		let config = self.config.clone();
 		let client = config.build().await?;
 
-		match client.get_commitment_at_height(self.height).await? {
+		match client.get_accepted_commitment_at_height(self.height).await? {
 			Some(commitment) => println!("Commitment at height {}: {:?}", self.height, commitment),
 			None => println!("No commitment found at height {}", self.height),
 		}

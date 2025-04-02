@@ -48,7 +48,7 @@ pub trait McrClientOperations {
 	) -> impl Future<Output = Result<CommitmentStream, McrClientError>> + Send;
 
 	/// Gets the accepted commitment at the given height.
-	fn get_commitment_at_height(
+	fn get_accepted_commitment_at_height(
 		&self,
 		height: u64,
 	) -> impl Future<Output = Result<Option<BlockCommitment>, McrClientError>> + Send;

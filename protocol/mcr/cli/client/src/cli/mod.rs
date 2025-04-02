@@ -1,11 +1,5 @@
-pub mod get_stake;
 pub mod eth;
-pub mod post_commitment;
 pub mod deploy;
-pub mod check_commitment;
-pub mod check_postconfirmation;
-pub mod stake;
-pub mod grant_trusted_attester;
 use clap::{Parser, Subcommand};
 use mcr_protocol_client_eth_core::config::Config;
 use mcr_protocol_client_core_util::McrClientOperations;
@@ -29,21 +23,9 @@ pub enum McrProtocolClientSubcommand {
 	/// Ethereum-specific commands of the protocol, such as staking and committing
 	#[clap(subcommand)]
 	Eth(eth::Eth),
-	/// Post a commitment
-	PostCommitment(post_commitment::PostCommitment),
-	/// Check a commitment for a given height and attester
-	CheckCommitment(check_commitment::CheckCommitment),
-	/// Check postconfirmation for a height
-	CheckPostconfirmation(check_postconfirmation::CheckPostconfirmation),
 	/// Deploy MCR contracts using deployer-core
 	#[clap(subcommand)]
 	Deploy(deploy::Deploy),
-	/// Stake MOVE tokens
-	Stake(stake::Stake),
-	/// Get the current epoch stake for an attester
-	GetStake(get_stake::GetStake),
-	/// Grant TRUSTED_ATTESTER role to an attester
-	GrantTrustedAttester(grant_trusted_attester::GrantTrustedAttester),
 }
 
 /// Implement the `From` trait for `McrProtocolClient` to convert it into a `McrProtocolClientSubcommand`.
@@ -70,21 +52,7 @@ impl McrProtocolClientSubcommand {
 				println!("mcr-protocol-client is under development. Please check back later.");
 			}
 			McrProtocolClientSubcommand::Eth(eth) => eth.execute().await?,
-			McrProtocolClientSubcommand::PostCommitment(post_commitment) => {
-				post_commitment.execute().await?
-			}
-			McrProtocolClientSubcommand::CheckCommitment(check_commitment) => {
-				check_commitment.execute().await?
-			}
-			McrProtocolClientSubcommand::CheckPostconfirmation(check_postconfirmation) => {
-				check_postconfirmation.execute().await?
-			}
 			McrProtocolClientSubcommand::Deploy(deploy) => deploy.execute().await?,
-			McrProtocolClientSubcommand::Stake(stake) => stake.execute().await?,
-			McrProtocolClientSubcommand::GetStake(get_stake) => get_stake.execute().await?,
-			McrProtocolClientSubcommand::GrantTrustedAttester(grant_trusted_attester) => {
-				grant_trusted_attester.execute().await?
-			}
 		}
 		Ok(())
 	}
