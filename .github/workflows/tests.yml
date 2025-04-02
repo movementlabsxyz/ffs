@@ -1,4 +1,4 @@
-name: Example Nix Commands
+name: Checks and Tests
 
 on:
   push:
