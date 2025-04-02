@@ -148,7 +148,7 @@ else
 fi
 
 # Stake MOVE octas
-./target/debug/ffs-dev mcr protocol client stake \
+./target/debug/ffs-dev mcr protocol client eth stake \
     --amount 1002 \
     --private-key $PRIVATE_KEY_C \
     --mcr-address $MCR \
@@ -203,7 +203,7 @@ if [ "$TRUSTED_ATTESTER_CHECK" = "0x00000000000000000000000000000000000000000000
     echo "Address C is not a trusted attester"
     # Grant TRUSTED_ATTESTER role using admin account
     echo "Granting TRUSTED_ATTESTER role to Address C..."
-    ./target/debug/ffs-dev mcr protocol client grant-trusted-attester \
+    ./target/debug/ffs-dev mcr protocol client eth grant-trusted-attester \
         --attester $ADDRESS_C \
         --mcr-address $MCR \
         --private-key ${PRIVATE_KEY_A#"0x"}
@@ -239,14 +239,14 @@ echo -e "\n================== Posting Commitment =================="
 
 
 # Check commitment before posting (should show nothing)
-./target/debug/ffs-dev mcr protocol client check-commitment \
+./target/debug/ffs-dev mcr protocol client eth check-commitment \
     --height 1 \
     --mcr-address $MCR \
     --attester $ADDRESS_C \
     --private-key $PRIVATE_KEY_C
 
 # Check if commitment was accepted (should show nothing)
-./target/debug/ffs-dev mcr protocol client check-postconfirmation \
+./target/debug/ffs-dev mcr protocol client eth check-postconfirmation \
     --height 1 \
     --mcr-address $MCR \
     --private-key $PRIVATE_KEY_C
@@ -264,7 +264,7 @@ fi
 
 # Post commitment using the CLI
 echo "Posting commitment for Address C..."
-./target/debug/ffs-dev mcr protocol client post-commitment \
+./target/debug/ffs-dev mcr protocol client eth post-commitment \
     --preimage-string "commitment_from_C" \
     --private-key $PRIVATE_KEY_C \
     --height 1 \
@@ -278,7 +278,7 @@ advance_by_a_block
 
 # Check attester's commitment after posting
 echo "Checking attester's commitment after posting..."
-./target/debug/ffs-dev mcr protocol client check-commitment \
+./target/debug/ffs-dev mcr protocol client eth get-block-commitment \
     --height 1 \
     --mcr-address $MCR \
     --attester $ADDRESS_C \
@@ -286,7 +286,7 @@ echo "Checking attester's commitment after posting..."
 
 # Check if commitment was accepted
 echo "Checking if commitment was accepted..."
-./target/debug/ffs-dev mcr protocol client check-postconfirmation \
+./target/debug/ffs-dev mcr protocol client eth get-accepted-commitment-at-height \
     --height 1 \
     --mcr-address $MCR \
     --private-key $PRIVATE_KEY_C
