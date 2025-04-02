@@ -4,7 +4,6 @@ pub mod config;
 use anyhow::Context;
 use client::{Act, Client};
 use config::Config;
-use futures::future::{AbortHandle, Abortable};
 use mcr_network_anvil_component_core::dev::lifecycle::up::Up;
 use mcr_protocol_client_eth_core::config::Config as EthConfig;
 use mcr_protocol_deployer_eth_core::artifacts::output::Artifacts;
@@ -73,9 +72,7 @@ impl Basic {
 		let anvil_data = self.up.anvil_data().clone();
 		let artifacts = self.up.artifacts().clone();
 
-		// start the up task
-		let (abort_handle, abort_reg) = AbortHandle::new_pair();
-		let up_task = kestrel::task(Abortable::new(async move { self.up.run().await }, abort_reg));
+		let up_task = kestrel::task(async move { self.up.run().await });
 
 		// wait for the anvil data and artifacts
 		println!("waiting for anvil data");
@@ -91,21 +88,8 @@ impl Basic {
 		// act with the client
 		mcr_protocol_client.act(Act::PostCommitment(BlockCommitment::default())).await?;
 
-		println!("act complete");
-
-		// cancel the up task
-		abort_handle.abort();
-
-		// expect up task aborted
-		// todo: remove better abort handlers into kestrel::task
-		match up_task.await {
-			Ok(result) => {
-				println!("up task completed: {:?}", result);
-			}
-			Err(e) => {
-				println!("up task aborted successfully: {:?}", e);
-			}
-		}
+		// end the up task
+		kestrel::end!(up_task)?;
 
 		Ok(())
 	}

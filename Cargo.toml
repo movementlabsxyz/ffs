@@ -123,8 +123,8 @@ secure-signer-loader = { git = "https://github.com/movementlabsxyz/secure-signin
 secure-signer-aws-kms = { git = "https://github.com/movementlabsxyz/secure-signing.git", rev = "f37eebd6d494d21b26b2faa44e1188de42ff1007"  }
 
 # kestrel 
-kestrel = { git = "https://github.com/movementlabsxyz/kestrel.git", rev = "220926ad4053ba8f67657e1585bef92aef95b6af" }
-jsonlvar = { git = "https://github.com/movementlabsxyz/kestrel.git", rev = "220926ad4053ba8f67657e1585bef92aef95b6af" }
+kestrel = { git = "https://github.com/movementlabsxyz/kestrel.git", rev = "b9485eb3c9f118d698452247e73778378468d38b" }
+jsonlvar = { git = "https://github.com/movementlabsxyz/kestrel.git", rev = "b9485eb3c9f118d698452247e73778378468d38b" }
 
 # orfile
 orfile = { git = "https://github.com/movementlabsxyz/orfile.git", rev = "d02299214e5aa202130cd1eb9593ce8064d1ec69" }
