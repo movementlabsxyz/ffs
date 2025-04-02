@@ -548,7 +548,7 @@ contract MCR is Initializable, BaseSettlement, MCRStorage, IMCR {
                 address attester = attesters[i];
                 if (commitments[blockCommitment.height][attester].commitment == blockCommitment.commitment) {
                     // Use delegatecall to maintain MCR as msg.sender for the reward call
-                    (bool success, ) = address(rewardContract).delegatecall(
+                    (bool _success, ) = address(rewardContract).delegatecall(
                         abi.encodeWithSelector(
                             IMcrReward.rewardBlockCommitment.selector,
                             blockCommitment.height,
@@ -557,6 +557,8 @@ contract MCR is Initializable, BaseSettlement, MCRStorage, IMCR {
                             attester
                         )
                     );
+                    // silence unused variable warning
+                    _success;
                     // We don't handle the success case specially as rewards are optional
                     break;
                 }
@@ -594,13 +596,15 @@ contract MCR is Initializable, BaseSettlement, MCRStorage, IMCR {
         // Distribute epoch rewards if reward contract is set
         if (address(rewardContract) != address(0)) {
             // Use delegatecall to maintain MCR as msg.sender for the reward call
-            (bool success, ) = address(rewardContract).delegatecall(
+            (bool _success, ) = address(rewardContract).delegatecall(
                 abi.encodeWithSelector(
                     IMcrReward.rewardEpochRollover.selector,
                     currentEpoch,
                     currentEpoch + 1
                 )
             );
+            // silence unused variable warning
+            _success;
             // We don't handle the success case specially as rewards are optional
         }
     }
