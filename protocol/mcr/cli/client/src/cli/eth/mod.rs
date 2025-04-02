@@ -2,6 +2,7 @@ pub mod get_commitment_at_height;
 pub mod get_max_tolerable_block_height;
 pub mod get_posted_commitment_at_height;
 pub mod post_admin_commitment;
+pub mod post_commitment;
 pub mod post_commitment_batch;
 pub mod stake;
 pub mod stream_commitments;
@@ -15,6 +16,8 @@ use clap::Subcommand;
 pub enum Eth {
 	/// Force a block commitment (admin only)
 	PostAdminCommitment(post_admin_commitment::PostAdminCommitment),
+	/// Post a single block commitment
+	PostCommitment(post_commitment::PostCommitment),
 	/// Post a batch of block commitments
 	PostCommitmentBatch(post_commitment_batch::PostCommitmentBatch),
 	/// Stream block commitments
@@ -35,6 +38,7 @@ impl Eth {
 	pub async fn execute(&self) -> Result<(), anyhow::Error> {
 		match self {
 			Eth::PostAdminCommitment(cmd) => cmd.execute().await?,
+			Eth::PostCommitment(cmd) => cmd.execute().await?,
 			Eth::PostCommitmentBatch(cmd) => cmd.execute().await?,
 			Eth::StreamCommitments(cmd) => cmd.execute().await?,
 			Eth::GetCommitmentAtHeight(cmd) => cmd.execute().await?,

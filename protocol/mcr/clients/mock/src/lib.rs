@@ -100,10 +100,10 @@ impl McrClientOperations for Client {
 
 	async fn post_block_commitment_batch(
 		&self,
-		block_commitment: Vec<BlockCommitment>,
+		block_commitments: Vec<BlockCommitment>,
 	) -> Result<(), McrClientError> {
-		for commitment in block_commitment {
-			self.post_block_commitment(commitment).await?;
+		for block_commitment in block_commitments {
+			self.post_block_commitment(block_commitment).await?;
 		}
 		Ok(())
 	}

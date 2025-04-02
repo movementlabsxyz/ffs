@@ -97,7 +97,7 @@ where
 	) -> Result<(), McrClientError> {
 		let contract = MCR::new(self.contract_address, &self.rpc_provider);
 
-		let eth_block_commitment: Vec<_> = block_commitments
+		let eth_block_commitment_batch: Vec<_> = block_commitments
 			.into_iter()
 			.map(|block_commitment| {
 				Ok(MCRStorage::BlockCommitment {
@@ -114,7 +114,7 @@ where
 			.collect::<Result<Vec<_>, TryFromSliceError>>()
 			.map_err(|e| McrClientError::Internal(Box::new(e)))?;
 
-		let call_builder = contract.submitBatchBlockCommitment(eth_block_commitment);
+		let call_builder = contract.submitBatchBlockCommitment(eth_block_commitment_batch);
 
 		send_transaction(
 			self.signer_address.clone(),
