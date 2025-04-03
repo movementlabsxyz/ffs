@@ -40,7 +40,7 @@ impl LifecycleDestroyFrontend for Config {
 
 		// form the forge deployer
 		let forge_deployer = ForgeDeployer {
-			workspace: ContractWorkspace::try_temp_tip()
+			workspace: ContractWorkspace::try_temp()
 				.map_err(|e| LifecycleError::Config(e.into()))?
 				.into(),
 			raw_private_key,

@@ -60,7 +60,7 @@ impl Config {
 
 		// form the forge deployer
 		let forge_deployer = ForgeDeployer {
-			workspace: ContractWorkspace::try_temp_tip()?.into(),
+			workspace: ContractWorkspace::try_temp()?.into(),
 			raw_private_key,
 			fork_url: self.fork_url.clone(),
 			jsonl_prefix: self.jsonl_prefix.clone(),
@@ -103,7 +103,7 @@ impl LifecycleApplyFrontend for Config {
 
 		// form the forge deployer
 		let forge_deployer = ForgeDeployer {
-			workspace: ContractWorkspace::try_temp_tip()
+			workspace: ContractWorkspace::try_temp()
 				.map_err(|e| LifecycleError::Config(e.into()))?
 				.into(),
 			raw_private_key,
