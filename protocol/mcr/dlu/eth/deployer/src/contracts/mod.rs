@@ -90,6 +90,10 @@ impl ContractWorkspace {
 	{
 		// Implementation of the run_command function
 		let path = self.get_workspace_path();
-		commander::run_command(command, args, Some(path)).await
+		commander::Command::new(command, true, vec![], vec![])
+			.args(args)
+			.current_dir(path)
+			.run()
+			.await
 	}
 }
