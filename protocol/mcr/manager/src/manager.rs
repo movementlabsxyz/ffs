@@ -218,9 +218,9 @@ mod tests {
 
 		// The batch of first two should have been posted,
 		// the third commitment is batched in the manager.
-		assert_eq!(client.get_commitment_at_height(1).await?, Some(commitment1.clone()));
-		assert_eq!(client.get_commitment_at_height(2).await?, Some(commitment2.clone()));
-		assert_eq!(client.get_commitment_at_height(3).await?, None);
+		assert_eq!(client.get_accepted_commitment_at_height(1).await?, Some(commitment1.clone()));
+		assert_eq!(client.get_accepted_commitment_at_height(2).await?, Some(commitment2.clone()));
+		assert_eq!(client.get_accepted_commitment_at_height(3).await?, None);
 
 		// Unblock the client, allowing processing of commitments to resume.
 		client.resume().await;

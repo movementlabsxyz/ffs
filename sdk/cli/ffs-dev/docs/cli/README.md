@@ -33,11 +33,14 @@ This document contains the help content for the `ffs-dev` command-line program.
 * [`ffs-dev mcr protocol client eth post-commitment`↴](#ffs-dev-mcr-protocol-client-eth-post-commitment)
 * [`ffs-dev mcr protocol client eth post-commitment-batch`↴](#ffs-dev-mcr-protocol-client-eth-post-commitment-batch)
 * [`ffs-dev mcr protocol client eth stream-commitments`↴](#ffs-dev-mcr-protocol-client-eth-stream-commitments)
-* [`ffs-dev mcr protocol client eth get-commitment-at-height`↴](#ffs-dev-mcr-protocol-client-eth-get-commitment-at-height)
+* [`ffs-dev mcr protocol client eth get-block-commitment`↴](#ffs-dev-mcr-protocol-client-eth-get-block-commitment)
+* [`ffs-dev mcr protocol client eth get-accepted-commitment-at-height`↴](#ffs-dev-mcr-protocol-client-eth-get-accepted-commitment-at-height)
 * [`ffs-dev mcr protocol client eth get-posted-commitment-at-height`↴](#ffs-dev-mcr-protocol-client-eth-get-posted-commitment-at-height)
 * [`ffs-dev mcr protocol client eth get-max-tolerable-block-height`↴](#ffs-dev-mcr-protocol-client-eth-get-max-tolerable-block-height)
 * [`ffs-dev mcr protocol client eth stake`↴](#ffs-dev-mcr-protocol-client-eth-stake)
+* [`ffs-dev mcr protocol client eth get-stake`↴](#ffs-dev-mcr-protocol-client-eth-get-stake)
 * [`ffs-dev mcr protocol client eth unstake`↴](#ffs-dev-mcr-protocol-client-eth-unstake)
+* [`ffs-dev mcr protocol client eth grant-trusted-attester`↴](#ffs-dev-mcr-protocol-client-eth-grant-trusted-attester)
 * [`ffs-dev pcp`↴](#ffs-dev-pcp)
 * [`ffs-dev pcp network`↴](#ffs-dev-pcp-network)
 * [`ffs-dev pcp network run`↴](#ffs-dev-pcp-network-run)
@@ -431,11 +434,14 @@ KEEP THIS UNTIL PRODUCTION-READY : Defined in: protocol/mcr/cli/client/src/cli/e
 * `post-commitment` — Post a single commitment
 * `post-commitment-batch` — Post a batch of commitments
 * `stream-commitments` — Stream commitments
-* `get-commitment-at-height` — Get commitment at a specific height
+* `get-block-commitment` — Get a block commitment for a given height and attester
+* `get-accepted-commitment-at-height` — Get accepted commitment at a specific height
 * `get-posted-commitment-at-height` — Get posted commitment at a specific height
 * `get-max-tolerable-block-height` — Get max tolerable superBlock height
 * `stake` — Stake tokens for the MCR domain
+* `get-stake` — Get the current epoch stake for an attester
 * `unstake` — Unstake tokens from the MCR domain
+* `grant-trusted-attester` — Grant TRUSTED_ATTESTER role to an attester
 
 
 
@@ -443,7 +449,7 @@ KEEP THIS UNTIL PRODUCTION-READY : Defined in: protocol/mcr/cli/client/src/cli/e
 
 Force a block commitment (admin only)
 
-**Usage:** `ffs-dev mcr protocol client eth post-admin-commitment [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --signer-identifier <SIGNER_IDENTIFIER> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --id <ID> --commitment <COMMITMENT>`
+**Usage:** `ffs-dev mcr protocol client eth post-admin-commitment [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --signer-identifier <SIGNER_IDENTIFIER> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --block-lead-tolerance <BLOCK_LEAD_TOLERANCE> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> --id <ID> --commitment <COMMITMENT>`
 
 ###### **Options:**
 
@@ -455,6 +461,10 @@ Force a block commitment (admin only)
 * `--run-commitment-admin-mode` — Whether to run in settlement admin mode
 * `--gas-limit <GAS_LIMIT>` — The gas limit for transactions
 * `--transaction-send-retries <TRANSACTION_SEND_RETRIES>` — The number of retries for sending transactions
+* `--mcr-address <MCR_ADDRESS>` — The MCR address
+* `--block-lead-tolerance <BLOCK_LEAD_TOLERANCE>` — The block lead tolerance
+* `--move-token-address <MOVE_TOKEN_ADDRESS>` — The move token address
+* `--staking-address <STAKING_ADDRESS>` — The staking address
 * `--height <HEIGHT>` — The height of the commitment block at which to commit
 * `--id <ID>` — The id of the commitment block at which to commit
 * `--commitment <COMMITMENT>` — The commitment to commit
@@ -465,7 +475,7 @@ Force a block commitment (admin only)
 
 Post a single commitment
 
-**Usage:** `ffs-dev mcr protocol client eth post-commitment [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --signer-identifier <SIGNER_IDENTIFIER> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --height <HEIGHT> --id <ID> --commitment <COMMITMENT>`
+**Usage:** `ffs-dev mcr protocol client eth post-commitment [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --signer-identifier <SIGNER_IDENTIFIER> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --block-lead-tolerance <BLOCK_LEAD_TOLERANCE> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> --height <HEIGHT> --id <ID> --commitment <COMMITMENT>`
 
 ###### **Options:**
 
@@ -477,6 +487,10 @@ Post a single commitment
 * `--run-commitment-admin-mode` — Whether to run in settlement admin mode
 * `--gas-limit <GAS_LIMIT>` — The gas limit for transactions
 * `--transaction-send-retries <TRANSACTION_SEND_RETRIES>` — The number of retries for sending transactions
+* `--mcr-address <MCR_ADDRESS>` — The MCR address
+* `--block-lead-tolerance <BLOCK_LEAD_TOLERANCE>` — The block lead tolerance
+* `--move-token-address <MOVE_TOKEN_ADDRESS>` — The move token address
+* `--staking-address <STAKING_ADDRESS>` — The staking address
 * `--height <HEIGHT>` — The height of the commitment block at which to commit
 * `--id <ID>` — The id of the commitment block at which to commit
 * `--commitment <COMMITMENT>` — The commitment to commit
@@ -487,7 +501,7 @@ Post a single commitment
 
 Post a batch of commitments
 
-**Usage:** `ffs-dev mcr protocol client eth post-commitment-batch [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --signer-identifier <SIGNER_IDENTIFIER> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --height <HEIGHT> --id <ID> --commitment <COMMITMENT>`
+**Usage:** `ffs-dev mcr protocol client eth post-commitment-batch [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --signer-identifier <SIGNER_IDENTIFIER> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --block-lead-tolerance <BLOCK_LEAD_TOLERANCE> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> --height <HEIGHT> --id <ID> --commitment <COMMITMENT>`
 
 ###### **Options:**
 
@@ -499,6 +513,10 @@ Post a batch of commitments
 * `--run-commitment-admin-mode` — Whether to run in settlement admin mode
 * `--gas-limit <GAS_LIMIT>` — The gas limit for transactions
 * `--transaction-send-retries <TRANSACTION_SEND_RETRIES>` — The number of retries for sending transactions
+* `--mcr-address <MCR_ADDRESS>` — The MCR address
+* `--block-lead-tolerance <BLOCK_LEAD_TOLERANCE>` — The block lead tolerance
+* `--move-token-address <MOVE_TOKEN_ADDRESS>` — The move token address
+* `--staking-address <STAKING_ADDRESS>` — The staking address
 * `--height <HEIGHT>` — The height of the block to commit
 * `--id <ID>` — The id of the block to commit
 * `--commitment <COMMITMENT>` — The commitment to commit
@@ -509,7 +527,7 @@ Post a batch of commitments
 
 Stream commitments
 
-**Usage:** `ffs-dev mcr protocol client eth stream-commitments [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --signer-identifier <SIGNER_IDENTIFIER> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES>`
+**Usage:** `ffs-dev mcr protocol client eth stream-commitments [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --signer-identifier <SIGNER_IDENTIFIER> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --block-lead-tolerance <BLOCK_LEAD_TOLERANCE> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS>`
 
 ###### **Options:**
 
@@ -521,14 +539,36 @@ Stream commitments
 * `--run-commitment-admin-mode` — Whether to run in settlement admin mode
 * `--gas-limit <GAS_LIMIT>` — The gas limit for transactions
 * `--transaction-send-retries <TRANSACTION_SEND_RETRIES>` — The number of retries for sending transactions
+* `--mcr-address <MCR_ADDRESS>` — The MCR address
+* `--block-lead-tolerance <BLOCK_LEAD_TOLERANCE>` — The block lead tolerance
+* `--move-token-address <MOVE_TOKEN_ADDRESS>` — The move token address
+* `--staking-address <STAKING_ADDRESS>` — The staking address
 
 
 
-## `ffs-dev mcr protocol client eth get-commitment-at-height`
+## `ffs-dev mcr protocol client eth get-block-commitment`
 
-Get commitment at a specific height
+Get a block commitment for a given height and attester
 
-**Usage:** `ffs-dev mcr protocol client eth get-commitment-at-height [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --signer-identifier <SIGNER_IDENTIFIER> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --height <HEIGHT>`
+**Usage:** `ffs-dev mcr protocol client eth get-block-commitment [OPTIONS] --height <HEIGHT> --attester <ATTESTER> --mcr-address <MCR_ADDRESS>`
+
+###### **Options:**
+
+* `--height <HEIGHT>` — Block height to check commitment for
+* `--attester <ATTESTER>` — Attester address to check commitment for
+* `--mcr-address <MCR_ADDRESS>` — MCR contract address
+* `--rpc-url <RPC_URL>` — RPC URL (optional, defaults to http://localhost:8545)
+
+  Default value: `http://localhost:8545`
+* `--private-key <PRIVATE_KEY>` — Private key for signing transactions (optional)
+
+
+
+## `ffs-dev mcr protocol client eth get-accepted-commitment-at-height`
+
+Get accepted commitment at a specific height
+
+**Usage:** `ffs-dev mcr protocol client eth get-accepted-commitment-at-height [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --signer-identifier <SIGNER_IDENTIFIER> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --block-lead-tolerance <BLOCK_LEAD_TOLERANCE> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> --height <HEIGHT>`
 
 ###### **Options:**
 
@@ -540,6 +580,10 @@ Get commitment at a specific height
 * `--run-commitment-admin-mode` — Whether to run in settlement admin mode
 * `--gas-limit <GAS_LIMIT>` — The gas limit for transactions
 * `--transaction-send-retries <TRANSACTION_SEND_RETRIES>` — The number of retries for sending transactions
+* `--mcr-address <MCR_ADDRESS>` — The MCR address
+* `--block-lead-tolerance <BLOCK_LEAD_TOLERANCE>` — The block lead tolerance
+* `--move-token-address <MOVE_TOKEN_ADDRESS>` — The move token address
+* `--staking-address <STAKING_ADDRESS>` — The staking address
 * `--height <HEIGHT>` — The height to get the commitment for
 
 
@@ -548,7 +592,7 @@ Get commitment at a specific height
 
 Get posted commitment at a specific height
 
-**Usage:** `ffs-dev mcr protocol client eth get-posted-commitment-at-height [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --signer-identifier <SIGNER_IDENTIFIER> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --height <HEIGHT>`
+**Usage:** `ffs-dev mcr protocol client eth get-posted-commitment-at-height [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --signer-identifier <SIGNER_IDENTIFIER> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --block-lead-tolerance <BLOCK_LEAD_TOLERANCE> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> --height <HEIGHT>`
 
 ###### **Options:**
 
@@ -560,6 +604,10 @@ Get posted commitment at a specific height
 * `--run-commitment-admin-mode` — Whether to run in settlement admin mode
 * `--gas-limit <GAS_LIMIT>` — The gas limit for transactions
 * `--transaction-send-retries <TRANSACTION_SEND_RETRIES>` — The number of retries for sending transactions
+* `--mcr-address <MCR_ADDRESS>` — The MCR address
+* `--block-lead-tolerance <BLOCK_LEAD_TOLERANCE>` — The block lead tolerance
+* `--move-token-address <MOVE_TOKEN_ADDRESS>` — The move token address
+* `--staking-address <STAKING_ADDRESS>` — The staking address
 * `--height <HEIGHT>` — The height to get the commitment for
 
 
@@ -568,7 +616,7 @@ Get posted commitment at a specific height
 
 Get max tolerable superBlock height
 
-**Usage:** `ffs-dev mcr protocol client eth get-max-tolerable-block-height [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --signer-identifier <SIGNER_IDENTIFIER> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES>`
+**Usage:** `ffs-dev mcr protocol client eth get-max-tolerable-block-height [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --signer-identifier <SIGNER_IDENTIFIER> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --block-lead-tolerance <BLOCK_LEAD_TOLERANCE> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS>`
 
 ###### **Options:**
 
@@ -580,6 +628,10 @@ Get max tolerable superBlock height
 * `--run-commitment-admin-mode` — Whether to run in settlement admin mode
 * `--gas-limit <GAS_LIMIT>` — The gas limit for transactions
 * `--transaction-send-retries <TRANSACTION_SEND_RETRIES>` — The number of retries for sending transactions
+* `--mcr-address <MCR_ADDRESS>` — The MCR address
+* `--block-lead-tolerance <BLOCK_LEAD_TOLERANCE>` — The block lead tolerance
+* `--move-token-address <MOVE_TOKEN_ADDRESS>` — The move token address
+* `--staking-address <STAKING_ADDRESS>` — The staking address
 
 
 
@@ -587,7 +639,7 @@ Get max tolerable superBlock height
 
 Stake tokens for the MCR domain
 
-**Usage:** `ffs-dev mcr protocol client eth stake [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --signer-identifier <SIGNER_IDENTIFIER> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --amount <AMOUNT>`
+**Usage:** `ffs-dev mcr protocol client eth stake [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --signer-identifier <SIGNER_IDENTIFIER> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --block-lead-tolerance <BLOCK_LEAD_TOLERANCE> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> --amount <AMOUNT>`
 
 ###### **Options:**
 
@@ -599,7 +651,31 @@ Stake tokens for the MCR domain
 * `--run-commitment-admin-mode` — Whether to run in settlement admin mode
 * `--gas-limit <GAS_LIMIT>` — The gas limit for transactions
 * `--transaction-send-retries <TRANSACTION_SEND_RETRIES>` — The number of retries for sending transactions
+* `--mcr-address <MCR_ADDRESS>` — The MCR address
+* `--block-lead-tolerance <BLOCK_LEAD_TOLERANCE>` — The block lead tolerance
+* `--move-token-address <MOVE_TOKEN_ADDRESS>` — The move token address
+* `--staking-address <STAKING_ADDRESS>` — The staking address
 * `--amount <AMOUNT>` — Amount to stake
+
+
+
+## `ffs-dev mcr protocol client eth get-stake`
+
+Get the current epoch stake for an attester
+
+**Usage:** `ffs-dev mcr protocol client eth get-stake [OPTIONS] --attester <ATTESTER> --custodian <CUSTODIAN> --mcr-address <MCR_ADDRESS>`
+
+###### **Options:**
+
+* `--private-key <PRIVATE_KEY>` — Private key for signing transactions (optional)
+
+  Default value: `0x1111111111111111111111111111111111111111111111111111111111111111`
+* `--rpc-url <RPC_URL>` — RPC URL (optional, defaults to http://localhost:8545)
+
+  Default value: `http://localhost:8545`
+* `--attester <ATTESTER>` — The attester address
+* `--custodian <CUSTODIAN>` — The custodian (MOVE token) address
+* `--mcr-address <MCR_ADDRESS>` — The MCR contract address
 
 
 
@@ -607,7 +683,7 @@ Stake tokens for the MCR domain
 
 Unstake tokens from the MCR domain
 
-**Usage:** `ffs-dev mcr protocol client eth unstake [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --signer-identifier <SIGNER_IDENTIFIER> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --amount <AMOUNT>`
+**Usage:** `ffs-dev mcr protocol client eth unstake [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --signer-identifier <SIGNER_IDENTIFIER> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --block-lead-tolerance <BLOCK_LEAD_TOLERANCE> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> --amount <AMOUNT>`
 
 ###### **Options:**
 
@@ -619,7 +695,25 @@ Unstake tokens from the MCR domain
 * `--run-commitment-admin-mode` — Whether to run in settlement admin mode
 * `--gas-limit <GAS_LIMIT>` — The gas limit for transactions
 * `--transaction-send-retries <TRANSACTION_SEND_RETRIES>` — The number of retries for sending transactions
+* `--mcr-address <MCR_ADDRESS>` — The MCR address
+* `--block-lead-tolerance <BLOCK_LEAD_TOLERANCE>` — The block lead tolerance
+* `--move-token-address <MOVE_TOKEN_ADDRESS>` — The move token address
+* `--staking-address <STAKING_ADDRESS>` — The staking address
 * `--amount <AMOUNT>` — Amount to unstake
+
+
+
+## `ffs-dev mcr protocol client eth grant-trusted-attester`
+
+Grant TRUSTED_ATTESTER role to an attester
+
+**Usage:** `ffs-dev mcr protocol client eth grant-trusted-attester --attester <ATTESTER> --mcr-address <MCR_ADDRESS> --private-key <PRIVATE_KEY>`
+
+###### **Options:**
+
+* `--attester <ATTESTER>` — The address to grant TRUSTED_ATTESTER role to
+* `--mcr-address <MCR_ADDRESS>` — The MCR contract address
+* `--private-key <PRIVATE_KEY>` — The private key to use for signing transactions
 
 
 

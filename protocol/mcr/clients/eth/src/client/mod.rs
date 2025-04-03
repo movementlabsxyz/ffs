@@ -43,6 +43,8 @@ pub struct Client<R, W> {
 	pub(crate) ws_provider: W,
 	pub(crate) signer_address: Address,
 	pub(crate) contract_address: Address,
+	pub(crate) move_token_address: Address,
+	// pub(crate) staking_address: Address,
 	pub(crate) send_transaction_error_rules: Vec<Box<dyn VerifyRule>>,
 	pub(crate) gas_limit: u64,
 	pub(crate) send_transaction_retries: u32,
@@ -80,7 +82,9 @@ where
 			)
 			.await
 		} else {
-			let call_builder = contract.submitBlockCommitment(eth_block_commitment);
+			let call_builder = contract.submitBlockCommitment(eth_block_commitment).from(self.signer_address);
+
+			println!("Debug [post_block_commitment] - About to send transaction");
 			send_transaction(
 				self.signer_address.clone(),
 				call_builder,
@@ -183,7 +187,7 @@ where
 		Ok(Box::pin(stream) as CommitmentStream)
 	}
 
-	async fn get_commitment_at_height(
+	async fn get_accepted_commitment_at_height(
 		&self,
 		height: u64,
 	) -> Result<Option<BlockCommitment>, McrClientError> {
@@ -252,6 +256,91 @@ where
 			.map_err(|e| McrClientError::Internal(e.into()))?)
 	}
 
+	async fn get_validator_commitment_at_height(
+		&self,
+		height: u64,
+		attester: String,
+	) -> Result<Option<BlockCommitment>, McrClientError> {
+		let contract = MCR::new(self.contract_address, &self.ws_provider);
+		let attester_addr = attester.parse()
+			.map_err(|e| McrClientError::Internal(Box::new(e)))?;
+
+		let MCR::getValidatorCommitmentAtBlockHeightReturn { _0: commitment } = contract
+			.getValidatorCommitmentAtBlockHeight(U256::from(height), attester_addr)
+			.call()
+			.await
+			.map_err(|e| McrClientError::Internal(Box::new(e)))?;
+
+		let return_height: u64 = commitment
+			.height
+			.try_into()
+			.context("failed to convert the commitment height from U256 to u64")
+			.map_err(|e| McrClientError::Internal(e.into()))?;
+
+		Ok((return_height != 0).then_some(BlockCommitment::new(
+			commitment
+				.height
+				.try_into()
+				.context("failed to convert the commitment height from U256 to u64")
+				.map_err(|e| McrClientError::Internal(e.into()))?,
+			Id::new(commitment.blockId.into()),
+			Commitment::new(commitment.commitment.into()),
+		)))
+	}
+
+	/// Get the MOVE-octas token balance of the specified address
+	async fn get_balance(&self, address: String) -> Result<u64, McrClientError> {
+		let token = MOVEToken::new(self.move_token_address, &self.rpc_provider);
+		let addr = address.parse::<Address>()
+			.map_err(|e| McrClientError::Internal(Box::new(e)))?;
+
+		let balance = token.balanceOf(addr)
+			.call()
+			.await
+			.map_err(|e| McrClientError::Internal(Box::new(e)))?;
+
+		Ok(balance._0.try_into().map_err(|e| McrClientError::Internal(Box::new(e)))?)
+	}
+
+	async fn get_last_accepted_block_height(&self) -> Result<u64, McrClientError> {
+		let contract = MCR::new(self.contract_address, &self.rpc_provider);
+		let MCR::lastAcceptedBlockHeightReturn { _0: height } = contract.lastAcceptedBlockHeight().call().await
+			.map_err(|e| McrClientError::Internal(Box::new(e)))?;
+		Ok(height.try_into().unwrap())
+	}
+
+	async fn get_leading_block_tolerance(&self) -> Result<u64, McrClientError> {
+		let contract = MCR::new(self.contract_address, &self.rpc_provider);
+		let MCR::leadingBlockToleranceReturn { _0: tolerance } = contract.leadingBlockTolerance().call().await
+			.map_err(|e| McrClientError::Internal(Box::new(e)))?;
+		Ok(tolerance.try_into().unwrap())
+	}
+
+	/// Grants TRUSTED_ATTESTER role to the specified address
+	async fn grant_trusted_attester(
+		&self,
+		attester: String,
+	) -> Result<(), McrClientError> {
+		
+		let contract = MCR::new(self.contract_address, &self.rpc_provider);
+		let attester_addr = attester.parse()
+			.map_err(|e| McrClientError::Internal(Box::new(e)))?;
+		
+		let tx = contract
+			.grantTrustedAttester(attester_addr)
+			.from(self.signer_address);
+
+		send_transaction(
+			self.signer_address.clone(),
+			tx,
+			&self.send_transaction_error_rules,
+			self.send_transaction_retries,
+			self.gas_limit as u128,
+		).await.map_err(|e| McrClientError::AdminFunction(Box::new(e)))?;
+		
+		Ok(())
+	}
+		
 	async fn stake(&self, amount: U256) -> Result<(), McrClientError> {
 		let contract = MCR::new(self.contract_address, &self.rpc_provider);
 		let call_builder = contract.stake(U256::from(amount));
@@ -263,6 +352,83 @@ where
 			self.gas_limit as u128,
 		)
 		.await
+	}
+
+	// async fn stake(&self, amount: u64) -> Result<(), McrClientError> {
+	// 	let move_token = MOVEToken::new(self.move_token_address, &self.rpc_provider);
+	// 	let staking = MovementStaking::new(self.staking_address, &self.rpc_provider);
+
+	// 	// First check current stake
+	// 	let initial_stake = staking.getCurrentEpochStake(
+	// 		self.contract_address,  // domain
+	// 		self.move_token_address,  // custodian
+	// 		self.signer_address  // attester
+	// 	)
+	// 		.call()
+	// 		.await
+	// 		.map_err(|e| McrClientError::Internal(Box::new(e)))?;
+
+	// 	// First approve the staking contract to spend our MOVE tokens
+	// 	let approve_call = move_token.approve(self.staking_address, U256::from(amount));
+	// 	send_transaction(
+	// 		self.signer_address,
+	// 		approve_call,
+	// 		&self.send_transaction_error_rules,
+	// 		self.send_transaction_retries,
+	// 		self.gas_limit as u128,
+	// 	).await?;
+
+	// 	// Then stake the tokens
+	// 	let stake_call = staking.stake(
+	// 		self.contract_address,  // domain
+	// 		self.move_token_address,  // custodian token
+	// 		U256::from(amount)  // amount
+	// 	);
+	// 	send_transaction(
+	// 		self.signer_address,
+	// 		stake_call,
+	// 		&self.send_transaction_error_rules,
+	// 		self.send_transaction_retries,
+	// 		self.gas_limit as u128,
+	// 	).await?;
+
+	// 	// Verify the stake was successful by checking if it increased
+	// 	let final_stake = staking.getCurrentEpochStake(
+	// 		self.contract_address,  // domain
+	// 		self.move_token_address,  // custodian
+	// 		self.signer_address  // attester
+	// 	)
+	// 		.call()
+	// 		.await
+	// 		.map_err(|e| McrClientError::Internal(Box::new(e)))?;
+
+	// 	// If stake didn't increase, the staking failed
+	// 	if final_stake._0 <= initial_stake._0 {
+	// 		return Err(McrClientError::Internal(Box::new(std::io::Error::new(
+	// 			std::io::ErrorKind::Other,
+	// 			"Staking failed - stake amount did not increase"
+	// 		))))
+	// 	}
+
+	// 	Ok(())
+	// }
+
+	/// Get the current epoch stake for an attester
+	async fn get_stake(&self, custodian: String, attester: String) -> Result<u64, McrClientError> {
+		let contract = MCR::new(self.contract_address, &self.rpc_provider);
+		
+		let custodian_addr = custodian.parse()
+			.map_err(|e| McrClientError::Internal(Box::new(e)))?;
+		let attester_addr = attester.parse()
+			.map_err(|e| McrClientError::Internal(Box::new(e)))?;
+		
+		let MCR::getCurrentEpochStakeReturn { _0: stake } = contract
+			.getCurrentEpochStake(custodian_addr, attester_addr)
+			.call()
+			.await
+			.map_err(|e| McrClientError::Internal(Box::new(e)))?;
+
+		Ok(stake.try_into().map_err(|e| McrClientError::Internal(Box::new(e)))?)
 	}
 
 	async fn unstake(&self, amount: U256) -> Result<(), McrClientError> {

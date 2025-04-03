@@ -170,7 +170,7 @@ contract McrARO is MCRStorage, IMcrReward {
         return token.balanceOf(address(this));
     }
 
-    /**
+    /*
      * @notice Reward attesters for a successful block commitment
      * @dev Called during _acceptBlockCommitment in the MCR contract via delegatecall
      * @param blockHeight The height of the accepted block
@@ -182,9 +182,12 @@ contract McrARO is MCRStorage, IMcrReward {
     function rewardBlockCommitment(
         uint256 blockHeight,
         bytes32 commitment,
-        bytes32 blockId,
+        bytes32 _blockId,
         address attester
     ) external override returns (bool success) {
+        // silence unused variable warning
+        _blockId;
+        
         uint256 availableBalance = getAvailableBalance();
         
         // Don't proceed if no balance is available for rewards

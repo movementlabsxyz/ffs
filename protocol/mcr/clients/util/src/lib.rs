@@ -48,7 +48,7 @@ pub trait McrClientOperations {
 	) -> impl Future<Output = Result<CommitmentStream, McrClientError>> + Send;
 
 	/// Gets the accepted commitment at the given height.
-	fn get_commitment_at_height(
+	fn get_accepted_commitment_at_height(
 		&self,
 		height: u64,
 	) -> impl Future<Output = Result<Option<BlockCommitment>, McrClientError>> + Send;
@@ -64,9 +64,51 @@ pub trait McrClientOperations {
 		&self,
 	) -> impl Future<Output = Result<u64, McrClientError>> + Send;
 
-	/// Stakes tokens for the MCR domain
-	fn stake(&self, amount: U256) -> impl Future<Output = Result<(), McrClientError>> + Send;
+	/// Gets the commitment for a specific validator at a given height
+	fn get_validator_commitment_at_height(
+		&self,
+		height: u64,
+		attester: String,
+	) -> impl Future<Output = Result<Option<BlockCommitment>, McrClientError>> + Send;
 
-	/// Unstakes tokens from the MCR domain
-	fn unstake(&self, amount: U256) -> impl Future<Output = Result<(), McrClientError>> + Send;
+	/// Get the balance of the specified address
+	fn get_balance(
+		&self,
+		address: String,
+	) -> impl Future<Output = Result<u64, McrClientError>> + Send;
+
+	/// Gets the last accepted block height.
+	fn get_last_accepted_block_height(
+		&self,
+	) -> impl Future<Output = Result<u64, McrClientError>> + Send;
+
+	/// Gets the leading block tolerance.
+	fn get_leading_block_tolerance(
+		&self,
+	) -> impl Future<Output = Result<u64, McrClientError>> + Send;
+
+	/// Grants TRUSTED_ATTESTER role to the specified address
+	fn grant_trusted_attester(
+		&self,
+		attester: String,
+	) -> impl Future<Output = Result<(), McrClientError>> + Send;
+	
+	/// Stakes tokens for the domain
+	fn stake(
+		&self, 
+		amount: U256
+	) -> impl Future<Output = Result<(), McrClientError>> + Send;
+
+	/// Get the current epoch stake for an attester
+	fn get_stake(
+		&self,
+		custodian: String,
+		attester: String,
+	) -> impl Future<Output = Result<u64, McrClientError>> + Send;
+
+	/// Unstakes tokens from the domain
+	fn unstake(
+		&self, 
+		amount: U256
+	) -> impl Future<Output = Result<(), McrClientError>> + Send;
 }
