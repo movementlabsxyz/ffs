@@ -40,6 +40,7 @@ members = [
   # util
   "util/signing/eth",
   "util/environment",
+  "util/include-dir",
 ]
 
 [workspace.package]
@@ -111,6 +112,8 @@ proc-macro2 = "1.0.32"
 proc-macro-error = { version = "1.0.4", features = ["syn-error"] }
 strip-ansi-escapes = "0.2.1"
 cargo_metadata = "0.19.2"
+ignore = "0.4.20"
+convert_case = "0.8.0"
 
 # model checking and verification
 
@@ -186,6 +189,7 @@ ffs-dev = { path = "sdk/cli/ffs-dev" }
 # util
 secure-signer-eth = { path = "util/signing/eth" }
 ffs-environment = { path = "util/environment" }
+include-dir = { path = "util/include-dir" }
 
 
 [workspace.lints.clippy]
