@@ -1738,6 +1738,7 @@ dependencies = [
 [[package]]
 name = "clap-markdown-ext"
 version = "0.0.1"
+source = "git+https://github.com/movementlabsxyz/clap-markdown-ext.git?rev=8f54fe424504bf37fb01dc69aaed8166e429fe6a#8f54fe424504bf37fb01dc69aaed8166e429fe6a"
 dependencies = [
  "anyhow",
  "cargo_metadata",
@@ -1800,18 +1801,6 @@ name = "colorchoice"
 version = "1.0.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "5b63caa9aa9397e2d9480a9b13673856c78d8ac123288526c37d7839f2a86990"
-
-[[package]]
-name = "commander"
-version = "0.0.1"
-dependencies = [
- "anyhow",
- "futures",
- "itertools 0.14.0",
- "tempfile",
- "tokio",
- "tracing",
-]
 
 [[package]]
 name = "commander"
@@ -3387,7 +3376,7 @@ name = "kestrel-process"
 version = "0.1.0"
 source = "git+https://github.com/movementlabsxyz/kestrel.git?rev=85e2f681ae3e54b29bb18d4ed7ca750116173321#85e2f681ae3e54b29bb18d4ed7ca750116173321"
 dependencies = [
- "commander 0.1.0",
+ "commander",
  "jsonlvar",
  "jsonlvar-tokio",
  "kestrel-state",
@@ -3797,7 +3786,7 @@ dependencies = [
  "async-stream",
  "async-trait",
  "clap",
- "commander 0.0.1",
+ "commander",
  "futures",
  "hex",
  "jsonlvar",
@@ -4218,7 +4207,7 @@ dependencies = [
  "async-stream",
  "async-trait",
  "clap",
- "commander 0.0.1",
+ "commander",
  "futures",
  "hex",
  "jsonlvar",

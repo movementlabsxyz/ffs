@@ -40,8 +40,6 @@ members = [
   # util
   "util/signing/eth",
   "util/environment",
-  "util/commander",
-  "util/clap-markdown-ext",
 ]
 
 [workspace.package]
@@ -125,6 +123,7 @@ secure-signer-aws-kms = { git = "https://github.com/movementlabsxyz/secure-signi
 # kestrel 
 kestrel = { git = "https://github.com/movementlabsxyz/kestrel.git", rev = "85e2f681ae3e54b29bb18d4ed7ca750116173321" }
 jsonlvar = { git = "https://github.com/movementlabsxyz/kestrel.git", rev = "85e2f681ae3e54b29bb18d4ed7ca750116173321" }
+commander = { git = "https://github.com/movementlabsxyz/kestrel.git", rev = "85e2f681ae3e54b29bb18d4ed7ca750116173321" }
 
 # orfile
 orfile = { git = "https://github.com/movementlabsxyz/orfile.git", rev = "d02299214e5aa202130cd1eb9593ce8064d1ec69" }
@@ -140,7 +139,7 @@ service-macro = { git = "https://github.com/movementlabsxyz/adud.git", rev = "44
 service-lifecycle = { git = "https://github.com/movementlabsxyz/adud.git", rev = "440cc81ecd69ba570a8bbdbaf3035e9d53fe6e84" }
 
 # docs
-clap-markdown = { git = "https://github.com/ConnorGray/clap-markdown.git", rev = "1e1ae469444604d5b9ee650232abc2d3a0fa723b"}
+clap-markdown-ext = { git = "https://github.com/movementlabsxyz/clap-markdown-ext.git", rev = "8f54fe424504bf37fb01dc69aaed8166e429fe6a"}
 
 # internal
 ## common
@@ -187,8 +186,7 @@ ffs-dev = { path = "sdk/cli/ffs-dev" }
 # util
 secure-signer-eth = { path = "util/signing/eth" }
 ffs-environment = { path = "util/environment" }
-commander = { path = "util/commander" }
-clap-markdown-ext = { path = "util/clap-markdown-ext" }
+
 
 [workspace.lints.clippy]
 debug_assert_with_mut_call = "deny"
