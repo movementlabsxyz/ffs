@@ -596,7 +596,7 @@ contract PCPTest is Test {
         uint256 targetHeight = 1;
         PCPStorage.Commitment memory commitment = PCPStorage.Commitment({
             height: targetHeight,
-            commitment: keccak256(abi.encodePacked(uint256(1))),
+            commitmentValue: keccak256(abi.encodePacked(uint256(1))),
             commitmentId: keccak256(abi.encodePacked(uint256(1)))
         });
 

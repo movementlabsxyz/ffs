@@ -7,7 +7,7 @@ use alloy_primitives::U256;
 use alloy_sol_types::sol;
 use anyhow::Context;
 use pcp_protocol_client_core_util::{CommitmentStream, PcpClientError, PcpClientOperations};
-use pcp_types::commitment::{Commitment, Commitment, Id};
+use pcp_types::commitment::{Commitment, CommitmentValue, CommitmentId};
 use serde_json::Value as JsonValue;
 use std::array::TryFromSliceError;
 use std::fs;
@@ -63,8 +63,8 @@ where
 		let eth_commitment = PCPStorage::Commitment {
 			// Currently, to simplify the API, we'll say 0 is uncommitted all other numbers are legitimate heights
 			height: U256::from(commitment.height()),
-			commitment: alloy_primitives::FixedBytes(
-				commitment.commitment().as_bytes().clone(),
+			commitmentValue: alloy_primitives::FixedBytes(
+				commitment.commitment_value().as_bytes().clone(),
 			),
 			commitmentId: alloy_primitives::FixedBytes(commitment.commitment_id().as_bytes().clone()),
 		};
@@ -104,8 +104,8 @@ where
 				Ok(PCPStorage::Commitment {
 					// Currently, to simplify the API, we'll say 0 is uncommitted all other numbers are legitimate heights
 					height: U256::from(commitment.height()),
-					commitment: alloy_primitives::FixedBytes(
-						commitment.commitment().as_bytes().clone(),
+					commitmentValue: alloy_primitives::FixedBytes(
+						commitment.commitment_value().as_bytes().clone(),
 					),
 					commitmentId: alloy_primitives::FixedBytes(
 						commitment.commitment_id().as_bytes().clone(),
@@ -136,8 +136,8 @@ where
 		let eth_commitment = PCPStorage::Commitment {
 			// Currently, to simplify the API, we'll say 0 is uncommitted all other numbers are legitimate heights
 			height: U256::from(commitment.height()),
-			commitment: alloy_primitives::FixedBytes(
-				commitment.commitment().as_bytes().clone(),
+			commitmentValue: alloy_primitives::FixedBytes(
+				commitment.commitment_value().as_bytes().clone(),
 			),
 			commitmentId: alloy_primitives::FixedBytes(commitment.commitment_id().as_bytes().clone()),
 		};
@@ -173,8 +173,8 @@ where
 					)?;
 					Ok(Commitment::new(
 						height,
-						Id::new(commitment.blockHash.0),
-						Commitment::new(commitment.stateCommitment.0),
+						CommitmentId::new(commitment.blockHash.0),
+						CommitmentValue::new(commitment.stateCommitment.0),
 					))
 				})
 				.map_err(|err| PcpEthConnectorError::EventNotificationError(err).into())
@@ -205,8 +205,8 @@ where
 				.try_into()
 				.context("failed to convert the commitment height from U256 to u64")
 				.map_err(|e| PcpClientError::Internal(e.into()))?,
-			Id::new(commitment.commitmentId.into()),
-			Commitment::new(commitment.commitment.into()),
+			CommitmentId::new(commitment.commitmentId.into()),
+			CommitmentValue::new(commitment.commitmentValue.into()),
 		)))
 	}
 
@@ -233,8 +233,8 @@ where
 				.try_into()
 				.context("failed to convert the commitment height from U256 to u64")
 				.map_err(|e| PcpClientError::Internal(e.into()))?,
-			Id::new(commitment.commitmentId.into()),
-			Commitment::new(commitment.commitment.into()),
+			CommitmentId::new(commitment.commitmentId.into()),
+			CommitmentValue::new(commitment.commitmentValue.into()),
 		)))
 	}
 

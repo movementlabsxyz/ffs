@@ -257,11 +257,11 @@ contract PCP is Initializable, BaseSettlement, PCPStorage, IPCP {
         commitments[commitment.height][attester] = commitment;
         
         // Record first seen timestamp if not already set
-        TrySetCommitmentFirstSeenAt(commitment.height, commitment.commitment, block.timestamp);
+        TrySetCommitmentFirstSeenAt(commitment.height, commitment.commitmentValue, block.timestamp);
 
         // increment the commitment count by stake
         uint256 attesterStakeForAcceptingEpoch = getAttesterStakeForAcceptingEpoch(attester);
-        commitmentStake[commitment.height][commitment.commitment] += attesterStakeForAcceptingEpoch;
+        commitmentStake[commitment.height][commitment.commitmentValue] += attesterStakeForAcceptingEpoch;
 
         emit CommitmentSubmitted(
             commitment.commitmentId,
@@ -286,6 +286,7 @@ contract PCP is Initializable, BaseSettlement, PCPStorage, IPCP {
             submitCommitmentForAttester(msg.sender, commitments[i]);
         }
     }
+    
     function getValidatorCommitmentAtCommitmentHeight(
         uint256 height,
         address attester
@@ -304,25 +305,25 @@ contract PCP is Initializable, BaseSettlement, PCPStorage, IPCP {
 
     /// @notice Gets the epoch assigned to a superblock height
     function getCommitmentHeightAssignedEpoch(uint256 height) public view returns (uint256) {
-        return commitmentAssignedEpoch[height];
+        return commitmentHeightAssignedEpoch[height];
     }
 
     // TODO use this to limit the postconfirmations on new commits ( we need to give time to attesters to submit their commitments )
     /// @notice get the timestamp when a commitment was first seen
     function getCommitmentFirstSeenAt(Commitment memory commitment) public view returns (uint256) {
-        return commitmentFirstSeenAt[commitment.height][commitment.commitment];
+        return commitmentFirstSeenAt[commitment.height][commitment.commitmentValue];
     }
 
     /// @notice Sets the timestamp when a commitment was first seen
-    function TrySetCommitmentFirstSeenAt(uint256 height, bytes32 commitment, uint256 timestamp) internal {
-        if (commitmentFirstSeenAt[height][commitment] != 0) {
+    function TrySetCommitmentFirstSeenAt(uint256 height, bytes32 commitmentValue, uint256 timestamp) internal {
+        if (commitmentFirstSeenAt[height][commitmentValue] != 0) {
             // do not set if already set
             return;
         } else if (timestamp == 0) {
             // no need to set if timestamp is 0. This if may be redundant though.
             return;
         }
-        commitmentFirstSeenAt[height][commitment] = timestamp;
+        commitmentFirstSeenAt[height][commitmentValue] = timestamp;
     }
 
     // ----------------------------------------------------------------
@@ -383,7 +384,7 @@ contract PCP is Initializable, BaseSettlement, PCPStorage, IPCP {
         // get the epoch for the commitment
         // Commitment is not in the current epoch, it cannot be postconfirmed. 
         // TODO: double check liveness conditions for the following critera
-        if (commitmentAssignedEpoch[commitment.height] != currentAcceptingEpoch) {
+        if (commitmentHeightAssignedEpoch[commitment.height] != currentAcceptingEpoch) {
             revert UnacceptableCommitment();
         }
 
@@ -423,7 +424,7 @@ contract PCP is Initializable, BaseSettlement, PCPStorage, IPCP {
         // emit the commitment postconfirmed event
         emit CommitmentPostconfirmed(
             commitment.commitmentId,
-            commitment.commitment,
+            commitment.commitmentValue,
             commitment.height
         );
     }
@@ -480,18 +481,18 @@ contract PCP is Initializable, BaseSettlement, PCPStorage, IPCP {
     /// @dev Moreover, due to the leadingCommitmentTolerance, the assigned epoch for a height could be ahead of the actual epoch. 
     /// @dev solution is to move to the next epoch and count votes there
     function attemptPostconfirmOrRollover(uint256 commitmentHeight) internal returns (bool) {
-        uint256 commitmentEpoch = commitmentAssignedEpoch[commitmentHeight];
+        uint256 commitmentEpoch = commitmentHeightAssignedEpoch[commitmentHeight];
         if (getLastPostconfirmedCommitmentHeight() == 0) {
             // if there is no postconfirmed superblock we are at genesis
         } else {
             // ensure that the commitment height is equal or above the lastPostconfirmedCommitmentHeight
-            uint256 previousCommitmentEpoch = commitmentAssignedEpoch[commitmentHeight-1];
+            uint256 previousCommitmentEpoch = commitmentHeightAssignedEpoch[commitmentHeight-1];
             if (commitmentEpoch < previousCommitmentEpoch  )  {
                 address[] memory stakedAttesters = getStakedAttestersForAcceptingEpoch();
                 // if there is at least one commitment at this commitment height, we need to update once
                 for (uint256 i = 0; i < stakedAttesters.length; i++) {
                     if (commitments[commitmentHeight][stakedAttesters[i]].height != 0) {
-                        commitmentAssignedEpoch[commitmentHeight] = previousCommitmentEpoch;
+                        commitmentHeightAssignedEpoch[commitmentHeight] = previousCommitmentEpoch;
                         break;
                     }
                 }
@@ -523,7 +524,7 @@ contract PCP is Initializable, BaseSettlement, PCPStorage, IPCP {
             if (commitment.height != commitmentHeight) continue;
 
             // check the total stake on the commitment
-            uint256 totalStakeOnCommitment = commitmentStake[commitment.height][commitment.commitment];
+            uint256 totalStakeOnCommitment = commitmentStake[commitment.height][commitment.commitmentValue];
 
             if (totalStakeOnCommitment >= supermajority) {
                 // Check if enough time has passed since commitment was first seen

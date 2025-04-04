@@ -1,9 +1,0 @@
-{
-    "minDelay": 0,
-    "signersLabs": ["0x8943545177806ED17B9F23F0a21ee5948eCaa776"],
-    "signersFoundation": ["0x8943545177806ED17B9F23F0a21ee5948eCaa776"],
-    "signersDeployer": ["0x8943545177806ED17B9F23F0a21ee5948eCaa776"],
-    "thresholdLabs": 1,
-    "thresholdFoundation": 1,
-    "thresholdDeployer": 1
-}
