@@ -1,7 +1,7 @@
 use clap::Parser;
 use pcp_protocol_client_core_eth::config::Config;
 use pcp_protocol_client_core_util::PcpClientOperations;
-use pcp_types::block_commitment::{Commitment, Id, SuperBlockCommitment};
+use pcp_types::block_commitment::{Commitment, Id, SuperCommitment};
 use secure_signer_loader::identifiers::local::Local;
 use secure_signer_loader::identifiers::SignerIdentifier;
 use sha3::{Digest, Keccak256};
@@ -43,12 +43,12 @@ impl PostCommitment {
 	}
 
 	/// Create a commitment from the given arguments.
-	fn create_commitment(&self) -> Result<SuperBlockCommitment, anyhow::Error> {
+	fn create_commitment(&self) -> Result<SuperCommitment, anyhow::Error> {
 		if let Some(hex) = &self.args.commitment_hex {
 			// Parse hex commitment
 			let bytes = hex::decode(hex)?;
 			let bytes_len = bytes.len();
-			Ok(SuperBlockCommitment::new(
+			Ok(SuperCommitment::new(
                 0, // height
                 Id::new([0; 32]), // block id
                 Commitment::new(bytes.try_into()
@@ -63,7 +63,7 @@ impl PostCommitment {
 			let mut hasher = Keccak256::new();
 			hasher.update(preimage.as_bytes());
 			let result = hasher.finalize();
-			Ok(SuperBlockCommitment::new(
+			Ok(SuperCommitment::new(
 				0,                // height
 				Id::new([0; 32]), // block id
 				Commitment::new(result.into()),

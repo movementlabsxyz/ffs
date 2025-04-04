@@ -29,7 +29,7 @@ impl ScriptArgs {
 			"initialTokenMint": self.args.initial_token_mint,
 			"custodians": self.args.custodians.as_ref().map_or(Vec::new(), |v| v.clone()),
 			"initialBlockHeight": self.args.initial_block_height,
-			"leadingBlockTolerance": self.args.leading_block_tolerance,
+			"leadingCommitmentTolerance": self.args.leading_block_tolerance,
 			"epochDuration": self.args.epoch_duration,
 			"rewardOption": reward_contract.reward_option(),
 			"existingRewardContract": reward_contract.reward_contract().unwrap_or_else(|| zero_address.to_string()),

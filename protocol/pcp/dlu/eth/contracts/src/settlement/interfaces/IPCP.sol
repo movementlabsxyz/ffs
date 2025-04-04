@@ -10,12 +10,12 @@ interface IPCP {
         bytes32 stateCommitment,
         uint256 height
     );
-    event SuperBlockCommitmentSubmitted(
+    event SuperCommitmentSubmitted(
         bytes32 indexed blockHash,
         bytes32 stateCommitment,
         uint256 attesterStake
     );
-    error UnacceptableSuperBlockCommitment();
+    error UnacceptableSuperCommitment();
     error AttesterAlreadyCommitted();
 
     /// @notice Gets the epoch duration
@@ -28,7 +28,7 @@ interface IPCP {
     function getPostconfirmer() external view returns (address);
 
     /// @notice submit a superblock commitment
-    function submitSuperBlockCommitment(PCPStorage.SuperBlockCommitment memory commitment) external;
+    function submitSuperCommitment(PCPStorage.SuperCommitment memory commitment) external;
 
     /// @notice get the last postconfirmed superblock height
     function getLastPostconfirmedSuperBlockHeight() external view returns (uint256);
@@ -40,7 +40,7 @@ interface IPCP {
     function getPresentEpoch() external view returns (uint256);
 
     /// @notice get the postconfirmed commitment for a given height
-    function getPostconfirmedCommitment(uint256 height) external view returns (PCPStorage.SuperBlockCommitment memory);
+    function getPostconfirmedCommitment(uint256 height) external view returns (PCPStorage.SuperCommitment memory);
 
     /// @notice postconfirm superblocks and rollover
     function postconfirmSuperBlocksAndRollover() external;

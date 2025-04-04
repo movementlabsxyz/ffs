@@ -27,8 +27,8 @@ contract PCPTest is Test {
     bytes32 dishonestBlockIdTemplate = keccak256(abi.encodePacked(uint256(3), uint256(2), uint256(1)));
     
     // make an honest commitment
-    function makeHonestCommitment(uint256 height) internal view returns (PCPStorage.SuperBlockCommitment memory) {
-        return PCPStorage.SuperBlockCommitment({
+    function makeHonestCommitment(uint256 height) internal view returns (PCPStorage.SuperCommitment memory) {
+        return PCPStorage.SuperCommitment({
             height: height,
             commitment: honestCommitmentTemplate,
             blockId: honestBlockIdTemplate
@@ -36,8 +36,8 @@ contract PCPTest is Test {
     }
        
     // make a dishonest commitment
-    function makeDishonestCommitment(uint256 height) internal view returns (PCPStorage.SuperBlockCommitment memory) {
-        return PCPStorage.SuperBlockCommitment({
+    function makeDishonestCommitment(uint256 height) internal view returns (PCPStorage.SuperCommitment memory) {
+        return PCPStorage.SuperCommitment({
             height: height,
             commitment: dishonestCommitmentTemplate,
             blockId: dishonestBlockIdTemplate
@@ -319,12 +319,12 @@ contract PCPTest is Test {
 
         // carol will be dishonest
         vm.prank(carol);
-        pcp.submitSuperBlockCommitment(makeDishonestCommitment(1));
+        pcp.submitSuperCommitment(makeDishonestCommitment(1));
 
         // carol will try to sign again
         vm.prank(carol);
         vm.expectRevert(IPCP.AttesterAlreadyCommitted.selector);
-        pcp.submitSuperBlockCommitment(makeDishonestCommitment(1));
+        pcp.submitSuperCommitment(makeDishonestCommitment(1));
     }
 
     /// @notice Test that honest supermajority succeeds despite dishonest attesters
@@ -334,20 +334,20 @@ contract PCPTest is Test {
 
         // Dishonest carol submits first
         vm.prank(carol);
-        pcp.submitSuperBlockCommitment(makeDishonestCommitment(1));
+        pcp.submitSuperCommitment(makeDishonestCommitment(1));
 
         // Honest majority submits
         vm.prank(alice);
-        pcp.submitSuperBlockCommitment(makeHonestCommitment(1));
+        pcp.submitSuperCommitment(makeHonestCommitment(1));
         vm.prank(bob); 
-        pcp.submitSuperBlockCommitment(makeHonestCommitment(1));
+        pcp.submitSuperCommitment(makeHonestCommitment(1));
 
         // Trigger postconfirmation with majority
         vm.prank(alice);
         pcp.postconfirmSuperBlocksAndRollover();
 
         // Verify honest commitment was postconfirmed
-        PCPStorage.SuperBlockCommitment memory retrievedCommitment = pcp.getPostconfirmedCommitment(1);
+        PCPStorage.SuperCommitment memory retrievedCommitment = pcp.getPostconfirmedCommitment(1);
         assertEq(retrievedCommitment.commitment, honestCommitmentTemplate);
         assertEq(retrievedCommitment.blockId, honestBlockIdTemplate);
         assertEq(retrievedCommitment.height, 1);
@@ -361,18 +361,18 @@ contract PCPTest is Test {
 
         // Honnest commitments
         vm.prank(alice);
-        pcp.submitSuperBlockCommitment(makeHonestCommitment(1));
+        pcp.submitSuperCommitment(makeHonestCommitment(1));
         vm.prank(bob);
-        pcp.submitSuperBlockCommitment(makeHonestCommitment(1));
+        pcp.submitSuperCommitment(makeHonestCommitment(1));
         // Dishonest commitment
         vm.prank(carol);
-        pcp.submitSuperBlockCommitment(makeDishonestCommitment(1));
+        pcp.submitSuperCommitment(makeDishonestCommitment(1));
 
         vm.prank(alice);
         pcp.postconfirmSuperBlocksAndRollover();
         assertEq(pcp.getLastPostconfirmedSuperBlockHeight(), 0, "Height should not advance - Alice");
         // Verify no commitment was postconfirmed
-        PCPStorage.SuperBlockCommitment memory retrievedCommitment = pcp.getPostconfirmedCommitment(1);
+        PCPStorage.SuperCommitment memory retrievedCommitment = pcp.getPostconfirmedCommitment(1);
         assertEq(retrievedCommitment.height, 0, "No commitment should be postconfirmed");
         assertEq(retrievedCommitment.commitment, bytes32(0), "No commitment should be postconfirmed");
     }
@@ -386,13 +386,13 @@ contract PCPTest is Test {
 
         // dishonest carol
         vm.prank(carol);
-        pcp.submitSuperBlockCommitment(makeDishonestCommitment(1));
+        pcp.submitSuperCommitment(makeDishonestCommitment(1));
 
         // honest majority
         vm.prank(alice);
-        pcp.submitSuperBlockCommitment(makeHonestCommitment(1));
+        pcp.submitSuperCommitment(makeHonestCommitment(1));
         vm.prank(bob);
-        pcp.submitSuperBlockCommitment(makeHonestCommitment(1));
+        pcp.submitSuperCommitment(makeHonestCommitment(1));
 
         // now we move to next epoch
         vm.warp(L1BlockTimeStart + epochDuration);
@@ -406,7 +406,7 @@ contract PCPTest is Test {
         assertEq(pcp.getStakeForAcceptingEpoch(address(moveToken), alice), 2);
         assertEq(pcp.getStakeForAcceptingEpoch(address(moveToken), bob), 1);
         assertEq(pcp.getStakeForAcceptingEpoch(address(moveToken), carol), 1);
-        PCPStorage.SuperBlockCommitment memory retrievedCommitment = pcp.getPostconfirmedCommitment(1);
+        PCPStorage.SuperCommitment memory retrievedCommitment = pcp.getPostconfirmedCommitment(1);
         assert(retrievedCommitment.commitment == honestCommitmentTemplate);
         assert(retrievedCommitment.blockId == honestBlockIdTemplate);
         assert(retrievedCommitment.height == 1);
@@ -456,30 +456,30 @@ contract PCPTest is Test {
 
                 // get the assigned epoch for the superblock height
                 // commit roughly half of dishones attesters 
-                PCPStorage.SuperBlockCommitment memory dishonestCommitment = makeDishonestCommitment(superBlockHeightNow);
+                PCPStorage.SuperCommitment memory dishonestCommitment = makeDishonestCommitment(superBlockHeightNow);
                 for (uint256 k = 0; k < dishonestAttesters.length / 2; k++) {
                     vm.prank(dishonestAttesters[k]);
-                    pcp.submitSuperBlockCommitment(dishonestCommitment);
+                    pcp.submitSuperCommitment(dishonestCommitment);
                 }
 
                 // commit honestly
-                PCPStorage.SuperBlockCommitment memory honestCommitment = makeHonestCommitment(superBlockHeightNow);
+                PCPStorage.SuperCommitment memory honestCommitment = makeHonestCommitment(superBlockHeightNow);
                 for (uint256 k = 0; k < honestAttesters.length; k++) {
                     vm.prank(honestAttesters[k]);
-                    pcp.submitSuperBlockCommitment(honestCommitment);
+                    pcp.submitSuperCommitment(honestCommitment);
                 }
 
                 // TODO: The following does not serve any purpose, as enough attesters are already committed
                 // commit dishonestly the rest
                 // for (uint256 k = dishonestAttesters.length / 2; k < dishonestAttesters.length; k++) {
                 //     vm.prank(dishonestAttesters[k]);
-                //     pcp.submitSuperBlockCommitment(dishonestCommitment);
+                //     pcp.submitSuperCommitment(dishonestCommitment);
                 // }
 
                 vm.prank(alice);
                 pcp.postconfirmSuperBlocksAndRollover();
 
-                PCPStorage.SuperBlockCommitment memory retrievedCommitment = pcp.getPostconfirmedCommitment(superBlockHeightNow);
+                PCPStorage.SuperCommitment memory retrievedCommitment = pcp.getPostconfirmedCommitment(superBlockHeightNow);
                 assert(retrievedCommitment.commitment == honestCommitment.commitment);
                 assert(retrievedCommitment.blockId == honestCommitment.blockId);
                 assert(retrievedCommitment.height == superBlockHeightNow);
@@ -549,11 +549,11 @@ contract PCPTest is Test {
         vm.warp(blockTime);
 
         // default signer should be able to force commitment
-        PCPStorage.SuperBlockCommitment memory forcedCommitment = makeDishonestCommitment(1);
+        PCPStorage.SuperCommitment memory forcedCommitment = makeDishonestCommitment(1);
         pcp.forceLatestCommitment(forcedCommitment);
 
         // get the latest commitment
-        PCPStorage.SuperBlockCommitment memory retrievedCommitment = pcp.getPostconfirmedCommitment(1);
+        PCPStorage.SuperCommitment memory retrievedCommitment = pcp.getPostconfirmedCommitment(1);
         assertEq(retrievedCommitment.blockId, forcedCommitment.blockId);
         assertEq(retrievedCommitment.commitment, forcedCommitment.commitment);
         assertEq(retrievedCommitment.height, forcedCommitment.height);
@@ -562,7 +562,7 @@ contract PCPTest is Test {
         address payable alice = payable(vm.addr(1));
 
         // try to force a different commitment with unauthorized user
-        PCPStorage.SuperBlockCommitment memory badForcedCommitment = makeHonestCommitment(1);
+        PCPStorage.SuperCommitment memory badForcedCommitment = makeHonestCommitment(1);
         
         // Alice should not have COMMITMENT_ADMIN role
         assertEq(pcp.hasRole(pcp.COMMITMENT_ADMIN(), alice), false);
@@ -594,7 +594,7 @@ contract PCPTest is Test {
 
         // Create and submit commitment
         uint256 targetHeight = 1;
-        PCPStorage.SuperBlockCommitment memory commitment = PCPStorage.SuperBlockCommitment({
+        PCPStorage.SuperCommitment memory commitment = PCPStorage.SuperCommitment({
             height: targetHeight,
             commitment: keccak256(abi.encodePacked(uint256(1))),
             blockId: keccak256(abi.encodePacked(uint256(1)))
@@ -602,10 +602,10 @@ contract PCPTest is Test {
 
         // Submit commitment
         vm.prank(alice);
-        pcp.submitSuperBlockCommitment(commitment);
+        pcp.submitSuperCommitment(commitment);
         
         // Verify commitment was stored
-        PCPStorage.SuperBlockCommitment memory stored = pcp.getCommitmentByAttester(targetHeight, alice);
+        PCPStorage.SuperCommitment memory stored = pcp.getCommitmentByAttester(targetHeight, alice);
         assert(stored.commitment == commitment.commitment);
         
         // Attempt postconfirmation
@@ -613,7 +613,7 @@ contract PCPTest is Test {
         pcp.postconfirmSuperBlocksAndRollover();
         
         // Verify postconfirmation worked
-        PCPStorage.SuperBlockCommitment memory postconfirmed = pcp.getPostconfirmedCommitment(targetHeight);
+        PCPStorage.SuperCommitment memory postconfirmed = pcp.getPostconfirmedCommitment(targetHeight);
         assert(postconfirmed.commitment == commitment.commitment);
 
         // confirm current superblock height
@@ -631,17 +631,17 @@ contract PCPTest is Test {
         // Create commitment for height 1
         uint256 targetHeight = 1;
         
-        PCPStorage.SuperBlockCommitment memory commitment = makeHonestCommitment(targetHeight);
+        PCPStorage.SuperCommitment memory commitment = makeHonestCommitment(targetHeight);
 
         // Submit commitments
         vm.prank(alice);
-        pcp.submitSuperBlockCommitment(commitment);
+        pcp.submitSuperCommitment(commitment);
         vm.prank(bob);
-        pcp.submitSuperBlockCommitment(commitment);
+        pcp.submitSuperCommitment(commitment);
 
         // Verify commitments were stored
-        PCPStorage.SuperBlockCommitment memory aliceCommitment = pcp.getCommitmentByAttester(targetHeight, alice);
-        PCPStorage.SuperBlockCommitment memory bobCommitment = pcp.getCommitmentByAttester(targetHeight, bob);
+        PCPStorage.SuperCommitment memory aliceCommitment = pcp.getCommitmentByAttester(targetHeight, alice);
+        PCPStorage.SuperCommitment memory bobCommitment = pcp.getCommitmentByAttester(targetHeight, bob);
         assert(aliceCommitment.commitment == commitment.commitment);
         assert(bobCommitment.commitment == commitment.commitment);
 
@@ -654,7 +654,7 @@ contract PCPTest is Test {
         pcp.postconfirmSuperBlocksAndRollover();
 
         // Verify postconfirmation
-        PCPStorage.SuperBlockCommitment memory postconfirmed = pcp.getPostconfirmedCommitment(targetHeight);
+        PCPStorage.SuperCommitment memory postconfirmed = pcp.getPostconfirmedCommitment(targetHeight);
         assert(postconfirmed.commitment == commitment.commitment);
         assertEq(pcp.getLastPostconfirmedSuperBlockHeight(), targetHeight);
     }
@@ -667,17 +667,17 @@ contract PCPTest is Test {
         // Create commitment for height 1
         uint256 targetHeight = 1;
         
-        PCPStorage.SuperBlockCommitment memory commitment = makeHonestCommitment(targetHeight);
+        PCPStorage.SuperCommitment memory commitment = makeHonestCommitment(targetHeight);
 
         // Submit commitments
         vm.prank(alice);
-        pcp.submitSuperBlockCommitment(commitment);
+        pcp.submitSuperCommitment(commitment);
         vm.prank(bob);
-        pcp.submitSuperBlockCommitment(commitment);
+        pcp.submitSuperCommitment(commitment);
 
         // Verify commitments were stored
-        PCPStorage.SuperBlockCommitment memory aliceCommitment = pcp.getCommitmentByAttester(targetHeight, alice);
-        PCPStorage.SuperBlockCommitment memory bobCommitment = pcp.getCommitmentByAttester(targetHeight, bob);
+        PCPStorage.SuperCommitment memory aliceCommitment = pcp.getCommitmentByAttester(targetHeight, alice);
+        PCPStorage.SuperCommitment memory bobCommitment = pcp.getCommitmentByAttester(targetHeight, bob);
         assert(aliceCommitment.commitment == commitment.commitment);
         assert(bobCommitment.commitment == commitment.commitment);
 
@@ -700,9 +700,9 @@ contract PCPTest is Test {
         (address alice, address bob, address carol) = setupGenesisWithThreeAttesters(1, 1, 0);
 
         // Create commitment for height 1 by the only stable attester
-        PCPStorage.SuperBlockCommitment memory commitment = makeHonestCommitment(1);
+        PCPStorage.SuperCommitment memory commitment = makeHonestCommitment(1);
         vm.prank(bob);
-        pcp.submitSuperBlockCommitment(commitment);
+        pcp.submitSuperCommitment(commitment);
 
         vm.prank(alice);
         pcp.postconfirmSuperBlocksAndRollover();
@@ -739,7 +739,7 @@ contract PCPTest is Test {
 
         // Carol commits to height 1
         vm.prank(carol);
-        pcp.submitSuperBlockCommitment(commitment);
+        pcp.submitSuperCommitment(commitment);
 
         // perform postconfirmation
         vm.prank(carol);
@@ -767,7 +767,7 @@ contract PCPTest is Test {
         assertEq(pcp.getMinCommitmentAgeForPostconfirmation(), minAge, "Min commitment age should be updated to 1 minutes");
         
         vm.prank(alice);
-        pcp.submitSuperBlockCommitment(makeHonestCommitment(1));
+        pcp.submitSuperCommitment(makeHonestCommitment(1));
         vm.prank(alice);
         pcp.postconfirmSuperBlocksAndRollover();
         assertEq(pcp.getLastPostconfirmedSuperBlockHeight(), 0, "Immediate postconfirmation should fail.");
@@ -871,11 +871,11 @@ contract PCPTest is Test {
 
         // Submit commitments for height 1 honestly (Alice and Bob > 2/3)
         vm.prank(alice);
-        pcp.submitSuperBlockCommitment(makeHonestCommitment(1));
+        pcp.submitSuperCommitment(makeHonestCommitment(1));
         vm.prank(bob);
-        pcp.submitSuperBlockCommitment(makeHonestCommitment(1));
+        pcp.submitSuperCommitment(makeHonestCommitment(1));
         vm.prank(carol);
-        pcp.submitSuperBlockCommitment(makeDishonestCommitment(1));
+        pcp.submitSuperCommitment(makeDishonestCommitment(1));
 
         // Check initial reward points
         assertEq(pcp.getAttesterRewardPoints(pcp.getAcceptingEpoch(), alice), 0, "Alice should have no points yet");
@@ -893,11 +893,11 @@ contract PCPTest is Test {
 
         // Alice and Carol commit to height 2 honestly (Alice + Carol > 2/3)
         vm.prank(alice);
-        pcp.submitSuperBlockCommitment(makeHonestCommitment(2));
+        pcp.submitSuperCommitment(makeHonestCommitment(2));
         vm.prank(bob);
-        pcp.submitSuperBlockCommitment(makeDishonestCommitment(2));
+        pcp.submitSuperCommitment(makeDishonestCommitment(2));
         vm.prank(carol);
-        pcp.submitSuperBlockCommitment(makeHonestCommitment(2));
+        pcp.submitSuperCommitment(makeHonestCommitment(2));
 
         // Trigger postconfirmation, reward distribution by rolling over to next epoch
         vm.warp(2*epochDuration);
@@ -927,7 +927,7 @@ contract PCPTest is Test {
         pcp.setPostconfirmerPrivilegeDuration(epochDuration/4);
 
         vm.prank(alice);
-        pcp.submitSuperBlockCommitment(makeHonestCommitment(1));
+        pcp.submitSuperCommitment(makeHonestCommitment(1));
         // check that the first seen timestamp is set
         assertGt(pcp.getCommitmentFirstSeenAt(makeHonestCommitment(1)), 0, "Commitment first seen at should be set");
 
@@ -966,7 +966,7 @@ contract PCPTest is Test {
         uint256 bobInitialBalance = moveToken.balanceOf(bob);
 
         vm.prank(alice);
-        pcp.submitSuperBlockCommitment(makeHonestCommitment(1));
+        pcp.submitSuperCommitment(makeHonestCommitment(1));
 
         assertEq(pcp.getPostconfirmer(), alice, "Alice should be the postconfirmer since it is the only staked attester.");
         assertEq(pcp.isWithinPostconfirmerPrivilegeDuration(makeHonestCommitment(1)), true, "Postconfirmer should be live");
@@ -1012,7 +1012,7 @@ contract PCPTest is Test {
         assertGt(thisPostconfirmerDuration, thisPostconfirmerPriviledgeWindow, "Postconfirmer term should be greater than thisPostconfirmerPriviledgeWindow");
 
         vm.prank(alice);
-        pcp.submitSuperBlockCommitment(makeHonestCommitment(1));
+        pcp.submitSuperCommitment(makeHonestCommitment(1));
 
         assertEq(pcp.getPostconfirmer(), bob, "bob should be the postconfirmer");
         assertEq(pcp.isWithinPostconfirmerPrivilegeDuration(makeHonestCommitment(1)), true, "Postconfirmer should be live");
@@ -1049,11 +1049,11 @@ contract PCPTest is Test {
         assertEq(pcp.getPostconfirmer(), bob, "Bob should be the postconfirmer");
 
         // make superBlock commitments
-        PCPStorage.SuperBlockCommitment memory initCommitment = makeHonestCommitment(1);
+        PCPStorage.SuperCommitment memory initCommitment = makeHonestCommitment(1);
         vm.prank(alice);
-        pcp.submitSuperBlockCommitment(initCommitment);
+        pcp.submitSuperCommitment(initCommitment);
         vm.prank(bob);
-        pcp.submitSuperBlockCommitment(initCommitment);
+        pcp.submitSuperCommitment(initCommitment);
 
         // bob postconfirms and gets a reward
         vm.prank(bob);
@@ -1061,11 +1061,11 @@ contract PCPTest is Test {
         assertEq(pcp.getLastPostconfirmedSuperBlockHeight(), 1);
 
         // make second superblock commitment
-        PCPStorage.SuperBlockCommitment memory secondCommitment = makeHonestCommitment(2);
+        PCPStorage.SuperCommitment memory secondCommitment = makeHonestCommitment(2);
         vm.prank(alice);
-        pcp.submitSuperBlockCommitment(secondCommitment);
+        pcp.submitSuperCommitment(secondCommitment);
         vm.prank(bob);
-        pcp.submitSuperBlockCommitment(secondCommitment);
+        pcp.submitSuperCommitment(secondCommitment);
 
         // alice can postconfirm, but does not get the reward
         // TODO check that bob did not get the reward

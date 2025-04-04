@@ -1,10 +1,10 @@
 use mcr_protocol_client_core_util::McrClientOperations;
 use mcr_protocol_client_eth_core::config::StandardClient;
-use mcr_types::block_commitment::BlockCommitment;
+use mcr_types::block_commitment::Commitment;
 
 #[derive(Debug, Clone)]
 pub enum Act {
-	PostBlockCommitment(BlockCommitment),
+	PostCommitment(Commitment),
 }
 
 pub struct Client {
@@ -20,7 +20,7 @@ impl Client {
 		println!("acting on {:?}", act);
 
 		match act {
-			Act::PostBlockCommitment(block_commitment) => {
+			Act::PostCommitment(block_commitment) => {
 				self.mcr_protocol_client.post_block_commitment(block_commitment).await?;
 				Ok(())
 			}

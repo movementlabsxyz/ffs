@@ -39,7 +39,7 @@ contract DeployMCRDev is Script {
         
         // MCR configuration
         uint256 initialBlockHeight;
-        uint256 leadingBlockTolerance;
+        uint256 leadingCommitmentTolerance;
         uint256 epochDuration;
         
         // Reward configuration
@@ -89,7 +89,7 @@ contract DeployMCRDev is Script {
         uint256 initialTokenMint = vm.parseJsonUint(jsonConfig, ".initialTokenMint");
         address[] memory custodians = vm.parseJsonAddressArray(jsonConfig, ".custodians");
         uint256 initialBlockHeight = vm.parseJsonUint(jsonConfig, ".initialBlockHeight");
-        uint256 leadingBlockTolerance = vm.parseJsonUint(jsonConfig, ".leadingBlockTolerance");
+        uint256 leadingCommitmentTolerance = vm.parseJsonUint(jsonConfig, ".leadingCommitmentTolerance");
         uint256 epochDuration = vm.parseJsonUint(jsonConfig, ".epochDuration");
         uint8 rewardOption = uint8(vm.parseJsonUint(jsonConfig, ".rewardOption"));
         address existingRewardContract = vm.parseJsonAddress(jsonConfig, ".existingRewardContract");
@@ -106,7 +106,7 @@ contract DeployMCRDev is Script {
             initialTokenMint: initialTokenMint,
             custodians: custodians,
             initialBlockHeight: initialBlockHeight,
-            leadingBlockTolerance: leadingBlockTolerance,
+            leadingCommitmentTolerance: leadingCommitmentTolerance,
             epochDuration: epochDuration,
             rewardOption: rewardOption,
             existingRewardContract: existingRewardContract,
@@ -216,7 +216,7 @@ contract DeployMCRDev is Script {
                 (
                     IMovementStaking(address(movementStakingProxy)), 
                     config.initialBlockHeight, 
-                    config.leadingBlockTolerance, 
+                    config.leadingCommitmentTolerance, 
                     config.epochDuration, 
                     config.custodians
                 )
@@ -328,7 +328,7 @@ contract DeployMCRDev is Script {
         
         // Default MCR config
         config.initialBlockHeight = 0;
-        config.leadingBlockTolerance = 10;
+        config.leadingCommitmentTolerance = 10;
         config.epochDuration = 4 seconds;
         
         // Default custodians - will be overridden when deployed

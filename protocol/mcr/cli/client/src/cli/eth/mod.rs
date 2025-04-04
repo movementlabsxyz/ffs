@@ -25,7 +25,7 @@ pub enum Eth {
 	/// Stream commitments
 	StreamCommitments(stream_commitments::StreamCommitments),
 	/// Get a block commitment for a given height and attester
-	GetBlockCommitment(get_block_commitment::GetBlockCommitment),
+	GetCommitment(get_block_commitment::GetCommitment),
 	/// Get accepted commitment at a specific height
 	GetAcceptedCommitmentAtHeight(get_accepted_commitment_at_height::GetAcceptedCommitmentAtHeight),
 	/// Get posted commitment at a specific height
@@ -45,7 +45,7 @@ pub enum Eth {
 impl Eth {
 	pub async fn execute(&self) -> Result<(), anyhow::Error> {
 		match self {
-			Eth::GetBlockCommitment(cmd) => cmd.execute().await?,
+			Eth::GetCommitment(cmd) => cmd.execute().await?,
 			Eth::PostAdminCommitment(cmd) => cmd.execute().await?,
 			Eth::PostCommitment(cmd) => cmd.execute().await?,
 			Eth::PostCommitmentBatch(cmd) => cmd.execute().await?,

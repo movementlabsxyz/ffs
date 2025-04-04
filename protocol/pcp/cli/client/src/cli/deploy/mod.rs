@@ -37,7 +37,7 @@ impl Deploy {
                 // - initialTokenMint: Initial supply (100,000 tokens with 18 decimals)
                 // - custodians: Array of addresses that can act as custodians
                 // - initialBlockHeight: Starting block height for the protocol
-                // - leadingBlockTolerance: Number of blocks a validator can be ahead
+                // - leadingCommitmentTolerance: Number of blocks a validator can be ahead
                 // - epochDuration: Duration of each epoch in seconds
                 // - rewardOption: 0=none, 1=deploy ARO, 2=use existing reward contract
                 // - existingRewardContract: Used if rewardOption=2
@@ -55,7 +55,7 @@ impl Deploy {
                         "initialTokenMint": "100000000000000000000000",
                         "custodians": [],
                         "initialBlockHeight": "0",
-                        "leadingBlockTolerance": "10",
+                        "leadingCommitmentTolerance": "10",
                         "epochDuration": "4",
                         "rewardOption": "0",
                         "existingRewardContract": "0x0000000000000000000000000000000000000000",

@@ -6,7 +6,7 @@ use alloy_primitives::Address;
 use alloy_sol_types::sol;
 use anyhow::Context;
 use mcr_protocol_client_core_util::{CommitmentStream, McrClientError, McrClientOperations, U256};
-use mcr_types::block_commitment::{BlockCommitment, Commitment, Id};
+use mcr_types::block_commitment::{Commitment, CommitmentValue, Id};
 use serde_json::Value as JsonValue;
 use std::array::TryFromSliceError;
 use std::fs;
@@ -57,16 +57,16 @@ where
 {
 	async fn post_block_commitment(
 		&self,
-		block_commitment: BlockCommitment,
+		block_commitment: Commitment,
 	) -> Result<(), McrClientError> {
 		let contract = MCR::new(self.contract_address, &self.rpc_provider);
 
 		// block commitment that is made ready for eth
-		let eth_block_commitment = MCRStorage::BlockCommitment {
+		let eth_block_commitment = MCRStorage::Commitment {
 			// Currently, to simplify the API, we'll say 0 is uncommitted all other numbers are legitimate heights
 			height: U256::from(block_commitment.height()),
-			commitment: alloy_primitives::FixedBytes(
-				block_commitment.commitment().as_bytes().clone(),
+			commitmentValue: alloy_primitives::FixedBytes(
+				block_commitment.commitment_value().as_bytes().clone(),
 			),
 			blockId: alloy_primitives::FixedBytes(block_commitment.block_id().as_bytes().clone()),
 		};
@@ -82,7 +82,7 @@ where
 			)
 			.await
 		} else {
-			let call_builder = contract.submitBlockCommitment(eth_block_commitment).from(self.signer_address);
+			let call_builder = contract.submitCommitment(eth_block_commitment).from(self.signer_address);
 
 			println!("Debug [post_block_commitment] - About to send transaction");
 			send_transaction(
@@ -98,7 +98,7 @@ where
 
 	async fn post_block_commitment_batch(
 		&self,
-		block_commitments: Vec<BlockCommitment>,
+		block_commitments: Vec<Commitment>,
 	) -> Result<(), McrClientError> {
 		let contract = MCR::new(self.contract_address, &self.rpc_provider);
 
@@ -106,11 +106,11 @@ where
 		let eth_block_commitment_batch: Vec<_> = block_commitments
 			.into_iter()
 			.map(|block_commitment| {
-				Ok(MCRStorage::BlockCommitment {
+				Ok(MCRStorage::Commitment {
 					// Currently, to simplify the API, we'll say 0 is uncommitted all other numbers are legitimate heights
 					height: U256::from(block_commitment.height()),
-					commitment: alloy_primitives::FixedBytes(
-						block_commitment.commitment().as_bytes().clone(),
+					commitmentValue: alloy_primitives::FixedBytes(
+						block_commitment.commitment_value().as_bytes().clone(),
 					),
 					blockId: alloy_primitives::FixedBytes(
 						block_commitment.block_id().as_bytes().clone(),
@@ -120,7 +120,7 @@ where
 			.collect::<Result<Vec<_>, TryFromSliceError>>()
 			.map_err(|e| McrClientError::Internal(Box::new(e)))?;
 
-		let call_builder = contract.submitBatchBlockCommitment(eth_block_commitment_batch);
+		let call_builder = contract.submitBatchCommitment(eth_block_commitment_batch);
 
 		send_transaction(
 			self.signer_address.clone(),
@@ -134,15 +134,15 @@ where
 
 	async fn force_block_commitment(
 		&self,
-		block_commitment: BlockCommitment,
+		block_commitment: Commitment,
 	) -> Result<(), McrClientError> {
 		let contract = MCR::new(self.contract_address, &self.rpc_provider);
 
-		let eth_block_commitment = MCRStorage::BlockCommitment {
+		let eth_block_commitment = MCRStorage::Commitment {
 			// Currently, to simplify the API, we'll say 0 is uncommitted all other numbers are legitimate heights
 			height: U256::from(block_commitment.height()),
-			commitment: alloy_primitives::FixedBytes(
-				block_commitment.commitment().as_bytes().clone(),
+			commitmentValue: alloy_primitives::FixedBytes(
+				block_commitment.commitment_value().as_bytes().clone(),
 			),
 			blockId: alloy_primitives::FixedBytes(block_commitment.block_id().as_bytes().clone()),
 		};
@@ -159,14 +159,14 @@ where
 	}
 
 	async fn stream_block_commitments(&self) -> Result<CommitmentStream, McrClientError> {
-		// Register to contract BlockCommitmentSubmitted event
+		// Register to contract CommitmentSubmitted event
 
 		let contract = MCR::new(self.contract_address, &self.ws_provider);
 		let event_filter = contract
 			.BlockAccepted_filter()
 			.watch()
 			.await
-			.map_err(|e| McrClientError::StreamBlockCommitments(Box::new(e)))?;
+			.map_err(|e| McrClientError::StreamCommitments(Box::new(e)))?;
 
 		let stream = event_filter.into_stream().map(|event| {
 			event
@@ -176,10 +176,10 @@ where
 							alloy_sol_types::Error::Other(err.to_string().into())
 						},
 					)?;
-					Ok(BlockCommitment::new(
+					Ok(Commitment::new(
 						height,
 						Id::new(commitment.blockHash.0),
-						Commitment::new(commitment.stateCommitment.0),
+						CommitmentValue::new(commitment.stateCommitment.0),
 					))
 				})
 				.map_err(|err| McrEthConnectorError::EventNotificationError(err).into())
@@ -190,7 +190,7 @@ where
 	async fn get_accepted_commitment_at_height(
 		&self,
 		height: u64,
-	) -> Result<Option<BlockCommitment>, McrClientError> {
+	) -> Result<Option<Commitment>, McrClientError> {
 		let contract = MCR::new(self.contract_address, &self.ws_provider);
 		let MCR::getAcceptedCommitmentAtBlockHeightReturn { _0: commitment } = contract
 			.getAcceptedCommitmentAtBlockHeight(U256::from(height))
@@ -204,21 +204,21 @@ where
 			.context("failed to convert the commitment height from U256 to u64")
 			.map_err(|e| McrClientError::Internal(e.into()))?;
 		// Commitment with height 0 mean not found
-		Ok((return_height != 0).then_some(BlockCommitment::new(
+		Ok((return_height != 0).then_some(Commitment::new(
 			commitment
 				.height
 				.try_into()
 				.context("failed to convert the commitment height from U256 to u64")
 				.map_err(|e| McrClientError::Internal(e.into()))?,
 			Id::new(commitment.blockId.into()),
-			Commitment::new(commitment.commitment.into()),
+			CommitmentValue::new(commitment.commitmentValue.into()),
 		)))
 	}
 
 	async fn get_posted_commitment_at_height(
 		&self,
 		height: u64,
-	) -> Result<Option<BlockCommitment>, McrClientError> {
+	) -> Result<Option<Commitment>, McrClientError> {
 		let contract = MCR::new(self.contract_address, &self.ws_provider);
 		let MCR::getValidatorCommitmentAtBlockHeightReturn { _0: commitment } = contract
 			.getValidatorCommitmentAtBlockHeight(U256::from(height), self.signer_address)
@@ -232,14 +232,14 @@ where
 			.context("failed to convert the commitment height from U256 to u64")
 			.map_err(|e| McrClientError::Internal(e.into()))?;
 
-		Ok((return_height != 0).then_some(BlockCommitment::new(
+		Ok((return_height != 0).then_some(Commitment::new(
 			commitment
 				.height
 				.try_into()
 				.context("failed to convert the commitment height from U256 to u64")
 				.map_err(|e| McrClientError::Internal(e.into()))?,
 			Id::new(commitment.blockId.into()),
-			Commitment::new(commitment.commitment.into()),
+			CommitmentValue::new(commitment.commitmentValue.into()),
 		)))
 	}
 
@@ -260,7 +260,7 @@ where
 		&self,
 		height: u64,
 		attester: String,
-	) -> Result<Option<BlockCommitment>, McrClientError> {
+	) -> Result<Option<Commitment>, McrClientError> {
 		let contract = MCR::new(self.contract_address, &self.ws_provider);
 		let attester_addr = attester.parse()
 			.map_err(|e| McrClientError::Internal(Box::new(e)))?;
@@ -277,14 +277,14 @@ where
 			.context("failed to convert the commitment height from U256 to u64")
 			.map_err(|e| McrClientError::Internal(e.into()))?;
 
-		Ok((return_height != 0).then_some(BlockCommitment::new(
+		Ok((return_height != 0).then_some(Commitment::new(
 			commitment
 				.height
 				.try_into()
 				.context("failed to convert the commitment height from U256 to u64")
 				.map_err(|e| McrClientError::Internal(e.into()))?,
 			Id::new(commitment.blockId.into()),
-			Commitment::new(commitment.commitment.into()),
+			CommitmentValue::new(commitment.commitmentValue.into()),
 		)))
 	}
 
@@ -304,14 +304,14 @@ where
 
 	async fn get_last_accepted_block_height(&self) -> Result<u64, McrClientError> {
 		let contract = MCR::new(self.contract_address, &self.rpc_provider);
-		let MCR::lastAcceptedBlockHeightReturn { _0: height } = contract.lastAcceptedBlockHeight().call().await
+		let MCR::lastAcceptedCommitmentHeightReturn { _0: height } = contract.lastAcceptedCommitmentHeight().call().await
 			.map_err(|e| McrClientError::Internal(Box::new(e)))?;
 		Ok(height.try_into().unwrap())
 	}
 
 	async fn get_leading_block_tolerance(&self) -> Result<u64, McrClientError> {
 		let contract = MCR::new(self.contract_address, &self.rpc_provider);
-		let MCR::leadingBlockToleranceReturn { _0: tolerance } = contract.leadingBlockTolerance().call().await
+		let MCR::leadingCommitmentToleranceReturn { _0: tolerance } = contract.leadingCommitmentTolerance().call().await
 			.map_err(|e| McrClientError::Internal(Box::new(e)))?;
 		Ok(tolerance.try_into().unwrap())
 	}

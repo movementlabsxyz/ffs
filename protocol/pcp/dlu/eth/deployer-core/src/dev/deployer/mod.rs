@@ -138,7 +138,7 @@ impl DeployConfig {
 			"initialTokenMint": self.initial_token_mint,
 			"custodians": self.custodians.as_ref().map_or(Vec::new(), |v| v.clone()),
 			"initialBlockHeight": self.initial_block_height,
-			"leadingBlockTolerance": self.leading_block_tolerance,
+			"leadingCommitmentTolerance": self.leading_block_tolerance,
 			"epochDuration": self.epoch_duration,
 			"rewardOption": reward_contract.reward_option(),
 			"existingRewardContract": reward_contract.existing_reward_contract().unwrap_or_else(|| zero_address.to_string()),

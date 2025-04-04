@@ -7,7 +7,7 @@ use config::Config;
 use mcr_network_anvil_component_core::dev::lifecycle::up::Up;
 use mcr_protocol_client_eth_core::config::Config as EthConfig;
 use mcr_protocol_deployer_eth_core::artifacts::output::Artifacts;
-use mcr_types::block_commitment::BlockCommitment;
+use mcr_types::block_commitment::Commitment;
 use network_anvil_component_core::util::parser::AnvilData;
 use secure_signer::key::TryFromCanonicalString;
 use secure_signer_loader::identifiers::SignerIdentifier;
@@ -89,7 +89,7 @@ impl Basic {
 		let mcr_protocol_client = up_state.try_build_default_mcr_protocol_client().await?;
 
 		// act with the client
-		mcr_protocol_client.act(Act::PostBlockCommitment(BlockCommitment::default())).await?;
+		mcr_protocol_client.act(Act::PostCommitment(Commitment::default())).await?;
 
 		// end the up task
 		kestrel::end!(up_task)?;

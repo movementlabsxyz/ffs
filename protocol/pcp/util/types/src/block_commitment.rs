@@ -84,13 +84,13 @@ impl From<Commitment> for Vec<u8> {
 }
 
 #[derive(Serialize, Deserialize, Clone, Default, Debug, PartialEq, Eq, Hash, PartialOrd, Ord)]
-pub struct SuperBlockCommitment {
+pub struct SuperCommitment {
 	height: u64,
 	block_id: Id,
 	commitment: Commitment,
 }
 
-impl SuperBlockCommitment {
+impl SuperCommitment {
 	pub fn new(height: u64, block_id: Id, commitment: Commitment) -> Self {
 		Self { height, block_id, commitment }
 	}
@@ -112,18 +112,18 @@ impl SuperBlockCommitment {
 	}
 }
 
-impl fmt::Display for SuperBlockCommitment {
+impl fmt::Display for SuperCommitment {
 	fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
 		write!(
 			f,
-			"SuperBlockCommitment {{ height: {}, block_id: {}, commitment: {} }}",
+			"SuperCommitment {{ height: {}, block_id: {}, commitment: {} }}",
 			self.height, self.block_id, self.commitment
 		)
 	}
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq, Hash, PartialOrd, Ord)]
-pub enum SuperBlockCommitmentRejectionReason {
+pub enum SuperCommitmentRejectionReason {
 	InvalidBlockId,
 	InvalidCommitment,
 	InvalidHeight,
@@ -131,7 +131,7 @@ pub enum SuperBlockCommitmentRejectionReason {
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq, Hash, PartialOrd, Ord)]
-pub enum SuperBlockCommitmentEvent {
-	Accepted(SuperBlockCommitment),
-	Rejected { height: u64, reason: SuperBlockCommitmentRejectionReason },
+pub enum SuperCommitmentEvent {
+	Accepted(SuperCommitment),
+	Rejected { height: u64, reason: SuperCommitmentRejectionReason },
 }

@@ -59,15 +59,15 @@ contract McrARO is MCRStorage, IMcrReward {
     EpochRewardConfig public epochRewardConfig;
 
     /// @notice Tracks the last timestamp a block commitment was accepted for speed bonus calculation
-    mapping(uint256 blockHeight => uint256 timestamp) public lastBlockTimestamp;
+    mapping(uint256 commitmentHeight => uint256 timestamp) public lastBlockTimestamp;
 
     /// @notice Tracks valid commitments by attesters in each epoch for consistency rewards
     mapping(uint256 epoch => mapping(address attester => uint256 commitCount)) public epochCommitments;
 
     /// @notice Event emitted when a block commitment reward is distributed
-    event BlockCommitmentRewarded(
+    event CommitmentRewarded(
         address indexed attester,
-        uint256 blockHeight,
+        uint256 commitmentHeight,
         bytes32 indexed commitment,
         uint256 rewardAmount,
         uint256 availableBalance
@@ -172,15 +172,15 @@ contract McrARO is MCRStorage, IMcrReward {
 
     /*
      * @notice Reward attesters for a successful block commitment
-     * @dev Called during _acceptBlockCommitment in the MCR contract via delegatecall
-     * @param blockHeight The height of the accepted block
+     * @dev Called during _acceptCommitment in the MCR contract via delegatecall
+     * @param commitmentHeight The height of the accepted block
      * @param commitment The accepted block commitment hash
      * @param blockId The unique identifier of the accepted block
      * @param attester The attester who submitted the accepted commitment
      * @return success Whether the reward distribution was successful
      */
-    function rewardBlockCommitment(
-        uint256 blockHeight,
+    function rewardCommitment(
+        uint256 commitmentHeight,
         bytes32 commitment,
         bytes32 _blockId,
         address attester
@@ -195,7 +195,7 @@ contract McrARO is MCRStorage, IMcrReward {
         
         // Calculate speed bonus based on time since last block
         uint256 speedBonus = 0;
-        uint256 lastTime = lastBlockTimestamp[blockHeight - 1];
+        uint256 lastTime = lastBlockTimestamp[commitmentHeight - 1];
         if (lastTime > 0) {
             uint256 timeDiff = block.timestamp - lastTime;
             // If block was produced faster than the threshold, apply speed bonus
@@ -219,7 +219,7 @@ contract McrARO is MCRStorage, IMcrReward {
         }
         
         // Update last block timestamp for future speed bonus calculations
-        lastBlockTimestamp[blockHeight] = block.timestamp;
+        lastBlockTimestamp[commitmentHeight] = block.timestamp;
         
         // Calculate base reward
         uint256 baseReward = calculateAsymptoticReward(
@@ -229,7 +229,7 @@ contract McrARO is MCRStorage, IMcrReward {
         );
         
         // Calculate stake-based bonus
-        uint256 epoch = blockHeightEpochAssignments[blockHeight];
+        uint256 epoch = commitmentHeightEpochAssignments[commitmentHeight];
         uint256 attesterStake = stakingContract.getStakeAtEpoch(
             address(this),
             epoch,
@@ -278,9 +278,9 @@ contract McrARO is MCRStorage, IMcrReward {
             stakingContract.reward(attesters, amounts, custodianAddresses);
             
             // Emit event
-            emit BlockCommitmentRewarded(
+            emit CommitmentRewarded(
                 attester,
-                blockHeight,
+                commitmentHeight,
                 commitment,
                 totalReward,
                 availableBalance

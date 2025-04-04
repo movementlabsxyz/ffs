@@ -7,7 +7,7 @@ use alloy_primitives::U256;
 use alloy_sol_types::sol;
 use anyhow::Context;
 use pcp_protocol_client_core_util::{CommitmentStream, PcpClientError, PcpClientOperations};
-use pcp_types::block_commitment::{SuperBlockCommitment, Commitment, Id};
+use pcp_types::block_commitment::{SuperCommitment, Commitment, Id};
 use serde_json::Value as JsonValue;
 use std::array::TryFromSliceError;
 use std::fs;
@@ -56,11 +56,11 @@ where
 {
 	async fn post_block_commitment(
 		&self,
-		block_commitment: SuperBlockCommitment,
+		block_commitment: SuperCommitment,
 	) -> Result<(), PcpClientError> {
 		let contract = PCP::new(self.contract_address, &self.rpc_provider);
 
-		let eth_block_commitment = PCPStorage::SuperBlockCommitment {
+		let eth_block_commitment = PCPStorage::SuperCommitment {
 			// Currently, to simplify the API, we'll say 0 is uncommitted all other numbers are legitimate heights
 			height: U256::from(block_commitment.height()),
 			commitment: alloy_primitives::FixedBytes(
@@ -80,7 +80,7 @@ where
 			)
 			.await
 		} else {
-			let call_builder = contract.submitSuperBlockCommitment(eth_block_commitment);
+			let call_builder = contract.submitSuperCommitment(eth_block_commitment);
 			send_transaction(
 				self.signer_address.clone(),
 				call_builder,
@@ -94,14 +94,14 @@ where
 
 	async fn post_block_commitment_batch(
 		&self,
-		block_commitments: Vec<SuperBlockCommitment>,
+		block_commitments: Vec<SuperCommitment>,
 	) -> Result<(), PcpClientError> {
 		let contract = PCP::new(self.contract_address, &self.rpc_provider);
 
 		let eth_block_commitment: Vec<_> = block_commitments
 			.into_iter()
 			.map(|block_commitment| {
-				Ok(PCPStorage::SuperBlockCommitment {
+				Ok(PCPStorage::SuperCommitment {
 					// Currently, to simplify the API, we'll say 0 is uncommitted all other numbers are legitimate heights
 					height: U256::from(block_commitment.height()),
 					commitment: alloy_primitives::FixedBytes(
@@ -115,7 +115,7 @@ where
 			.collect::<Result<Vec<_>, TryFromSliceError>>()
 			.map_err(|e| PcpClientError::Internal(Box::new(e)))?;
 
-		let call_builder = contract.submitBatchSuperBlockCommitment(eth_block_commitment);
+		let call_builder = contract.submitBatchSuperCommitment(eth_block_commitment);
 
 		send_transaction(
 			self.signer_address.clone(),
@@ -129,11 +129,11 @@ where
 
 	async fn force_block_commitment(
 		&self,
-		block_commitment: SuperBlockCommitment,
+		block_commitment: SuperCommitment,
 	) -> Result<(), PcpClientError> {
 		let contract = PCP::new(self.contract_address, &self.rpc_provider);
 
-		let eth_block_commitment = PCPStorage::SuperBlockCommitment {
+		let eth_block_commitment = PCPStorage::SuperCommitment {
 			// Currently, to simplify the API, we'll say 0 is uncommitted all other numbers are legitimate heights
 			height: U256::from(block_commitment.height()),
 			commitment: alloy_primitives::FixedBytes(
@@ -154,14 +154,14 @@ where
 	}
 
 	async fn stream_block_commitments(&self) -> Result<CommitmentStream, PcpClientError> {
-		// Register to contract BlockCommitmentSubmitted event
+		// Register to contract CommitmentSubmitted event
 
 		let contract = PCP::new(self.contract_address, &self.ws_provider);
 		let event_filter = contract
 			.SuperBlockPostconfirmed_filter()
 			.watch()
 			.await
-			.map_err(|e| PcpClientError::StreamBlockCommitments(Box::new(e)))?;
+			.map_err(|e| PcpClientError::StreamCommitments(Box::new(e)))?;
 
 		let stream = event_filter.into_stream().map(|event| {
 			event
@@ -171,7 +171,7 @@ where
 							alloy_sol_types::Error::Other(err.to_string().into())
 						},
 					)?;
-					Ok(SuperBlockCommitment::new(
+					Ok(SuperCommitment::new(
 						height,
 						Id::new(commitment.blockHash.0),
 						Commitment::new(commitment.stateCommitment.0),
@@ -185,7 +185,7 @@ where
 	async fn get_accepted_commitment_at_height(
 		&self,
 		height: u64,
-	) -> Result<Option<SuperBlockCommitment>, PcpClientError> {
+	) -> Result<Option<SuperCommitment>, PcpClientError> {
 		let contract = PCP::new(self.contract_address, &self.ws_provider);
 		let PCP::getPostconfirmedCommitmentReturn { _0: commitment } = contract
 			.getPostconfirmedCommitment(U256::from(height))
@@ -199,7 +199,7 @@ where
 			.context("failed to convert the commitment height from U256 to u64")
 			.map_err(|e| PcpClientError::Internal(e.into()))?;
 		// Commitment with height 0 mean not found
-		Ok((return_height != 0).then_some(SuperBlockCommitment::new(
+		Ok((return_height != 0).then_some(SuperCommitment::new(
 			commitment
 				.height
 				.try_into()
@@ -213,7 +213,7 @@ where
 	async fn get_posted_commitment_at_height(
 		&self,
 		height: u64,
-	) -> Result<Option<SuperBlockCommitment>, PcpClientError> {
+	) -> Result<Option<SuperCommitment>, PcpClientError> {
 		let contract = PCP::new(self.contract_address, &self.ws_provider);
 		let PCP::getValidatorCommitmentAtSuperBlockHeightReturn { _0: commitment } = contract
 			.getValidatorCommitmentAtSuperBlockHeight(U256::from(height), self.signer_address)
@@ -227,7 +227,7 @@ where
 			.context("failed to convert the commitment height from U256 to u64")
 			.map_err(|e| PcpClientError::Internal(e.into()))?;
 
-		Ok((return_height != 0).then_some(SuperBlockCommitment::new(
+		Ok((return_height != 0).then_some(SuperCommitment::new(
 			commitment
 				.height
 				.try_into()

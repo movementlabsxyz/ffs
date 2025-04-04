@@ -2,7 +2,7 @@ use clap::Parser;
 use secure_signer_loader::identifiers::{SignerIdentifier, local::Local};
 use mcr_protocol_client_eth_core::config::Config;
 use mcr_protocol_client_core_util::McrClientOperations;
-use mcr_types::block_commitment::{BlockCommitment, Commitment, Id};
+use mcr_types::block_commitment::{Commitment, Commitment, Id};
 
 #[derive(Parser)]
 #[clap(help_expected = true)]
@@ -52,7 +52,7 @@ impl PostCommitment {
         hasher.update(&self.args.height.to_be_bytes());
         let block_id = hasher.finalize().into();
         
-        let commitment = BlockCommitment::new(
+        let commitment = Commitment::new(
             self.args.height,  // Use height from args
             Id::new(block_id),
             Commitment::new(commitment_bytes),

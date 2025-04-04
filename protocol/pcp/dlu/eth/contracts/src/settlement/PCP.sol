@@ -221,75 +221,75 @@ contract PCP is Initializable, BaseSettlement, PCPStorage, IPCP {
     // ----------------------------------------------------------------
 
     // creates a commitment
-    function createSuperBlockCommitment(
+    function createSuperCommitment(
         uint256 height,
         bytes32 commitment,
         bytes32 blockId
-    ) public pure returns (SuperBlockCommitment memory) {
-        return SuperBlockCommitment(height, commitment, blockId);
+    ) public pure returns (SuperCommitment memory) {
+        return SuperCommitment(height, commitment, blockId);
     }
 
     /// @dev submits a superBlock commitment for an attester.
-    function submitSuperBlockCommitmentForAttester(
+    function submitSuperCommitmentForAttester(
         address attester,
-        SuperBlockCommitment memory superBlockCommitment
+        SuperCommitment memory superCommitment
     ) internal {
         // Attester has already committed to a superBlock at this height
-        if (commitments[superBlockCommitment.height][attester].height != 0)
+        if (commitments[superCommitment.height][attester].height != 0)
             revert AttesterAlreadyCommitted();
 
         // note: do no uncomment the below, we want to allow this in case we have lagging attesters
         // Attester has committed to an already postconfirmed superBlock
-        // if ( lastPostconfirmedSuperBlockHeight > superBlockCommitment.height) revert AlreadyAcceptedSuperBlock();
+        // if ( lastPostconfirmedSuperBlockHeight > superCommitment.height) revert AlreadyAcceptedSuperBlock();
         // Attester has committed to a superBlock too far ahead of the last postconfirmed superBlock
-        if (lastPostconfirmedSuperBlockHeight + leadingSuperBlockTolerance < superBlockCommitment.height) {
+        if (lastPostconfirmedSuperBlockHeight + leadingSuperBlockTolerance < superCommitment.height) {
             revert AttesterAlreadyCommitted();
         }
 
         // assign the superBlock height to the present epoch if it hasn't been assigned yet
         // since any attester can submit a comittment for a superBlock height, the epoch assignment could differ 
         // from when the superBlock gets actually postconfirmed. This is limited by by leadingSuperBlockTolerance
-        if (superBlockHeightAssignedEpoch[superBlockCommitment.height] == 0) {
-            superBlockHeightAssignedEpoch[superBlockCommitment.height] = getPresentEpoch();
+        if (superBlockHeightAssignedEpoch[superCommitment.height] == 0) {
+            superBlockHeightAssignedEpoch[superCommitment.height] = getPresentEpoch();
         }
 
         // register the attester's commitment
-        commitments[superBlockCommitment.height][attester] = superBlockCommitment;
+        commitments[superCommitment.height][attester] = superCommitment;
         
         // Record first seen timestamp if not already set
-        TrySetCommitmentFirstSeenAt(superBlockCommitment.height, superBlockCommitment.commitment, block.timestamp);
+        TrySetCommitmentFirstSeenAt(superCommitment.height, superCommitment.commitment, block.timestamp);
 
         // increment the commitment count by stake
         uint256 attesterStakeForAcceptingEpoch = getAttesterStakeForAcceptingEpoch(attester);
-        commitmentStake[superBlockCommitment.height][superBlockCommitment.commitment] += attesterStakeForAcceptingEpoch;
+        commitmentStake[superCommitment.height][superCommitment.commitment] += attesterStakeForAcceptingEpoch;
 
-        emit SuperBlockCommitmentSubmitted(
-            superBlockCommitment.blockId,
-            superBlockCommitment.commitment,
+        emit SuperCommitmentSubmitted(
+            superCommitment.blockId,
+            superCommitment.commitment,
             attesterStakeForAcceptingEpoch
         );
     }
-    function submitSuperBlockCommitment(SuperBlockCommitment memory superBlockCommitment) external {
+    function submitSuperCommitment(SuperCommitment memory superCommitment) external {
         require(
             openAttestationEnabled || hasRole(TRUSTED_ATTESTER, msg.sender),
             "UNAUTHORIZED_SUPERBLOCK_COMMITMENT"
         );
-        submitSuperBlockCommitmentForAttester(msg.sender, superBlockCommitment);
+        submitSuperCommitmentForAttester(msg.sender, superCommitment);
     }
 
-    function submitBatchSuperBlockCommitment(SuperBlockCommitment[] memory superBlockCommitments) public {
+    function submitBatchSuperCommitment(SuperCommitment[] memory superCommitments) public {
         require(
             openAttestationEnabled || hasRole(TRUSTED_ATTESTER, msg.sender),
             "UNAUTHORIZED_SUPERBLOCK_COMMITMENT"
         );
-        for (uint256 i = 0; i < superBlockCommitments.length; i++) {
-            submitSuperBlockCommitmentForAttester(msg.sender, superBlockCommitments[i]);
+        for (uint256 i = 0; i < superCommitments.length; i++) {
+            submitSuperCommitmentForAttester(msg.sender, superCommitments[i]);
         }
     }
     function getValidatorCommitmentAtSuperBlockHeight(
         uint256 height,
         address attester
-    ) public view returns (SuperBlockCommitment memory) {
+    ) public view returns (SuperCommitment memory) {
         return commitments[height][attester];
     }
 
@@ -298,7 +298,7 @@ contract PCP is Initializable, BaseSettlement, PCPStorage, IPCP {
         return lastPostconfirmedSuperBlockHeight + leadingSuperBlockTolerance;
     }
     /// @notice Gets the commitment submitted by an attester for a given height
-    function getCommitmentByAttester(uint256 height, address attester) public view returns (SuperBlockCommitment memory) {
+    function getCommitmentByAttester(uint256 height, address attester) public view returns (SuperCommitment memory) {
         return commitments[height][attester];
     }
 
@@ -309,8 +309,8 @@ contract PCP is Initializable, BaseSettlement, PCPStorage, IPCP {
 
     // TODO use this to limit the postconfirmations on new commits ( we need to give time to attesters to submit their commitments )
     /// @notice get the timestamp when a commitment was first seen
-    function getCommitmentFirstSeenAt(SuperBlockCommitment memory superBlockCommitment) public view returns (uint256) {
-        return commitmentFirstSeenAt[superBlockCommitment.height][superBlockCommitment.commitment];
+    function getCommitmentFirstSeenAt(SuperCommitment memory superCommitment) public view returns (uint256) {
+        return commitmentFirstSeenAt[superCommitment.height][superCommitment.commitment];
     }
 
     /// @notice Sets the timestamp when a commitment was first seen
@@ -354,54 +354,54 @@ contract PCP is Initializable, BaseSettlement, PCPStorage, IPCP {
     }
 
     // Sets the postconfirmed commitment at a given superBlock height
-    function setPostconfirmedCommitmentAtBlockHeight(SuperBlockCommitment memory superBlockCommitment) public {
+    function setPostconfirmedCommitmentAtBlockHeight(SuperCommitment memory superCommitment) public {
         require(
             hasRole(COMMITMENT_ADMIN, msg.sender),
             "SET_LAST_POSTCONFIRMED_COMMITMENT_AT_HEIGHT_IS_COMMITMENT_ADMIN_ONLY"
         );
-        versionedPostconfirmedSuperBlocks[postconfirmedSuperBlocksVersion][superBlockCommitment.height] = superBlockCommitment;  
+        versionedPostconfirmedSuperBlocks[postconfirmedSuperBlocksVersion][superCommitment.height] = superCommitment;  
     }
 
     // Forces the latest attestation by setting the superBlock height
     // Note: this only safe when we are running with a single validator as it does not zero out follow-on commitments.
-    function forceLatestCommitment(SuperBlockCommitment memory superBlockCommitment) public {
+    function forceLatestCommitment(SuperCommitment memory superCommitment) public {
         require(
             hasRole(COMMITMENT_ADMIN, msg.sender),
             "FORCE_LATEST_COMMITMENT_IS_COMMITMENT_ADMIN_ONLY"
         );
-        setPostconfirmedCommitmentAtBlockHeight(superBlockCommitment);
+        setPostconfirmedCommitmentAtBlockHeight(superCommitment);
     }
 
-    function getPostconfirmedCommitment(uint256 height) public view returns (SuperBlockCommitment memory) {
+    function getPostconfirmedCommitment(uint256 height) public view returns (SuperCommitment memory) {
         return versionedPostconfirmedSuperBlocks[postconfirmedSuperBlocksVersion][height];
     }
     /// @dev Postconfirms a superBlock commitment.
     /// @dev This function and attemptPostconfirmOrRollover() could call each other recursively, so we must ensure it's safe from re-entrancy
-    function _postconfirmSuperBlockCommitment(SuperBlockCommitment memory superBlockCommitment, address attester) internal {
+    function _postconfirmSuperCommitment(SuperCommitment memory superCommitment, address attester) internal {
         uint256 currentAcceptingEpoch = getAcceptingEpoch();
         
         // get the epoch for the superBlock commitment
         // SuperBlock commitment is not in the current epoch, it cannot be postconfirmed. 
         // TODO: double check liveness conditions for the following critera
-        if (superBlockHeightAssignedEpoch[superBlockCommitment.height] != currentAcceptingEpoch) {
-            revert UnacceptableSuperBlockCommitment();
+        if (superBlockHeightAssignedEpoch[superCommitment.height] != currentAcceptingEpoch) {
+            revert UnacceptableSuperCommitment();
         }
 
         // ensure that the lastPostconfirmedSuperBlockHeight is exactly the superBlock height - 1
-        if (lastPostconfirmedSuperBlockHeight != superBlockCommitment.height - 1) {
-            revert UnacceptableSuperBlockCommitment();
+        if (lastPostconfirmedSuperBlockHeight != superCommitment.height - 1) {
+            revert UnacceptableSuperCommitment();
         }
 
         // Record reward points for all attesters who committed to the winning commitment
         address[] memory attesters = getStakedAttestersForAcceptingEpoch();
         for (uint256 i = 0; i < attesters.length; i++) {
-            if (commitments[superBlockCommitment.height][attesters[i]].commitment == superBlockCommitment.commitment) {
+            if (commitments[superCommitment.height][attesters[i]].commitment == superCommitment.commitment) {
                 attesterRewardPoints[currentAcceptingEpoch][attesters[i]]++;
             }
         }
 
         // Award points to postconfirmer
-        if (!isWithinPostconfirmerPrivilegeDuration(superBlockCommitment)) { 
+        if (!isWithinPostconfirmerPrivilegeDuration(superCommitment)) { 
             // if we are outside the privilege window, for the postconfirmer reward anyone who postconfirms
             postconfirmerRewardPoints[currentAcceptingEpoch][attester] += 1;
         } else {
@@ -414,17 +414,17 @@ contract PCP is Initializable, BaseSettlement, PCPStorage, IPCP {
             }
         }
 
-        versionedPostconfirmedSuperBlocks[postconfirmedSuperBlocksVersion][superBlockCommitment.height] = superBlockCommitment;
-        lastPostconfirmedSuperBlockHeight = superBlockCommitment.height;
-        postconfirmedBy[superBlockCommitment.height] = attester;
-        postconfirmedAtL1BlockHeight[superBlockCommitment.height] = block.number;
-        postconfirmedAtL1BlockTimestamp[superBlockCommitment.height] = block.timestamp;
+        versionedPostconfirmedSuperBlocks[postconfirmedSuperBlocksVersion][superCommitment.height] = superCommitment;
+        lastPostconfirmedSuperBlockHeight = superCommitment.height;
+        postconfirmedBy[superCommitment.height] = attester;
+        postconfirmedAtL1BlockHeight[superCommitment.height] = block.number;
+        postconfirmedAtL1BlockTimestamp[superCommitment.height] = block.timestamp;
 
         // emit the superBlock postconfirmed event
         emit SuperBlockPostconfirmed(
-            superBlockCommitment.blockId,
-            superBlockCommitment.commitment,
-            superBlockCommitment.height
+            superCommitment.blockId,
+            superCommitment.commitment,
+            superCommitment.height
         );
     }
 
@@ -461,13 +461,13 @@ contract PCP is Initializable, BaseSettlement, PCPStorage, IPCP {
 
     /// @notice Checks, for a given superBlock commitment, if the current L1 block time is within the postconfirmer's privilege window
     /// @dev The postconfirmer's privilege window is the time period when only the postconfirmer will get rewarded for postconfirmation
-    function isWithinPostconfirmerPrivilegeDuration(SuperBlockCommitment memory superBlockCommitment) public view returns (bool) {
-        if (getCommitmentFirstSeenAt(superBlockCommitment) == 0) {
+    function isWithinPostconfirmerPrivilegeDuration(SuperCommitment memory superCommitment) public view returns (bool) {
+        if (getCommitmentFirstSeenAt(superCommitment) == 0) {
             return false;
         }
         // based on the first timestamp for the commitment we can determine if the postconfirmer has been live sufficiently recently
         // use getCommitmentFirstSeenAt, and the mappings
-        if (getCommitmentFirstSeenAt(superBlockCommitment) 
+        if (getCommitmentFirstSeenAt(superCommitment) 
             + getMinCommitmentAgeForPostconfirmation() 
             + getPostconfirmerPrivilegeDuration() 
             < block.timestamp) {
@@ -477,7 +477,7 @@ contract PCP is Initializable, BaseSettlement, PCPStorage, IPCP {
     }
 
     /// @dev it is possible if the accepting epoch is behind the presentEpoch that heights dont obtain enough votes in the assigned epoch. 
-    /// @dev Moreover, due to the leadingBlockTolerance, the assigned epoch for a height could be ahead of the actual epoch. 
+    /// @dev Moreover, due to the leadingCommitmentTolerance, the assigned epoch for a height could be ahead of the actual epoch. 
     /// @dev solution is to move to the next epoch and count votes there
     function attemptPostconfirmOrRollover(uint256 superBlockHeight) internal returns (bool) {
         uint256 superBlockEpoch = superBlockHeightAssignedEpoch[superBlockHeight];
@@ -517,22 +517,22 @@ contract PCP is Initializable, BaseSettlement, PCPStorage, IPCP {
         bool successfulPostconfirmation = false;
         for (uint256 i = 0; i < attesters.length; i++) {
             address attester = attesters[i];
-            SuperBlockCommitment memory superBlockCommitment = commitments[superBlockHeight][attester];
+            SuperCommitment memory superCommitment = commitments[superBlockHeight][attester];
             // check if the commitment has committed to the correct superBlock height
             // TODO: possibly this is not needed and we can remove the height from the commitment?
-            if (superBlockCommitment.height != superBlockHeight) continue;
+            if (superCommitment.height != superBlockHeight) continue;
 
             // check the total stake on the commitment
-            uint256 totalStakeOnCommitment = commitmentStake[superBlockCommitment.height][superBlockCommitment.commitment];
+            uint256 totalStakeOnCommitment = commitmentStake[superCommitment.height][superCommitment.commitment];
 
             if (totalStakeOnCommitment >= supermajority) {
                 // Check if enough time has passed since commitment was first seen
                 // if not enough time has passed, then no postconfirmation at this height can yet happen
-                uint256 firstSeen = getCommitmentFirstSeenAt(superBlockCommitment);
+                uint256 firstSeen = getCommitmentFirstSeenAt(superCommitment);
                 // we should jump out of the for loop entirely
                 if (block.timestamp < firstSeen + minCommitmentAgeForPostconfirmation) break;
 
-                _postconfirmSuperBlockCommitment(superBlockCommitment, msg.sender);
+                _postconfirmSuperCommitment(superCommitment, msg.sender);
                 successfulPostconfirmation = true;
 
                 // TODO: for rewards we have to run through all the attesters, as we need to acknowledge that they get rewards. 

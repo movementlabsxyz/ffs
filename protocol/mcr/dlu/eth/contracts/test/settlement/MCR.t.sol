@@ -89,19 +89,19 @@ contract MCRTest is Test, IMCR {
         mcr.acceptGenesisCeremony();
 
         // make a block commitment
-        MCRStorage.BlockCommitment memory bc1 = MCRStorage.BlockCommitment({
+        MCRStorage.Commitment memory bc1 = MCRStorage.Commitment({
             height: 1,
-            commitment: keccak256(abi.encodePacked(uint256(1), uint256(2), uint256(3))),
+            commitmentValue: keccak256(abi.encodePacked(uint256(1), uint256(2), uint256(3))),
             blockId: keccak256(abi.encodePacked(uint256(1), uint256(2), uint256(3)))
         });
         vm.prank(alice);
-        mcr.submitBlockCommitment(bc1);
+        mcr.submitCommitment(bc1);
         vm.prank(bob);
-        mcr.submitBlockCommitment(bc1);
+        mcr.submitCommitment(bc1);
 
         // now we move to block 2 and make some commitment just to trigger the epochRollover
-        MCRStorage.BlockCommitment memory retrievedCommitment = mcr.getAcceptedCommitmentAtBlockHeight(1);
-        assert(retrievedCommitment.commitment == bc1.commitment);
+        MCRStorage.Commitment memory retrievedCommitment = mcr.getAcceptedCommitmentAtBlockHeight(1);
+        assert(retrievedCommitment.commitmentValue == bc1.commitmentValue);
         assert(retrievedCommitment.blockId == bc1.blockId);
         assert(retrievedCommitment.height == 1);
     }
@@ -136,33 +136,33 @@ contract MCRTest is Test, IMCR {
         mcr.acceptGenesisCeremony();
 
         // carol will be dishonest
-        MCRStorage.BlockCommitment memory dishonestCommitment = MCRStorage.BlockCommitment({
+        MCRStorage.Commitment memory dishonestCommitment = MCRStorage.Commitment({
             height: 1,
-            commitment: keccak256(abi.encodePacked(uint256(3), uint256(2), uint256(1))),
+            commitmentValue: keccak256(abi.encodePacked(uint256(3), uint256(2), uint256(1))),
             blockId: keccak256(abi.encodePacked(uint256(3), uint256(2), uint256(1)))
         });
         vm.prank(carol);
-        mcr.submitBlockCommitment(dishonestCommitment);
+        mcr.submitCommitment(dishonestCommitment);
 
         // carol will try to sign again
         vm.prank(carol);
         vm.expectRevert(AttesterAlreadyCommitted.selector);
-        mcr.submitBlockCommitment(dishonestCommitment);
+        mcr.submitCommitment(dishonestCommitment);
 
         // make a block commitment
-        MCRStorage.BlockCommitment memory bc1 = MCRStorage.BlockCommitment({
+        MCRStorage.Commitment memory bc1 = MCRStorage.Commitment({
             height: 1,
-            commitment: keccak256(abi.encodePacked(uint256(1), uint256(2), uint256(3))),
+            commitmentValue: keccak256(abi.encodePacked(uint256(1), uint256(2), uint256(3))),
             blockId: keccak256(abi.encodePacked(uint256(1), uint256(2), uint256(3)))
         });
         vm.prank(alice);
-        mcr.submitBlockCommitment(bc1);
+        mcr.submitCommitment(bc1);
         vm.prank(bob);
-        mcr.submitBlockCommitment(bc1);
+        mcr.submitCommitment(bc1);
 
-        MCRStorage.BlockCommitment memory retrievedCommitment = mcr.getAcceptedCommitmentAtBlockHeight(1);
+        MCRStorage.Commitment memory retrievedCommitment = mcr.getAcceptedCommitmentAtBlockHeight(1);
         // now we move to block 2 and make some commitment just to trigger the epochRollover
-        assert(retrievedCommitment.commitment == bc1.commitment);
+        assert(retrievedCommitment.commitmentValue == bc1.commitmentValue);
         assert(retrievedCommitment.blockId == bc1.blockId);
         assert(retrievedCommitment.height == 1);
     }
@@ -199,49 +199,49 @@ contract MCRTest is Test, IMCR {
         mcr.acceptGenesisCeremony();
 
         // carol will be dishonest
-        MCRStorage.BlockCommitment memory dishonestCommitment = MCRStorage.BlockCommitment({
+        MCRStorage.Commitment memory dishonestCommitment = MCRStorage.Commitment({
             height: 1,
-            commitment: keccak256(abi.encodePacked(uint256(3), uint256(2), uint256(1))),
+            commitmentValue: keccak256(abi.encodePacked(uint256(3), uint256(2), uint256(1))),
             blockId: keccak256(abi.encodePacked(uint256(3), uint256(2), uint256(1)))
         });
         vm.prank(carol);
-        mcr.submitBlockCommitment(dishonestCommitment);
+        mcr.submitCommitment(dishonestCommitment);
 
         // carol will try to sign again
         vm.prank(carol);
         vm.expectRevert(AttesterAlreadyCommitted.selector);
-        mcr.submitBlockCommitment(dishonestCommitment);
+        mcr.submitCommitment(dishonestCommitment);
 
         // make a block commitment
-        MCRStorage.BlockCommitment memory bc1 = MCRStorage.BlockCommitment({
+        MCRStorage.Commitment memory bc1 = MCRStorage.Commitment({
             height: 1,
-            commitment: keccak256(abi.encodePacked(uint256(1), uint256(2), uint256(3))),
+            commitmentValue: keccak256(abi.encodePacked(uint256(1), uint256(2), uint256(3))),
             blockId: keccak256(abi.encodePacked(uint256(1), uint256(2), uint256(3)))
         });
         vm.prank(alice);
-        mcr.submitBlockCommitment(bc1);
+        mcr.submitCommitment(bc1);
         vm.prank(bob);
-        mcr.submitBlockCommitment(bc1);
+        mcr.submitCommitment(bc1);
 
         // now we move to block 2 and make some commitment just to trigger the epochRollover
         vm.warp(310 seconds);
 
         // make a block commitment
-        MCRStorage.BlockCommitment memory bc2 = MCRStorage.BlockCommitment({
+        MCRStorage.Commitment memory bc2 = MCRStorage.Commitment({
             height: 2,
-            commitment: keccak256(abi.encodePacked(uint256(1), uint256(2), uint256(3))),
+            commitmentValue: keccak256(abi.encodePacked(uint256(1), uint256(2), uint256(3))),
             blockId: keccak256(abi.encodePacked(uint256(1), uint256(2), uint256(3)))
         });
         vm.prank(alice);
-        mcr.submitBlockCommitment(bc2);
+        mcr.submitCommitment(bc2);
 
         // check that roll over happened
         assertEq(mcr.getCurrentEpoch(), mcr.getEpochByBlockTime());
         assertEq(mcr.getCurrentEpochStake(address(moveToken), alice), 34);
         assertEq(mcr.getCurrentEpochStake(address(moveToken), bob), 33);
         assertEq(mcr.getCurrentEpochStake(address(moveToken), carol), 33);
-        MCRStorage.BlockCommitment memory retrievedCommitment = mcr.getAcceptedCommitmentAtBlockHeight(1);
-        assert(retrievedCommitment.commitment == bc1.commitment);
+        MCRStorage.Commitment memory retrievedCommitment = mcr.getAcceptedCommitmentAtBlockHeight(1);
+        assert(retrievedCommitment.commitmentValue == bc1.commitmentValue);
         assert(retrievedCommitment.blockId == bc1.blockId);
         assert(retrievedCommitment.height == 1);
     }
@@ -294,42 +294,42 @@ contract MCRTest is Test, IMCR {
         for (uint256 i = 0; i < reorgs; i++) {
             uint256 commitmentHeights = 10;
             for (uint256 j = 0; j < commitmentHeights; j++) {
-                uint256 blockHeight = i * 10 + j + 1;
+                uint256 commitmentHeight = i * 10 + j + 1;
                 blockTime += 1;
                 vm.warp(blockTime);
 
                 // commit dishonestly
-                MCRStorage.BlockCommitment memory dishonestCommitment = MCRStorage.BlockCommitment({
-                    height: blockHeight,
-                    commitment: keccak256(abi.encodePacked(uint256(3), uint256(2), uint256(1))),
+                MCRStorage.Commitment memory dishonestCommitment = MCRStorage.Commitment({
+                    height: commitmentHeight,
+                    commitmentValue: keccak256(abi.encodePacked(uint256(3), uint256(2), uint256(1))),
                     blockId: keccak256(abi.encodePacked(uint256(3), uint256(2), uint256(1)))
                 });
                 for (uint256 k = 0; k < dishonestSigners.length / 2; k++) {
                     vm.prank(dishonestSigners[k]);
-                    mcr.submitBlockCommitment(dishonestCommitment);
+                    mcr.submitCommitment(dishonestCommitment);
                 }
 
                 // commit honestly
-                MCRStorage.BlockCommitment memory honestCommitment = MCRStorage.BlockCommitment({
-                    height: blockHeight,
-                    commitment: keccak256(abi.encodePacked(uint256(1), uint256(2), uint256(3))),
+                MCRStorage.Commitment memory honestCommitment = MCRStorage.Commitment({
+                    height: commitmentHeight,
+                    commitmentValue: keccak256(abi.encodePacked(uint256(1), uint256(2), uint256(3))),
                     blockId: keccak256(abi.encodePacked(uint256(1), uint256(2), uint256(3)))
                 });
                 for (uint256 k = 0; k < honestSigners.length; k++) {
                     vm.prank(honestSigners[k]);
-                    mcr.submitBlockCommitment(honestCommitment);
+                    mcr.submitCommitment(honestCommitment);
                 }
 
                 // commit dishonestly some more
                 for (uint256 k = dishonestSigners.length / 2; k < dishonestSigners.length; k++) {
                     vm.prank(dishonestSigners[k]);
-                    mcr.submitBlockCommitment(dishonestCommitment);
+                    mcr.submitCommitment(dishonestCommitment);
                 }
 
-                MCRStorage.BlockCommitment memory retrievedCommitment = mcr.getAcceptedCommitmentAtBlockHeight(blockHeight);
-                assert(retrievedCommitment.commitment == honestCommitment.commitment);
+                MCRStorage.Commitment memory retrievedCommitment = mcr.getAcceptedCommitmentAtBlockHeight(commitmentHeight);
+                assert(retrievedCommitment.commitmentValue == honestCommitment.commitmentValue);
                 assert(retrievedCommitment.blockId == honestCommitment.blockId);
-                assert(retrievedCommitment.height == blockHeight);
+                assert(retrievedCommitment.height == commitmentHeight);
             }
 
             // add a new signer
@@ -378,26 +378,26 @@ contract MCRTest is Test, IMCR {
         vm.warp(blockTime);
 
         // default signer should be able to force commitment
-        MCRStorage.BlockCommitment memory forcedCommitment = MCRStorage.BlockCommitment({
+        MCRStorage.Commitment memory forcedCommitment = MCRStorage.Commitment({
             height: 1,
-            commitment: keccak256(abi.encodePacked(uint256(3), uint256(2), uint256(1))),
+            commitmentValue: keccak256(abi.encodePacked(uint256(3), uint256(2), uint256(1))),
             blockId: keccak256(abi.encodePacked(uint256(3), uint256(2), uint256(1)))
         });
         mcr.forceLatestCommitment(forcedCommitment);
 
         // get the latest commitment
-        MCRStorage.BlockCommitment memory retrievedCommitment = mcr.getAcceptedCommitmentAtBlockHeight(1);
+        MCRStorage.Commitment memory retrievedCommitment = mcr.getAcceptedCommitmentAtBlockHeight(1);
         assertEq(retrievedCommitment.blockId, forcedCommitment.blockId);
-        assertEq(retrievedCommitment.commitment, forcedCommitment.commitment);
+        assertEq(retrievedCommitment.commitmentValue, forcedCommitment.commitmentValue);
         assertEq(retrievedCommitment.height, forcedCommitment.height);
 
         // create an unauthorized signer
         address payable alice = payable(vm.addr(1));
 
         // try to force a different commitment
-        MCRStorage.BlockCommitment memory badForcedCommitment = MCRStorage.BlockCommitment({
+        MCRStorage.Commitment memory badForcedCommitment = MCRStorage.Commitment({
             height: 1,
-            commitment: keccak256(abi.encodePacked(uint256(1), uint256(2), uint256(3))),
+            commitmentValue: keccak256(abi.encodePacked(uint256(1), uint256(2), uint256(3))),
             blockId: keccak256(abi.encodePacked(uint256(1), uint256(2), uint256(3)))
         });
         vm.prank(alice);

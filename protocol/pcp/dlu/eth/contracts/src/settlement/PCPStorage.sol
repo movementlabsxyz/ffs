@@ -40,7 +40,7 @@ contract PCPStorage {
     /// @param height The height of the block
     /// @param commitment The hash of the committment
     /// @param blockId The unique identifier of the block (hash of the block)
-    struct SuperBlockCommitment {
+    struct SuperCommitment {
         // currently, to simplify the api, we'll say 0 is uncommitted all other numbers are legitimate heights
         uint256 height;
         bytes32 commitment;
@@ -51,7 +51,7 @@ contract PCPStorage {
     mapping(uint256 superBlockHeight => uint256 epoch) public superBlockHeightAssignedEpoch;
 
     // track each commitment from each attester for each superBlock height
-    mapping(uint256 superBlockHeight => mapping(address attester => SuperBlockCommitment)) public commitments;
+    mapping(uint256 superBlockHeight => mapping(address attester => SuperCommitment)) public commitments;
 
     // track the total stake accumulate for each commitment for each superBlock height
     mapping(uint256 superBlockHeight => mapping(bytes32 commitement => uint256 stake)) public commitmentStake;
@@ -77,13 +77,13 @@ contract PCPStorage {
     mapping(uint256 superBlockHeight => uint256 L1BlockHeight) public postconfirmedAtL1BlockHeightByPostconfirmer;
 
     // map superBlock height to postconfirmed superBlock hash 
-    mapping(uint256 superBlockHeight => SuperBlockCommitment) public postconfirmedSuperBlocks;
+    mapping(uint256 superBlockHeight => SuperCommitment) public postconfirmedSuperBlocks;
 
     // whether we allow open attestation
     bool public openAttestationEnabled;
 
     // versioned scheme for postconfirmed superBlocks
-    mapping(uint256 => mapping(uint256 superBlockHeight => SuperBlockCommitment)) public versionedPostconfirmedSuperBlocks;
+    mapping(uint256 => mapping(uint256 superBlockHeight => SuperCommitment)) public versionedPostconfirmedSuperBlocks;
     uint256 public postconfirmedSuperBlocksVersion;
 
     // track reward points for attesters
