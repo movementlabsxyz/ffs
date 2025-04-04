@@ -15,7 +15,7 @@ clap = { workspace = true}
 dotenv = { workspace = true }
 anyhow = { workspace = true }
 mcr-protocol-client = { workspace = true }
-pcp-protocol-client = { workspace = true }
+# pcp-protocol-client = { workspace = true }
 
 [lints]
 workspace = true

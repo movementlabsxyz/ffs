@@ -129,10 +129,10 @@ Run config with all parameters passed explicitly as CLI flags. See Orfile docume
 
   Default value: `1000000000000000000000000`
 * `--custodians <CUSTODIANS>` — The custodians By default this should be an empty vector
-* `--initial-commitment-height <INITIAL_BLOCK_HEIGHT>` — The initial block height
+* `--initial-commitment-height <INITIAL_COMMITMENT_HEIGHT>` — The initial block height
 
   Default value: `1`
-* `--leading-commitment-tolerance <LEADING_BLOCK_TOLERANCE>` — The leading block tolerance
+* `--leading-commitment-tolerance <LEADING_COMMITMENT_TOLERANCE>` — The leading block tolerance
 
   Default value: `10`
 * `--epoch-duration <EPOCH_DURATION>` — The epoch duration
