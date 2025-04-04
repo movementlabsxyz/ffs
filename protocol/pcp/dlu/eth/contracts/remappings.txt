@@ -11,4 +11,4 @@ openzeppelin-foundry-upgrades/=lib/openzeppelin-foundry-upgrades/src/
 openzeppelin/=lib/createx/lib/openzeppelin-contracts/contracts/
 solady/=lib/createx/lib/solady/
 solidity-stringutils/=lib/openzeppelin-foundry-upgrades/lib/solidity-stringutils/
-@safe-smart-account/=lib/safe-contracts/
+safe/=lib/safe-contracts/contracts/
