@@ -193,7 +193,7 @@ impl McrClientOperations for Client {
 pub mod test {
 
 	use super::*;
-	use mcr_types::commitment::Commitment;
+	use mcr_types::commitment::{Commitment, CommitmentValue};
 
 	use futures::future;
 	use tokio::select;
@@ -202,7 +202,7 @@ pub mod test {
 	#[tokio::test]
 	async fn test_post_commitment() -> Result<(), McrClientError> {
 		let client = Client::new();
-		let commitment = Commitment::new(1, Default::default(), Commitment::test());
+		let commitment = Commitment::new(1, Default::default(), CommitmentValue::test());
 		client.post_commitment(commitment.clone()).await.unwrap();
 		let guard = client.commitments.write().await;
 		assert_eq!(guard.get(&1), Some(&commitment));
@@ -216,8 +216,8 @@ pub mod test {
 	#[tokio::test]
 	async fn test_post_commitment_batch() -> Result<(), McrClientError> {
 		let client = Client::new();
-		let commitment = Commitment::new(1, Default::default(), Commitment::test());
-		let commitment2 = Commitment::new(2, Default::default(), Commitment::test());
+		let commitment = Commitment::new(1, Default::default(), CommitmentValue::test());
+		let commitment2 = Commitment::new(2, Default::default(), CommitmentValue::test());
 		client
 			.post_commitment_batch(vec![commitment.clone(), commitment2.clone()])
 			.await
@@ -231,7 +231,7 @@ pub mod test {
 	#[tokio::test]
 	async fn test_stream_commitments() -> Result<(), McrClientError> {
 		let client = Client::new();
-		let commitment = Commitment::new(1, Default::default(), Commitment::test());
+		let commitment = Commitment::new(1, Default::default(), CommitmentValue::test());
 		client.post_commitment(commitment.clone()).await.unwrap();
 		let mut stream = client.stream_commitments().await?;
 		assert_eq!(stream.next().await.unwrap().unwrap(), commitment);
@@ -241,10 +241,10 @@ pub mod test {
 	#[tokio::test]
 	async fn test_override_commitments() -> Result<(), McrClientError> {
 		let client = Client::new();
-		let commitment = Commitment::new(2, Default::default(), Commitment::test());
+		let commitment = Commitment::new(2, Default::default(), CommitmentValue::test());
 		client.override_commitment(commitment.clone()).await;
 		client
-			.post_commitment(Commitment::new(2, Default::default(), Commitment::test()))
+			.post_commitment(Commitment::new(2, Default::default(), CommitmentValue::test()))
 			.await
 			.unwrap();
 		let mut stream = client.stream_commitments().await?;
@@ -255,10 +255,10 @@ pub mod test {
 	#[tokio::test]
 	async fn test_pause() -> Result<(), McrClientError> {
 		let client = Client::new();
-		let commitment = Commitment::new(1, Default::default(), Commitment::test());
+		let commitment = Commitment::new(1, Default::default(), CommitmentValue::test());
 		client.pause_after(1).await;
 		client.post_commitment(commitment.clone()).await?;
-		let commitment2 = Commitment::new(2, Default::default(), Commitment::test());
+		let commitment2 = Commitment::new(2, Default::default(), CommitmentValue::test());
 		client.post_commitment(commitment2).await?;
 		let mut stream = client.stream_commitments().await?;
 		assert_eq!(stream.next().await.expect("stream has ended")?, commitment);
@@ -273,10 +273,10 @@ pub mod test {
 	#[tokio::test]
 	async fn test_resume() -> Result<(), McrClientError> {
 		let client = Client::new();
-		let commitment = Commitment::new(1, Default::default(), Commitment::test());
+		let commitment = Commitment::new(1, Default::default(), CommitmentValue::test());
 		client.pause_after(1).await;
 		client.post_commitment(commitment.clone()).await?;
-		let commitment2 = Commitment::new(2, Default::default(), Commitment::test());
+		let commitment2 = Commitment::new(2, Default::default(), CommitmentValue::test());
 		client.post_commitment(commitment2.clone()).await?;
 		let mut stream = client.stream_commitments().await?;
 		assert_eq!(stream.next().await.expect("stream has ended")?, commitment);
