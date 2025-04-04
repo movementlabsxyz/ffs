@@ -1,6 +1,5 @@
 use serde::{Deserialize, Serialize};
 use std::fmt;
-use std::str::FromStr;
 
 #[derive(
 	Serialize, Deserialize, Clone, Copy, Default, Debug, PartialEq, Eq, Hash, PartialOrd, Ord,
@@ -44,27 +43,10 @@ impl fmt::Display for Id {
 	}
 }
 
-impl FromStr for Id {
-	type Err = anyhow::Error;
-
-	fn from_str(s: &str) -> Result<Self, Self::Err> {
-		let bytes = hex::decode(s)?;
-		Ok(Self::new(bytes.try_into().map_err(|_| anyhow::anyhow!("invalid id: {}", s))?))
-	}
-}
 #[derive(
 	Serialize, Deserialize, Clone, Copy, Default, Debug, PartialEq, Eq, Hash, PartialOrd, Ord,
 )]
 pub struct CommitmentValue([u8; 32]);
-
-impl FromStr for CommitmentValue {
-	type Err = anyhow::Error;
-
-	fn from_str(s: &str) -> Result<Self, Self::Err> {
-		let bytes = hex::decode(s)?;
-		Ok(Self::new(bytes.try_into().map_err(|_| anyhow::anyhow!("invalid commitment value: {}", s))?))
-	}
-}
 
 impl CommitmentValue {
 	pub fn new(data: [u8; 32]) -> Self {
@@ -90,35 +72,35 @@ impl fmt::Display for CommitmentValue {
 }
 
 impl From<CommitmentValue> for [u8; 32] {
-	fn from(commitment_value: CommitmentValue) -> [u8; 32] {
-		commitment_value.0
+	fn from(commitment: CommitmentValue) -> [u8; 32] {
+		commitment.0
 	}
 }
 
 impl From<CommitmentValue> for Vec<u8> {
-	fn from(commitment_value: CommitmentValue) -> Vec<u8> {
-		commitment_value.0.into()
+	fn from(commitment: CommitmentValue) -> Vec<u8> {
+		commitment.0.into()
 	}
 }
 
 #[derive(Serialize, Deserialize, Clone, Default, Debug, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub struct Commitment {
 	height: u64,
-	block_id: Id,
-	commitment_value: CommitmentValue,
+	commitment_id: Id,
+	commitment: CommitmentValue,
 }
 
 impl Commitment {
-	pub fn new(height: u64, block_id: Id, commitment_value: CommitmentValue) -> Self {
-		Self { height, block_id, commitment_value }
+	pub fn new(height: u64, commitment_id: Id, commitment: CommitmentValue) -> Self {
+		Self { height, commitment_id, commitment }
 	}
 
 	pub fn height(&self) -> u64 {
 		self.height
 	}
 
-	pub fn block_id(&self) -> &Id {
-		&self.block_id
+	pub fn commitment_id(&self) -> &Id {
+		&self.commitment_id
 	}
 
 	pub fn commitment_value(&self) -> CommitmentValue {
@@ -134,16 +116,16 @@ impl fmt::Display for Commitment {
 	fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
 		write!(
 			f,
-			"Commitment {{ height: {}, block_id: {}, commitment_value: {} }}",
-			self.height, self.block_id, self.commitment_value
+			"Commitment {{ height: {}, commitment_id: {}, commitment_value: {} }}",
+			self.height, self.commitment_id, self.commitment_value
 		)
 	}
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub enum CommitmentRejectionReason {
-	InvalidBlockId,
-	InvalidCommitment,
+	InvalidCommitmentId,
+	InvalidCommitmentValue,
 	InvalidHeight,
 	ContractError,
 }

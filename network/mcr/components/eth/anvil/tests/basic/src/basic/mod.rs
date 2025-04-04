@@ -7,7 +7,7 @@ use config::Config;
 use mcr_network_anvil_component_core::dev::lifecycle::up::Up;
 use mcr_protocol_client_eth_core::config::Config as EthConfig;
 use mcr_protocol_deployer_eth_core::artifacts::output::Artifacts;
-use mcr_types::block_commitment::Commitment;
+use mcr_types::commitment::Commitment;
 use network_anvil_component_core::util::parser::AnvilData;
 use secure_signer::key::TryFromCanonicalString;
 use secure_signer_loader::identifiers::SignerIdentifier;
@@ -28,7 +28,7 @@ impl UpState {
 		let rpc_url = "http://localhost:8545".to_string();
 		let ws_url = "ws://localhost:8545".to_string();
 		let chain_id = self.anvil_data.chain_id;
-		let block_lead_tolerance = 100;
+		let commitment_lead_tolerance = 100;
 
 		// get the signer identifier
 		let signer_identifier_hex_key = self.anvil_data.private_keys[0].clone();
@@ -52,7 +52,7 @@ impl UpState {
 			gas_limit: 323924465909782,
 			transaction_send_retries: 3,
 			mcr_address: self.artifacts.mcr_proxy.clone(),
-			block_lead_tolerance: block_lead_tolerance,
+			commitment_lead_tolerance: commitment_lead_tolerance,
 			move_token_address: self.artifacts.token_proxy.clone(),
 			staking_address: self.artifacts.staking_proxy.clone(),
 		})

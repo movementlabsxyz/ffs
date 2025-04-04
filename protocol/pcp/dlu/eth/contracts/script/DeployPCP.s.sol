@@ -36,8 +36,8 @@ contract DeployPCP is Script {
             PCP.initialize, 
             (
                 IMovementStaking(staking),  // _stakingContract: address of staking contract
-                0,                          // _lastPostconfirmedSuperBlockHeight: start from genesis
-                5,                          // _leadingSuperBlockTolerance: max blocks ahead of last confirmed
+                0,                          // _lastPostconfirmedCommitmentHeight: start from genesis
+                5,                          // _leadingCommitmentTolerance: max blocks ahead of last confirmed
                 20 seconds,                 // _epochDuration: how long an epoch lasts
                 custodians,                 // _custodians: array with moveToken address for rewards
                 10 seconds,                 // _postconfirmerDuration: how long a postconfirmer serves

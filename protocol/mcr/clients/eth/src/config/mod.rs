@@ -78,7 +78,7 @@ pub struct Config {
 	pub mcr_address: String,
 	/// The block lead tolerance.
 	#[arg(long)]
-	pub block_lead_tolerance: u64,
+	pub commitment_lead_tolerance: u64,
 	/// The move token address.
 	#[arg(long)]
 	pub move_token_address: String,
@@ -99,7 +99,7 @@ impl Config {
 		gas_limit: u64,
 		transaction_send_retries: u32,
 		mcr_address: String,
-		block_lead_tolerance: u64,
+		commitment_lead_tolerance: u64,
 		move_token_address: String,
 		staking_address: String,
 	) -> Self {
@@ -113,7 +113,7 @@ impl Config {
 			gas_limit,
 			transaction_send_retries,
 			mcr_address,
-			block_lead_tolerance,
+			commitment_lead_tolerance,
 			move_token_address,
 			staking_address,
 		}

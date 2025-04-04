@@ -23,9 +23,9 @@
 
 # At this point, the contracts should be deployed and the following environment variables should be set:
 
-# Function to check block height and advance one block
+# Function to check L1 block height and advance one L1 block
 advance_by_a_block() {
-    echo -n "... block height: "
+    echo -n "... L1 block height: "
     cast block-number --rpc-url http://localhost:8545
     sleep 1  # wait for async calls to complete
     cast rpc anvil_mine --rpc-url http://localhost:8545 > /dev/null # Advance 1 block

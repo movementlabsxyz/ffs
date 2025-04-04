@@ -5,17 +5,17 @@ import {PCPStorage} from "../PCPStorage.sol";
 
 interface IPCP {
 
-    event SuperBlockPostconfirmed(
+    event CommitmentPostconfirmed(
         bytes32 indexed blockHash,
         bytes32 stateCommitment,
         uint256 height
     );
-    event SuperCommitmentSubmitted(
+    event CommitmentSubmitted(
         bytes32 indexed blockHash,
         bytes32 stateCommitment,
         uint256 attesterStake
     );
-    error UnacceptableSuperCommitment();
+    error UnacceptableCommitment();
     error AttesterAlreadyCommitted();
 
     /// @notice Gets the epoch duration
@@ -28,10 +28,10 @@ interface IPCP {
     function getPostconfirmer() external view returns (address);
 
     /// @notice submit a superblock commitment
-    function submitSuperCommitment(PCPStorage.SuperCommitment memory commitment) external;
+    function submitCommitment(PCPStorage.Commitment memory commitment) external;
 
     /// @notice get the last postconfirmed superblock height
-    function getLastPostconfirmedSuperBlockHeight() external view returns (uint256);
+    function getLastPostconfirmedCommitmentHeight() external view returns (uint256);
 
     /// @notice get the accepting epoch
     function getAcceptingEpoch() external view returns (uint256);
@@ -40,10 +40,10 @@ interface IPCP {
     function getPresentEpoch() external view returns (uint256);
 
     /// @notice get the postconfirmed commitment for a given height
-    function getPostconfirmedCommitment(uint256 height) external view returns (PCPStorage.SuperCommitment memory);
+    function getPostconfirmedCommitment(uint256 height) external view returns (PCPStorage.Commitment memory);
 
     /// @notice postconfirm superblocks and rollover
-    function postconfirmSuperBlocksAndRollover() external;
+    function postconfirmCommitmentsAndRollover() external;
 
     /// @notice Sets the accepting epoch to a new value (must be higher than current)
     function setAcceptingEpoch(uint256 newEpoch) external;

@@ -20,9 +20,9 @@ pub enum PcpEthConnectorError {
 	SendTransactionError(#[from] alloy_contract::Error),
 	#[error("PCP Settlement Transaction send failed during its execution: {0}")]
 	RpcTransactionExecution(String),
-	#[error("PCP Settlement BlockAccepted event notification error: {0}")]
+	#[error("PCP Settlement CommitmentAccepted event notification error: {0}")]
 	EventNotificationError(#[from] alloy_sol_types::Error),
-	#[error("PCP Settlement BlockAccepted event notification stream close")]
+	#[error("PCP Settlement CommitmentAccepted event notification stream close")]
 	EventNotificationStreamClosed,
 }
 

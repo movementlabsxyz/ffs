@@ -62,7 +62,7 @@ impl Stake {
             1_000_000_000_000_000,  // Try an even higher limit
             3,
             self.args.mcr_address.clone(),
-            16,  // block_lead_tolerance
+            16,  // commitment_lead_tolerance
             self.args.move_token_address.clone(),
             self.args.staking_address.clone(),
         );

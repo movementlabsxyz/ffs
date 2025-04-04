@@ -32,7 +32,7 @@ contract MCRStorage {
     struct Commitment {
         uint256 height;
         bytes32 commitmentValue;
-        bytes32 blockId;
+        bytes32 commitmentId;
     }
 
     /// @notice Maps each block height to its corresponding epoch

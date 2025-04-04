@@ -17,7 +17,7 @@ impl StreamCommitments {
 		let config = self.config.clone();
 		let client = config.build().await?;
 
-		let mut stream = client.stream_block_commitments().await?;
+		let mut stream = client.stream_commitments().await?;
 
 		while let Some(result) = stream.next().await {
 			match result {

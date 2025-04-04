@@ -1,7 +1,7 @@
 use clap::Parser;
 use mcr_protocol_client_core_util::McrClientOperations;
 use mcr_protocol_client_eth_core::config::Config;
-use mcr_types::block_commitment::{Commitment, CommitmentValue, Id};
+use mcr_types::commitment::{Commitment, CommitmentValue, Id};
 use serde::{Deserialize, Serialize};
 
 #[derive(Parser, Serialize, Deserialize, Debug, Clone)]
@@ -26,10 +26,10 @@ impl PostCommitment {
 		let config = self.config.clone();
 		let client = config.build().await?;
 
-		let block_commitment =
+		let commitment =
 			Commitment::new(self.height, self.id.clone(), self.commitment_value.clone());
 
-		client.post_block_commitment(block_commitment).await?;
+		client.post_commitment(commitment).await?;
 
 		Ok(())
 	}

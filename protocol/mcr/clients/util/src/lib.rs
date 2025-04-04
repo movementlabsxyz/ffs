@@ -1,5 +1,5 @@
 pub use alloy_primitives::U256;
-use mcr_types::block_commitment::Commitment;
+use mcr_types::commitment::Commitment;
 use std::future::Future;
 use tokio_stream::Stream;
 
@@ -24,26 +24,26 @@ pub type CommitmentStream =
 
 pub trait McrClientOperations {
 	/// Posts a block commitment to the settlement client.
-	fn post_block_commitment(
+	fn post_commitment(
 		&self,
-		block_commitment: Commitment,
+		commitment: Commitment,
 	) -> impl Future<Output = Result<(), McrClientError>> + Send;
 
 	/// Posts a batch of block commitments to the settlement client.
-	fn post_block_commitment_batch(
+	fn post_commitment_batch(
 		&self,
-		block_commitment: Vec<Commitment>,
+		commitment: Vec<Commitment>,
 	) -> impl Future<Output = Result<(), McrClientError>> + Send;
 
 	/// Forces a block commitment
 	/// This will only work in admin mode
-	fn force_block_commitment(
+	fn force_commitment(
 		&self,
-		block_commitment: Commitment,
+		commitment: Commitment,
 	) -> impl Future<Output = Result<(), McrClientError>> + Send;
 
 	/// Streams block commitments from the settlement client.
-	fn stream_block_commitments(
+	fn stream_commitments(
 		&self,
 	) -> impl Future<Output = Result<CommitmentStream, McrClientError>> + Send;
 
@@ -60,7 +60,7 @@ pub trait McrClientOperations {
 	) -> impl Future<Output = Result<Option<Commitment>, McrClientError>> + Send;
 
 	/// Gets the max tolerable block height.
-	fn get_max_tolerable_block_height(
+	fn get_max_tolerable_commitment_height(
 		&self,
 	) -> impl Future<Output = Result<u64, McrClientError>> + Send;
 
@@ -83,7 +83,7 @@ pub trait McrClientOperations {
 	) -> impl Future<Output = Result<u64, McrClientError>> + Send;
 
 	/// Gets the leading block tolerance.
-	fn get_leading_block_tolerance(
+	fn get_leading_commitment_tolerance(
 		&self,
 	) -> impl Future<Output = Result<u64, McrClientError>> + Send;
 

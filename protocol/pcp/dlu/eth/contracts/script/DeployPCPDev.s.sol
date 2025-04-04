@@ -57,8 +57,8 @@ contract DeployPCPDev is Script {
             PCP.initialize,
             (
                 IMovementStaking(address(movementStakingProxy)),  // stakingContract: Contract managing attesters' stakes
-                0,                                                // lastPostconfirmedSuperBlockHeight: Start from genesis
-                5,                                                // leadingSuperBlockTolerance: Max blocks ahead of last confirmed
+                0,                                                // lastPostconfirmedCommitmentHeight: Start from genesis
+                5,                                                // leadingCommitmentTolerance: Max blocks ahead of last confirmed
                 10 seconds,                                       // epochDuration: How long each epoch lasts (short for testing)
                 custodians,                                      // custodians: Array of tokens used for rewards [MOVE]
                 5 seconds,                                       // postconfirmerDuration: How long postconfirmer serves
@@ -133,7 +133,7 @@ contract DeployPCPDev is Script {
 
         // Some simple sanity checks
         console.log("\ngetAcceptingEpoch(pcpProxy): %s", staking.getAcceptingEpoch(pcpProxy));
-        console.log("\ngetLastPostconfirmedSuperBlockHeight(): %s", pcp.getLastPostconfirmedSuperBlockHeight());
+        console.log("\ngetLastPostconfirmedCommitmentHeight(): %s", pcp.getLastPostconfirmedCommitmentHeight());
         console.log("\nList of active attesters:");
         address[] memory stakedAttesters = staking.getStakedAttestersForAcceptingEpoch(pcpProxy);
         if (stakedAttesters.length > 0) {

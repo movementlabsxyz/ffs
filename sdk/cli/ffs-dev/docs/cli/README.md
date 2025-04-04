@@ -283,10 +283,10 @@ Run up with all parameters passed explicitly as CLI flags. See Orfile documentat
 
   Default value: `1000000000000000000000000`
 * `--custodians <CUSTODIANS>` — The custodians By default this should be an empty vector
-* `--initial-block-height <INITIAL_BLOCK_HEIGHT>` — The initial block height
+* `--initial-commitment-height <INITIAL_BLOCK_HEIGHT>` — The initial block height
 
   Default value: `1`
-* `--leading-block-tolerance <LEADING_BLOCK_TOLERANCE>` — The leading block tolerance
+* `--leading-commitment-tolerance <LEADING_BLOCK_TOLERANCE>` — The leading block tolerance
 
   Default value: `10`
 * `--epoch-duration <EPOCH_DURATION>` — The epoch duration
@@ -357,10 +357,10 @@ KEEP THIS UNTIL PRODUCTION-READY : Defined in: network/mcr/cli/coordinator/src/c
 
   Default value: `1000000000000000000000000`
 * `--custodians <CUSTODIANS>` — The custodians By default this should be an empty vector
-* `--initial-block-height <INITIAL_BLOCK_HEIGHT>` — The initial block height
+* `--initial-commitment-height <INITIAL_BLOCK_HEIGHT>` — The initial block height
 
   Default value: `1`
-* `--leading-block-tolerance <LEADING_BLOCK_TOLERANCE>` — The leading block tolerance
+* `--leading-commitment-tolerance <LEADING_BLOCK_TOLERANCE>` — The leading block tolerance
 
   Default value: `10`
 * `--epoch-duration <EPOCH_DURATION>` — The epoch duration
@@ -437,7 +437,7 @@ KEEP THIS UNTIL PRODUCTION-READY : Defined in: protocol/mcr/cli/client/src/cli/e
 * `get-block-commitment` — Get a block commitment for a given height and attester
 * `get-accepted-commitment-at-height` — Get accepted commitment at a specific height
 * `get-posted-commitment-at-height` — Get posted commitment at a specific height
-* `get-max-tolerable-block-height` — Get max tolerable superBlock height
+* `get-max-tolerable-block-height` — Get max tolerable commitment height
 * `stake` — Stake tokens for the MCR domain
 * `get-stake` — Get the current epoch stake for an attester
 * `unstake` — Unstake tokens from the MCR domain
@@ -614,7 +614,7 @@ Get posted commitment at a specific height
 
 ## `ffs-dev mcr protocol client eth get-max-tolerable-block-height`
 
-Get max tolerable superBlock height
+Get max tolerable commitment height
 
 **Usage:** `ffs-dev mcr protocol client eth get-max-tolerable-block-height [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --signer-identifier <SIGNER_IDENTIFIER> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --block-lead-tolerance <BLOCK_LEAD_TOLERANCE> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS>`
 
@@ -862,10 +862,10 @@ Run up with all parameters passed explicitly as CLI flags. See Orfile documentat
 
   Default value: `1000000000000000000000000`
 * `--custodians <CUSTODIANS>` — The custodians By default this should be an empty vector
-* `--initial-block-height <INITIAL_BLOCK_HEIGHT>` — The initial block height
+* `--initial-commitment-height <INITIAL_BLOCK_HEIGHT>` — The initial block height
 
   Default value: `1`
-* `--leading-block-tolerance <LEADING_BLOCK_TOLERANCE>` — The leading block tolerance
+* `--leading-commitment-tolerance <LEADING_BLOCK_TOLERANCE>` — The leading block tolerance
 
   Default value: `10`
 * `--epoch-duration <EPOCH_DURATION>` — The epoch duration
@@ -911,10 +911,10 @@ Run up with parameters from environment variables, config files, and CLI flags. 
 
   Default value: `1000000000000000000000000`
 * `--custodians <CUSTODIANS>` — The custodians By default this should be an empty vector
-* `--initial-block-height <INITIAL_BLOCK_HEIGHT>` — The initial block height
+* `--initial-commitment-height <INITIAL_BLOCK_HEIGHT>` — The initial block height
 
   Default value: `1`
-* `--leading-block-tolerance <LEADING_BLOCK_TOLERANCE>` — The leading block tolerance
+* `--leading-commitment-tolerance <LEADING_BLOCK_TOLERANCE>` — The leading block tolerance
 
   Default value: `10`
 * `--epoch-duration <EPOCH_DURATION>` — The epoch duration
@@ -970,10 +970,10 @@ KEEP THIS UNTIL PRODUCTION-READY : Defined in: network/pcp/cli/coordinator/src/c
 
   Default value: `1000000000000000000000000`
 * `--custodians <CUSTODIANS>` — The custodians By default this should be an empty vector
-* `--initial-block-height <INITIAL_BLOCK_HEIGHT>` — The initial block height
+* `--initial-commitment-height <INITIAL_BLOCK_HEIGHT>` — The initial block height
 
   Default value: `1`
-* `--leading-block-tolerance <LEADING_BLOCK_TOLERANCE>` — The leading block tolerance
+* `--leading-commitment-tolerance <LEADING_BLOCK_TOLERANCE>` — The leading block tolerance
 
   Default value: `10`
 * `--epoch-duration <EPOCH_DURATION>` — The epoch duration

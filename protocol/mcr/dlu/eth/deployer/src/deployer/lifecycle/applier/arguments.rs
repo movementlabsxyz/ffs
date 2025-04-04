@@ -72,11 +72,11 @@ pub struct Arguments {
 
 	/// The initial block height
 	#[arg(long, default_value = "1")]
-	pub initial_block_height: String,
+	pub initial_commitment_height: String,
 
 	/// The leading block tolerance
 	#[arg(long, default_value = "10")]
-	pub leading_block_tolerance: String,
+	pub leading_commitment_tolerance: String,
 
 	/// The epoch duration
 	#[arg(long, default_value = "1000000")]
@@ -96,8 +96,8 @@ impl Arguments {
 			token_symbol: "MOVE".to_string(),
 			initial_token_mint: "1000000000000000000000000".to_string(),
 			custodians: None,
-			initial_block_height: "1".to_string(),
-			leading_block_tolerance: "10".to_string(),
+			initial_commitment_height: "1".to_string(),
+			leading_commitment_tolerance: "10".to_string(),
 			epoch_duration: "1000000".to_string(),
 			reward_contract: None,
 		}

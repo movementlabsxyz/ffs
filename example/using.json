@@ -11,8 +11,8 @@
             "token_symbol": "MOVE",
             "initial_token_mint": "100000000000000000000000",
             "custodians": [],
-            "initial_block_height": "0",
-            "leading_block_tolerance": "10",
+            "initial_commitment_height": "0",
+            "leading_commitment_tolerance": "10",
             "epoch_duration": "4",
             "destroy_mode": false
         },

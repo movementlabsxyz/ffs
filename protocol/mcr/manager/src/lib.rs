@@ -2,7 +2,7 @@ mod manager;
 pub use manager::Manager;
 
 use mcr_protocol_client_core_util::McrClientError;
-use mcr_types::block_commitment::{Commitment, CommitmentEvent};
+use mcr_types::commitment::{Commitment, CommitmentEvent};
 use std::future::Future;
 use tokio_stream::Stream;
 
@@ -11,8 +11,8 @@ pub type CommitmentEventStream =
 
 pub trait McrManagerOperations {
 	/// Adds a block commitment to the manager queue.
-	fn post_block_commitment(
+	fn post_commitment(
 		&self,
-		block_commitment: Commitment,
+		commitment: Commitment,
 	) -> impl Future<Output = Result<(), McrClientError>>;
 }

@@ -175,18 +175,18 @@ contract McrARO is MCRStorage, IMcrReward {
      * @dev Called during _acceptCommitment in the MCR contract via delegatecall
      * @param commitmentHeight The height of the accepted block
      * @param commitment The accepted block commitment hash
-     * @param blockId The unique identifier of the accepted block
+     * @param commitmentId The unique identifier of the accepted block
      * @param attester The attester who submitted the accepted commitment
      * @return success Whether the reward distribution was successful
      */
     function rewardCommitment(
         uint256 commitmentHeight,
         bytes32 commitment,
-        bytes32 _blockId,
+        bytes32 _commitmentId,
         address attester
     ) external override returns (bool success) {
         // silence unused variable warning
-        _blockId;
+        _commitmentId;
         
         uint256 availableBalance = getAvailableBalance();
         

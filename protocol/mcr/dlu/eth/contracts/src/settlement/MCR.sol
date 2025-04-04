@@ -84,23 +84,23 @@ contract MCR is Initializable, BaseSettlement, MCRStorage, IMCR {
     /**
      * @notice Creates a new block commitment structure
      * @param height Block height
-     * @param commitment Commitment hash
-     * @param blockId Unique identifier for the block
+     * @param commitmentValue Commitment value (hash)
+     * @param commitmentId Unique identifier for the block
      * @return Commitment memory
      */
     function createCommitment(
         uint256 height,
-        bytes32 commitment,
-        bytes32 blockId
+        bytes32 commitmentValue,
+        bytes32 commitmentId
     ) public pure returns (Commitment memory) {
-        return Commitment(height, commitment, blockId);
+        return Commitment(height, commitmentValue, commitmentId);
     }
 
     /**
-     * @notice Calculates the maximum tolerable block height based on tolerance
-     * @return uint256 Maximum tolerable block height
+     * @notice Calculates the maximum tolerable commitment height based on tolerance
+     * @return uint256 Maximum tolerable commitment height
      */
-    function getMaxTolerableBlockHeight() public view returns (uint256) {
+    function getMaxTolerableCommitmentHeight() public view returns (uint256) {
         return lastAcceptedCommitmentHeight + leadingCommitmentTolerance;
     }
 
@@ -268,12 +268,12 @@ contract MCR is Initializable, BaseSettlement, MCRStorage, IMCR {
     }
 
     /**
-     * @notice Gets a validator's commitment at a specific block height
-     * @param height Block height
+     * @notice Gets a validator's commitment at a specific commitment height
+     * @param height Commitment height
      * @param attester Attester address
      * @return Commitment memory
      */
-    function getValidatorCommitmentAtBlockHeight(
+    function getValidatorCommitmentAtHeight(
         uint256 height,
         address attester
     ) public view returns (Commitment memory) {
@@ -281,10 +281,10 @@ contract MCR is Initializable, BaseSettlement, MCRStorage, IMCR {
     }
 
     /**
-     * @notice Sets the accepted commitment at a given block height
-     * @param commitment The block commitment to set
+     * @notice Sets the accepted commitment at a given commitment height
+     * @param commitment The commitment to set
      */
-    function setAcceptedCommitmentAtBlockHeight(Commitment memory commitment) public {
+    function setAcceptedCommitmentAtHeight(Commitment memory commitment) public {
         require(
             hasRole(COMMITMENT_ADMIN, msg.sender),
             "SET_LAST_ACCEPTED_COMMITMENT_AT_HEIGHT_IS_COMMITMENT_ADMIN_ONLY"
@@ -293,21 +293,21 @@ contract MCR is Initializable, BaseSettlement, MCRStorage, IMCR {
     }
 
     /**
-     * @notice Sets the last accepted block height
-     * @param height New last accepted block height
+     * @notice Sets the last accepted commitment height
+     * @param height New last accepted commitment height
      */
-    function setLastAcceptedBlockHeight(uint256 height) public {
+    function setLastAcceptedCommitmentHeight(uint256 height) public {
         require(
             hasRole(COMMITMENT_ADMIN, msg.sender),
-            "SET_LAST_ACCEPTED_BLOCK_HEIGHT_IS_COMMITMENT_ADMIN_ONLY"
+            "SET_LAST_ACCEPTED_COMMITMENT_HEIGHT_IS_COMMITMENT_ADMIN_ONLY"
         );
         lastAcceptedCommitmentHeight = height;
     }
 
     /**
-     * @notice Forces the latest attestation by setting the block height
+     * @notice Forces the latest attestation by setting the commitment height
      * @dev Only safe when running with a single validator as it does not zero out follow-on commitments
-     * @param commitment The block commitment to force
+     * @param commitment The commitment to force
      */
     function forceLatestCommitment(Commitment memory commitment) public {
         console.log("forceLatestCommitment called by:", msg.sender);
@@ -316,18 +316,18 @@ contract MCR is Initializable, BaseSettlement, MCRStorage, IMCR {
             "FORCE_LATEST_COMMITMENT_IS_COMMITMENT_ADMIN_ONLY"
         );
 
-        // Increment the acceptedCommitmentsVersion (effectively removing all other accepted blocks)
+        // Increment the acceptedCommitmentsVersion (effectively removing all other accepted commitments)
         acceptedCommitmentsVersion += 1;
         versionedAcceptedCommitments[acceptedCommitmentsVersion][commitment.height] = commitment;
         lastAcceptedCommitmentHeight = commitment.height; 
     }
 
     /**
-     * @notice Gets the accepted commitment at a specific block height
-     * @param height Block height
+     * @notice Gets the accepted commitment at a specific commitment height
+     * @param height Commitment height
      * @return Commitment memory
      */
-    function getAcceptedCommitmentAtBlockHeight(uint256 height) public view returns (Commitment memory) {
+    function getAcceptedCommitmentAtCommitmentHeight(uint256 height) public view returns (Commitment memory) {
         return versionedAcceptedCommitments[acceptedCommitmentsVersion][height];
     }
 
@@ -340,10 +340,10 @@ contract MCR is Initializable, BaseSettlement, MCRStorage, IMCR {
     }
 
     /**
-     * @notice Submits a block commitment for a specific attester
+     * @notice Submits a commitment for a specific attester
      * @dev Internal function used by public submission methods
      * @param attester The attester submitting the commitment
-     * @param commitment The block commitment being submitted
+     * @param commitment The commitment being submitted
      */
     function submitCommitmentForAttester(
         address attester,
@@ -351,13 +351,13 @@ contract MCR is Initializable, BaseSettlement, MCRStorage, IMCR {
     ) internal {
         emit DebugCheckpoint("Start submitCommitmentForAttester");
         emit DebugValues("Values", attester, commitment.height, lastAcceptedCommitmentHeight, leadingCommitmentTolerance);
-        // Attester has already committed to a block at this height
+        // Attester has already a commitment at this height
         if (commitments[commitment.height][attester].height != 0)
             revert AttesterAlreadyCommitted();
 
-        // We allow commitments to already accepted blocks to support lagging attesters
-        // If uncommented, this would prevent commitments to already accepted blocks:
-        // if (lastAcceptedCommitmentHeight > commitment.height) revert AlreadyAcceptedBlock();
+        // We allow commitments to already accepted commitments to support lagging attesters
+        // If uncommented, this would prevent commitments to already accepted commitments:
+        // if (lastAcceptedCommitmentHeight > commitment.height) revert AlreadyAcceptedCommitment();
         
         emit DebugCheckpoint("Before existing commitment check");
         uint256 existingCommitmentHeight = commitments[commitment.height][attester].height;
@@ -377,7 +377,7 @@ contract MCR is Initializable, BaseSettlement, MCRStorage, IMCR {
         emit DebugCheckpoint("After tolerance check");
 
         emit DebugCheckpoint("Before epoch assignment");
-        // Assign the block height to the current epoch if it hasn't been assigned yet
+        // Assign the commitment height to the current epoch if it hasn't been assigned yet
         if (commitmentHeightEpochAssignments[commitment.height] == 0) {
             commitmentHeightEpochAssignments[
                 commitment.height
@@ -395,39 +395,39 @@ contract MCR is Initializable, BaseSettlement, MCRStorage, IMCR {
         ] += allCurrentEpochStake;
 
         emit CommitmentSubmitted(
-            commitment.blockId,
+            commitment.commitmentId,
             commitment.commitmentValue,
             allCurrentEpochStake
         );
 
-        // Keep ticking through to find accepted blocks
+        // Keep ticking through to find accepted commitments
         // This allows for batching to be successful:
-        // We can commit to blocks out to the tolerance point then accept them in order
-        // Note: this could become costly for whoever submits the last block
+        // We can commit to commitments out to the tolerance point then accept them in order
+        // Note: this could become costly for whoever submits the last commitment
         // Rewards should be managed accordingly
-        while (tickOnBlockHeight(lastAcceptedCommitmentHeight + 1)) {}
+        while (tickOnCommitmentHeight(lastAcceptedCommitmentHeight + 1)) {}
     }
 
     /**
-     * @notice Processes a specific block height to check for consensus
+     * @notice Processes a specific commitment height to check for consensus
      * @dev Returns true if a commitment was accepted at this height
-     * @param commitmentHeight The block height to process
+     * @param commitmentHeight The commitment height to process
      * @return bool True if a commitment was accepted
      */
-    function tickOnBlockHeight(uint256 commitmentHeight) internal returns (bool) {
-        // Get the epoch assigned to the block height
-        uint256 blockEpoch = commitmentHeightEpochAssignments[commitmentHeight];
+    function tickOnCommitmentHeight(uint256 commitmentHeight) internal returns (bool) {
+        // Get the epoch assigned to the commitment height
+        uint256 epoch = commitmentHeightEpochAssignments[commitmentHeight];
 
         // If the current epoch is behind, roll it over until we catch up
-        // This is fine as long as we process blocks in order and the block-to-epoch 
+        // This is fine as long as we process commitments in order and the commitment-to-epoch 
         // assignment is non-decreasing
-        while (getCurrentEpoch() < blockEpoch) {
+        while (getCurrentEpoch() < epoch) {
             rollOverEpoch();
         }
 
         // We could track seen commitments in a set, but since our operations
         // are very cheap, the set would actually add overhead
-        uint256 supermajority = (2 * computeAllTotalStakeForEpoch(blockEpoch)) /
+        uint256 supermajority = (2 * computeAllTotalStakeForEpoch(epoch)) /
             3;
         address[] memory attesters = getAttesters();
 
@@ -435,7 +435,7 @@ contract MCR is Initializable, BaseSettlement, MCRStorage, IMCR {
         for (uint256 i = 0; i < attesters.length; i++) {
             address attester = attesters[i];
 
-            // Get the commitment for this attester at the block height
+            // Get the commitment for this attester at the commitment height
             Commitment memory commitment = commitments[commitmentHeight][
                 attester
             ];
@@ -446,7 +446,7 @@ contract MCR is Initializable, BaseSettlement, MCRStorage, IMCR {
             ][commitment.commitmentValue];
 
             if (totalStakeOnCommitment > supermajority) {
-                // Accept the block commitment (may trigger epoch rollover)
+                // Accept the commitment (may trigger epoch rollover)
                 _acceptCommitment(commitment);
 
                 // We found a commitment that was accepted
@@ -485,8 +485,8 @@ contract MCR is Initializable, BaseSettlement, MCRStorage, IMCR {
     }
 
     /**
-     * @notice Submits a single block commitment
-     * @param commitment The block commitment to submit
+     * @notice Submits a single commitment
+     * @param commitment The commitment to submit
      */
     function submitCommitment(Commitment memory commitment) public {
         emit DebugSubmitCommitment(
@@ -497,20 +497,20 @@ contract MCR is Initializable, BaseSettlement, MCRStorage, IMCR {
         emit DebugCheckpoint("Before authorization check");
         require(
             openAttestationEnabled || hasRole(TRUSTED_ATTESTER, msg.sender),
-            "UNAUTHORIZED_BLOCK_COMMITMENT"
+            "UNAUTHORIZED_COMMITMENT"
         );
         emit DebugCheckpoint("After authorization check");
         submitCommitmentForAttester(msg.sender, commitment);
     }
 
     /**
-     * @notice Submits multiple block commitments in batch
-     * @param commitments Array of block commitments to submit
+     * @notice Submits multiple commitments in batch
+     * @param commitments Array of commitments to submit
      */
     function submitBatchCommitment(Commitment[] memory commitments) public {
         require(
             openAttestationEnabled || hasRole(TRUSTED_ATTESTER, msg.sender),
-            "UNAUTHORIZED_BLOCK_COMMITMENT"
+            "UNAUTHORIZED_COMMITMENT"
         );
         for (uint256 i = 0; i < commitments.length; i++) {
             submitCommitmentForAttester(msg.sender, commitments[i]);
@@ -518,37 +518,37 @@ contract MCR is Initializable, BaseSettlement, MCRStorage, IMCR {
     }
 
     /**
-     * @notice Accepts a block commitment
-     * @dev This shares recursion with tickOnBlockHeight, so it should be reentrant
-     * @param commitment The block commitment to accept
+     * @notice Accepts a commitment
+     * @dev This shares recursion with tickOnCommitmentHeight, so it should be reentrant
+     * @param commitment The commitment to accept
      */
     function _acceptCommitment(
         Commitment memory commitment
     ) internal {
         uint256 currentEpoch = getCurrentEpoch();
         
-        // Block commitment must be in the current epoch to be accepted
+        // Commitment must be in the current epoch to be accepted
         // If not, this indicates a bug in the protocol
         if (commitmentHeightEpochAssignments[commitment.height] != currentEpoch)
             revert UnacceptableCommitment();
 
-        // Set accepted block commitment
+        // Set accepted commitment
         versionedAcceptedCommitments[acceptedCommitmentsVersion][commitment.height] = commitment;
 
-        // Set last accepted block height
+        // Set last accepted commitment height
         lastAcceptedCommitmentHeight = commitment.height;
 
-        // Slash minority attesters with respect to the accepted block commitment
+        // Slash minority attesters with respect to the accepted commitment
         slashMinority(commitment);
 
         // Emit the block accepted event
-        emit BlockAccepted(
-            commitment.blockId,
+        emit CommitmentAccepted(
+            commitment.commitmentId,
             commitment.commitmentValue,
             commitment.height
         );
 
-        // Distribute rewards for the block commitment if reward contract is set
+        // Distribute rewards for the commitment if reward contract is set
         if (address(rewardContract) != address(0)) {
             // Find the attester who made this commitment
             address[] memory attesters = stakingContract.getAttestersByDomain(address(this));
@@ -561,7 +561,7 @@ contract MCR is Initializable, BaseSettlement, MCRStorage, IMCR {
                             IMcrReward.rewardCommitment.selector,
                             commitment.height,
                             commitment.commitmentValue,
-                            commitment.blockId,
+                            commitment.commitmentId,
                             attester
                         )
                     );

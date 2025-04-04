@@ -36,7 +36,7 @@ impl Deploy {
                 // - tokenSymbol: Symbol used in wallets/exchanges
                 // - initialTokenMint: Initial supply (100,000 tokens with 18 decimals)
                 // - custodians: Array of addresses that can act as custodians
-                // - initialBlockHeight: Starting block height for the protocol
+                // - initialCommitmentHeight: Starting block height for the protocol
                 // - leadingCommitmentTolerance: Number of blocks a validator can be ahead
                 // - epochDuration: Duration of each epoch in seconds
                 // - rewardOption: 0=none, 1=deploy ARO, 2=use existing reward contract
@@ -54,7 +54,7 @@ impl Deploy {
                         "tokenSymbol": "MOVE",
                         "initialTokenMint": "100000000000000000000000",
                         "custodians": [],
-                        "initialBlockHeight": "0",
+                        "initialCommitmentHeight": "0",
                         "leadingCommitmentTolerance": "10",
                         "epochDuration": "4",
                         "rewardOption": "0",

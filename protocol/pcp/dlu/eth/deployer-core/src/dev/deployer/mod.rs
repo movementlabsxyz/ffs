@@ -86,11 +86,11 @@ pub struct DeployConfig {
 
 	/// The initial block height
 	#[arg(long, default_value = "1")]
-	pub initial_block_height: String,
+	pub initial_commitment_height: String,
 
 	/// The leading block tolerance
 	#[arg(long, default_value = "10")]
-	pub leading_block_tolerance: String,
+	pub leading_commitment_tolerance: String,
 
 	/// The epoch duration
 	#[arg(long, default_value = "1000000")]
@@ -137,8 +137,8 @@ impl DeployConfig {
 			"tokenSymbol": self.token_symbol,
 			"initialTokenMint": self.initial_token_mint,
 			"custodians": self.custodians.as_ref().map_or(Vec::new(), |v| v.clone()),
-			"initialBlockHeight": self.initial_block_height,
-			"leadingCommitmentTolerance": self.leading_block_tolerance,
+			"initialCommitmentHeight": self.initial_commitment_height,
+			"leadingCommitmentTolerance": self.leading_commitment_tolerance,
 			"epochDuration": self.epoch_duration,
 			"rewardOption": reward_contract.reward_option(),
 			"existingRewardContract": reward_contract.existing_reward_contract().unwrap_or_else(|| zero_address.to_string()),
