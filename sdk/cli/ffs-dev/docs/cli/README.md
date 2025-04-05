@@ -53,10 +53,10 @@ This document contains the help content for the `ffs-dev` command-line program.
 * [`ffs-dev mcr protocol client eth post-commitment`↴](#ffs-dev-mcr-protocol-client-eth-post-commitment)
 * [`ffs-dev mcr protocol client eth post-commitment-batch`↴](#ffs-dev-mcr-protocol-client-eth-post-commitment-batch)
 * [`ffs-dev mcr protocol client eth stream-commitments`↴](#ffs-dev-mcr-protocol-client-eth-stream-commitments)
-* [`ffs-dev mcr protocol client eth get-block-commitment`↴](#ffs-dev-mcr-protocol-client-eth-get-block-commitment)
+* [`ffs-dev mcr protocol client eth get-commitment`↴](#ffs-dev-mcr-protocol-client-eth-get-commitment)
 * [`ffs-dev mcr protocol client eth get-accepted-commitment-at-height`↴](#ffs-dev-mcr-protocol-client-eth-get-accepted-commitment-at-height)
 * [`ffs-dev mcr protocol client eth get-posted-commitment-at-height`↴](#ffs-dev-mcr-protocol-client-eth-get-posted-commitment-at-height)
-* [`ffs-dev mcr protocol client eth get-max-tolerable-block-height`↴](#ffs-dev-mcr-protocol-client-eth-get-max-tolerable-block-height)
+* [`ffs-dev mcr protocol client eth get-max-tolerable-commitment-height`↴](#ffs-dev-mcr-protocol-client-eth-get-max-tolerable-commitment-height)
 * [`ffs-dev mcr protocol client eth stake`↴](#ffs-dev-mcr-protocol-client-eth-stake)
 * [`ffs-dev mcr protocol client eth get-stake`↴](#ffs-dev-mcr-protocol-client-eth-get-stake)
 * [`ffs-dev mcr protocol client eth unstake`↴](#ffs-dev-mcr-protocol-client-eth-unstake)
@@ -72,29 +72,6 @@ This document contains the help content for the `ffs-dev` command-line program.
 * [`ffs-dev mcr protocol deployer eth apply where`↴](#ffs-dev-mcr-protocol-deployer-eth-apply-where)
 * [`ffs-dev mcr protocol deployer eth apply using`↴](#ffs-dev-mcr-protocol-deployer-eth-apply-using)
 * [`ffs-dev mcr protocol deployer eth destroy`↴](#ffs-dev-mcr-protocol-deployer-eth-destroy)
-* [`ffs-dev pcp`↴](#ffs-dev-pcp)
-* [`ffs-dev pcp network`↴](#ffs-dev-pcp-network)
-* [`ffs-dev pcp network run`↴](#ffs-dev-pcp-network-run)
-* [`ffs-dev pcp network client`↴](#ffs-dev-pcp-network-client)
-* [`ffs-dev pcp network client run`↴](#ffs-dev-pcp-network-client-run)
-* [`ffs-dev pcp network coordinator`↴](#ffs-dev-pcp-network-coordinator)
-* [`ffs-dev pcp network coordinator run`↴](#ffs-dev-pcp-network-coordinator-run)
-* [`ffs-dev pcp network coordinator eth`↴](#ffs-dev-pcp-network-coordinator-eth)
-* [`ffs-dev pcp network coordinator eth anvil`↴](#ffs-dev-pcp-network-coordinator-eth-anvil)
-* [`ffs-dev pcp network coordinator eth anvil up`↴](#ffs-dev-pcp-network-coordinator-eth-anvil-up)
-* [`ffs-dev pcp network coordinator eth anvil up where`↴](#ffs-dev-pcp-network-coordinator-eth-anvil-up-where)
-* [`ffs-dev pcp network coordinator eth anvil up using`↴](#ffs-dev-pcp-network-coordinator-eth-anvil-up-using)
-* [`ffs-dev pcp network coordinator eth live`↴](#ffs-dev-pcp-network-coordinator-eth-live)
-* [`ffs-dev pcp network coordinator eth live up`↴](#ffs-dev-pcp-network-coordinator-eth-live-up)
-* [`ffs-dev pcp protocol`↴](#ffs-dev-pcp-protocol)
-* [`ffs-dev pcp protocol run`↴](#ffs-dev-pcp-protocol-run)
-* [`ffs-dev pcp protocol client`↴](#ffs-dev-pcp-protocol-client)
-* [`ffs-dev pcp protocol client run`↴](#ffs-dev-pcp-protocol-client-run)
-* [`ffs-dev pcp protocol client eth`↴](#ffs-dev-pcp-protocol-client-eth)
-* [`ffs-dev pcp protocol client eth post-admin-commitment`↴](#ffs-dev-pcp-protocol-client-eth-post-admin-commitment)
-* [`ffs-dev pcp protocol client post-commitment`↴](#ffs-dev-pcp-protocol-client-post-commitment)
-* [`ffs-dev pcp protocol client deploy`↴](#ffs-dev-pcp-protocol-client-deploy)
-* [`ffs-dev pcp protocol client deploy anvil`↴](#ffs-dev-pcp-protocol-client-deploy-anvil)
 
 ## `ffs-dev`
 
@@ -106,7 +83,6 @@ KEEP THIS UNTIL PRODUCTION-READY : Defined in: sdk/cli/ffs-dev/src/cli/mod.rs
 
 * `markdown` — Generate CLI documentation
 * `mcr` — Manage MCR
-* `pcp` — Manage PCP
 
 
 
@@ -465,10 +441,10 @@ Run up with all parameters passed explicitly as CLI flags. See Orfile documentat
 
   Default value: `1000000000000000000000000`
 * `--custodians <CUSTODIANS>` — The custodians By default this should be an empty vector
-* `--initial-block-height <INITIAL_BLOCK_HEIGHT>` — The initial block height
+* `--initial-commitment-height <INITIAL_COMMITMENT_HEIGHT>` — The initial block height
 
   Default value: `1`
-* `--leading-block-tolerance <LEADING_BLOCK_TOLERANCE>` — The leading block tolerance
+* `--leading-commitment-tolerance <LEADING_COMMITMENT_TOLERANCE>` — The leading block tolerance
 
   Default value: `10`
 * `--epoch-duration <EPOCH_DURATION>` — The epoch duration
@@ -539,10 +515,10 @@ Brings-up an MCR network on a live Ethereum network
 
   Default value: `1000000000000000000000000`
 * `--custodians <CUSTODIANS>` — The custodians By default this should be an empty vector
-* `--initial-block-height <INITIAL_BLOCK_HEIGHT>` — The initial block height
+* `--initial-commitment-height <INITIAL_COMMITMENT_HEIGHT>` — The initial block height
 
   Default value: `1`
-* `--leading-block-tolerance <LEADING_BLOCK_TOLERANCE>` — The leading block tolerance
+* `--leading-commitment-tolerance <LEADING_COMMITMENT_TOLERANCE>` — The leading block tolerance
 
   Default value: `10`
 * `--epoch-duration <EPOCH_DURATION>` — The epoch duration
@@ -715,14 +691,14 @@ KEEP THIS UNTIL PRODUCTION-READY : Defined in: protocol/mcr/cli/client/src/cli/e
 
 ###### **Subcommands:**
 
-* `post-admin-commitment` — Force a block commitment (admin only)
+* `post-admin-commitment` — Force a commitment (admin only)
 * `post-commitment` — Post a single commitment
 * `post-commitment-batch` — Post a batch of commitments
 * `stream-commitments` — Stream commitments
-* `get-block-commitment` — Get a block commitment for a given height and attester
+* `get-commitment` — Get a commitment for a given height and attester
 * `get-accepted-commitment-at-height` — Get accepted commitment at a specific height
 * `get-posted-commitment-at-height` — Get posted commitment at a specific height
-* `get-max-tolerable-block-height` — Get max tolerable superBlock height
+* `get-max-tolerable-commitment-height` — Get max tolerable commitment height
 * `stake` — Stake tokens for the MCR domain
 * `get-stake` — Get the current epoch stake for an attester
 * `unstake` — Unstake tokens from the MCR domain
@@ -732,9 +708,9 @@ KEEP THIS UNTIL PRODUCTION-READY : Defined in: protocol/mcr/cli/client/src/cli/e
 
 ## `ffs-dev mcr protocol client eth post-admin-commitment`
 
-Force a block commitment (admin only)
+Force a commitment (admin only)
 
-**Usage:** `ffs-dev mcr protocol client eth post-admin-commitment [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --signer-identifier <SIGNER_IDENTIFIER> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --block-lead-tolerance <BLOCK_LEAD_TOLERANCE> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> --id <ID> --commitment <COMMITMENT>`
+**Usage:** `ffs-dev mcr protocol client eth post-admin-commitment [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --signer-identifier <SIGNER_IDENTIFIER> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --commitment-lead-tolerance <COMMITMENT_LEAD_TOLERANCE> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> --commitment-id <COMMITMENT_ID> --commitment-value <COMMITMENT_VALUE>`
 
 ###### **Options:**
 
@@ -747,12 +723,12 @@ Force a block commitment (admin only)
 * `--gas-limit <GAS_LIMIT>` — The gas limit for transactions
 * `--transaction-send-retries <TRANSACTION_SEND_RETRIES>` — The number of retries for sending transactions
 * `--mcr-address <MCR_ADDRESS>` — The MCR address
-* `--block-lead-tolerance <BLOCK_LEAD_TOLERANCE>` — The block lead tolerance
+* `--commitment-lead-tolerance <COMMITMENT_LEAD_TOLERANCE>` — The block lead tolerance
 * `--move-token-address <MOVE_TOKEN_ADDRESS>` — The move token address
 * `--staking-address <STAKING_ADDRESS>` — The staking address
-* `--height <HEIGHT>` — The height of the commitment block at which to commit
-* `--id <ID>` — The id of the commitment block at which to commit
-* `--commitment <COMMITMENT>` — The commitment to commit
+* `--height <HEIGHT>` — The commitment height at which to commit
+* `--commitment-id <COMMITMENT_ID>` — The commitment id to commit
+* `--commitment-value <COMMITMENT_VALUE>` — The commitment value to commit
 
 
 
@@ -760,7 +736,7 @@ Force a block commitment (admin only)
 
 Post a single commitment
 
-**Usage:** `ffs-dev mcr protocol client eth post-commitment [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --signer-identifier <SIGNER_IDENTIFIER> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --block-lead-tolerance <BLOCK_LEAD_TOLERANCE> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> --height <HEIGHT> --id <ID> --commitment <COMMITMENT>`
+**Usage:** `ffs-dev mcr protocol client eth post-commitment [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --signer-identifier <SIGNER_IDENTIFIER> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --commitment-lead-tolerance <COMMITMENT_LEAD_TOLERANCE> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> --height <HEIGHT> --commitment-id <COMMITMENT_ID> --commitment-value <COMMITMENT_VALUE>`
 
 ###### **Options:**
 
@@ -773,12 +749,12 @@ Post a single commitment
 * `--gas-limit <GAS_LIMIT>` — The gas limit for transactions
 * `--transaction-send-retries <TRANSACTION_SEND_RETRIES>` — The number of retries for sending transactions
 * `--mcr-address <MCR_ADDRESS>` — The MCR address
-* `--block-lead-tolerance <BLOCK_LEAD_TOLERANCE>` — The block lead tolerance
+* `--commitment-lead-tolerance <COMMITMENT_LEAD_TOLERANCE>` — The block lead tolerance
 * `--move-token-address <MOVE_TOKEN_ADDRESS>` — The move token address
 * `--staking-address <STAKING_ADDRESS>` — The staking address
 * `--height <HEIGHT>` — The height of the commitment block at which to commit
-* `--id <ID>` — The id of the commitment block at which to commit
-* `--commitment <COMMITMENT>` — The commitment to commit
+* `--commitment-id <COMMITMENT_ID>` — The id of the commitment block at which to commit
+* `--commitment-value <COMMITMENT_VALUE>` — The commitment value to commit
 
 
 
@@ -786,7 +762,7 @@ Post a single commitment
 
 Post a batch of commitments
 
-**Usage:** `ffs-dev mcr protocol client eth post-commitment-batch [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --signer-identifier <SIGNER_IDENTIFIER> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --block-lead-tolerance <BLOCK_LEAD_TOLERANCE> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> --height <HEIGHT> --id <ID> --commitment <COMMITMENT>`
+**Usage:** `ffs-dev mcr protocol client eth post-commitment-batch [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --signer-identifier <SIGNER_IDENTIFIER> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --commitment-lead-tolerance <COMMITMENT_LEAD_TOLERANCE> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> --height <HEIGHT> --commitment-id <COMMITMENT_ID> --commitment-value <COMMITMENT_VALUE>`
 
 ###### **Options:**
 
@@ -799,12 +775,12 @@ Post a batch of commitments
 * `--gas-limit <GAS_LIMIT>` — The gas limit for transactions
 * `--transaction-send-retries <TRANSACTION_SEND_RETRIES>` — The number of retries for sending transactions
 * `--mcr-address <MCR_ADDRESS>` — The MCR address
-* `--block-lead-tolerance <BLOCK_LEAD_TOLERANCE>` — The block lead tolerance
+* `--commitment-lead-tolerance <COMMITMENT_LEAD_TOLERANCE>` — The block lead tolerance
 * `--move-token-address <MOVE_TOKEN_ADDRESS>` — The move token address
 * `--staking-address <STAKING_ADDRESS>` — The staking address
 * `--height <HEIGHT>` — The height of the block to commit
-* `--id <ID>` — The id of the block to commit
-* `--commitment <COMMITMENT>` — The commitment to commit
+* `--commitment-id <COMMITMENT_ID>` — The id of the block to commit
+* `--commitment-value <COMMITMENT_VALUE>` — The commitment value to commit
 
 
 
@@ -812,7 +788,7 @@ Post a batch of commitments
 
 Stream commitments
 
-**Usage:** `ffs-dev mcr protocol client eth stream-commitments [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --signer-identifier <SIGNER_IDENTIFIER> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --block-lead-tolerance <BLOCK_LEAD_TOLERANCE> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS>`
+**Usage:** `ffs-dev mcr protocol client eth stream-commitments [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --signer-identifier <SIGNER_IDENTIFIER> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --commitment-lead-tolerance <COMMITMENT_LEAD_TOLERANCE> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS>`
 
 ###### **Options:**
 
@@ -825,17 +801,17 @@ Stream commitments
 * `--gas-limit <GAS_LIMIT>` — The gas limit for transactions
 * `--transaction-send-retries <TRANSACTION_SEND_RETRIES>` — The number of retries for sending transactions
 * `--mcr-address <MCR_ADDRESS>` — The MCR address
-* `--block-lead-tolerance <BLOCK_LEAD_TOLERANCE>` — The block lead tolerance
+* `--commitment-lead-tolerance <COMMITMENT_LEAD_TOLERANCE>` — The block lead tolerance
 * `--move-token-address <MOVE_TOKEN_ADDRESS>` — The move token address
 * `--staking-address <STAKING_ADDRESS>` — The staking address
 
 
 
-## `ffs-dev mcr protocol client eth get-block-commitment`
+## `ffs-dev mcr protocol client eth get-commitment`
 
-Get a block commitment for a given height and attester
+Get a commitment for a given height and attester
 
-**Usage:** `ffs-dev mcr protocol client eth get-block-commitment [OPTIONS] --height <HEIGHT> --attester <ATTESTER> --mcr-address <MCR_ADDRESS>`
+**Usage:** `ffs-dev mcr protocol client eth get-commitment [OPTIONS] --height <HEIGHT> --attester <ATTESTER> --mcr-address <MCR_ADDRESS>`
 
 ###### **Options:**
 
@@ -853,7 +829,7 @@ Get a block commitment for a given height and attester
 
 Get accepted commitment at a specific height
 
-**Usage:** `ffs-dev mcr protocol client eth get-accepted-commitment-at-height [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --signer-identifier <SIGNER_IDENTIFIER> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --block-lead-tolerance <BLOCK_LEAD_TOLERANCE> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> --height <HEIGHT>`
+**Usage:** `ffs-dev mcr protocol client eth get-accepted-commitment-at-height [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --signer-identifier <SIGNER_IDENTIFIER> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --commitment-lead-tolerance <COMMITMENT_LEAD_TOLERANCE> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> --height <HEIGHT>`
 
 ###### **Options:**
 
@@ -866,7 +842,7 @@ Get accepted commitment at a specific height
 * `--gas-limit <GAS_LIMIT>` — The gas limit for transactions
 * `--transaction-send-retries <TRANSACTION_SEND_RETRIES>` — The number of retries for sending transactions
 * `--mcr-address <MCR_ADDRESS>` — The MCR address
-* `--block-lead-tolerance <BLOCK_LEAD_TOLERANCE>` — The block lead tolerance
+* `--commitment-lead-tolerance <COMMITMENT_LEAD_TOLERANCE>` — The block lead tolerance
 * `--move-token-address <MOVE_TOKEN_ADDRESS>` — The move token address
 * `--staking-address <STAKING_ADDRESS>` — The staking address
 * `--height <HEIGHT>` — The height to get the commitment for
@@ -877,7 +853,7 @@ Get accepted commitment at a specific height
 
 Get posted commitment at a specific height
 
-**Usage:** `ffs-dev mcr protocol client eth get-posted-commitment-at-height [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --signer-identifier <SIGNER_IDENTIFIER> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --block-lead-tolerance <BLOCK_LEAD_TOLERANCE> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> --height <HEIGHT>`
+**Usage:** `ffs-dev mcr protocol client eth get-posted-commitment-at-height [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --signer-identifier <SIGNER_IDENTIFIER> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --commitment-lead-tolerance <COMMITMENT_LEAD_TOLERANCE> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> --height <HEIGHT>`
 
 ###### **Options:**
 
@@ -890,18 +866,18 @@ Get posted commitment at a specific height
 * `--gas-limit <GAS_LIMIT>` — The gas limit for transactions
 * `--transaction-send-retries <TRANSACTION_SEND_RETRIES>` — The number of retries for sending transactions
 * `--mcr-address <MCR_ADDRESS>` — The MCR address
-* `--block-lead-tolerance <BLOCK_LEAD_TOLERANCE>` — The block lead tolerance
+* `--commitment-lead-tolerance <COMMITMENT_LEAD_TOLERANCE>` — The block lead tolerance
 * `--move-token-address <MOVE_TOKEN_ADDRESS>` — The move token address
 * `--staking-address <STAKING_ADDRESS>` — The staking address
 * `--height <HEIGHT>` — The height to get the commitment for
 
 
 
-## `ffs-dev mcr protocol client eth get-max-tolerable-block-height`
+## `ffs-dev mcr protocol client eth get-max-tolerable-commitment-height`
 
-Get max tolerable superBlock height
+Get max tolerable commitment height
 
-**Usage:** `ffs-dev mcr protocol client eth get-max-tolerable-block-height [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --signer-identifier <SIGNER_IDENTIFIER> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --block-lead-tolerance <BLOCK_LEAD_TOLERANCE> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS>`
+**Usage:** `ffs-dev mcr protocol client eth get-max-tolerable-commitment-height [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --signer-identifier <SIGNER_IDENTIFIER> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --commitment-lead-tolerance <COMMITMENT_LEAD_TOLERANCE> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS>`
 
 ###### **Options:**
 
@@ -914,7 +890,7 @@ Get max tolerable superBlock height
 * `--gas-limit <GAS_LIMIT>` — The gas limit for transactions
 * `--transaction-send-retries <TRANSACTION_SEND_RETRIES>` — The number of retries for sending transactions
 * `--mcr-address <MCR_ADDRESS>` — The MCR address
-* `--block-lead-tolerance <BLOCK_LEAD_TOLERANCE>` — The block lead tolerance
+* `--commitment-lead-tolerance <COMMITMENT_LEAD_TOLERANCE>` — The block lead tolerance
 * `--move-token-address <MOVE_TOKEN_ADDRESS>` — The move token address
 * `--staking-address <STAKING_ADDRESS>` — The staking address
 
@@ -924,7 +900,7 @@ Get max tolerable superBlock height
 
 Stake tokens for the MCR domain
 
-**Usage:** `ffs-dev mcr protocol client eth stake [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --signer-identifier <SIGNER_IDENTIFIER> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --block-lead-tolerance <BLOCK_LEAD_TOLERANCE> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> --amount <AMOUNT>`
+**Usage:** `ffs-dev mcr protocol client eth stake [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --signer-identifier <SIGNER_IDENTIFIER> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --commitment-lead-tolerance <COMMITMENT_LEAD_TOLERANCE> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> --amount <AMOUNT>`
 
 ###### **Options:**
 
@@ -937,7 +913,7 @@ Stake tokens for the MCR domain
 * `--gas-limit <GAS_LIMIT>` — The gas limit for transactions
 * `--transaction-send-retries <TRANSACTION_SEND_RETRIES>` — The number of retries for sending transactions
 * `--mcr-address <MCR_ADDRESS>` — The MCR address
-* `--block-lead-tolerance <BLOCK_LEAD_TOLERANCE>` — The block lead tolerance
+* `--commitment-lead-tolerance <COMMITMENT_LEAD_TOLERANCE>` — The block lead tolerance
 * `--move-token-address <MOVE_TOKEN_ADDRESS>` — The move token address
 * `--staking-address <STAKING_ADDRESS>` — The staking address
 * `--amount <AMOUNT>` — Amount to stake
@@ -968,7 +944,7 @@ Get the current epoch stake for an attester
 
 Unstake tokens from the MCR domain
 
-**Usage:** `ffs-dev mcr protocol client eth unstake [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --signer-identifier <SIGNER_IDENTIFIER> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --block-lead-tolerance <BLOCK_LEAD_TOLERANCE> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> --amount <AMOUNT>`
+**Usage:** `ffs-dev mcr protocol client eth unstake [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --signer-identifier <SIGNER_IDENTIFIER> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --commitment-lead-tolerance <COMMITMENT_LEAD_TOLERANCE> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> --amount <AMOUNT>`
 
 ###### **Options:**
 
@@ -981,7 +957,7 @@ Unstake tokens from the MCR domain
 * `--gas-limit <GAS_LIMIT>` — The gas limit for transactions
 * `--transaction-send-retries <TRANSACTION_SEND_RETRIES>` — The number of retries for sending transactions
 * `--mcr-address <MCR_ADDRESS>` — The MCR address
-* `--block-lead-tolerance <BLOCK_LEAD_TOLERANCE>` — The block lead tolerance
+* `--commitment-lead-tolerance <COMMITMENT_LEAD_TOLERANCE>` — The block lead tolerance
 * `--move-token-address <MOVE_TOKEN_ADDRESS>` — The move token address
 * `--staking-address <STAKING_ADDRESS>` — The staking address
 * `--amount <AMOUNT>` — Amount to unstake
@@ -1115,10 +1091,10 @@ Run config with all parameters passed explicitly as CLI flags. See Orfile docume
 
   Default value: `1000000000000000000000000`
 * `--custodians <CUSTODIANS>` — The custodians By default this should be an empty vector
-* `--initial-block-height <INITIAL_BLOCK_HEIGHT>` — The initial block height
+* `--initial-commitment-height <INITIAL_COMMITMENT_HEIGHT>` — The initial block height
 
   Default value: `1`
-* `--leading-block-tolerance <LEADING_BLOCK_TOLERANCE>` — The leading block tolerance
+* `--leading-commitment-tolerance <LEADING_COMMITMENT_TOLERANCE>` — The leading block tolerance
 
   Default value: `10`
 * `--epoch-duration <EPOCH_DURATION>` — The epoch duration
@@ -1167,389 +1143,6 @@ Run config with parameters from environment variables, config files, and CLI fla
 * `--mcr-proxy <MCR_PROXY>` — The mcr proxy
 * `--reward-proxy <REWARD_PROXY>` — The reward proxy
 * `--jsonl-prefix <JSONL_PREFIX>` — The JSONL prefix to give to the output from the deployer
-
-
-
-## `ffs-dev pcp`
-
-Manage PCP
-
-**Usage:** `ffs-dev pcp <COMMAND>`
-
-KEEP THIS UNTIL PRODUCTION-READY : Defined in: sdk/cli/ffs-dev/src/cli/pcp/mod.rs
-
-###### **Subcommands:**
-
-* `network` — Subcommands for the PCP network
-* `protocol` — Subcommands for the PCP protocol
-
-
-
-## `ffs-dev pcp network`
-
-Subcommands for the PCP network
-
-**Usage:** `ffs-dev pcp network <COMMAND>`
-
-KEEP THIS UNTIL PRODUCTION-READY : Defined in: network/pcp/cli/network/src/cli/mod.rs
-
-###### **Subcommands:**
-
-* `run` — A placeholder for future commands
-* `client` — The client-specific commands of the PCP network
-* `coordinator` — The coordinator-specific commands of the PCP network
-
-
-
-## `ffs-dev pcp network run`
-
-A placeholder for future commands
-
-**Usage:** `ffs-dev pcp network run`
-
-
-
-## `ffs-dev pcp network client`
-
-The client-specific commands of the PCP network
-
-**Usage:** `ffs-dev pcp network client <COMMAND>`
-
-###### **Subcommands:**
-
-* `run` — A placeholder for future commands
-
-
-
-## `ffs-dev pcp network client run`
-
-A placeholder for future commands
-
-**Usage:** `ffs-dev pcp network client run`
-
-
-
-## `ffs-dev pcp network coordinator`
-
-The coordinator-specific commands of the PCP network
-
-**Usage:** `ffs-dev pcp network coordinator <COMMAND>`
-
-KEEP THIS UNTIL PRODUCTION-READY : Defined in: network/pcp/cli/coordinator/src/cli/mod.rs
-
-###### **Subcommands:**
-
-* `run` — A placeholder for future commands
-* `eth` — Ethereum-specific commands of the network coordinator, i.e., for bringing-up an Ethereum-based PCP network
-
-
-
-## `ffs-dev pcp network coordinator run`
-
-A placeholder for future commands
-
-**Usage:** `ffs-dev pcp network coordinator run`
-
-
-
-## `ffs-dev pcp network coordinator eth`
-
-Ethereum-specific commands of the network coordinator, i.e., for bringing-up an Ethereum-based PCP network
-
-**Usage:** `ffs-dev pcp network coordinator eth <COMMAND>`
-
-KEEP THIS UNTIL PRODUCTION-READY : Defined in: network/pcp/cli/coordinator/src/cli/eth/mod.rs
-
-###### **Subcommands:**
-
-* `anvil` — Anvil-specific commands of the network coordinator, i.e., for bringing-up a PCP network on Anvil
-* `live` — Live-Ethereum-based commands of the network coordinator, i.e., for bringing-up a PCP network on a live Ethereum network
-
-
-
-## `ffs-dev pcp network coordinator eth anvil`
-
-Anvil-specific commands of the network coordinator, i.e., for bringing-up a PCP network on Anvil
-
-**Usage:** `ffs-dev pcp network coordinator eth anvil <COMMAND>`
-
-KEEP THIS UNTIL PRODUCTION-READY : Defined in: network/pcp/cli/coordinator/src/cli/eth/anvil/mod.rs
-
-###### **Subcommands:**
-
-* `up` — Brings-up a PCP network on Anvil
-
-
-
-## `ffs-dev pcp network coordinator eth anvil up`
-
-Brings-up a PCP network on Anvil
-
-**Usage:** `ffs-dev pcp network coordinator eth anvil up <COMMAND>`
-
-###### **Subcommands:**
-
-* `where` — Run up with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
-* `using` — Run up with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
-
-
-
-## `ffs-dev pcp network coordinator eth anvil up where`
-
-Run up with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
-
-**Usage:** `ffs-dev pcp network coordinator eth anvil up where [OPTIONS] --signer-identifier <SIGNER_IDENTIFIER> --fork-url <FORK_URL> --contract-admin <CONTRACT_ADMIN>`
-
-###### **Options:**
-
-* `--signer-identifier <SIGNER_IDENTIFIER>` — The signer identifier
-* `--fork-url <FORK_URL>` — The fork url for deployment
-* `--contract-admin <CONTRACT_ADMIN>` — Admin address for deployed contracts
-* `--token-name <TOKEN_NAME>` — The token name
-
-  Default value: `Move Token`
-* `--token-symbol <TOKEN_SYMBOL>` — The token symbol
-
-  Default value: `MOVE`
-* `--initial-token-mint <INITIAL_TOKEN_MINT>` — The initial token mint
-
-  Default value: `1000000000000000000000000`
-* `--custodians <CUSTODIANS>` — The custodians By default this should be an empty vector
-* `--initial-block-height <INITIAL_BLOCK_HEIGHT>` — The initial block height
-
-  Default value: `1`
-* `--leading-block-tolerance <LEADING_BLOCK_TOLERANCE>` — The leading block tolerance
-
-  Default value: `10`
-* `--epoch-duration <EPOCH_DURATION>` — The epoch duration
-
-  Default value: `1000000`
-* `--reward-contract <REWARD_CONTRACT>` — The reward contract
-* `--existing-proxy-admin <EXISTING_PROXY_ADMIN>` — The existing proxy admin
-* `--existing-token-proxy <EXISTING_TOKEN_PROXY>` — The existing move token proxy
-* `--existing-staking-proxy <EXISTING_STAKING_PROXY>` — The existing staking proxy
-* `--existing-pcp-proxy <EXISTING_PCP_PROXY>` — The existing PCP proxy
-* `--existing-reward-proxy <EXISTING_REWARD_PROXY>` — The existing ARO proxy
-* `--destroy-mode` — Whether to destroy the contracts
-
-  Default value: `false`
-* `--jsonl-prefix <JSONL_PREFIX>` — The JSONL prefix to give to the output from the deployer
-* `--write-artifacts-path <WRITE_ARTIFACTS_PATH>` — Path to the configuration file
-* `--write-anvil-data-path <WRITE_ANVIL_DATA_PATH>` — Path to write the anvil data as json
-
-
-
-## `ffs-dev pcp network coordinator eth anvil up using`
-
-Run up with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
-
-**Usage:** `ffs-dev pcp network coordinator eth anvil up using [OPTIONS] --signer-identifier <SIGNER_IDENTIFIER> --fork-url <FORK_URL> --contract-admin <CONTRACT_ADMIN> [EXTRA_ARGS]...`
-
-###### **Arguments:**
-
-* `<EXTRA_ARGS>` — Extra arguments to be passed to the CLI
-
-###### **Options:**
-
-* `--signer-identifier <SIGNER_IDENTIFIER>` — The signer identifier
-* `--fork-url <FORK_URL>` — The fork url for deployment
-* `--contract-admin <CONTRACT_ADMIN>` — Admin address for deployed contracts
-* `--token-name <TOKEN_NAME>` — The token name
-
-  Default value: `Move Token`
-* `--token-symbol <TOKEN_SYMBOL>` — The token symbol
-
-  Default value: `MOVE`
-* `--initial-token-mint <INITIAL_TOKEN_MINT>` — The initial token mint
-
-  Default value: `1000000000000000000000000`
-* `--custodians <CUSTODIANS>` — The custodians By default this should be an empty vector
-* `--initial-block-height <INITIAL_BLOCK_HEIGHT>` — The initial block height
-
-  Default value: `1`
-* `--leading-block-tolerance <LEADING_BLOCK_TOLERANCE>` — The leading block tolerance
-
-  Default value: `10`
-* `--epoch-duration <EPOCH_DURATION>` — The epoch duration
-
-  Default value: `1000000`
-* `--reward-contract <REWARD_CONTRACT>` — The reward contract
-* `--existing-proxy-admin <EXISTING_PROXY_ADMIN>` — The existing proxy admin
-* `--existing-token-proxy <EXISTING_TOKEN_PROXY>` — The existing move token proxy
-* `--existing-staking-proxy <EXISTING_STAKING_PROXY>` — The existing staking proxy
-* `--existing-pcp-proxy <EXISTING_PCP_PROXY>` — The existing PCP proxy
-* `--existing-reward-proxy <EXISTING_REWARD_PROXY>` — The existing ARO proxy
-* `--destroy-mode` — Whether to destroy the contracts
-
-  Default value: `false`
-* `--jsonl-prefix <JSONL_PREFIX>` — The JSONL prefix to give to the output from the deployer
-* `--write-artifacts-path <WRITE_ARTIFACTS_PATH>` — Path to the configuration file
-* `--write-anvil-data-path <WRITE_ANVIL_DATA_PATH>` — Path to write the anvil data as json
-
-
-
-## `ffs-dev pcp network coordinator eth live`
-
-Live-Ethereum-based commands of the network coordinator, i.e., for bringing-up a PCP network on a live Ethereum network
-
-**Usage:** `ffs-dev pcp network coordinator eth live <COMMAND>`
-
-KEEP THIS UNTIL PRODUCTION-READY : Defined in: network/pcp/cli/coordinator/src/cli/eth/live/mod.rs
-
-###### **Subcommands:**
-
-* `up` — Brings-up a PCP network on a live Ethereum network
-
-
-
-## `ffs-dev pcp network coordinator eth live up`
-
-Brings-up a PCP network on a live Ethereum network
-
-**Usage:** `ffs-dev pcp network coordinator eth live up [OPTIONS] --signer-identifier <SIGNER_IDENTIFIER> --fork-url <FORK_URL> --contract-admin <CONTRACT_ADMIN>`
-
-###### **Options:**
-
-* `--signer-identifier <SIGNER_IDENTIFIER>` — The signer identifier
-* `--fork-url <FORK_URL>` — The fork url for deployment
-* `--contract-admin <CONTRACT_ADMIN>` — Admin address for deployed contracts
-* `--token-name <TOKEN_NAME>` — The token name
-
-  Default value: `Move Token`
-* `--token-symbol <TOKEN_SYMBOL>` — The token symbol
-
-  Default value: `MOVE`
-* `--initial-token-mint <INITIAL_TOKEN_MINT>` — The initial token mint
-
-  Default value: `1000000000000000000000000`
-* `--custodians <CUSTODIANS>` — The custodians By default this should be an empty vector
-* `--initial-block-height <INITIAL_BLOCK_HEIGHT>` — The initial block height
-
-  Default value: `1`
-* `--leading-block-tolerance <LEADING_BLOCK_TOLERANCE>` — The leading block tolerance
-
-  Default value: `10`
-* `--epoch-duration <EPOCH_DURATION>` — The epoch duration
-
-  Default value: `1000000`
-* `--reward-contract <REWARD_CONTRACT>` — The reward contract
-* `--existing-proxy-admin <EXISTING_PROXY_ADMIN>` — The existing proxy admin
-* `--existing-token-proxy <EXISTING_TOKEN_PROXY>` — The existing move token proxy
-* `--existing-staking-proxy <EXISTING_STAKING_PROXY>` — The existing staking proxy
-* `--existing-pcp-proxy <EXISTING_PCP_PROXY>` — The existing PCP proxy
-* `--existing-reward-proxy <EXISTING_REWARD_PROXY>` — The existing ARO proxy
-* `--destroy-mode` — Whether to destroy the contracts
-
-  Default value: `false`
-* `--jsonl-prefix <JSONL_PREFIX>` — The JSONL prefix to give to the output from the deployer
-
-
-
-## `ffs-dev pcp protocol`
-
-Subcommands for the PCP protocol
-
-**Usage:** `ffs-dev pcp protocol <COMMAND>`
-
-###### **Subcommands:**
-
-* `run` — 
-* `client` — The subcommands of the `pcp-protocol-client` CLI
-
-
-
-## `ffs-dev pcp protocol run`
-
-**Usage:** `ffs-dev pcp protocol run`
-
-
-
-## `ffs-dev pcp protocol client`
-
-The subcommands of the `pcp-protocol-client` CLI
-
-**Usage:** `ffs-dev pcp protocol client <COMMAND>`
-
-###### **Subcommands:**
-
-* `run` — 
-* `eth` — 
-* `post-commitment` — Post a commitment to an PCP implementation
-* `deploy` — Deploy PCP contracts using deployer-core
-
-
-
-## `ffs-dev pcp protocol client run`
-
-**Usage:** `ffs-dev pcp protocol client run`
-
-
-
-## `ffs-dev pcp protocol client eth`
-
-**Usage:** `ffs-dev pcp protocol client eth <COMMAND>`
-
-###### **Subcommands:**
-
-* `post-admin-commitment` — 
-
-
-
-## `ffs-dev pcp protocol client eth post-admin-commitment`
-
-**Usage:** `ffs-dev pcp protocol client eth post-admin-commitment [OPTIONS] --pcp-contract-address <PCP_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --signer-identifier <SIGNER_IDENTIFIER> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES>`
-
-###### **Options:**
-
-* `--pcp-contract-address <PCP_CONTRACT_ADDRESS>` — The address of the PCP settlement contract
-* `--rpc-url <RPC_URL>` — The Ethereum RPC connection URL
-* `--ws-url <WS_URL>` — The Ethereum WebSocket connection URL
-* `--chain-id <CHAIN_ID>` — The Ethereum chain ID
-* `--signer-identifier <SIGNER_IDENTIFIER>` — The signer identifier
-* `--run-commitment-admin-mode` — Whether to run in settlement admin mode
-* `--gas-limit <GAS_LIMIT>` — The gas limit for transactions
-* `--transaction-send-retries <TRANSACTION_SEND_RETRIES>` — The number of retries for sending transactions
-
-
-
-## `ffs-dev pcp protocol client post-commitment`
-
-Post a commitment to an PCP implementation
-
-**Usage:** `ffs-dev pcp protocol client post-commitment [OPTIONS]`
-
-###### **Options:**
-
-* `--commitment-hex <COMMITMENT_HEX>` — Hex-encoded commitment
-* `--preimage-string <PREIMAGE_STRING>` — String to be hashed into a commitment
-
-
-
-## `ffs-dev pcp protocol client deploy`
-
-Deploy PCP contracts using deployer-core
-
-**Usage:** `ffs-dev pcp protocol client deploy <COMMAND>`
-
-###### **Subcommands:**
-
-* `anvil` — Deploy to local Anvil network
-
-
-
-## `ffs-dev pcp protocol client deploy anvil`
-
-Deploy to local Anvil network
-
-**Usage:** `ffs-dev pcp protocol client deploy anvil [OPTIONS] --admin <ADMIN> --private-key <PRIVATE_KEY>`
-
-###### **Options:**
-
-* `--admin <ADMIN>` — Admin address for deployed contracts
-* `--rpc-url <RPC_URL>` — RPC URL (defaults to http://localhost:8545)
-
-  Default value: `http://localhost:8545`
-* `--private-key <PRIVATE_KEY>` — Private key for deployment
 
 
 

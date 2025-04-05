@@ -20,9 +20,9 @@ pub enum McrEthConnectorError {
 	SendTransactionError(#[from] alloy_contract::Error),
 	#[error("MCR Settlement Transaction send failed during its execution: {0}")]
 	RpcTransactionExecution(String),
-	#[error("MCR Settlement BlockAccepted event notification error: {0}")]
+	#[error("MCR Settlement CommitmentAccepted event notification error: {0}")]
 	EventNotificationError(#[from] alloy_sol_types::Error),
-	#[error("MCR Settlement BlockAccepted event notification stream close")]
+	#[error("MCR Settlement CommitmentAccepted event notification stream close")]
 	EventNotificationStreamClosed,
 	#[error("MCR Settlement Transaction gas estimation failed: {0}")]
 	GasEstimationFailed(String),

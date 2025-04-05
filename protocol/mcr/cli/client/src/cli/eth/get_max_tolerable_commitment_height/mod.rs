@@ -5,18 +5,18 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Parser, Serialize, Deserialize, Debug, Clone)]
 #[clap(help_expected = true)]
-pub struct GetMaxTolerableBlockHeight {
+pub struct GetMaxTolerableCommitmentHeight {
 	/// Config
 	#[clap(flatten)]
 	pub config: Config,
 }
 
-impl GetMaxTolerableBlockHeight {
+impl GetMaxTolerableCommitmentHeight {
 	pub async fn execute(&self) -> Result<(), anyhow::Error> {
 		let config = self.config.clone();
 		let client = config.build().await?;
 
-		let height = client.get_max_tolerable_block_height().await?;
+		let height = client.get_max_tolerable_commitment_height().await?;
 		println!("Max tolerable block height: {}", height);
 
 		Ok(())

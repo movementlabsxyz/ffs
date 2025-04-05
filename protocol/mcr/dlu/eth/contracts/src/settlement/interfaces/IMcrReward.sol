@@ -14,17 +14,17 @@ import {MCRStorage} from "../MCRStorage.sol";
 interface IMcrReward {
     /**
      * @notice Reward attesters for a successful block commitment
-     * @dev Called during _acceptBlockCommitment in the MCR contract
-     * @param blockHeight The height of the accepted block
+     * @dev Called during _acceptCommitment in the MCR contract
+     * @param commitmentHeight The height of the accepted block
      * @param commitment The accepted block commitment hash
-     * @param blockId The unique identifier of the accepted block
+     * @param commitmentId The unique identifier of the accepted block
      * @param attester The attester who submitted the accepted commitment
      * @return success Whether the reward distribution was successful
      */
-    function rewardBlockCommitment(
-        uint256 blockHeight,
+    function rewardCommitment(
+        uint256 commitmentHeight,
         bytes32 commitment,
-        bytes32 blockId,
+        bytes32 commitmentId,
         address attester
     ) external returns (bool success);
 

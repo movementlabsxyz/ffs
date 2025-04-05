@@ -153,10 +153,10 @@ Run up with all parameters passed explicitly as CLI flags. See Orfile documentat
 
   Default value: `1000000000000000000000000`
 * `--custodians <CUSTODIANS>` — The custodians By default this should be an empty vector
-* `--initial-block-height <INITIAL_BLOCK_HEIGHT>` — The initial block height
+* `--initial-commitment-height <INITIAL_COMMITMENT_HEIGHT>` — The initial block height
 
   Default value: `1`
-* `--leading-block-tolerance <LEADING_BLOCK_TOLERANCE>` — The leading block tolerance
+* `--leading-commitment-tolerance <LEADING_COMMITMENT_TOLERANCE>` — The leading block tolerance
 
   Default value: `10`
 * `--epoch-duration <EPOCH_DURATION>` — The epoch duration
@@ -227,10 +227,10 @@ Brings-up an MCR network on a live Ethereum network
 
   Default value: `1000000000000000000000000`
 * `--custodians <CUSTODIANS>` — The custodians By default this should be an empty vector
-* `--initial-block-height <INITIAL_BLOCK_HEIGHT>` — The initial block height
+* `--initial-commitment-height <INITIAL_COMMITMENT_HEIGHT>` — The initial block height
 
   Default value: `1`
-* `--leading-block-tolerance <LEADING_BLOCK_TOLERANCE>` — The leading block tolerance
+* `--leading-commitment-tolerance <LEADING_COMMITMENT_TOLERANCE>` — The leading block tolerance
 
   Default value: `10`
 * `--epoch-duration <EPOCH_DURATION>` — The epoch duration

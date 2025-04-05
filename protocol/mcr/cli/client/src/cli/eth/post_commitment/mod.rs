@@ -1,7 +1,7 @@
 use clap::Parser;
 use mcr_protocol_client_core_util::McrClientOperations;
 use mcr_protocol_client_eth_core::config::Config;
-use mcr_types::block_commitment::{BlockCommitment, Commitment, Id};
+use mcr_types::commitment::{Commitment, CommitmentValue, CommitmentId};
 use serde::{Deserialize, Serialize};
 
 #[derive(Parser, Serialize, Deserialize, Debug, Clone)]
@@ -15,10 +15,10 @@ pub struct PostCommitment {
 	height: u64,
 	/// The id of the commitment block at which to commit
 	#[clap(long)]
-	id: Id,
-	/// The commitment to commit
+	commitment_id: CommitmentId,
+	/// The commitment value to commit
 	#[clap(long)]
-	commitment: Commitment,
+	commitment_value: CommitmentValue,
 }
 
 impl PostCommitment {
@@ -26,10 +26,10 @@ impl PostCommitment {
 		let config = self.config.clone();
 		let client = config.build().await?;
 
-		let block_commitment =
-			BlockCommitment::new(self.height, self.id.clone(), self.commitment.clone());
+		let commitment =
+			Commitment::new(self.height, self.commitment_id.clone(), self.commitment_value.clone());
 
-		client.post_block_commitment(block_commitment).await?;
+		client.post_commitment(commitment).await?;
 
 		Ok(())
 	}

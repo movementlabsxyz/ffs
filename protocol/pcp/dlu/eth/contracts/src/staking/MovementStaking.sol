@@ -213,7 +213,7 @@ contract MovementStaking is
         return block.timestamp / epochDurationByDomain[domain];
     }
 
-    // gets the current epoch up to which superBlocks have been accepted
+    // gets the current epoch up to which commitments have been accepted
     function getAcceptingEpoch(address domain) public view returns (uint256) {
         return currentAcceptingEpochByDomain[domain];
     }

@@ -1,1 +1,1 @@
-pub mod block_commitment;
+pub mod commitment;

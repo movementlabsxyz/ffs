@@ -1,7 +1,7 @@
 use clap::Parser;
 use pcp_protocol_client_core_eth::config::Config;
 use pcp_protocol_client_core_util::PcpClientOperations;
-use pcp_types::block_commitment::{Commitment, Id, SuperBlockCommitment};
+use pcp_types::commitment::{Commitment, CommitmentValue, CommitmentId};
 use secure_signer_loader::identifiers::local::Local;
 use secure_signer_loader::identifiers::SignerIdentifier;
 use sha3::{Digest, Keccak256};
@@ -36,22 +36,22 @@ impl PostCommitment {
 		println!("Config: {:?}", config);
 		let client = config.build().await?;
 		println!("Starting post commitment process...");
-		client.post_block_commitment(commitment).await?;
+		client.post_commitment(commitment).await?;
 		println!("Successfully posted commitment");
 
 		Ok(())
 	}
 
 	/// Create a commitment from the given arguments.
-	fn create_commitment(&self) -> Result<SuperBlockCommitment, anyhow::Error> {
+	fn create_commitment(&self) -> Result<Commitment, anyhow::Error> {
 		if let Some(hex) = &self.args.commitment_hex {
 			// Parse hex commitment
 			let bytes = hex::decode(hex)?;
 			let bytes_len = bytes.len();
-			Ok(SuperBlockCommitment::new(
+			Ok(Commitment::new(
                 0, // height
-                Id::new([0; 32]), // block id
-                Commitment::new(bytes.try_into()
+                CommitmentId::new([0; 32]), // block id
+                CommitmentValue::new(bytes.try_into()
                     .map_err(|_| anyhow::anyhow!(
                         "Invalid commitment length. Expected 32 bytes (64 hex characters), got {} bytes ({} hex characters)",
                         bytes_len,
@@ -63,10 +63,10 @@ impl PostCommitment {
 			let mut hasher = Keccak256::new();
 			hasher.update(preimage.as_bytes());
 			let result = hasher.finalize();
-			Ok(SuperBlockCommitment::new(
+			Ok(Commitment::new(
 				0,                // height
-				Id::new([0; 32]), // block id
-				Commitment::new(result.into()),
+				CommitmentId::new([0; 32]), // block id
+				CommitmentValue::new(result.into()),
 			))
 		} else {
 			unreachable!("clap ensures one option is present")

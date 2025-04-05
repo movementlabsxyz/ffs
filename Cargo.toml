@@ -20,11 +20,11 @@ members = [
   "network/mcr/components/eth/anvil/tests/*",
 
   # pcp
-  "protocol/pcp/util/*",
-  "protocol/pcp/clients/*",
-  "protocol/pcp/dlu/eth/deployer-core",
-  "protocol/pcp/cli/*",
-  "network/pcp/cli/*",
+  # "protocol/pcp/util/*",
+  # "protocol/pcp/clients/*",
+  # "protocol/pcp/dlu/eth/deployer-core",
+  # "protocol/pcp/cli/*",
+  # "network/pcp/cli/*",
 #  "node/pcp/cli/*",
 
   # # fcp

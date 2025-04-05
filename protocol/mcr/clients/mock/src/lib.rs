@@ -1,6 +1,6 @@
 use alloy_primitives::U256;
 use mcr_protocol_client_core_util::{CommitmentStream, McrClientError, McrClientOperations};
-use mcr_types::block_commitment::BlockCommitment;
+use mcr_types::commitment::Commitment;
 use std::collections::BTreeMap;
 use std::sync::{Arc, Mutex};
 use tokio::sync::{mpsc, RwLock};
@@ -9,11 +9,11 @@ use tokio_stream::wrappers::ReceiverStream;
 
 #[derive(Clone)]
 pub struct Client {
-	commitments: Arc<RwLock<BTreeMap<u64, BlockCommitment>>>,
-	stream_sender: mpsc::Sender<Result<BlockCommitment, McrClientError>>,
-	stream_receiver: Arc<Mutex<Option<mpsc::Receiver<Result<BlockCommitment, McrClientError>>>>>,
+	commitments: Arc<RwLock<BTreeMap<u64, Commitment>>>,
+	stream_sender: mpsc::Sender<Result<Commitment, McrClientError>>,
+	stream_receiver: Arc<Mutex<Option<mpsc::Receiver<Result<Commitment, McrClientError>>>>>,
 	pub current_height: Arc<RwLock<u64>>,
-	pub block_lead_tolerance: u64,
+	pub commitment_lead_tolerance: u64,
 	paused_at_height: Arc<RwLock<Option<u64>>>,
 }
 
@@ -25,7 +25,7 @@ impl Client {
 			stream_sender,
 			stream_receiver: Arc::new(Mutex::new(Some(receiver))),
 			current_height: Arc::new(RwLock::new(0)),
-			block_lead_tolerance: 16,
+			commitment_lead_tolerance: 16,
 			paused_at_height: Arc::new(RwLock::new(None)),
 		}
 	}
@@ -34,7 +34,7 @@ impl Client {
 	///
 	/// To have effect, this method needs to be called before a commitment is
 	/// posted for this height with the `McrClientOperations` API.
-	pub async fn override_block_commitment(&self, commitment: BlockCommitment) {
+	pub async fn override_commitment(&self, commitment: Commitment) {
 		let mut commitments = self.commitments.write().await;
 		commitments.insert(commitment.height(), commitment);
 	}
@@ -66,15 +66,15 @@ impl Client {
 }
 
 impl McrClientOperations for Client {
-	async fn post_block_commitment(
+	async fn post_commitment(
 		&self,
-		block_commitment: BlockCommitment,
+		commitment: Commitment,
 	) -> Result<(), McrClientError> {
-		let height = block_commitment.height();
+		let height = commitment.height();
 
 		let settled = {
 			let mut commitments = self.commitments.write().await;
-			commitments.entry(block_commitment.height()).or_insert(block_commitment).clone()
+			commitments.entry(commitment.height()).or_insert(commitment).clone()
 		};
 		{
 			let paused_at_height = self.paused_at_height.read().await;
@@ -99,19 +99,19 @@ impl McrClientOperations for Client {
 		Ok(())
 	}
 
-	async fn post_block_commitment_batch(
+	async fn post_commitment_batch(
 		&self,
-		block_commitments: Vec<BlockCommitment>,
+		commitments: Vec<Commitment>,
 	) -> Result<(), McrClientError> {
-		for block_commitment in block_commitments {
-			self.post_block_commitment(block_commitment).await?;
+		for commitment in commitments {
+			self.post_commitment(commitment).await?;
 		}
 		Ok(())
 	}
 
-	async fn force_block_commitment(
+	async fn force_commitment(
 		&self,
-		_block_commitment: BlockCommitment,
+		_commitment: Commitment,
 	) -> Result<(), McrClientError> {
 		unimplemented!()
 	}
@@ -119,37 +119,37 @@ impl McrClientOperations for Client {
 	async fn get_posted_commitment_at_height(
 		&self,
 		_height: u64,
-	) -> Result<Option<BlockCommitment>, McrClientError> {
+	) -> Result<Option<Commitment>, McrClientError> {
 		unimplemented!();
 	}
 
-	async fn stream_block_commitments(&self) -> Result<CommitmentStream, McrClientError> {
+	async fn stream_commitments(&self) -> Result<CommitmentStream, McrClientError> {
 		let receiver = self
 			.stream_receiver
 			.lock()
 			.unwrap()
 			.take()
-			.expect("stream_block_commitments already called");
+			.expect("stream_commitments already called");
 		Ok(Box::pin(ReceiverStream::new(receiver)))
 	}
 
 	async fn get_accepted_commitment_at_height(
 		&self,
 		height: u64,
-	) -> Result<Option<BlockCommitment>, McrClientError> {
+	) -> Result<Option<Commitment>, McrClientError> {
 		let guard = self.commitments.read().await;
 		Ok(guard.get(&height).cloned())
 	}
 
-	async fn get_max_tolerable_block_height(&self) -> Result<u64, McrClientError> {
-		Ok(*self.current_height.read().await + self.block_lead_tolerance)
+	async fn get_max_tolerable_commitment_height(&self) -> Result<u64, McrClientError> {
+		Ok(*self.current_height.read().await + self.commitment_lead_tolerance)
 	}
 
 	async fn get_validator_commitment_at_height(
 		&self,
 		_height: u64,
 		_attester: String,
-	) -> Result<Option<BlockCommitment>, McrClientError> {
+	) -> Result<Option<Commitment>, McrClientError> {
 		unimplemented!()
 	}
 
@@ -161,7 +161,7 @@ impl McrClientOperations for Client {
 		Ok(0) // Mock implementation returns 0
 	}
 
-	async fn get_leading_block_tolerance(&self) -> Result<u64, McrClientError> {
+	async fn get_leading_commitment_tolerance(&self) -> Result<u64, McrClientError> {
 		Ok(10) // Mock implementation returns default tolerance of 10
 	}
 
@@ -193,33 +193,33 @@ impl McrClientOperations for Client {
 pub mod test {
 
 	use super::*;
-	use mcr_types::block_commitment::Commitment;
+	use mcr_types::commitment::{Commitment, CommitmentValue};
 
 	use futures::future;
 	use tokio::select;
 	use tokio_stream::StreamExt;
 
 	#[tokio::test]
-	async fn test_post_block_commitment() -> Result<(), McrClientError> {
+	async fn test_post_commitment() -> Result<(), McrClientError> {
 		let client = Client::new();
-		let commitment = BlockCommitment::new(1, Default::default(), Commitment::test());
-		client.post_block_commitment(commitment.clone()).await.unwrap();
+		let commitment = Commitment::new(1, Default::default(), CommitmentValue::test());
+		client.post_commitment(commitment.clone()).await.unwrap();
 		let guard = client.commitments.write().await;
 		assert_eq!(guard.get(&1), Some(&commitment));
 
 		assert_eq!(*client.current_height.read().await, 1);
-		assert_eq!(client.get_max_tolerable_block_height().await?, 17);
+		assert_eq!(client.get_max_tolerable_commitment_height().await?, 17);
 
 		Ok(())
 	}
 
 	#[tokio::test]
-	async fn test_post_block_commitment_batch() -> Result<(), McrClientError> {
+	async fn test_post_commitment_batch() -> Result<(), McrClientError> {
 		let client = Client::new();
-		let commitment = BlockCommitment::new(1, Default::default(), Commitment::test());
-		let commitment2 = BlockCommitment::new(2, Default::default(), Commitment::test());
+		let commitment = Commitment::new(1, Default::default(), CommitmentValue::test());
+		let commitment2 = Commitment::new(2, Default::default(), CommitmentValue::test());
 		client
-			.post_block_commitment_batch(vec![commitment.clone(), commitment2.clone()])
+			.post_commitment_batch(vec![commitment.clone(), commitment2.clone()])
 			.await
 			.unwrap();
 		let guard = client.commitments.write().await;
@@ -229,25 +229,25 @@ pub mod test {
 	}
 
 	#[tokio::test]
-	async fn test_stream_block_commitments() -> Result<(), McrClientError> {
+	async fn test_stream_commitments() -> Result<(), McrClientError> {
 		let client = Client::new();
-		let commitment = BlockCommitment::new(1, Default::default(), Commitment::test());
-		client.post_block_commitment(commitment.clone()).await.unwrap();
-		let mut stream = client.stream_block_commitments().await?;
+		let commitment = Commitment::new(1, Default::default(), CommitmentValue::test());
+		client.post_commitment(commitment.clone()).await.unwrap();
+		let mut stream = client.stream_commitments().await?;
 		assert_eq!(stream.next().await.unwrap().unwrap(), commitment);
 		Ok(())
 	}
 
 	#[tokio::test]
-	async fn test_override_block_commitments() -> Result<(), McrClientError> {
+	async fn test_override_commitments() -> Result<(), McrClientError> {
 		let client = Client::new();
-		let commitment = BlockCommitment::new(2, Default::default(), Commitment::test());
-		client.override_block_commitment(commitment.clone()).await;
+		let commitment = Commitment::new(2, Default::default(), CommitmentValue::test());
+		client.override_commitment(commitment.clone()).await;
 		client
-			.post_block_commitment(BlockCommitment::new(2, Default::default(), Commitment::test()))
+			.post_commitment(Commitment::new(2, Default::default(), CommitmentValue::test()))
 			.await
 			.unwrap();
-		let mut stream = client.stream_block_commitments().await?;
+		let mut stream = client.stream_commitments().await?;
 		assert_eq!(stream.next().await.expect("stream has ended")?, commitment);
 		Ok(())
 	}
@@ -255,12 +255,12 @@ pub mod test {
 	#[tokio::test]
 	async fn test_pause() -> Result<(), McrClientError> {
 		let client = Client::new();
-		let commitment = BlockCommitment::new(1, Default::default(), Commitment::test());
+		let commitment = Commitment::new(1, Default::default(), CommitmentValue::test());
 		client.pause_after(1).await;
-		client.post_block_commitment(commitment.clone()).await?;
-		let commitment2 = BlockCommitment::new(2, Default::default(), Commitment::test());
-		client.post_block_commitment(commitment2).await?;
-		let mut stream = client.stream_block_commitments().await?;
+		client.post_commitment(commitment.clone()).await?;
+		let commitment2 = Commitment::new(2, Default::default(), CommitmentValue::test());
+		client.post_commitment(commitment2).await?;
+		let mut stream = client.stream_commitments().await?;
 		assert_eq!(stream.next().await.expect("stream has ended")?, commitment);
 		select! {
 			biased;
@@ -273,12 +273,12 @@ pub mod test {
 	#[tokio::test]
 	async fn test_resume() -> Result<(), McrClientError> {
 		let client = Client::new();
-		let commitment = BlockCommitment::new(1, Default::default(), Commitment::test());
+		let commitment = Commitment::new(1, Default::default(), CommitmentValue::test());
 		client.pause_after(1).await;
-		client.post_block_commitment(commitment.clone()).await?;
-		let commitment2 = BlockCommitment::new(2, Default::default(), Commitment::test());
-		client.post_block_commitment(commitment2.clone()).await?;
-		let mut stream = client.stream_block_commitments().await?;
+		client.post_commitment(commitment.clone()).await?;
+		let commitment2 = Commitment::new(2, Default::default(), CommitmentValue::test());
+		client.post_commitment(commitment2.clone()).await?;
+		let mut stream = client.stream_commitments().await?;
 		assert_eq!(stream.next().await.expect("stream has ended")?, commitment);
 		client.resume().await;
 		assert_eq!(stream.next().await.expect("stream has ended")?, commitment2);

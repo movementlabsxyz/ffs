@@ -1,18 +1,18 @@
 use clap::Parser;
 use mcr_protocol_client_eth_core::config::Config;
 use mcr_protocol_client_core_util::McrClientOperations;
-// use mcr_types::block_commitment::BlockCommitment;
+// use mcr_types::commitment::Commitment;
 use secure_signer_loader::identifiers::{SignerIdentifier, local::Local};
 
 #[derive(Parser)]
 #[clap(help_expected = true)]
-pub struct GetBlockCommitment {
+pub struct GetCommitment {
     #[clap(flatten)]
-    pub args: GetBlockCommitmentArgs,
+    pub args: GetCommitmentArgs,
 }
 
 #[derive(Parser)]
-pub struct GetBlockCommitmentArgs {
+pub struct GetCommitmentArgs {
     /// Block height to check commitment for
     #[clap(long)]
     height: u64,
@@ -34,7 +34,7 @@ pub struct GetBlockCommitmentArgs {
     private_key: Option<String>,
 }
 
-impl GetBlockCommitment {
+impl GetCommitment {
     pub async fn execute(&self) -> Result<(), anyhow::Error> {
         // Use provided key or fallback to dummy key
         let private_key = self.args.private_key

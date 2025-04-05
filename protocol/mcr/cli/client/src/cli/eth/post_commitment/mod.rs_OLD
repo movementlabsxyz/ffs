@@ -2,7 +2,7 @@ use clap::Parser;
 use secure_signer_loader::identifiers::{SignerIdentifier, local::Local};
 use mcr_protocol_client_eth_core::config::Config;
 use mcr_protocol_client_core_util::McrClientOperations;
-use mcr_types::block_commitment::{BlockCommitment, Commitment, Id};
+use mcr_types::commitment::{Commitment, Commitment, Id};
 
 #[derive(Parser)]
 #[clap(help_expected = true)]
@@ -50,11 +50,11 @@ impl PostCommitment {
         hasher.update(&[0x01]); // Add prefix to make it different from commitment
         hasher.update(&commitment_bytes);
         hasher.update(&self.args.height.to_be_bytes());
-        let block_id = hasher.finalize().into();
+        let commitment_id = hasher.finalize().into();
         
-        let commitment = BlockCommitment::new(
+        let commitment = Commitment::new(
             self.args.height,  // Use height from args
-            Id::new(block_id),
+            Id::new(commitment_id),
             Commitment::new(commitment_bytes),
         );
         
@@ -85,7 +85,7 @@ impl PostCommitment {
         println!("Posting commitment to MCR contract...");
         // Check block height tolerance
         let last_accepted = client.get_last_accepted_block_height().await?;
-        let tolerance = client.get_leading_block_tolerance().await?;
+        let tolerance = client.get_leading_commitment_tolerance().await?;
 
         // Check if we already have a commitment at this height
         let existing = client.get_posted_commitment_at_height(self.args.height).await?;
@@ -93,7 +93,7 @@ impl PostCommitment {
             return Ok(());
         }
 
-        client.post_block_commitment(commitment).await?;
+        client.post_commitment(commitment).await?;
         
         Ok(())
     }

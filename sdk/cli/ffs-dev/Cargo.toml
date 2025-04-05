@@ -22,8 +22,8 @@ mcr-network = { workspace = true }
 mcr-protocol = { workspace = true }
 
 # pcp
-pcp-network = { workspace = true }
-pcp-protocol = { workspace = true }
+# pcp-network = { workspace = true }
+# pcp-protocol = { workspace = true }
 
 [lints]
 workspace = true
