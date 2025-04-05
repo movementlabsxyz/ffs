@@ -6,7 +6,7 @@ use clap::Subcommand;
 #[clap(rename_all = "kebab-case")]
 #[clap(after_help = concat!("KEEP THIS UNTIL PRODUCTION-READY : Defined in: ", file!()))]
 pub enum Live {
-	/// ???
+	/// Brings-up a PCP network on a live Ethereum network.
 	Up(up::Up),
 }
 

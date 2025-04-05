@@ -15,6 +15,8 @@ clap = { workspace = true}
 dotenv = { workspace = true }
 anyhow = { workspace = true }
 mcr-protocol-client = { workspace = true }
+mcr-protocol-deployer = { workspace = true }
+clap-markdown-ext = { workspace = true }
 
 [lints]
 workspace = true

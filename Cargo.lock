@@ -3645,6 +3645,7 @@ version = "0.0.1"
 dependencies = [
  "anyhow",
  "clap",
+ "clap-markdown-ext",
  "dotenv",
  "mcr-network-client",
  "mcr-network-coordinator",
@@ -3680,6 +3681,7 @@ version = "0.0.1"
 dependencies = [
  "anyhow",
  "clap",
+ "clap-markdown-ext",
  "dotenv",
  "serde",
  "tokio",
@@ -3691,6 +3693,7 @@ version = "0.0.1"
 dependencies = [
  "anyhow",
  "clap",
+ "clap-markdown-ext",
  "dotenv",
  "jsonlvar",
  "kestrel",
@@ -3729,8 +3732,10 @@ version = "0.0.1"
 dependencies = [
  "anyhow",
  "clap",
+ "clap-markdown-ext",
  "dotenv",
  "mcr-protocol-client",
+ "mcr-protocol-deployer",
  "serde",
  "tokio",
 ]
@@ -3741,6 +3746,7 @@ version = "0.0.1"
 dependencies = [
  "anyhow",
  "clap",
+ "clap-markdown-ext",
  "dotenv",
  "hex",
  "mcr-protocol-client-core-util",
