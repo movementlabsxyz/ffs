@@ -1,4 +1,5 @@
 use clap::{Parser, Subcommand};
+use clap_markdown_ext::Markdown;
 
 /// The `mcr-network-client` CLI.
 #[derive(Parser)]
@@ -13,13 +14,16 @@ pub struct McrNetworkClient {
 #[clap(rename_all = "kebab-case")]
 pub enum McrNetworkClientSubcommand {
 	/// ???
-	Run,
+	#[clap(subcommand)]
+	Markdown(Markdown),
 }
 
 /// Implement the `From` trait for `McrNetworkClient` to convert it into a `McrNetworkClientSubcommand`.
 impl From<McrNetworkClient> for McrNetworkClientSubcommand {
 	fn from(client: McrNetworkClient) -> Self {
-		client.command.unwrap_or(McrNetworkClientSubcommand::Run)
+		client
+			.command
+			.unwrap_or(McrNetworkClientSubcommand::Markdown(Markdown::default()))
 	}
 }
 
@@ -36,8 +40,8 @@ impl McrNetworkClient {
 impl McrNetworkClientSubcommand {
 	pub async fn execute(&self) -> Result<(), anyhow::Error> {
 		match self {
-			McrNetworkClientSubcommand::Run => {
-				println!("mcr-network-client is under development. Please check back later.");
+			McrNetworkClientSubcommand::Markdown(markdown) => {
+				markdown.execute::<McrNetworkClient>().await?;
 			}
 		}
 		Ok(())

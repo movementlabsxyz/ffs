@@ -1,0 +1,412 @@
+# Command-Line Help for `mcr-network`
+
+This document contains the help content for the `mcr-network` command-line program.
+
+**Command Overview:**
+
+* [`mcr-network`↴](#mcr-network)
+* [`mcr-network markdown`↴](#mcr-network-markdown)
+* [`mcr-network markdown generate`↴](#mcr-network-markdown-generate)
+* [`mcr-network markdown file`↴](#mcr-network-markdown-file)
+* [`mcr-network markdown print`↴](#mcr-network-markdown-print)
+* [`mcr-network markdown workspace`↴](#mcr-network-markdown-workspace)
+* [`mcr-network client`↴](#mcr-network-client)
+* [`mcr-network client markdown`↴](#mcr-network-client-markdown)
+* [`mcr-network client markdown generate`↴](#mcr-network-client-markdown-generate)
+* [`mcr-network client markdown file`↴](#mcr-network-client-markdown-file)
+* [`mcr-network client markdown print`↴](#mcr-network-client-markdown-print)
+* [`mcr-network client markdown workspace`↴](#mcr-network-client-markdown-workspace)
+* [`mcr-network coordinator`↴](#mcr-network-coordinator)
+* [`mcr-network coordinator markdown`↴](#mcr-network-coordinator-markdown)
+* [`mcr-network coordinator markdown generate`↴](#mcr-network-coordinator-markdown-generate)
+* [`mcr-network coordinator markdown file`↴](#mcr-network-coordinator-markdown-file)
+* [`mcr-network coordinator markdown print`↴](#mcr-network-coordinator-markdown-print)
+* [`mcr-network coordinator markdown workspace`↴](#mcr-network-coordinator-markdown-workspace)
+* [`mcr-network coordinator eth`↴](#mcr-network-coordinator-eth)
+* [`mcr-network coordinator eth anvil`↴](#mcr-network-coordinator-eth-anvil)
+* [`mcr-network coordinator eth anvil up`↴](#mcr-network-coordinator-eth-anvil-up)
+* [`mcr-network coordinator eth anvil up where`↴](#mcr-network-coordinator-eth-anvil-up-where)
+* [`mcr-network coordinator eth anvil up using`↴](#mcr-network-coordinator-eth-anvil-up-using)
+* [`mcr-network coordinator eth live`↴](#mcr-network-coordinator-eth-live)
+* [`mcr-network coordinator eth live up`↴](#mcr-network-coordinator-eth-live-up)
+
+## `mcr-network`
+
+The `mcr-network` CLI
+
+**Usage:** `mcr-network [COMMAND]`
+
+KEEP THIS UNTIL PRODUCTION-READY : Defined in: network/mcr/cli/network/src/cli/mod.rs
+
+###### **Subcommands:**
+
+* `markdown` — ???
+* `client` — ???
+* `coordinator` — ???
+
+
+
+## `mcr-network markdown`
+
+???
+
+**Usage:** `mcr-network markdown <COMMAND>`
+
+###### **Subcommands:**
+
+* `generate` — Generate and update the documentation
+* `file` — Print the documentation to a file (providing the file path)
+* `print` — Print the documentation in the shell
+* `workspace` — Generate the documentation for the workspace
+
+
+
+## `mcr-network markdown generate`
+
+Generate and update the documentation
+
+**Usage:** `mcr-network markdown generate [OPTIONS]`
+
+###### **Options:**
+
+* `--file <FILE>` — Override the default docs location
+
+
+
+## `mcr-network markdown file`
+
+Print the documentation to a file (providing the file path)
+
+**Usage:** `mcr-network markdown file --file <FILE>`
+
+###### **Options:**
+
+* `--file <FILE>` — the file to write out to
+
+
+
+## `mcr-network markdown print`
+
+Print the documentation in the shell
+
+**Usage:** `mcr-network markdown print`
+
+
+
+## `mcr-network markdown workspace`
+
+Generate the documentation for the workspace
+
+**Usage:** `mcr-network markdown workspace --relative-path <RELATIVE_PATH>`
+
+###### **Options:**
+
+* `--relative-path <RELATIVE_PATH>` — The file to write out to, relative to the crate root
+
+
+
+## `mcr-network client`
+
+???
+
+**Usage:** `mcr-network client <COMMAND>`
+
+###### **Subcommands:**
+
+* `markdown` — ???
+
+
+
+## `mcr-network client markdown`
+
+???
+
+**Usage:** `mcr-network client markdown <COMMAND>`
+
+###### **Subcommands:**
+
+* `generate` — Generate and update the documentation
+* `file` — Print the documentation to a file (providing the file path)
+* `print` — Print the documentation in the shell
+* `workspace` — Generate the documentation for the workspace
+
+
+
+## `mcr-network client markdown generate`
+
+Generate and update the documentation
+
+**Usage:** `mcr-network client markdown generate [OPTIONS]`
+
+###### **Options:**
+
+* `--file <FILE>` — Override the default docs location
+
+
+
+## `mcr-network client markdown file`
+
+Print the documentation to a file (providing the file path)
+
+**Usage:** `mcr-network client markdown file --file <FILE>`
+
+###### **Options:**
+
+* `--file <FILE>` — the file to write out to
+
+
+
+## `mcr-network client markdown print`
+
+Print the documentation in the shell
+
+**Usage:** `mcr-network client markdown print`
+
+
+
+## `mcr-network client markdown workspace`
+
+Generate the documentation for the workspace
+
+**Usage:** `mcr-network client markdown workspace --relative-path <RELATIVE_PATH>`
+
+###### **Options:**
+
+* `--relative-path <RELATIVE_PATH>` — The file to write out to, relative to the crate root
+
+
+
+## `mcr-network coordinator`
+
+???
+
+**Usage:** `mcr-network coordinator <COMMAND>`
+
+###### **Subcommands:**
+
+* `markdown` — ???
+* `eth` — ???
+
+
+
+## `mcr-network coordinator markdown`
+
+???
+
+**Usage:** `mcr-network coordinator markdown <COMMAND>`
+
+###### **Subcommands:**
+
+* `generate` — Generate and update the documentation
+* `file` — Print the documentation to a file (providing the file path)
+* `print` — Print the documentation in the shell
+* `workspace` — Generate the documentation for the workspace
+
+
+
+## `mcr-network coordinator markdown generate`
+
+Generate and update the documentation
+
+**Usage:** `mcr-network coordinator markdown generate [OPTIONS]`
+
+###### **Options:**
+
+* `--file <FILE>` — Override the default docs location
+
+
+
+## `mcr-network coordinator markdown file`
+
+Print the documentation to a file (providing the file path)
+
+**Usage:** `mcr-network coordinator markdown file --file <FILE>`
+
+###### **Options:**
+
+* `--file <FILE>` — the file to write out to
+
+
+
+## `mcr-network coordinator markdown print`
+
+Print the documentation in the shell
+
+**Usage:** `mcr-network coordinator markdown print`
+
+
+
+## `mcr-network coordinator markdown workspace`
+
+Generate the documentation for the workspace
+
+**Usage:** `mcr-network coordinator markdown workspace --relative-path <RELATIVE_PATH>`
+
+###### **Options:**
+
+* `--relative-path <RELATIVE_PATH>` — The file to write out to, relative to the crate root
+
+
+
+## `mcr-network coordinator eth`
+
+???
+
+**Usage:** `mcr-network coordinator eth <COMMAND>`
+
+KEEP THIS UNTIL PRODUCTION-READY : Defined in: network/mcr/cli/coordinator/src/cli/eth/mod.rs
+
+###### **Subcommands:**
+
+* `anvil` — ???
+* `live` — ???
+
+
+
+## `mcr-network coordinator eth anvil`
+
+???
+
+**Usage:** `mcr-network coordinator eth anvil <COMMAND>`
+
+KEEP THIS UNTIL PRODUCTION-READY : Defined in: network/mcr/cli/coordinator/src/cli/eth/anvil/mod.rs
+
+###### **Subcommands:**
+
+* `up` — ???
+
+
+
+## `mcr-network coordinator eth anvil up`
+
+???
+
+**Usage:** `mcr-network coordinator eth anvil up <COMMAND>`
+
+###### **Subcommands:**
+
+* `where` — Run up with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+* `using` — Run up with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+
+
+## `mcr-network coordinator eth anvil up where`
+
+Run up with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `mcr-network coordinator eth anvil up where [OPTIONS] --signer-identifier <SIGNER_IDENTIFIER> --fork-url <FORK_URL> --contract-admin <CONTRACT_ADMIN>`
+
+###### **Options:**
+
+* `--signer-identifier <SIGNER_IDENTIFIER>` — The signer identifier
+* `--fork-url <FORK_URL>` — The fork url for deployment
+* `--contract-admin <CONTRACT_ADMIN>` — Admin address for deployed contracts
+* `--token-name <TOKEN_NAME>` — The token name
+
+  Default value: `Move Token`
+* `--token-symbol <TOKEN_SYMBOL>` — The token symbol
+
+  Default value: `MOVE`
+* `--initial-token-mint <INITIAL_TOKEN_MINT>` — The initial token mint
+
+  Default value: `1000000000000000000000000`
+* `--custodians <CUSTODIANS>` — The custodians By default this should be an empty vector
+* `--initial-block-height <INITIAL_BLOCK_HEIGHT>` — The initial block height
+
+  Default value: `1`
+* `--leading-block-tolerance <LEADING_BLOCK_TOLERANCE>` — The leading block tolerance
+
+  Default value: `10`
+* `--epoch-duration <EPOCH_DURATION>` — The epoch duration
+
+  Default value: `1000000`
+* `--reward-contract <REWARD_CONTRACT>` — The reward contract
+* `--proxy-admin <PROXY_ADMIN>` — The existing proxy admin
+* `--token-proxy <TOKEN_PROXY>` — The existing move token proxy
+* `--staking-proxy <STAKING_PROXY>` — The existing staking proxy
+* `--mcr-proxy <MCR_PROXY>` — The existing MCR proxy
+* `--reward-proxy <REWARD_PROXY>` — The existing ARO proxy
+* `--jsonl-prefix <JSONL_PREFIX>` — The JSONL prefix to give to the output from the deployer
+* `--write-artifacts-path <WRITE_ARTIFACTS_PATH>` — Path to the configuration file
+* `--write-anvil-data-path <WRITE_ANVIL_DATA_PATH>` — Path to write the anvil data as json
+
+
+
+## `mcr-network coordinator eth anvil up using`
+
+Run up with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `mcr-network coordinator eth anvil up using [OPTIONS] [EXTRA_ARGS]...`
+
+###### **Arguments:**
+
+* `<EXTRA_ARGS>` — Extra arguments to be passed to the CLI
+
+###### **Options:**
+
+* `--config-path <CONFIG_PATH>`
+* `--write-artifacts-path <WRITE_ARTIFACTS_PATH>` — Path to the configuration file
+* `--write-anvil-data-path <WRITE_ANVIL_DATA_PATH>` — Path to write the anvil data as json
+
+
+
+## `mcr-network coordinator eth live`
+
+???
+
+**Usage:** `mcr-network coordinator eth live <COMMAND>`
+
+KEEP THIS UNTIL PRODUCTION-READY : Defined in: network/mcr/cli/coordinator/src/cli/eth/live/mod.rs
+
+###### **Subcommands:**
+
+* `up` — ???
+
+
+
+## `mcr-network coordinator eth live up`
+
+???
+
+**Usage:** `mcr-network coordinator eth live up [OPTIONS] --signer-identifier <SIGNER_IDENTIFIER> --fork-url <FORK_URL> --contract-admin <CONTRACT_ADMIN>`
+
+###### **Options:**
+
+* `--signer-identifier <SIGNER_IDENTIFIER>` — The signer identifier
+* `--fork-url <FORK_URL>` — The fork url for deployment
+* `--contract-admin <CONTRACT_ADMIN>` — Admin address for deployed contracts
+* `--token-name <TOKEN_NAME>` — The token name
+
+  Default value: `Move Token`
+* `--token-symbol <TOKEN_SYMBOL>` — The token symbol
+
+  Default value: `MOVE`
+* `--initial-token-mint <INITIAL_TOKEN_MINT>` — The initial token mint
+
+  Default value: `1000000000000000000000000`
+* `--custodians <CUSTODIANS>` — The custodians By default this should be an empty vector
+* `--initial-block-height <INITIAL_BLOCK_HEIGHT>` — The initial block height
+
+  Default value: `1`
+* `--leading-block-tolerance <LEADING_BLOCK_TOLERANCE>` — The leading block tolerance
+
+  Default value: `10`
+* `--epoch-duration <EPOCH_DURATION>` — The epoch duration
+
+  Default value: `1000000`
+* `--reward-contract <REWARD_CONTRACT>` — The reward contract
+* `--proxy-admin <PROXY_ADMIN>` — The existing proxy admin
+* `--token-proxy <TOKEN_PROXY>` — The existing move token proxy
+* `--staking-proxy <STAKING_PROXY>` — The existing staking proxy
+* `--mcr-proxy <MCR_PROXY>` — The existing MCR proxy
+* `--reward-proxy <REWARD_PROXY>` — The existing ARO proxy
+* `--jsonl-prefix <JSONL_PREFIX>` — The JSONL prefix to give to the output from the deployer
+
+
+
+<hr/>
+
+<small><i>
+    This document was generated automatically by
+    <a href="https://crates.io/crates/clap-markdown"><code>clap-markdown</code></a>.
+</i></small>

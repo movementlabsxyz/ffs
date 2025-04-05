@@ -1,8 +1,6 @@
 pub mod eth;
 use clap::{Parser, Subcommand};
-// use mcr_protocol_client_eth_core::config::Config;
-// use mcr_protocol_client_core_util::McrClientOperations;
-// use mcr_types::block_commitment::BlockCommitment;
+use clap_markdown_ext::Markdown;
 
 /// The `mcr-protocol-client` CLI.
 #[derive(Parser)]
@@ -18,7 +16,8 @@ pub struct McrProtocolClient {
 #[clap(after_help = concat!("KEEP THIS UNTIL PRODUCTION-READY : Defined in: ", file!()))]
 pub enum McrProtocolClientSubcommand {
 	/// ???
-	Run,
+	#[clap(subcommand)]
+	Markdown(Markdown),
 	/// Ethereum-specific commands of the protocol, such as staking and committing
 	#[clap(subcommand)]
 	Eth(eth::Eth),
@@ -27,7 +26,9 @@ pub enum McrProtocolClientSubcommand {
 /// Implement the `From` trait for `McrProtocolClient` to convert it into a `McrProtocolClientSubcommand`.
 impl From<McrProtocolClient> for McrProtocolClientSubcommand {
 	fn from(client: McrProtocolClient) -> Self {
-		client.command.unwrap_or(McrProtocolClientSubcommand::Run)
+		client
+			.command
+			.unwrap_or(McrProtocolClientSubcommand::Markdown(Markdown::default()))
 	}
 }
 
@@ -44,8 +45,8 @@ impl McrProtocolClient {
 impl McrProtocolClientSubcommand {
 	pub async fn execute(&self) -> Result<(), anyhow::Error> {
 		match self {
-			McrProtocolClientSubcommand::Run => {
-				println!("mcr-protocol-client is under development. Please check back later.");
+			McrProtocolClientSubcommand::Markdown(markdown) => {
+				markdown.execute::<McrProtocolClient>().await?;
 			}
 			McrProtocolClientSubcommand::Eth(eth) => eth.execute().await?,
 		}

@@ -12,11 +12,23 @@ This document contains the help content for the `ffs-dev` command-line program.
 * [`ffs-dev markdown workspace`↴](#ffs-dev-markdown-workspace)
 * [`ffs-dev mcr`↴](#ffs-dev-mcr)
 * [`ffs-dev mcr network`↴](#ffs-dev-mcr-network)
-* [`ffs-dev mcr network run`↴](#ffs-dev-mcr-network-run)
+* [`ffs-dev mcr network markdown`↴](#ffs-dev-mcr-network-markdown)
+* [`ffs-dev mcr network markdown generate`↴](#ffs-dev-mcr-network-markdown-generate)
+* [`ffs-dev mcr network markdown file`↴](#ffs-dev-mcr-network-markdown-file)
+* [`ffs-dev mcr network markdown print`↴](#ffs-dev-mcr-network-markdown-print)
+* [`ffs-dev mcr network markdown workspace`↴](#ffs-dev-mcr-network-markdown-workspace)
 * [`ffs-dev mcr network client`↴](#ffs-dev-mcr-network-client)
-* [`ffs-dev mcr network client run`↴](#ffs-dev-mcr-network-client-run)
+* [`ffs-dev mcr network client markdown`↴](#ffs-dev-mcr-network-client-markdown)
+* [`ffs-dev mcr network client markdown generate`↴](#ffs-dev-mcr-network-client-markdown-generate)
+* [`ffs-dev mcr network client markdown file`↴](#ffs-dev-mcr-network-client-markdown-file)
+* [`ffs-dev mcr network client markdown print`↴](#ffs-dev-mcr-network-client-markdown-print)
+* [`ffs-dev mcr network client markdown workspace`↴](#ffs-dev-mcr-network-client-markdown-workspace)
 * [`ffs-dev mcr network coordinator`↴](#ffs-dev-mcr-network-coordinator)
-* [`ffs-dev mcr network coordinator run`↴](#ffs-dev-mcr-network-coordinator-run)
+* [`ffs-dev mcr network coordinator markdown`↴](#ffs-dev-mcr-network-coordinator-markdown)
+* [`ffs-dev mcr network coordinator markdown generate`↴](#ffs-dev-mcr-network-coordinator-markdown-generate)
+* [`ffs-dev mcr network coordinator markdown file`↴](#ffs-dev-mcr-network-coordinator-markdown-file)
+* [`ffs-dev mcr network coordinator markdown print`↴](#ffs-dev-mcr-network-coordinator-markdown-print)
+* [`ffs-dev mcr network coordinator markdown workspace`↴](#ffs-dev-mcr-network-coordinator-markdown-workspace)
 * [`ffs-dev mcr network coordinator eth`↴](#ffs-dev-mcr-network-coordinator-eth)
 * [`ffs-dev mcr network coordinator eth anvil`↴](#ffs-dev-mcr-network-coordinator-eth-anvil)
 * [`ffs-dev mcr network coordinator eth anvil up`↴](#ffs-dev-mcr-network-coordinator-eth-anvil-up)
@@ -25,9 +37,17 @@ This document contains the help content for the `ffs-dev` command-line program.
 * [`ffs-dev mcr network coordinator eth live`↴](#ffs-dev-mcr-network-coordinator-eth-live)
 * [`ffs-dev mcr network coordinator eth live up`↴](#ffs-dev-mcr-network-coordinator-eth-live-up)
 * [`ffs-dev mcr protocol`↴](#ffs-dev-mcr-protocol)
-* [`ffs-dev mcr protocol run`↴](#ffs-dev-mcr-protocol-run)
+* [`ffs-dev mcr protocol markdown`↴](#ffs-dev-mcr-protocol-markdown)
+* [`ffs-dev mcr protocol markdown generate`↴](#ffs-dev-mcr-protocol-markdown-generate)
+* [`ffs-dev mcr protocol markdown file`↴](#ffs-dev-mcr-protocol-markdown-file)
+* [`ffs-dev mcr protocol markdown print`↴](#ffs-dev-mcr-protocol-markdown-print)
+* [`ffs-dev mcr protocol markdown workspace`↴](#ffs-dev-mcr-protocol-markdown-workspace)
 * [`ffs-dev mcr protocol client`↴](#ffs-dev-mcr-protocol-client)
-* [`ffs-dev mcr protocol client run`↴](#ffs-dev-mcr-protocol-client-run)
+* [`ffs-dev mcr protocol client markdown`↴](#ffs-dev-mcr-protocol-client-markdown)
+* [`ffs-dev mcr protocol client markdown generate`↴](#ffs-dev-mcr-protocol-client-markdown-generate)
+* [`ffs-dev mcr protocol client markdown file`↴](#ffs-dev-mcr-protocol-client-markdown-file)
+* [`ffs-dev mcr protocol client markdown print`↴](#ffs-dev-mcr-protocol-client-markdown-print)
+* [`ffs-dev mcr protocol client markdown workspace`↴](#ffs-dev-mcr-protocol-client-markdown-workspace)
 * [`ffs-dev mcr protocol client eth`↴](#ffs-dev-mcr-protocol-client-eth)
 * [`ffs-dev mcr protocol client eth post-admin-commitment`↴](#ffs-dev-mcr-protocol-client-eth-post-admin-commitment)
 * [`ffs-dev mcr protocol client eth post-commitment`↴](#ffs-dev-mcr-protocol-client-eth-post-commitment)
@@ -163,17 +183,68 @@ KEEP THIS UNTIL PRODUCTION-READY : Defined in: network/mcr/cli/network/src/cli/m
 
 ###### **Subcommands:**
 
-* `run` — ???
+* `markdown` — ???
 * `client` — ???
 * `coordinator` — ???
 
 
 
-## `ffs-dev mcr network run`
+## `ffs-dev mcr network markdown`
 
 ???
 
-**Usage:** `ffs-dev mcr network run`
+**Usage:** `ffs-dev mcr network markdown <COMMAND>`
+
+###### **Subcommands:**
+
+* `generate` — Generate and update the documentation
+* `file` — Print the documentation to a file (providing the file path)
+* `print` — Print the documentation in the shell
+* `workspace` — Generate the documentation for the workspace
+
+
+
+## `ffs-dev mcr network markdown generate`
+
+Generate and update the documentation
+
+**Usage:** `ffs-dev mcr network markdown generate [OPTIONS]`
+
+###### **Options:**
+
+* `--file <FILE>` — Override the default docs location
+
+
+
+## `ffs-dev mcr network markdown file`
+
+Print the documentation to a file (providing the file path)
+
+**Usage:** `ffs-dev mcr network markdown file --file <FILE>`
+
+###### **Options:**
+
+* `--file <FILE>` — the file to write out to
+
+
+
+## `ffs-dev mcr network markdown print`
+
+Print the documentation in the shell
+
+**Usage:** `ffs-dev mcr network markdown print`
+
+
+
+## `ffs-dev mcr network markdown workspace`
+
+Generate the documentation for the workspace
+
+**Usage:** `ffs-dev mcr network markdown workspace --relative-path <RELATIVE_PATH>`
+
+###### **Options:**
+
+* `--relative-path <RELATIVE_PATH>` — The file to write out to, relative to the crate root
 
 
 
@@ -185,15 +256,66 @@ KEEP THIS UNTIL PRODUCTION-READY : Defined in: network/mcr/cli/network/src/cli/m
 
 ###### **Subcommands:**
 
-* `run` — ???
+* `markdown` — ???
 
 
 
-## `ffs-dev mcr network client run`
+## `ffs-dev mcr network client markdown`
 
 ???
 
-**Usage:** `ffs-dev mcr network client run`
+**Usage:** `ffs-dev mcr network client markdown <COMMAND>`
+
+###### **Subcommands:**
+
+* `generate` — Generate and update the documentation
+* `file` — Print the documentation to a file (providing the file path)
+* `print` — Print the documentation in the shell
+* `workspace` — Generate the documentation for the workspace
+
+
+
+## `ffs-dev mcr network client markdown generate`
+
+Generate and update the documentation
+
+**Usage:** `ffs-dev mcr network client markdown generate [OPTIONS]`
+
+###### **Options:**
+
+* `--file <FILE>` — Override the default docs location
+
+
+
+## `ffs-dev mcr network client markdown file`
+
+Print the documentation to a file (providing the file path)
+
+**Usage:** `ffs-dev mcr network client markdown file --file <FILE>`
+
+###### **Options:**
+
+* `--file <FILE>` — the file to write out to
+
+
+
+## `ffs-dev mcr network client markdown print`
+
+Print the documentation in the shell
+
+**Usage:** `ffs-dev mcr network client markdown print`
+
+
+
+## `ffs-dev mcr network client markdown workspace`
+
+Generate the documentation for the workspace
+
+**Usage:** `ffs-dev mcr network client markdown workspace --relative-path <RELATIVE_PATH>`
+
+###### **Options:**
+
+* `--relative-path <RELATIVE_PATH>` — The file to write out to, relative to the crate root
 
 
 
@@ -203,20 +325,69 @@ KEEP THIS UNTIL PRODUCTION-READY : Defined in: network/mcr/cli/network/src/cli/m
 
 **Usage:** `ffs-dev mcr network coordinator <COMMAND>`
 
-KEEP THIS UNTIL PRODUCTION-READY : Defined in: network/mcr/cli/coordinator/src/cli/mod.rs
-
 ###### **Subcommands:**
 
-* `run` — ???
+* `markdown` — ???
 * `eth` — ???
 
 
 
-## `ffs-dev mcr network coordinator run`
+## `ffs-dev mcr network coordinator markdown`
 
 ???
 
-**Usage:** `ffs-dev mcr network coordinator run`
+**Usage:** `ffs-dev mcr network coordinator markdown <COMMAND>`
+
+###### **Subcommands:**
+
+* `generate` — Generate and update the documentation
+* `file` — Print the documentation to a file (providing the file path)
+* `print` — Print the documentation in the shell
+* `workspace` — Generate the documentation for the workspace
+
+
+
+## `ffs-dev mcr network coordinator markdown generate`
+
+Generate and update the documentation
+
+**Usage:** `ffs-dev mcr network coordinator markdown generate [OPTIONS]`
+
+###### **Options:**
+
+* `--file <FILE>` — Override the default docs location
+
+
+
+## `ffs-dev mcr network coordinator markdown file`
+
+Print the documentation to a file (providing the file path)
+
+**Usage:** `ffs-dev mcr network coordinator markdown file --file <FILE>`
+
+###### **Options:**
+
+* `--file <FILE>` — the file to write out to
+
+
+
+## `ffs-dev mcr network coordinator markdown print`
+
+Print the documentation in the shell
+
+**Usage:** `ffs-dev mcr network coordinator markdown print`
+
+
+
+## `ffs-dev mcr network coordinator markdown workspace`
+
+Generate the documentation for the workspace
+
+**Usage:** `ffs-dev mcr network coordinator markdown workspace --relative-path <RELATIVE_PATH>`
+
+###### **Options:**
+
+* `--relative-path <RELATIVE_PATH>` — The file to write out to, relative to the crate root
 
 
 
@@ -384,16 +555,65 @@ The subcommands of the `mcr-protocol` CLI 2
 
 ###### **Subcommands:**
 
-* `run` — ???
+* `markdown` — 
 * `client` — ???
 
 
 
-## `ffs-dev mcr protocol run`
+## `ffs-dev mcr protocol markdown`
 
-???
+**Usage:** `ffs-dev mcr protocol markdown <COMMAND>`
 
-**Usage:** `ffs-dev mcr protocol run`
+###### **Subcommands:**
+
+* `generate` — Generate and update the documentation
+* `file` — Print the documentation to a file (providing the file path)
+* `print` — Print the documentation in the shell
+* `workspace` — Generate the documentation for the workspace
+
+
+
+## `ffs-dev mcr protocol markdown generate`
+
+Generate and update the documentation
+
+**Usage:** `ffs-dev mcr protocol markdown generate [OPTIONS]`
+
+###### **Options:**
+
+* `--file <FILE>` — Override the default docs location
+
+
+
+## `ffs-dev mcr protocol markdown file`
+
+Print the documentation to a file (providing the file path)
+
+**Usage:** `ffs-dev mcr protocol markdown file --file <FILE>`
+
+###### **Options:**
+
+* `--file <FILE>` — the file to write out to
+
+
+
+## `ffs-dev mcr protocol markdown print`
+
+Print the documentation in the shell
+
+**Usage:** `ffs-dev mcr protocol markdown print`
+
+
+
+## `ffs-dev mcr protocol markdown workspace`
+
+Generate the documentation for the workspace
+
+**Usage:** `ffs-dev mcr protocol markdown workspace --relative-path <RELATIVE_PATH>`
+
+###### **Options:**
+
+* `--relative-path <RELATIVE_PATH>` — The file to write out to, relative to the crate root
 
 
 
@@ -407,16 +627,67 @@ KEEP THIS UNTIL PRODUCTION-READY : Defined in: protocol/mcr/cli/client/src/cli/m
 
 ###### **Subcommands:**
 
-* `run` — ???
+* `markdown` — ???
 * `eth` — Ethereum-specific commands of the protocol, such as staking and committing
 
 
 
-## `ffs-dev mcr protocol client run`
+## `ffs-dev mcr protocol client markdown`
 
 ???
 
-**Usage:** `ffs-dev mcr protocol client run`
+**Usage:** `ffs-dev mcr protocol client markdown <COMMAND>`
+
+###### **Subcommands:**
+
+* `generate` — Generate and update the documentation
+* `file` — Print the documentation to a file (providing the file path)
+* `print` — Print the documentation in the shell
+* `workspace` — Generate the documentation for the workspace
+
+
+
+## `ffs-dev mcr protocol client markdown generate`
+
+Generate and update the documentation
+
+**Usage:** `ffs-dev mcr protocol client markdown generate [OPTIONS]`
+
+###### **Options:**
+
+* `--file <FILE>` — Override the default docs location
+
+
+
+## `ffs-dev mcr protocol client markdown file`
+
+Print the documentation to a file (providing the file path)
+
+**Usage:** `ffs-dev mcr protocol client markdown file --file <FILE>`
+
+###### **Options:**
+
+* `--file <FILE>` — the file to write out to
+
+
+
+## `ffs-dev mcr protocol client markdown print`
+
+Print the documentation in the shell
+
+**Usage:** `ffs-dev mcr protocol client markdown print`
+
+
+
+## `ffs-dev mcr protocol client markdown workspace`
+
+Generate the documentation for the workspace
+
+**Usage:** `ffs-dev mcr protocol client markdown workspace --relative-path <RELATIVE_PATH>`
+
+###### **Options:**
+
+* `--relative-path <RELATIVE_PATH>` — The file to write out to, relative to the crate root
 
 
 

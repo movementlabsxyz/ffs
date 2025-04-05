@@ -1,6 +1,7 @@
 pub mod eth;
 
 use clap::{Parser, Subcommand};
+use clap_markdown_ext::Markdown;
 
 /// The `mcr-network-coordinator` CLI.
 #[derive(Parser)]
@@ -13,10 +14,10 @@ pub struct McrNetworkCoordinator {
 /// The subcommands of the `mcr-network-coordinator` CLI.
 #[derive(Subcommand)]
 #[clap(rename_all = "kebab-case")]
-#[clap(after_help = concat!("KEEP THIS UNTIL PRODUCTION-READY : Defined in: ", file!()))]
 pub enum McrNetworkCoordinatorSubcommand {
 	/// ???
-	Run,
+	#[clap(subcommand)]
+	Markdown(Markdown),
 	/// ???
 	#[clap(subcommand)]
 	Eth(eth::Eth),
@@ -25,7 +26,9 @@ pub enum McrNetworkCoordinatorSubcommand {
 /// Implement the `From` trait for `McrNetworkCoordinator` to convert it into a `McrNetworkCoordinatorSubcommand`.
 impl From<McrNetworkCoordinator> for McrNetworkCoordinatorSubcommand {
 	fn from(coordinator: McrNetworkCoordinator) -> Self {
-		coordinator.command.unwrap_or(McrNetworkCoordinatorSubcommand::Run)
+		coordinator
+			.command
+			.unwrap_or(McrNetworkCoordinatorSubcommand::Markdown(Markdown::default()))
 	}
 }
 
@@ -42,8 +45,8 @@ impl McrNetworkCoordinator {
 impl McrNetworkCoordinatorSubcommand {
 	pub async fn execute(&self) -> Result<(), anyhow::Error> {
 		match self {
-			McrNetworkCoordinatorSubcommand::Run => {
-				println!("mcr-network-coordinator is under development. Please check back later.");
+			McrNetworkCoordinatorSubcommand::Markdown(markdown) => {
+				markdown.execute::<McrNetworkCoordinator>().await?;
 			}
 			McrNetworkCoordinatorSubcommand::Eth(eth) => eth.execute().await?,
 		}
