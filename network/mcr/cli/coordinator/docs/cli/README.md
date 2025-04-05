@@ -26,14 +26,14 @@ The `mcr-network-coordinator` CLI
 
 ###### **Subcommands:**
 
-* `markdown` — ???
-* `eth` — ???
+* `markdown` — Generate markdown for the CLI
+* `eth` — Ethereum-specific commands of the network coordinator, i.e., for bringing-up an Ethereum-based MCR network
 
 
 
 ## `mcr-network-coordinator markdown`
 
-???
+Generate markdown for the CLI
 
 **Usage:** `mcr-network-coordinator markdown <COMMAND>`
 
@@ -92,7 +92,7 @@ Generate the documentation for the workspace
 
 ## `mcr-network-coordinator eth`
 
-???
+Ethereum-specific commands of the network coordinator, i.e., for bringing-up an Ethereum-based MCR network
 
 **Usage:** `mcr-network-coordinator eth <COMMAND>`
 
@@ -100,14 +100,14 @@ KEEP THIS UNTIL PRODUCTION-READY : Defined in: network/mcr/cli/coordinator/src/c
 
 ###### **Subcommands:**
 
-* `anvil` — ???
-* `live` — ???
+* `anvil` — Anvil-specific commands of the network coordinator, i.e., for bringing-up an MCR network on Anvil
+* `live` — Live-Ethereum-based commands of the network coordinator, i.e., for bringing-up an MCR network on a live Ethereum network
 
 
 
 ## `mcr-network-coordinator eth anvil`
 
-???
+Anvil-specific commands of the network coordinator, i.e., for bringing-up an MCR network on Anvil
 
 **Usage:** `mcr-network-coordinator eth anvil <COMMAND>`
 
@@ -115,13 +115,13 @@ KEEP THIS UNTIL PRODUCTION-READY : Defined in: network/mcr/cli/coordinator/src/c
 
 ###### **Subcommands:**
 
-* `up` — ???
+* `up` — Brings-up an MCR network on Anvil
 
 
 
 ## `mcr-network-coordinator eth anvil up`
 
-???
+Brings-up an MCR network on Anvil
 
 **Usage:** `mcr-network-coordinator eth anvil up <COMMAND>`
 
@@ -194,7 +194,7 @@ Run up with parameters from environment variables, config files, and CLI flags. 
 
 ## `mcr-network-coordinator eth live`
 
-???
+Live-Ethereum-based commands of the network coordinator, i.e., for bringing-up an MCR network on a live Ethereum network
 
 **Usage:** `mcr-network-coordinator eth live <COMMAND>`
 
@@ -202,13 +202,13 @@ KEEP THIS UNTIL PRODUCTION-READY : Defined in: network/mcr/cli/coordinator/src/c
 
 ###### **Subcommands:**
 
-* `up` — ???
+* `up` — Brings-up an MCR network on a live Ethereum network
 
 
 
 ## `mcr-network-coordinator eth live up`
 
-???
+Brings-up an MCR network on a live Ethereum network
 
 **Usage:** `mcr-network-coordinator eth live up [OPTIONS] --signer-identifier <SIGNER_IDENTIFIER> --fork-url <FORK_URL> --contract-admin <CONTRACT_ADMIN>`
 

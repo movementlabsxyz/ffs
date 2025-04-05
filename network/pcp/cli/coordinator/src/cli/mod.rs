@@ -15,9 +15,9 @@ pub struct PcpNetworkCoordinator {
 #[clap(rename_all = "kebab-case")]
 #[clap(after_help = concat!("KEEP THIS UNTIL PRODUCTION-READY : Defined in: ", file!()))]
 pub enum PcpNetworkCoordinatorSubcommand {
-	/// ???
+	/// A placeholder for future commands.
 	Run,
-	/// ???
+	/// Ethereum-specific commands of the network coordinator, i.e., for bringing-up an Ethereum-based PCP network.
 	#[clap(subcommand)]
 	Eth(eth::Eth),
 }

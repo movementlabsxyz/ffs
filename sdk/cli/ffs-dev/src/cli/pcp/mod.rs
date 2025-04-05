@@ -6,10 +6,10 @@ use pcp_protocol::cli::PcpProtocolSubcommand;
 #[clap(rename_all = "kebab-case")]
 #[clap(after_help = concat!("KEEP THIS UNTIL PRODUCTION-READY : Defined in: ", file!()))]
 pub enum Pcp {
-	/// ???
+	/// Subcommands for the PCP network.
 	#[clap(subcommand)]
 	Network(PcpNetworkSubcommand),
-	/// ???
+	/// Subcommands for the PCP protocol.
 	#[clap(subcommand)]
 	Protocol(PcpProtocolSubcommand),
 }

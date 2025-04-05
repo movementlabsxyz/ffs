@@ -15,10 +15,10 @@ pub struct McrNetworkCoordinator {
 #[derive(Subcommand)]
 #[clap(rename_all = "kebab-case")]
 pub enum McrNetworkCoordinatorSubcommand {
-	/// ???
+	/// Generate markdown for the CLI.
 	#[clap(subcommand)]
 	Markdown(Markdown),
-	/// ???
+	/// Ethereum-specific commands of the network coordinator, i.e., for bringing-up an Ethereum-based MCR network.
 	#[clap(subcommand)]
 	Eth(eth::Eth),
 }

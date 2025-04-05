@@ -3738,6 +3738,7 @@ dependencies = [
  "clap-markdown-ext",
  "dotenv",
  "mcr-protocol-client",
+ "mcr-protocol-deployer",
  "serde",
  "tokio",
 ]

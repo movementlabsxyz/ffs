@@ -12,7 +12,7 @@ pub struct PcpNetworkClient {
 #[derive(Subcommand)]
 #[clap(rename_all = "kebab-case")]
 pub enum PcpNetworkClientSubcommand {
-	/// ???
+	/// A placeholder for future commands.
 	Run,
 }
 

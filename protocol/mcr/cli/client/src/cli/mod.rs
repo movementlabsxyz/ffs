@@ -15,7 +15,7 @@ pub struct McrProtocolClient {
 #[clap(rename_all = "kebab-case")]
 #[clap(after_help = concat!("KEEP THIS UNTIL PRODUCTION-READY : Defined in: ", file!()))]
 pub enum McrProtocolClientSubcommand {
-	/// ???
+	/// Generates markdown for the CLI.
 	#[clap(subcommand)]
 	Markdown(Markdown),
 	/// Ethereum-specific commands of the protocol, such as staking and committing

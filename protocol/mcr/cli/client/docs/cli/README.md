@@ -34,14 +34,14 @@ KEEP THIS UNTIL PRODUCTION-READY : Defined in: protocol/mcr/cli/client/src/cli/m
 
 ###### **Subcommands:**
 
-* `markdown` — ???
+* `markdown` — Generates markdown for the CLI
 * `eth` — Ethereum-specific commands of the protocol, such as staking and committing
 
 
 
 ## `mcr-protocol-client markdown`
 
-???
+Generates markdown for the CLI
 
 **Usage:** `mcr-protocol-client markdown <COMMAND>`
 

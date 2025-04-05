@@ -16,13 +16,13 @@ pub struct McrNetwork {
 #[clap(rename_all = "kebab-case")]
 #[clap(after_help = concat!("KEEP THIS UNTIL PRODUCTION-READY : Defined in: ", file!()))]
 pub enum McrNetworkSubcommand {
-	/// ???
+	/// Generates markdown for the CLI.
 	#[clap(subcommand)]
 	Markdown(Markdown),
-	/// ???
+	/// The client-specific commands of the MCR network.
 	#[clap(subcommand)]
 	Client(McrNetworkClientSubcommand),
-	/// ???
+	/// The coordinator-specific commands of the MCR network.
 	#[clap(subcommand)]
 	Coordinator(McrNetworkCoordinatorSubcommand),
 }

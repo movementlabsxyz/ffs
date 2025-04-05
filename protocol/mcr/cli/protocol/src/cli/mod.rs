@@ -1,6 +1,7 @@
 use clap::{Parser, Subcommand};
 use clap_markdown_ext::Markdown;
 use mcr_protocol_client::cli::McrProtocolClientSubcommand;
+use mcr_protocol_deployer::cli::McrProtocolDeployerSubcommand;
 /// The `mcr-protocol` CLI.
 #[derive(Parser)]
 #[clap(rename_all = "kebab-case")]
@@ -12,11 +13,15 @@ pub struct McrProtocol {
 #[derive(Subcommand)]
 #[clap(rename_all = "kebab-case")]
 pub enum McrProtocolSubcommand {
+	/// Generates markdown for the CLI.
 	#[clap(subcommand)]
 	Markdown(Markdown),
-	/// ???
+	/// The client-specific commands of the MCR protocol.
 	#[clap(subcommand)]
 	Client(McrProtocolClientSubcommand),
+	/// The deployer-specific commands of the MCR protocol.
+	#[clap(subcommand)]
+	Deployer(McrProtocolDeployerSubcommand),
 }
 
 /// Implement the `From` trait for `McrProtocol` to convert it into a `McrProtocolSubcommand`.
@@ -46,6 +51,9 @@ impl McrProtocolSubcommand {
 			}
 			McrProtocolSubcommand::Client(client) => {
 				client.execute().await?;
+			}
+			McrProtocolSubcommand::Deployer(deployer) => {
+				deployer.execute().await?;
 			}
 		}
 		Ok(())

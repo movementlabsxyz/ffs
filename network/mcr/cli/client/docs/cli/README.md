@@ -19,13 +19,13 @@ The `mcr-network-client` CLI
 
 ###### **Subcommands:**
 
-* `markdown` — ???
+* `markdown` — Generates markdown for the CLI
 
 
 
 ## `mcr-network-client markdown`
 
-???
+Generates markdown for the CLI
 
 **Usage:** `mcr-network-client markdown <COMMAND>`
 

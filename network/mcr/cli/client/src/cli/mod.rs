@@ -13,7 +13,7 @@ pub struct McrNetworkClient {
 #[derive(Subcommand)]
 #[clap(rename_all = "kebab-case")]
 pub enum McrNetworkClientSubcommand {
-	/// ???
+	/// Generates markdown for the CLI.
 	#[clap(subcommand)]
 	Markdown(Markdown),
 }

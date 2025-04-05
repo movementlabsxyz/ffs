@@ -61,6 +61,17 @@ This document contains the help content for the `ffs-dev` command-line program.
 * [`ffs-dev mcr protocol client eth get-stake`↴](#ffs-dev-mcr-protocol-client-eth-get-stake)
 * [`ffs-dev mcr protocol client eth unstake`↴](#ffs-dev-mcr-protocol-client-eth-unstake)
 * [`ffs-dev mcr protocol client eth grant-trusted-attester`↴](#ffs-dev-mcr-protocol-client-eth-grant-trusted-attester)
+* [`ffs-dev mcr protocol deployer`↴](#ffs-dev-mcr-protocol-deployer)
+* [`ffs-dev mcr protocol deployer markdown`↴](#ffs-dev-mcr-protocol-deployer-markdown)
+* [`ffs-dev mcr protocol deployer markdown generate`↴](#ffs-dev-mcr-protocol-deployer-markdown-generate)
+* [`ffs-dev mcr protocol deployer markdown file`↴](#ffs-dev-mcr-protocol-deployer-markdown-file)
+* [`ffs-dev mcr protocol deployer markdown print`↴](#ffs-dev-mcr-protocol-deployer-markdown-print)
+* [`ffs-dev mcr protocol deployer markdown workspace`↴](#ffs-dev-mcr-protocol-deployer-markdown-workspace)
+* [`ffs-dev mcr protocol deployer eth`↴](#ffs-dev-mcr-protocol-deployer-eth)
+* [`ffs-dev mcr protocol deployer eth apply`↴](#ffs-dev-mcr-protocol-deployer-eth-apply)
+* [`ffs-dev mcr protocol deployer eth apply where`↴](#ffs-dev-mcr-protocol-deployer-eth-apply-where)
+* [`ffs-dev mcr protocol deployer eth apply using`↴](#ffs-dev-mcr-protocol-deployer-eth-apply-using)
+* [`ffs-dev mcr protocol deployer eth destroy`↴](#ffs-dev-mcr-protocol-deployer-eth-destroy)
 * [`ffs-dev pcp`↴](#ffs-dev-pcp)
 * [`ffs-dev pcp network`↴](#ffs-dev-pcp-network)
 * [`ffs-dev pcp network run`↴](#ffs-dev-pcp-network-run)
@@ -168,14 +179,14 @@ KEEP THIS UNTIL PRODUCTION-READY : Defined in: sdk/cli/ffs-dev/src/cli/mcr/mod.r
 
 ###### **Subcommands:**
 
-* `network` — ???
-* `protocol` — The subcommands of the `mcr-protocol` CLI 2
+* `network` — Subcommands for bringing-up an MCR network
+* `protocol` — Subcommands for the MCR protocol
 
 
 
 ## `ffs-dev mcr network`
 
-???
+Subcommands for bringing-up an MCR network
 
 **Usage:** `ffs-dev mcr network <COMMAND>`
 
@@ -183,15 +194,15 @@ KEEP THIS UNTIL PRODUCTION-READY : Defined in: network/mcr/cli/network/src/cli/m
 
 ###### **Subcommands:**
 
-* `markdown` — ???
-* `client` — ???
-* `coordinator` — ???
+* `markdown` — Generates markdown for the CLI
+* `client` — The client-specific commands of the MCR network
+* `coordinator` — The coordinator-specific commands of the MCR network
 
 
 
 ## `ffs-dev mcr network markdown`
 
-???
+Generates markdown for the CLI
 
 **Usage:** `ffs-dev mcr network markdown <COMMAND>`
 
@@ -250,19 +261,19 @@ Generate the documentation for the workspace
 
 ## `ffs-dev mcr network client`
 
-???
+The client-specific commands of the MCR network
 
 **Usage:** `ffs-dev mcr network client <COMMAND>`
 
 ###### **Subcommands:**
 
-* `markdown` — ???
+* `markdown` — Generates markdown for the CLI
 
 
 
 ## `ffs-dev mcr network client markdown`
 
-???
+Generates markdown for the CLI
 
 **Usage:** `ffs-dev mcr network client markdown <COMMAND>`
 
@@ -321,20 +332,20 @@ Generate the documentation for the workspace
 
 ## `ffs-dev mcr network coordinator`
 
-???
+The coordinator-specific commands of the MCR network
 
 **Usage:** `ffs-dev mcr network coordinator <COMMAND>`
 
 ###### **Subcommands:**
 
-* `markdown` — ???
-* `eth` — ???
+* `markdown` — Generate markdown for the CLI
+* `eth` — Ethereum-specific commands of the network coordinator, i.e., for bringing-up an Ethereum-based MCR network
 
 
 
 ## `ffs-dev mcr network coordinator markdown`
 
-???
+Generate markdown for the CLI
 
 **Usage:** `ffs-dev mcr network coordinator markdown <COMMAND>`
 
@@ -393,7 +404,7 @@ Generate the documentation for the workspace
 
 ## `ffs-dev mcr network coordinator eth`
 
-???
+Ethereum-specific commands of the network coordinator, i.e., for bringing-up an Ethereum-based MCR network
 
 **Usage:** `ffs-dev mcr network coordinator eth <COMMAND>`
 
@@ -401,14 +412,14 @@ KEEP THIS UNTIL PRODUCTION-READY : Defined in: network/mcr/cli/coordinator/src/c
 
 ###### **Subcommands:**
 
-* `anvil` — ???
-* `live` — ???
+* `anvil` — Anvil-specific commands of the network coordinator, i.e., for bringing-up an MCR network on Anvil
+* `live` — Live-Ethereum-based commands of the network coordinator, i.e., for bringing-up an MCR network on a live Ethereum network
 
 
 
 ## `ffs-dev mcr network coordinator eth anvil`
 
-???
+Anvil-specific commands of the network coordinator, i.e., for bringing-up an MCR network on Anvil
 
 **Usage:** `ffs-dev mcr network coordinator eth anvil <COMMAND>`
 
@@ -416,13 +427,13 @@ KEEP THIS UNTIL PRODUCTION-READY : Defined in: network/mcr/cli/coordinator/src/c
 
 ###### **Subcommands:**
 
-* `up` — ???
+* `up` — Brings-up an MCR network on Anvil
 
 
 
 ## `ffs-dev mcr network coordinator eth anvil up`
 
-???
+Brings-up an MCR network on Anvil
 
 **Usage:** `ffs-dev mcr network coordinator eth anvil up <COMMAND>`
 
@@ -495,7 +506,7 @@ Run up with parameters from environment variables, config files, and CLI flags. 
 
 ## `ffs-dev mcr network coordinator eth live`
 
-???
+Live-Ethereum-based commands of the network coordinator, i.e., for bringing-up an MCR network on a live Ethereum network
 
 **Usage:** `ffs-dev mcr network coordinator eth live <COMMAND>`
 
@@ -503,13 +514,13 @@ KEEP THIS UNTIL PRODUCTION-READY : Defined in: network/mcr/cli/coordinator/src/c
 
 ###### **Subcommands:**
 
-* `up` — ???
+* `up` — Brings-up an MCR network on a live Ethereum network
 
 
 
 ## `ffs-dev mcr network coordinator eth live up`
 
-???
+Brings-up an MCR network on a live Ethereum network
 
 **Usage:** `ffs-dev mcr network coordinator eth live up [OPTIONS] --signer-identifier <SIGNER_IDENTIFIER> --fork-url <FORK_URL> --contract-admin <CONTRACT_ADMIN>`
 
@@ -549,18 +560,21 @@ KEEP THIS UNTIL PRODUCTION-READY : Defined in: network/mcr/cli/coordinator/src/c
 
 ## `ffs-dev mcr protocol`
 
-The subcommands of the `mcr-protocol` CLI 2
+Subcommands for the MCR protocol
 
 **Usage:** `ffs-dev mcr protocol <COMMAND>`
 
 ###### **Subcommands:**
 
-* `markdown` — 
-* `client` — ???
+* `markdown` — Generates markdown for the CLI
+* `client` — The client-specific commands of the MCR protocol
+* `deployer` — The deployer-specific commands of the MCR protocol
 
 
 
 ## `ffs-dev mcr protocol markdown`
+
+Generates markdown for the CLI
 
 **Usage:** `ffs-dev mcr protocol markdown <COMMAND>`
 
@@ -619,7 +633,7 @@ Generate the documentation for the workspace
 
 ## `ffs-dev mcr protocol client`
 
-???
+The client-specific commands of the MCR protocol
 
 **Usage:** `ffs-dev mcr protocol client <COMMAND>`
 
@@ -627,14 +641,14 @@ KEEP THIS UNTIL PRODUCTION-READY : Defined in: protocol/mcr/cli/client/src/cli/m
 
 ###### **Subcommands:**
 
-* `markdown` — ???
+* `markdown` — Generates markdown for the CLI
 * `eth` — Ethereum-specific commands of the protocol, such as staking and committing
 
 
 
 ## `ffs-dev mcr protocol client markdown`
 
-???
+Generates markdown for the CLI
 
 **Usage:** `ffs-dev mcr protocol client markdown <COMMAND>`
 
@@ -988,6 +1002,174 @@ Grant TRUSTED_ATTESTER role to an attester
 
 
 
+## `ffs-dev mcr protocol deployer`
+
+The deployer-specific commands of the MCR protocol
+
+**Usage:** `ffs-dev mcr protocol deployer <COMMAND>`
+
+###### **Subcommands:**
+
+* `markdown` — 
+* `eth` — 
+
+
+
+## `ffs-dev mcr protocol deployer markdown`
+
+**Usage:** `ffs-dev mcr protocol deployer markdown <COMMAND>`
+
+###### **Subcommands:**
+
+* `generate` — Generate and update the documentation
+* `file` — Print the documentation to a file (providing the file path)
+* `print` — Print the documentation in the shell
+* `workspace` — Generate the documentation for the workspace
+
+
+
+## `ffs-dev mcr protocol deployer markdown generate`
+
+Generate and update the documentation
+
+**Usage:** `ffs-dev mcr protocol deployer markdown generate [OPTIONS]`
+
+###### **Options:**
+
+* `--file <FILE>` — Override the default docs location
+
+
+
+## `ffs-dev mcr protocol deployer markdown file`
+
+Print the documentation to a file (providing the file path)
+
+**Usage:** `ffs-dev mcr protocol deployer markdown file --file <FILE>`
+
+###### **Options:**
+
+* `--file <FILE>` — the file to write out to
+
+
+
+## `ffs-dev mcr protocol deployer markdown print`
+
+Print the documentation in the shell
+
+**Usage:** `ffs-dev mcr protocol deployer markdown print`
+
+
+
+## `ffs-dev mcr protocol deployer markdown workspace`
+
+Generate the documentation for the workspace
+
+**Usage:** `ffs-dev mcr protocol deployer markdown workspace --relative-path <RELATIVE_PATH>`
+
+###### **Options:**
+
+* `--relative-path <RELATIVE_PATH>` — The file to write out to, relative to the crate root
+
+
+
+## `ffs-dev mcr protocol deployer eth`
+
+**Usage:** `ffs-dev mcr protocol deployer eth <COMMAND>`
+
+###### **Subcommands:**
+
+* `apply` — 
+* `destroy` — 
+
+
+
+## `ffs-dev mcr protocol deployer eth apply`
+
+**Usage:** `ffs-dev mcr protocol deployer eth apply <COMMAND>`
+
+###### **Subcommands:**
+
+* `where` — Run config with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+* `using` — Run config with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+
+
+## `ffs-dev mcr protocol deployer eth apply where`
+
+Run config with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `ffs-dev mcr protocol deployer eth apply where [OPTIONS] --signer-identifier <SIGNER_IDENTIFIER> --fork-url <FORK_URL> --contract-admin <CONTRACT_ADMIN>`
+
+###### **Options:**
+
+* `--signer-identifier <SIGNER_IDENTIFIER>` — The signer identifier
+* `--fork-url <FORK_URL>` — The fork url for deployment
+* `--contract-admin <CONTRACT_ADMIN>` — Admin address for deployed contracts
+* `--token-name <TOKEN_NAME>` — The token name
+
+  Default value: `Move Token`
+* `--token-symbol <TOKEN_SYMBOL>` — The token symbol
+
+  Default value: `MOVE`
+* `--initial-token-mint <INITIAL_TOKEN_MINT>` — The initial token mint
+
+  Default value: `1000000000000000000000000`
+* `--custodians <CUSTODIANS>` — The custodians By default this should be an empty vector
+* `--initial-block-height <INITIAL_BLOCK_HEIGHT>` — The initial block height
+
+  Default value: `1`
+* `--leading-block-tolerance <LEADING_BLOCK_TOLERANCE>` — The leading block tolerance
+
+  Default value: `10`
+* `--epoch-duration <EPOCH_DURATION>` — The epoch duration
+
+  Default value: `1000000`
+* `--reward-contract <REWARD_CONTRACT>` — The reward contract
+* `--proxy-admin <PROXY_ADMIN>` — The existing proxy admin
+* `--token-proxy <TOKEN_PROXY>` — The existing move token proxy
+* `--staking-proxy <STAKING_PROXY>` — The existing staking proxy
+* `--mcr-proxy <MCR_PROXY>` — The existing MCR proxy
+* `--reward-proxy <REWARD_PROXY>` — The existing ARO proxy
+* `--jsonl-prefix <JSONL_PREFIX>` — The JSONL prefix to give to the output from the deployer
+
+
+
+## `ffs-dev mcr protocol deployer eth apply using`
+
+Run config with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `ffs-dev mcr protocol deployer eth apply using [OPTIONS] --signer-identifier <SIGNER_IDENTIFIER> --fork-url <FORK_URL> [EXTRA_ARGS]...`
+
+###### **Arguments:**
+
+* `<EXTRA_ARGS>` — Extra arguments to be passed to the CLI
+
+###### **Options:**
+
+* `--script-args-path <SCRIPT_ARGS_PATH>`
+* `--signer-identifier <SIGNER_IDENTIFIER>` — The signer identifier
+* `--fork-url <FORK_URL>` — The fork url for deployment
+* `--jsonl-prefix <JSONL_PREFIX>` — The JSONL prefix to give to the output from the deployer
+
+
+
+## `ffs-dev mcr protocol deployer eth destroy`
+
+**Usage:** `ffs-dev mcr protocol deployer eth destroy [OPTIONS] --signer-identifier <SIGNER_IDENTIFIER> --fork-url <FORK_URL> --proxy-admin <PROXY_ADMIN> --token-proxy <TOKEN_PROXY> --staking-proxy <STAKING_PROXY> --mcr-proxy <MCR_PROXY> --reward-proxy <REWARD_PROXY>`
+
+###### **Options:**
+
+* `--signer-identifier <SIGNER_IDENTIFIER>` — The signer identifier
+* `--fork-url <FORK_URL>` — The fork url for deployment
+* `--proxy-admin <PROXY_ADMIN>` — The proxy admin
+* `--token-proxy <TOKEN_PROXY>` — The move token proxy
+* `--staking-proxy <STAKING_PROXY>` — The staking proxy
+* `--mcr-proxy <MCR_PROXY>` — The mcr proxy
+* `--reward-proxy <REWARD_PROXY>` — The reward proxy
+* `--jsonl-prefix <JSONL_PREFIX>` — The JSONL prefix to give to the output from the deployer
+
+
+
 ## `ffs-dev pcp`
 
 Manage PCP
@@ -998,14 +1180,14 @@ KEEP THIS UNTIL PRODUCTION-READY : Defined in: sdk/cli/ffs-dev/src/cli/pcp/mod.r
 
 ###### **Subcommands:**
 
-* `network` — ???
-* `protocol` — ???
+* `network` — Subcommands for the PCP network
+* `protocol` — Subcommands for the PCP protocol
 
 
 
 ## `ffs-dev pcp network`
 
-???
+Subcommands for the PCP network
 
 **Usage:** `ffs-dev pcp network <COMMAND>`
 
@@ -1013,15 +1195,15 @@ KEEP THIS UNTIL PRODUCTION-READY : Defined in: network/pcp/cli/network/src/cli/m
 
 ###### **Subcommands:**
 
-* `run` — ???
-* `client` — ???
-* `coordinator` — ???
+* `run` — A placeholder for future commands
+* `client` — The client-specific commands of the PCP network
+* `coordinator` — The coordinator-specific commands of the PCP network
 
 
 
 ## `ffs-dev pcp network run`
 
-???
+A placeholder for future commands
 
 **Usage:** `ffs-dev pcp network run`
 
@@ -1029,19 +1211,19 @@ KEEP THIS UNTIL PRODUCTION-READY : Defined in: network/pcp/cli/network/src/cli/m
 
 ## `ffs-dev pcp network client`
 
-???
+The client-specific commands of the PCP network
 
 **Usage:** `ffs-dev pcp network client <COMMAND>`
 
 ###### **Subcommands:**
 
-* `run` — ???
+* `run` — A placeholder for future commands
 
 
 
 ## `ffs-dev pcp network client run`
 
-???
+A placeholder for future commands
 
 **Usage:** `ffs-dev pcp network client run`
 
@@ -1049,7 +1231,7 @@ KEEP THIS UNTIL PRODUCTION-READY : Defined in: network/pcp/cli/network/src/cli/m
 
 ## `ffs-dev pcp network coordinator`
 
-???
+The coordinator-specific commands of the PCP network
 
 **Usage:** `ffs-dev pcp network coordinator <COMMAND>`
 
@@ -1057,14 +1239,14 @@ KEEP THIS UNTIL PRODUCTION-READY : Defined in: network/pcp/cli/coordinator/src/c
 
 ###### **Subcommands:**
 
-* `run` — ???
-* `eth` — ???
+* `run` — A placeholder for future commands
+* `eth` — Ethereum-specific commands of the network coordinator, i.e., for bringing-up an Ethereum-based PCP network
 
 
 
 ## `ffs-dev pcp network coordinator run`
 
-???
+A placeholder for future commands
 
 **Usage:** `ffs-dev pcp network coordinator run`
 
@@ -1072,7 +1254,7 @@ KEEP THIS UNTIL PRODUCTION-READY : Defined in: network/pcp/cli/coordinator/src/c
 
 ## `ffs-dev pcp network coordinator eth`
 
-???
+Ethereum-specific commands of the network coordinator, i.e., for bringing-up an Ethereum-based PCP network
 
 **Usage:** `ffs-dev pcp network coordinator eth <COMMAND>`
 
@@ -1080,14 +1262,14 @@ KEEP THIS UNTIL PRODUCTION-READY : Defined in: network/pcp/cli/coordinator/src/c
 
 ###### **Subcommands:**
 
-* `anvil` — ???
-* `live` — ???
+* `anvil` — Anvil-specific commands of the network coordinator, i.e., for bringing-up a PCP network on Anvil
+* `live` — Live-Ethereum-based commands of the network coordinator, i.e., for bringing-up a PCP network on a live Ethereum network
 
 
 
 ## `ffs-dev pcp network coordinator eth anvil`
 
-???
+Anvil-specific commands of the network coordinator, i.e., for bringing-up a PCP network on Anvil
 
 **Usage:** `ffs-dev pcp network coordinator eth anvil <COMMAND>`
 
@@ -1095,13 +1277,13 @@ KEEP THIS UNTIL PRODUCTION-READY : Defined in: network/pcp/cli/coordinator/src/c
 
 ###### **Subcommands:**
 
-* `up` — ???
+* `up` — Brings-up a PCP network on Anvil
 
 
 
 ## `ffs-dev pcp network coordinator eth anvil up`
 
-???
+Brings-up a PCP network on Anvil
 
 **Usage:** `ffs-dev pcp network coordinator eth anvil up <COMMAND>`
 
@@ -1208,7 +1390,7 @@ Run up with parameters from environment variables, config files, and CLI flags. 
 
 ## `ffs-dev pcp network coordinator eth live`
 
-???
+Live-Ethereum-based commands of the network coordinator, i.e., for bringing-up a PCP network on a live Ethereum network
 
 **Usage:** `ffs-dev pcp network coordinator eth live <COMMAND>`
 
@@ -1216,13 +1398,13 @@ KEEP THIS UNTIL PRODUCTION-READY : Defined in: network/pcp/cli/coordinator/src/c
 
 ###### **Subcommands:**
 
-* `up` — ???
+* `up` — Brings-up a PCP network on a live Ethereum network
 
 
 
 ## `ffs-dev pcp network coordinator eth live up`
 
-???
+Brings-up a PCP network on a live Ethereum network
 
 **Usage:** `ffs-dev pcp network coordinator eth live up [OPTIONS] --signer-identifier <SIGNER_IDENTIFIER> --fork-url <FORK_URL> --contract-admin <CONTRACT_ADMIN>`
 
@@ -1265,7 +1447,7 @@ KEEP THIS UNTIL PRODUCTION-READY : Defined in: network/pcp/cli/coordinator/src/c
 
 ## `ffs-dev pcp protocol`
 
-???
+Subcommands for the PCP protocol
 
 **Usage:** `ffs-dev pcp protocol <COMMAND>`
 

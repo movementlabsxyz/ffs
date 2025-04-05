@@ -15,12 +15,12 @@ pub struct PcpNetwork {
 #[clap(rename_all = "kebab-case")]
 #[clap(after_help = concat!("KEEP THIS UNTIL PRODUCTION-READY : Defined in: ", file!()))]
 pub enum PcpNetworkSubcommand {
-	/// ???
+	/// A placeholder for future commands.
 	Run,
-	/// ???
+	/// The client-specific commands of the PCP network.
 	#[clap(subcommand)]
 	Client(PcpNetworkClientSubcommand),
-	/// ???
+	/// The coordinator-specific commands of the PCP network.
 	#[clap(subcommand)]
 	Coordinator(PcpNetworkCoordinatorSubcommand),
 }
