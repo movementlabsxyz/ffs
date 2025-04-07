@@ -22,3 +22,7 @@ Those looking to add to the suggest new `features` and `bugs` should identify wh
 
 **Documentation**
 Visit [sdk/cli/README.md](sdk/cli/README.md) for instructions on how do document when working with the CLI.
+
+**Crate names**
+- CLI names get preferential naming, e.g., `mcr-network-client`.
+- `*-core` crates are "core" libraries, meaning they encode APIs ended to be used programmatically in Rust. `mcr-protocol-client-eth-core` is, for example, the `core` library for the ETH implementation associated with `mcr-network-client`. 
