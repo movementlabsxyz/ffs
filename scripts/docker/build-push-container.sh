@@ -117,5 +117,6 @@ docker buildx build \
   --platform "linux/$platform_shorthand" \
   --file "$dockerfile_path" \
   $(for tag in "${container_tags[@]}"; do echo -n " -t $tag "; done) \
-  --push \
-  "$git_root"
+  --label "org.opencontainers.image.source=https://github.com/movementlabsxyz/$(basename $git_root)" \
+  --label "org.opencontainers.image.description=Container for $container_name implemented in $(basename $git_root)" \
+  --push "$git_root"
