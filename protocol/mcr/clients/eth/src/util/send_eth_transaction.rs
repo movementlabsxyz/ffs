@@ -20,10 +20,14 @@ pub enum McrEthConnectorError {
 	SendTransactionError(#[from] alloy_contract::Error),
 	#[error("MCR Settlement Transaction send failed during its execution: {0}")]
 	RpcTransactionExecution(String),
-	#[error("MCR Settlement BlockAccepted event notification error: {0}")]
+	#[error("MCR Settlement CommitmentAccepted event notification error: {0}")]
 	EventNotificationError(#[from] alloy_sol_types::Error),
-	#[error("MCR Settlement BlockAccepted event notification stream close")]
+	#[error("MCR Settlement CommitmentAccepted event notification stream close")]
 	EventNotificationStreamClosed,
+	#[error("MCR Settlement Transaction gas estimation failed: {0}")]
+	GasEstimationFailed(String),
+	#[error("MCR Settlement Transaction gas estimation too high: estimated gas: {estimated} > limit: {limit}")]
+	GasEstimationTooHigh { estimated: u128, limit: u128 },
 }
 
 impl From<McrEthConnectorError> for McrClientError {
@@ -97,7 +101,9 @@ pub async fn send_transaction<P: Provider + Clone, D: CallDecoder + Clone>(
 	let mut estimate_gas = base_call_builder
 		.estimate_gas()
 		.await
-		.map_err(|_| McrClientError::Internal("Gas estimation failed".into()))?
+		.map_err(|e| {
+			McrEthConnectorError::GasEstimationFailed(e.to_string())
+		})?
 		as u128;
 
 	// Apply an initial 20% buffer
@@ -105,7 +111,13 @@ pub async fn send_transaction<P: Provider + Clone, D: CallDecoder + Clone>(
 	let max_gas_limit = 30_000_000; // Cap max gas to avoid runaway values
 	estimate_gas = estimate_gas.min(max_gas_limit);
 
-	info!("Initial estimated gas: {}", estimate_gas);
+	if estimate_gas > gas_limit {
+		return Err(McrEthConnectorError::GasEstimationTooHigh {
+			estimated: estimate_gas,
+			limit: gas_limit,
+		}
+		.into());
+	}
 
 	for attempt in 0..number_retry {
 		info!("Retry attempt: {}", attempt + 1);

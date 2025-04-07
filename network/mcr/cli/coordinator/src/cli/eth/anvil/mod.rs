@@ -6,7 +6,7 @@ use clap::Subcommand;
 #[clap(rename_all = "kebab-case")]
 #[clap(after_help = concat!("KEEP THIS UNTIL PRODUCTION-READY : Defined in: ", file!()))]
 pub enum Anvil {
-	/// ???
+	/// Brings-up an MCR network on Anvil.
 	#[clap(subcommand)]
 	Up(up::or_file::Up),
 }

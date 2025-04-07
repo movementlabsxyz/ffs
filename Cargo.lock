@@ -1540,6 +1540,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "bstr"
+version = "1.11.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "531a9155a481e2ee699d4f98f43c0ca4ff8ee1bfd55c31e9e98fb29d2b176fe0"
+dependencies = [
+ "memchr",
+ "serde",
+]
+
+[[package]]
 name = "bumpalo"
 version = "3.17.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1738,6 +1748,7 @@ dependencies = [
 [[package]]
 name = "clap-markdown-ext"
 version = "0.0.1"
+source = "git+https://github.com/movementlabsxyz/clap-markdown-ext.git?rev=8f54fe424504bf37fb01dc69aaed8166e429fe6a#8f54fe424504bf37fb01dc69aaed8166e429fe6a"
 dependencies = [
  "anyhow",
  "cargo_metadata",
@@ -1800,18 +1811,6 @@ name = "colorchoice"
 version = "1.0.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "5b63caa9aa9397e2d9480a9b13673856c78d8ac123288526c37d7839f2a86990"
-
-[[package]]
-name = "commander"
-version = "0.0.1"
-dependencies = [
- "anyhow",
- "futures",
- "itertools 0.14.0",
- "tempfile",
- "tokio",
- "tracing",
-]
 
 [[package]]
 name = "commander"
@@ -1942,6 +1941,25 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a97769d94ddab943e4510d138150169a2758b5ef3eb191a9ee688de3e23ef7b3"
 dependencies = [
  "cfg-if",
+]
+
+[[package]]
+name = "crossbeam-deque"
+version = "0.8.6"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "9dd111b7b7f7d55b72c0a6ae361660ee5853c9af73f70c3c2ef6858b950e2e51"
+dependencies = [
+ "crossbeam-epoch",
+ "crossbeam-utils",
+]
+
+[[package]]
+name = "crossbeam-epoch"
+version = "0.9.18"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "5b82ac4a3c2ca9c3460964f020e1402edd5753411d7737aa39c3714ad1b5420e"
+dependencies = [
+ "crossbeam-utils",
 ]
 
 [[package]]
@@ -2429,7 +2447,6 @@ dependencies = [
  "clap",
  "dotenv",
  "mcr-protocol-client",
- "pcp-protocol-client",
  "serde",
  "tokio",
 ]
@@ -2444,8 +2461,6 @@ dependencies = [
  "dotenv",
  "mcr-network",
  "mcr-protocol",
- "pcp-network",
- "pcp-protocol",
  "serde",
  "tokio",
 ]
@@ -2674,6 +2689,19 @@ name = "glob"
 version = "0.3.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a8d1add55171497b4705a648c6b583acafb01d58050a51727785f0b2c8e0a2b2"
+
+[[package]]
+name = "globset"
+version = "0.4.16"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "54a1028dfc5f5df5da8a56a73e6c153c9a9708ec57232470703592a3f18e49f5"
+dependencies = [
+ "aho-corasick",
+ "bstr",
+ "log",
+ "regex-automata 0.4.9",
+ "regex-syntax 0.8.5",
+]
 
 [[package]]
 name = "group"
@@ -3144,6 +3172,22 @@ dependencies = [
 ]
 
 [[package]]
+name = "ignore"
+version = "0.4.23"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "6d89fd380afde86567dfba715db065673989d6253f42b88179abd3eae47bda4b"
+dependencies = [
+ "crossbeam-deque",
+ "globset",
+ "log",
+ "memchr",
+ "regex-automata 0.4.9",
+ "same-file",
+ "walkdir",
+ "winapi-util",
+]
+
+[[package]]
 name = "impl-codec"
 version = "0.6.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3161,6 +3205,19 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn 2.0.100",
+]
+
+[[package]]
+name = "include-dir"
+version = "0.0.1"
+dependencies = [
+ "anyhow",
+ "commander",
+ "convert_case 0.8.0",
+ "ignore",
+ "tempfile",
+ "thiserror 1.0.69",
+ "zip",
 ]
 
 [[package]]
@@ -3387,7 +3444,7 @@ name = "kestrel-process"
 version = "0.1.0"
 source = "git+https://github.com/movementlabsxyz/kestrel.git?rev=85e2f681ae3e54b29bb18d4ed7ca750116173321#85e2f681ae3e54b29bb18d4ed7ca750116173321"
 dependencies = [
- "commander 0.1.0",
+ "commander",
  "jsonlvar",
  "jsonlvar-tokio",
  "kestrel-state",
@@ -3588,6 +3645,7 @@ version = "0.0.1"
 dependencies = [
  "anyhow",
  "clap",
+ "clap-markdown-ext",
  "dotenv",
  "mcr-network-client",
  "mcr-network-coordinator",
@@ -3623,6 +3681,7 @@ version = "0.0.1"
 dependencies = [
  "anyhow",
  "clap",
+ "clap-markdown-ext",
  "dotenv",
  "serde",
  "tokio",
@@ -3634,6 +3693,7 @@ version = "0.0.1"
 dependencies = [
  "anyhow",
  "clap",
+ "clap-markdown-ext",
  "dotenv",
  "jsonlvar",
  "kestrel",
@@ -3672,8 +3732,10 @@ version = "0.0.1"
 dependencies = [
  "anyhow",
  "clap",
+ "clap-markdown-ext",
  "dotenv",
  "mcr-protocol-client",
+ "mcr-protocol-deployer",
  "serde",
  "tokio",
 ]
@@ -3684,12 +3746,16 @@ version = "0.0.1"
 dependencies = [
  "anyhow",
  "clap",
+ "clap-markdown-ext",
  "dotenv",
+ "hex",
  "mcr-protocol-client-core-util",
  "mcr-protocol-client-eth-core",
  "mcr-protocol-deployer-eth-core",
  "mcr-types",
+ "secure-signer-loader",
  "serde",
+ "sha3",
  "tokio",
  "tokio-stream",
 ]
@@ -3797,9 +3863,11 @@ dependencies = [
  "async-stream",
  "async-trait",
  "clap",
- "commander 0.0.1",
+ "commander",
  "futures",
  "hex",
+ "ignore",
+ "include-dir",
  "jsonlvar",
  "lifecycle",
  "mcr-config",
@@ -3815,7 +3883,6 @@ dependencies = [
  "thiserror 1.0.69",
  "tokio",
  "tokio-stream",
- "walkdir",
  "zip",
 ]
 
@@ -4196,240 +4263,6 @@ checksum = "f8ed6a7761f76e3b9f92dfb0a60a6a6477c61024b775147ff0973a02653abaf2"
 dependencies = [
  "digest 0.10.7",
  "hmac",
-]
-
-[[package]]
-name = "pcp-config"
-version = "0.0.1"
-dependencies = [
- "alloy",
- "anyhow",
- "ffs-environment",
- "secure-signer",
- "secure-signer-loader",
- "serde",
-]
-
-[[package]]
-name = "pcp-dlu-eth-deployer-core"
-version = "0.0.1"
-dependencies = [
- "anyhow",
- "async-stream",
- "async-trait",
- "clap",
- "commander 0.0.1",
- "futures",
- "hex",
- "jsonlvar",
- "pcp-config",
- "pcp-protocol-client-core-mock",
- "pcp-protocol-client-core-util",
- "pcp-types",
- "secure-signer",
- "secure-signer-loader",
- "serde",
- "serde_json",
- "tempfile",
- "thiserror 1.0.69",
- "tokio",
- "tokio-stream",
- "walkdir",
- "zip",
-]
-
-[[package]]
-name = "pcp-network"
-version = "0.0.1"
-dependencies = [
- "anyhow",
- "clap",
- "dotenv",
- "pcp-network-client",
- "pcp-network-coordinator",
- "serde",
- "tokio",
-]
-
-[[package]]
-name = "pcp-network-anvil-component-core"
-version = "0.0.1"
-dependencies = [
- "anyhow",
- "async-stream",
- "async-trait",
- "futures",
- "kestrel",
- "network-anvil-component-core",
- "pcp-config",
- "pcp-dlu-eth-deployer-core",
- "pcp-protocol-client-core-mock",
- "pcp-protocol-client-core-util",
- "pcp-types",
- "secure-signer-loader",
- "serde_json",
- "strip-ansi-escapes",
- "tokio",
- "tokio-stream",
-]
-
-[[package]]
-name = "pcp-network-client"
-version = "0.0.1"
-dependencies = [
- "anyhow",
- "clap",
- "dotenv",
- "serde",
- "tokio",
-]
-
-[[package]]
-name = "pcp-network-coordinator"
-version = "0.0.1"
-dependencies = [
- "anyhow",
- "clap",
- "dotenv",
- "jsonlvar",
- "kestrel",
- "orfile",
- "pcp-dlu-eth-deployer-core",
- "pcp-network-anvil-component-core",
- "pcp-network-eth-live-component-core",
- "serde",
- "serde_json",
- "tokio",
-]
-
-[[package]]
-name = "pcp-network-eth-live-component-core"
-version = "0.0.1"
-dependencies = [
- "anyhow",
- "async-stream",
- "async-trait",
- "futures",
- "kestrel",
- "pcp-config",
- "pcp-dlu-eth-deployer-core",
- "pcp-protocol-client-core-mock",
- "pcp-protocol-client-core-util",
- "pcp-types",
- "secure-signer-loader",
- "serde_json",
- "tokio",
- "tokio-stream",
-]
-
-[[package]]
-name = "pcp-protocol"
-version = "0.0.1"
-dependencies = [
- "anyhow",
- "clap",
- "dotenv",
- "pcp-protocol-client",
- "serde",
- "tokio",
-]
-
-[[package]]
-name = "pcp-protocol-client"
-version = "0.0.1"
-dependencies = [
- "anyhow",
- "clap",
- "dotenv",
- "hex",
- "pcp-dlu-eth-deployer-core",
- "pcp-protocol-client-core-eth",
- "pcp-protocol-client-core-util",
- "pcp-types",
- "secure-signer-loader",
- "serde",
- "sha3",
- "tokio",
-]
-
-[[package]]
-name = "pcp-protocol-client-core-eth"
-version = "0.0.1"
-dependencies = [
- "alloy",
- "alloy-contract",
- "alloy-network",
- "alloy-primitives 0.8.23",
- "alloy-provider",
- "alloy-rpc-types",
- "alloy-signer",
- "alloy-sol-types",
- "alloy-transport",
- "alloy-transport-ws",
- "anyhow",
- "async-stream",
- "async-trait",
- "clap",
- "futures",
- "hex",
- "pcp-protocol-client-core-util",
- "pcp-types",
- "secure-signer",
- "secure-signer-eth",
- "secure-signer-loader",
- "serde",
- "serde_json",
- "thiserror 1.0.69",
- "tokio",
- "tokio-stream",
- "tracing",
- "tracing-subscriber",
-]
-
-[[package]]
-name = "pcp-protocol-client-core-mock"
-version = "0.0.1"
-dependencies = [
- "anyhow",
- "futures",
- "pcp-protocol-client-core-util",
- "pcp-types",
- "serde",
- "thiserror 1.0.69",
- "tokio",
- "tokio-stream",
- "tracing",
-]
-
-[[package]]
-name = "pcp-protocol-client-core-util"
-version = "0.0.1"
-dependencies = [
- "pcp-types",
- "serde",
- "thiserror 1.0.69",
- "tokio",
- "tokio-stream",
-]
-
-[[package]]
-name = "pcp-protocol-deployer"
-version = "0.0.1"
-dependencies = [
- "anyhow",
- "clap",
- "dotenv",
- "pcp-dlu-eth-deployer-core",
- "pcp-types",
- "serde",
- "tokio",
-]
-
-[[package]]
-name = "pcp-types"
-version = "0.0.1"
-dependencies = [
- "serde",
 ]
 
 [[package]]

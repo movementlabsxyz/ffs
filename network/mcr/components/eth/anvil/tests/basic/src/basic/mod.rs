@@ -7,7 +7,7 @@ use config::Config;
 use mcr_network_anvil_component_core::dev::lifecycle::up::Up;
 use mcr_protocol_client_eth_core::config::Config as EthConfig;
 use mcr_protocol_deployer_eth_core::artifacts::output::Artifacts;
-use mcr_types::block_commitment::BlockCommitment;
+use mcr_types::commitment::Commitment;
 use network_anvil_component_core::util::parser::AnvilData;
 use secure_signer::key::TryFromCanonicalString;
 use secure_signer_loader::identifiers::SignerIdentifier;
@@ -28,6 +28,7 @@ impl UpState {
 		let rpc_url = "http://localhost:8545".to_string();
 		let ws_url = "ws://localhost:8545".to_string();
 		let chain_id = self.anvil_data.chain_id;
+		let commitment_lead_tolerance = 100;
 
 		// get the signer identifier
 		let signer_identifier_hex_key = self.anvil_data.private_keys[0].clone();
@@ -41,17 +42,19 @@ impl UpState {
 			SignerIdentifier::try_from_canonical_string(&canonical_identifier_string)
 				.map_err(|_| anyhow::anyhow!("invalid signer identifier"))?;
 
-		let mcr_contract_address = self.artifacts.mcr_proxy.clone();
-
 		Ok(EthConfig {
-			rpc_url,
-			ws_url,
-			chain_id,
-			signer_identifier,
-			mcr_contract_address,
+			mcr_contract_address: self.artifacts.mcr_proxy.clone(),
+			rpc_url: rpc_url.clone(),
+			ws_url: ws_url.clone(),
+			chain_id: chain_id,
+			signer_identifier: signer_identifier,
 			run_commitment_admin_mode: false,
 			gas_limit: 323924465909782,
 			transaction_send_retries: 3,
+			mcr_address: self.artifacts.mcr_proxy.clone(),
+			commitment_lead_tolerance: commitment_lead_tolerance,
+			move_token_address: self.artifacts.token_proxy.clone(),
+			staking_address: self.artifacts.staking_proxy.clone(),
 		})
 	}
 
@@ -88,9 +91,7 @@ impl Basic {
 		let mcr_protocol_client = up_state.try_build_default_mcr_protocol_client().await?;
 
 		// act with the client
-		mcr_protocol_client
-			.act(Act::PostBlockCommitment(BlockCommitment::default()))
-			.await?;
+		mcr_protocol_client.act(Act::PostCommitment(Commitment::default())).await?;
 
 		// end the up task
 		kestrel::end!(up_task)?;

@@ -176,15 +176,15 @@ contract McrAROTest is Test {
         uint256 initialAttester1Balance = token.balanceOf(attester1);
         
         // Create a block commitment from attester1
-        MCR.BlockCommitment memory commitment1 = mcr.createBlockCommitment(
+        MCR.Commitment memory commitment1 = mcr.createCommitment(
             1, // height
             keccak256("block1"), // commitment
-            keccak256("blockId1") // blockId
+            keccak256("commitmentId1") // commitmentId
         );
         
         // Submit the commitment
         vm.prank(attester1);
-        mcr.submitBlockCommitment(commitment1);
+        mcr.submitCommitment(commitment1);
         
         // Check if attester1 received rewards
         uint256 newAttester1Balance = token.balanceOf(attester1);
@@ -192,10 +192,10 @@ contract McrAROTest is Test {
         assertGt(newAttester1Balance, initialAttester1Balance, "Attester1 should receive rewards for block commitment");
         
         // Create another block commitment to check for speed bonuses
-        MCR.BlockCommitment memory commitment2 = mcr.createBlockCommitment(
+        MCR.Commitment memory commitment2 = mcr.createCommitment(
             2, // height
             keccak256("block2"), // commitment
-            keccak256("blockId2") // blockId
+            keccak256("commitmentId2") // commitmentId
         );
         
         // Skip a short time to ensure speed bonus
@@ -203,7 +203,7 @@ contract McrAROTest is Test {
         
         // Submit the commitment
         vm.prank(attester1);
-        mcr.submitBlockCommitment(commitment2);
+        mcr.submitCommitment(commitment2);
         
         // Check if attester1 received more rewards
         uint256 secondRewardBalance = token.balanceOf(attester1);
@@ -220,25 +220,25 @@ contract McrAROTest is Test {
         // Create several block commitments to accumulate epoch commitments
         for (uint256 i = 1; i <= 5; i++) {
             // Attester1 submits most commitments
-            MCR.BlockCommitment memory commitment = mcr.createBlockCommitment(
+            MCR.Commitment memory commitment = mcr.createCommitment(
                 i, // height
                 keccak256(abi.encodePacked("block", i)), // commitment 
-                keccak256(abi.encodePacked("blockId", i)) // blockId
+                keccak256(abi.encodePacked("commitmentId", i)) // commitmentId
             );
             
             vm.prank(attester1);
-            mcr.submitBlockCommitment(commitment);
+            mcr.submitCommitment(commitment);
             
             // Attester2 submits fewer commitments
             if (i % 2 == 0) {
                 vm.prank(attester2);
-                mcr.submitBlockCommitment(commitment);
+                mcr.submitCommitment(commitment);
             }
             
             // Attester3 submits only one commitment
             if (i == 3) {
                 vm.prank(attester3);
-                mcr.submitBlockCommitment(commitment);
+                mcr.submitCommitment(commitment);
             }
         }
         
@@ -246,14 +246,14 @@ contract McrAROTest is Test {
         skip(EPOCH_DURATION + 1);
         
         // Trigger epoch rollover by submitting another block
-        MCR.BlockCommitment memory rolloverCommitment = mcr.createBlockCommitment(
+        MCR.Commitment memory rolloverCommitment = mcr.createCommitment(
             6, // height
             keccak256("block6"), // commitment
-            keccak256("blockId6") // blockId
+            keccak256("commitmentId6") // commitmentId
         );
         
         vm.prank(attester1);
-        mcr.submitBlockCommitment(rolloverCommitment);
+        mcr.submitCommitment(rolloverCommitment);
         
         // Check rewards - attesters should have received epoch rollover rewards
         uint256 newAttester1Balance = token.balanceOf(attester1);
@@ -284,14 +284,14 @@ contract McrAROTest is Test {
             uint256 initialAttesterBalance = token.balanceOf(attester1);
             
             // Create a block commitment
-            MCR.BlockCommitment memory commitment = mcr.createBlockCommitment(
+            MCR.Commitment memory commitment = mcr.createCommitment(
                 i, // height
                 keccak256(abi.encodePacked("block", i)), // commitment 
-                keccak256(abi.encodePacked("blockId", i)) // blockId
+                keccak256(abi.encodePacked("commitmentId", i)) // commitmentId
             );
             
             vm.prank(attester1);
-            mcr.submitBlockCommitment(commitment);
+            mcr.submitCommitment(commitment);
             
             // Record the reward
             uint256 newAttesterBalance = token.balanceOf(attester1);
@@ -345,14 +345,14 @@ contract McrAROTest is Test {
         uint256 initialAttesterBalance = token.balanceOf(attester1);
         
         // Create a block commitment
-        MCR.BlockCommitment memory commitment = mcr.createBlockCommitment(
+        MCR.Commitment memory commitment = mcr.createCommitment(
             10, // height (new height to avoid conflicts)
             keccak256("block10"), // commitment
-            keccak256("blockId10") // blockId
+            keccak256("commitmentId10") // commitmentId
         );
         
         vm.prank(attester1);
-        mcr.submitBlockCommitment(commitment);
+        mcr.submitCommitment(commitment);
         
         // Check rewards - should be higher with the new config
         uint256 newAttesterBalance = token.balanceOf(attester1);

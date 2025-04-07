@@ -7,10 +7,10 @@ use clap::Subcommand;
 #[clap(rename_all = "kebab-case")]
 #[clap(after_help = concat!("KEEP THIS UNTIL PRODUCTION-READY : Defined in: ", file!()))]
 pub enum Eth {
-	/// ???
+	/// Anvil-specific commands of the network coordinator, i.e., for bringing-up an MCR network on Anvil.
 	#[clap(subcommand)]
 	Anvil(anvil::Anvil),
-	/// ???
+	/// Live-Ethereum-based commands of the network coordinator, i.e., for bringing-up an MCR network on a live Ethereum network.
 	#[clap(subcommand)]
 	Live(live::Live),
 }

@@ -20,11 +20,11 @@ members = [
   "network/mcr/components/eth/anvil/tests/*",
 
   # pcp
-  "protocol/pcp/util/*",
-  "protocol/pcp/clients/*",
-  "protocol/pcp/dlu/eth/deployer-core",
-  "protocol/pcp/cli/*",
-  "network/pcp/cli/*",
+  # "protocol/pcp/util/*",
+  # "protocol/pcp/clients/*",
+  # "protocol/pcp/dlu/eth/deployer-core",
+  # "protocol/pcp/cli/*",
+  # "network/pcp/cli/*",
 #  "node/pcp/cli/*",
 
   # # fcp
@@ -40,8 +40,7 @@ members = [
   # util
   "util/signing/eth",
   "util/environment",
-  "util/commander",
-  "util/clap-markdown-ext",
+  "util/include-dir",
 ]
 
 [workspace.package]
@@ -113,6 +112,8 @@ proc-macro2 = "1.0.32"
 proc-macro-error = { version = "1.0.4", features = ["syn-error"] }
 strip-ansi-escapes = "0.2.1"
 cargo_metadata = "0.19.2"
+ignore = "0.4.20"
+convert_case = "0.8.0"
 
 # model checking and verification
 
@@ -125,6 +126,7 @@ secure-signer-aws-kms = { git = "https://github.com/movementlabsxyz/secure-signi
 # kestrel 
 kestrel = { git = "https://github.com/movementlabsxyz/kestrel.git", rev = "85e2f681ae3e54b29bb18d4ed7ca750116173321" }
 jsonlvar = { git = "https://github.com/movementlabsxyz/kestrel.git", rev = "85e2f681ae3e54b29bb18d4ed7ca750116173321" }
+commander = { git = "https://github.com/movementlabsxyz/kestrel.git", rev = "85e2f681ae3e54b29bb18d4ed7ca750116173321" }
 
 # orfile
 orfile = { git = "https://github.com/movementlabsxyz/orfile.git", rev = "d02299214e5aa202130cd1eb9593ce8064d1ec69" }
@@ -140,7 +142,7 @@ service-macro = { git = "https://github.com/movementlabsxyz/adud.git", rev = "44
 service-lifecycle = { git = "https://github.com/movementlabsxyz/adud.git", rev = "440cc81ecd69ba570a8bbdbaf3035e9d53fe6e84" }
 
 # docs
-clap-markdown = { git = "https://github.com/ConnorGray/clap-markdown.git", rev = "1e1ae469444604d5b9ee650232abc2d3a0fa723b"}
+clap-markdown-ext = { git = "https://github.com/movementlabsxyz/clap-markdown-ext.git", rev = "8f54fe424504bf37fb01dc69aaed8166e429fe6a"}
 
 # internal
 ## common
@@ -154,8 +156,9 @@ mcr-config = { path = "protocol/mcr/util/config" }
 mcr-protocol-client-core-util = { path = "protocol/mcr/clients/util" }
 mcr-protocol-client-eth-core = { path = "protocol/mcr/clients/eth" }
 mcr-protocol-client-core-mock = { path = "protocol/mcr/clients/mock" }
-mcr-protocol-client = { path = "protocol/mcr/cli/client" }
 mcr-protocol = { path = "protocol/mcr/cli/protocol"}
+mcr-protocol-client = { path = "protocol/mcr/cli/client" }
+mcr-protocol-deployer = { path = "protocol/mcr/cli/deployer" }
 mcr-protocol-deployer-eth-core = { path = "protocol/mcr/dlu/eth/deployer" }
 ### network
 mcr-network-client = { path = "network/mcr/cli/client" }
@@ -187,8 +190,8 @@ ffs-dev = { path = "sdk/cli/ffs-dev" }
 # util
 secure-signer-eth = { path = "util/signing/eth" }
 ffs-environment = { path = "util/environment" }
-commander = { path = "util/commander" }
-clap-markdown-ext = { path = "util/clap-markdown-ext" }
+include-dir = { path = "util/include-dir" }
+
 
 [workspace.lints.clippy]
 debug_assert_with_mut_call = "deny"

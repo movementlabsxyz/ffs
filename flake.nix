@@ -109,20 +109,19 @@
               # Add ./target/release/* to PATH
               export PATH="$PATH:$(pwd)/target/release"
 
-              # Copy over ./githooks/pre-commit to .git/hooks/pre-commit
-              cp ./githooks/pre-commit .git/hooks/pre-commit
+               # Copy over ./githooks/pre-commit to .git/hooks/pre-commit
+              cp $(pwd)/.githooks/pre-commit $(pwd)/.git/hooks/pre-commit
+              chmod +x $(pwd)/.git/hooks/pre-commit
 
-              echo "Monza Aptos path: $MONZA_APTOS_PATH"
               cat <<'EOF'
-                _______________________________
-                \_   _____/\_   _____/   _____/
-                |    __)   |    __) \_____  \ 
-                |     \    |     \  /        \
-                \___  /    \___  / /_______  /
-                    \/         \/          \/ 
+                          ------------
+                f ------ |            |
+                f ------ | 5e771e3e47 |
+                5 ------ |            |
+                          ------------
               EOF
 
-              echo "Develop with Move Anywhere"
+              echo "FFS, just take a vote!"
             '';
           };
         };

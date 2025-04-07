@@ -6,10 +6,10 @@ use mcr_protocol::cli::McrProtocolSubcommand;
 #[clap(rename_all = "kebab-case")]
 #[clap(after_help = concat!("KEEP THIS UNTIL PRODUCTION-READY : Defined in: ", file!()))]
 pub enum Mcr {
-	/// ???
+	/// Subcommands for bringing-up an MCR network.
 	#[clap(subcommand)]
 	Network(McrNetworkSubcommand),
-	/// The subcommands of the `mcr-protocol` CLI 2.
+	/// Subcommands for the MCR protocol.
 	#[clap(subcommand)]
 	Protocol(McrProtocolSubcommand),
 }
