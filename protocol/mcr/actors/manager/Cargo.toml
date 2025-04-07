@@ -1,5 +1,5 @@
 [package]
-name = "mcr-protocol-deployer-core-anvil"
+name = "mcr-protocol-manager-core"
 version = { workspace = true }
 edition  = { workspace = true }
 license  = { workspace = true }

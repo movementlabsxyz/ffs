@@ -1,0 +1,122 @@
+syntax = "proto3";
+
+package movementlabsxyz.ffs.mcr.light_node.v1beta1;
+
+// Import common protobuf types
+import "google/protobuf/empty.proto";
+
+// Commitment message represents a block commitment
+message Commitment {
+  uint64 height = 1;
+  bytes id = 2;
+  bytes vote = 3;
+}
+
+// Request and response messages for each operation
+message PostCommitmentRequest {
+  Commitment commitment = 1;
+}
+
+message PostCommitmentBatchRequest {
+  repeated Commitment commitments = 1;
+}
+
+message GetCommitmentAtHeightRequest {
+  uint64 height = 1;
+}
+
+message GetCommitmentResponse {
+  optional Commitment commitment = 1;
+}
+
+message GetValidatorCommitmentRequest {
+  uint64 height = 1;
+  string attester = 2;
+}
+
+message GetBalanceRequest {
+  string address = 1;
+}
+
+message GetBalanceResponse {
+  uint64 balance = 1;
+}
+
+message GrantTrustedAttesterRequest {
+  string attester = 1;
+}
+
+message StakeRequest {
+  string amount = 1; // String representation of U256
+}
+
+message UnstakeRequest {
+  string amount = 1; // String representation of U256
+}
+
+message GetStakeRequest {
+  string custodian = 1;
+  string attester = 2;
+}
+
+message GetStakeResponse {
+  uint64 stake = 1;
+}
+
+message GetHeightResponse {
+  uint64 height = 1;
+}
+
+// Stream response for commitments
+message CommitmentStreamResponse {
+  Commitment commitment = 1;
+}
+
+// MCR Light Node Service
+service McrLightNodeService {
+  // Posts a block commitment
+  rpc PostCommitment(PostCommitmentRequest) returns (google.protobuf.Empty) {}
+  
+  // Posts a batch of block commitments
+  rpc PostCommitmentBatch(PostCommitmentBatchRequest) returns (google.protobuf.Empty) {}
+  
+  // Forces a block commitment (admin only)
+  rpc ForceCommitment(PostCommitmentRequest) returns (google.protobuf.Empty) {}
+  
+  // Streams block commitments
+  rpc StreamCommitments(google.protobuf.Empty) returns (stream CommitmentStreamResponse) {}
+  
+  // Gets the accepted commitment at the given height
+  rpc GetAcceptedCommitmentAtHeight(GetCommitmentAtHeightRequest) returns (GetCommitmentResponse) {}
+  
+  // Gets the commitment this validator has made at a given height
+  rpc GetPostedCommitmentAtHeight(GetCommitmentAtHeightRequest) returns (GetCommitmentResponse) {}
+  
+  // Gets the max tolerable block height
+  rpc GetMaxTolerableCommitmentHeight(google.protobuf.Empty) returns (GetHeightResponse) {}
+  
+  // Gets the commitment for a specific validator at a given height
+  rpc GetValidatorCommitmentAtHeight(GetValidatorCommitmentRequest) returns (GetCommitmentResponse) {}
+  
+  // Get the balance of the specified address
+  rpc GetBalance(GetBalanceRequest) returns (GetBalanceResponse) {}
+  
+  // Gets the last accepted block height
+  rpc GetLastAcceptedBlockHeight(google.protobuf.Empty) returns (GetHeightResponse) {}
+  
+  // Gets the leading block tolerance
+  rpc GetLeadingCommitmentTolerance(google.protobuf.Empty) returns (GetHeightResponse) {}
+  
+  // Grants TRUSTED_ATTESTER role to the specified address
+  rpc GrantTrustedAttester(GrantTrustedAttesterRequest) returns (google.protobuf.Empty) {}
+  
+  // Stakes tokens for the domain
+  rpc Stake(StakeRequest) returns (google.protobuf.Empty) {}
+  
+  // Get the current epoch stake for an attester
+  rpc GetStake(GetStakeRequest) returns (GetStakeResponse) {}
+  
+  // Unstakes tokens from the domain
+  rpc Unstake(UnstakeRequest) returns (google.protobuf.Empty) {}
+}
+

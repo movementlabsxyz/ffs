@@ -11,7 +11,7 @@ members = [
   # mcr
   "protocol/mcr/util/*",
   "protocol/mcr/clients/*",
-  "protocol/mcr/manager",
+  "protocol/mcr/actors/*",
   "protocol/mcr/cli/*",
   "protocol/mcr/dlu/eth/deployer",
   "network/mcr/cli/*",
@@ -41,6 +41,7 @@ members = [
   "util/signing/eth",
   "util/environment",
   "util/include-dir",
+  "util/buildtime/*"
 ]
 
 [workspace.package]
@@ -114,6 +115,12 @@ strip-ansi-escapes = "0.2.1"
 cargo_metadata = "0.19.2"
 ignore = "0.4.20"
 convert_case = "0.8.0"
+toml = "0.8.20"
+tonic = "0.12.3"
+tonic-build = { version = "0.12.3", features = ["prost"] }
+tonic-reflection = "0.12.3"
+tonic-web = "0.12.3"
+prost = "0.13.3"
 
 # model checking and verification
 
@@ -152,6 +159,7 @@ network-anvil-component-core = { path = "network/common/components/anvil" }
 ## mcr
 ### protocol
 mcr-types = { path = "protocol/mcr/util/types" }
+mcr-light-node-proto = { path = "protocol/mcr/util/light-node-proto" }
 mcr-config = { path = "protocol/mcr/util/config" }
 mcr-protocol-client-core-util = { path = "protocol/mcr/clients/util" }
 mcr-protocol-client-eth-core = { path = "protocol/mcr/clients/eth" }
@@ -191,6 +199,9 @@ ffs-dev = { path = "sdk/cli/ffs-dev" }
 secure-signer-eth = { path = "util/signing/eth" }
 ffs-environment = { path = "util/environment" }
 include-dir = { path = "util/include-dir" }
+buildtime = { path = "util/buildtime/buildtime"}
+buildtime-macros = { path = "util/buildtime/buildtime-macros"}
+buildtime-helpers = { path = "util/buildtime/buildtime-helpers"}
 
 
 [workspace.lints.clippy]

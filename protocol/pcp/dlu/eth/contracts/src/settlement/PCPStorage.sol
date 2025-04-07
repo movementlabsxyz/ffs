@@ -38,13 +38,13 @@ contract PCPStorage {
     // TODO i added these param descriptions. are these correct?
     /// Struct to store block commitment details
     /// @param height The height of the commitment
-    /// @param commitmentValue The hash of the commitment value
-    /// @param commitmentId The unique identifier of the commitment (hash of the commitment value)
+    /// @param vote The hash of the commitment value
+    /// @param id The unique identifier of the commitment (hash of the commitment value)
     struct Commitment {
         // currently, to simplify the api, we'll say 0 is uncommitted all other numbers are legitimate heights
         uint256 height;
-        bytes32 commitmentValue;
-        bytes32 commitmentId;
+        bytes32 vote;
+        bytes32 id;
     }
 
     // map each commitment height to an epoch

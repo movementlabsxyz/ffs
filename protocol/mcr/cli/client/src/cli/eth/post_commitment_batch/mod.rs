@@ -1,7 +1,7 @@
 use clap::Parser;
 use mcr_protocol_client_core_util::McrClientOperations;
 use mcr_protocol_client_eth_core::config::Config;
-use mcr_types::commitment::{Commitment, CommitmentValue, CommitmentId};
+use mcr_types::commitment::{Commitment, Id, Vote};
 use serde::{Deserialize, Serialize};
 
 #[derive(Parser, Serialize, Deserialize, Debug, Clone)]
@@ -15,10 +15,10 @@ pub struct PostCommitmentBatch {
 	height: u64,
 	/// The id of the block to commit
 	#[clap(long)]
-	commitment_id: CommitmentId,
+	id: Id,
 	/// The commitment value to commit
 	#[clap(long)]
-	commitment_value: CommitmentValue,
+	vote: Vote,
 }
 
 impl PostCommitmentBatch {
@@ -26,8 +26,7 @@ impl PostCommitmentBatch {
 		let config = self.config.clone();
 		let client = config.build().await?;
 
-		let commitment =
-			Commitment::new(self.height, self.commitment_id.clone(), self.commitment_value.clone());
+		let commitment = Commitment::new(self.height, self.id.clone(), self.vote.clone());
 		let batch = vec![commitment];
 
 		client.post_commitment_batch(batch).await?;

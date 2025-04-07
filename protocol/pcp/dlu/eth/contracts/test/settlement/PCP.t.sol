@@ -22,16 +22,16 @@ contract PCPTest is Test {
     uint256 epochDuration = 7200 seconds;
     uint256 postconfirmerDuration = epochDuration/4;
     bytes32 honestCommitmentValueTemplate = keccak256(abi.encodePacked(uint256(1), uint256(2), uint256(3)));
-    bytes32 honestCommitmentIdTemplate = keccak256(abi.encodePacked(uint256(1), uint256(2), uint256(3)));
+    bytes32 honestIdTemplate = keccak256(abi.encodePacked(uint256(1), uint256(2), uint256(3)));
     bytes32 dishonestCommitmentValueTemplate = keccak256(abi.encodePacked(uint256(3), uint256(2), uint256(1)));
-    bytes32 dishonestCommitmentIdTemplate = keccak256(abi.encodePacked(uint256(3), uint256(2), uint256(1)));
+    bytes32 dishonestIdTemplate = keccak256(abi.encodePacked(uint256(3), uint256(2), uint256(1)));
     
     // make an honest commitment
     function makeHonestCommitment(uint256 height) internal view returns (PCPStorage.Commitment memory) {
         return PCPStorage.Commitment({
             height: height,
-            commitmentValue: honestCommitmentValueTemplate,
-            commitmentId: honestCommitmentIdTemplate
+            vote: honestCommitmentValueTemplate,
+            id: honestIdTemplate
         });
     }
        
@@ -39,8 +39,8 @@ contract PCPTest is Test {
     function makeDishonestCommitment(uint256 height) internal view returns (PCPStorage.Commitment memory) {
         return PCPStorage.Commitment({
             height: height,
-            commitmentValue: dishonestCommitmentValueTemplate,
-            commitmentId: dishonestCommitmentIdTemplate
+            vote: dishonestCommitmentValueTemplate,
+            id: dishonestIdTemplate
         });
     }
 
@@ -233,14 +233,14 @@ contract PCPTest is Test {
     }
 
     // we need this function to print the commitment value in a readable format, e.g. for logging purposes
-    function commitmentToHexString(bytes32 commitmentValue) public pure returns (string memory) {
+    function commitmentToHexString(bytes32 vote) public pure returns (string memory) {
         bytes memory alphabet = "0123456789abcdef";
         bytes memory str = new bytes(2 + 32 * 2);
         str[0] = "0";
         str[1] = "x";
         for (uint i = 0; i < 32; i++) {
-            str[2+i*2] = alphabet[uint8(commitmentValue[i] >> 4)];
-            str[2+i*2+1] = alphabet[uint8(commitmentValue[i] & 0x0f)];
+            str[2+i*2] = alphabet[uint8(vote[i] >> 4)];
+            str[2+i*2+1] = alphabet[uint8(vote[i] & 0x0f)];
         }
         return string(str);
     }
@@ -348,8 +348,8 @@ contract PCPTest is Test {
 
         // Verify honest commitment was postconfirmed
         PCPStorage.Commitment memory retrievedCommitment = pcp.getPostconfirmedCommitment(1);
-        assertEq(retrievedCommitment.commitmentValue, honestCommitmentValueTemplate);
-        assertEq(retrievedCommitment.commitmentId, honestCommitmentIdTemplate);
+        assertEq(retrievedCommitment.vote, honestCommitmentValueTemplate);
+        assertEq(retrievedCommitment.id, honestIdTemplate);
         assertEq(retrievedCommitment.height, 1);
     }
 
@@ -374,7 +374,7 @@ contract PCPTest is Test {
         // Verify no commitment was postconfirmed
         PCPStorage.Commitment memory retrievedCommitment = pcp.getPostconfirmedCommitment(1);
         assertEq(retrievedCommitment.height, 0, "No commitment should be postconfirmed");
-        assertEq(retrievedCommitment.commitmentValue, bytes32(0), "No commitment should be postconfirmed");
+        assertEq(retrievedCommitment.vote, bytes32(0), "No commitment should be postconfirmed");
     }
 
     /// @notice Test that rollover handling works with dishonesty
@@ -407,8 +407,8 @@ contract PCPTest is Test {
         assertEq(pcp.getStakeForAcceptingEpoch(address(moveToken), bob), 1);
         assertEq(pcp.getStakeForAcceptingEpoch(address(moveToken), carol), 1);
         PCPStorage.Commitment memory retrievedCommitment = pcp.getPostconfirmedCommitment(1);
-        assert(retrievedCommitment.commitmentValue == honestCommitmentValueTemplate);
-        assert(retrievedCommitment.commitmentId == honestCommitmentIdTemplate);
+        assert(retrievedCommitment.vote == honestCommitmentValueTemplate);
+        assert(retrievedCommitment.id == honestIdTemplate);
         assert(retrievedCommitment.height == 1);
     }
 
@@ -480,8 +480,8 @@ contract PCPTest is Test {
                 pcp.postconfirmCommitmentsAndRollover();
 
                 PCPStorage.Commitment memory retrievedCommitment = pcp.getPostconfirmedCommitment(commitmentHeightNow);
-                assert(retrievedCommitment.commitmentValue == honestCommitment.commitmentValue);
-                assert(retrievedCommitment.commitmentId == honestCommitment.commitmentId);
+                assert(retrievedCommitment.vote == honestCommitment.vote);
+                assert(retrievedCommitment.id == honestCommitment.id);
                 assert(retrievedCommitment.height == commitmentHeightNow);
 
             }
@@ -554,8 +554,8 @@ contract PCPTest is Test {
 
         // get the latest commitment
         PCPStorage.Commitment memory retrievedCommitment = pcp.getPostconfirmedCommitment(1);
-        assertEq(retrievedCommitment.commitmentId, forcedCommitment.commitmentId);
-        assertEq(retrievedCommitment.commitmentValue, forcedCommitment.commitmentValue);
+        assertEq(retrievedCommitment.id, forcedCommitment.id);
+        assertEq(retrievedCommitment.vote, forcedCommitment.vote);
         assertEq(retrievedCommitment.height, forcedCommitment.height);
 
         // create an unauthorized signer
@@ -596,8 +596,8 @@ contract PCPTest is Test {
         uint256 targetHeight = 1;
         PCPStorage.Commitment memory commitment = PCPStorage.Commitment({
             height: targetHeight,
-            commitmentValue: keccak256(abi.encodePacked(uint256(1))),
-            commitmentId: keccak256(abi.encodePacked(uint256(1)))
+            vote: keccak256(abi.encodePacked(uint256(1))),
+            id: keccak256(abi.encodePacked(uint256(1)))
         });
 
         // Submit commitment
@@ -606,7 +606,7 @@ contract PCPTest is Test {
         
         // Verify commitment was stored
         PCPStorage.Commitment memory stored = pcp.getCommitmentByAttester(targetHeight, alice);
-        assert(stored.commitmentValue == commitment.commitmentValue);
+        assert(stored.vote == commitment.vote);
         
         // Attempt postconfirmation
         vm.prank(alice);
@@ -614,7 +614,7 @@ contract PCPTest is Test {
         
         // Verify postconfirmation worked
         PCPStorage.Commitment memory postconfirmed = pcp.getPostconfirmedCommitment(targetHeight);
-        assert(postconfirmed.commitmentValue == commitment.commitmentValue);
+        assert(postconfirmed.vote == commitment.vote);
 
         // confirm current superblock height
         uint256 currentHeightNew = pcp.getLastPostconfirmedCommitmentHeight();
@@ -642,8 +642,8 @@ contract PCPTest is Test {
         // Verify commitments were stored
         PCPStorage.Commitment memory aliceCommitment = pcp.getCommitmentByAttester(targetHeight, alice);
         PCPStorage.Commitment memory bobCommitment = pcp.getCommitmentByAttester(targetHeight, bob);
-        assert(aliceCommitment.commitmentValue == commitment.commitmentValue);
-        assert(bobCommitment.commitmentValue == commitment.commitmentValue);
+        assert(aliceCommitment.vote == commitment.vote);
+        assert(bobCommitment.vote == commitment.vote);
 
         // Verify postconfirmer state
         assert(pcp.isWithinPostconfirmerPrivilegeDuration(commitment));
@@ -655,7 +655,7 @@ contract PCPTest is Test {
 
         // Verify postconfirmation
         PCPStorage.Commitment memory postconfirmed = pcp.getPostconfirmedCommitment(targetHeight);
-        assert(postconfirmed.commitmentValue == commitment.commitmentValue);
+        assert(postconfirmed.vote == commitment.vote);
         assertEq(pcp.getLastPostconfirmedCommitmentHeight(), targetHeight);
     }
 
@@ -678,8 +678,8 @@ contract PCPTest is Test {
         // Verify commitments were stored
         PCPStorage.Commitment memory aliceCommitment = pcp.getCommitmentByAttester(targetHeight, alice);
         PCPStorage.Commitment memory bobCommitment = pcp.getCommitmentByAttester(targetHeight, bob);
-        assert(aliceCommitment.commitmentValue == commitment.commitmentValue);
-        assert(bobCommitment.commitmentValue == commitment.commitmentValue);
+        assert(aliceCommitment.vote == commitment.vote);
+        assert(bobCommitment.vote == commitment.vote);
 
         // Verify postconfirmer state
         assert(pcp.isWithinPostconfirmerPrivilegeDuration(commitment));

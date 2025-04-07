@@ -37,10 +37,7 @@ impl Manager {
 }
 
 impl McrManagerOperations for Manager {
-	async fn post_commitment(
-		&self,
-		commitment: Commitment,
-	) -> Result<(), McrClientError> {
+	async fn post_commitment(&self, commitment: Commitment) -> Result<(), McrClientError> {
 		self.sender.send(commitment).await.map_err(|_| {
 			McrClientError::Internal("failed to send block commitment to manager".into())
 		})?;
@@ -66,7 +63,7 @@ fn process_commitments<C: McrClientOperations + Send + 'static>(
 				Some(commitment) = receiver.recv(), if !ahead_of_settlement => {
 					commitments_to_settle.insert(
 						commitment.height(),
-						commitment.commitment_value().clone(),
+						commitment.vote().clone(),
 					);
 					if commitment.height() > max_height {
 						// Can't post this commitment to the contract yet.
@@ -106,12 +103,12 @@ fn process_commitments<C: McrClientOperations + Send + 'static>(
 
 					let height = settled_commitment.height();
 					if let Some(commitment) = commitments_to_settle.remove(&height) {
-						let event = if commitment == settled_commitment.commitment_value() {
+						let event = if commitment == *settled_commitment.vote() {
 							CommitmentEvent::Accepted(settled_commitment)
 						} else {
 							CommitmentEvent::Rejected {
 								height,
-								reason: CommitmentRejectionReason::InvalidCommitmentValue,
+								reason: CommitmentRejectionReason::InvalidVote,
 							}
 						};
 						yield Ok(event);
@@ -147,7 +144,7 @@ fn process_commitments<C: McrClientOperations + Send + 'static>(
 mod tests {
 	use super::*;
 	use mcr_protocol_client_core_mock::Client;
-	use mcr_types::commitment::{Commitment, CommitmentValue};
+	use mcr_types::commitment::{Commitment, Vote};
 
 	#[tokio::test]
 	async fn test_commitment_accepted() -> Result<(), anyhow::Error> {
@@ -155,9 +152,9 @@ mod tests {
 		let mut client = Client::new();
 		client.commitment_lead_tolerance = 1;
 		let (manager, mut event_stream) = Manager::new(client.clone(), &config);
-		let commitment = Commitment::new(1, Default::default(), CommitmentValue::new([1; 32]));
+		let commitment = Commitment::new(1, Default::default(), Vote::new([1; 32]));
 		manager.post_commitment(commitment.clone()).await?;
-		let commitment2 = Commitment::new(2, Default::default(), CommitmentValue::new([2; 32]));
+		let commitment2 = Commitment::new(2, Default::default(), Vote::new([2; 32]));
 		manager.post_commitment(commitment2).await?;
 		let item = event_stream.next().await;
 		let res = item.unwrap();
@@ -172,26 +169,19 @@ mod tests {
 		let mut client = Client::new();
 		client.commitment_lead_tolerance = 1;
 		let (manager, mut event_stream) = Manager::new(client.clone(), &config);
-		let commitment = Commitment::new(1, Default::default(), CommitmentValue::new([1; 32]));
+		let commitment = Commitment::new(1, Default::default(), Vote::new([1; 32]));
 		client
-			.override_commitment(Commitment::new(
-				1,
-				Default::default(),
-				CommitmentValue::new([3; 32]),
-			))
+			.override_commitment(Commitment::new(1, Default::default(), Vote::new([3; 32])))
 			.await;
 		manager.post_commitment(commitment.clone()).await?;
-		let commitment2 = Commitment::new(2, Default::default(), CommitmentValue::new([2; 32]));
+		let commitment2 = Commitment::new(2, Default::default(), Vote::new([2; 32]));
 		manager.post_commitment(commitment2).await?;
 		let item = event_stream.next().await;
 		let res = item.unwrap();
 		let event = res.unwrap();
 		assert_eq!(
 			event,
-			CommitmentEvent::Rejected {
-				height: 1,
-				reason: CommitmentRejectionReason::InvalidCommitmentValue,
-			}
+			CommitmentEvent::Rejected { height: 1, reason: CommitmentRejectionReason::InvalidVote }
 		);
 		Ok(())
 	}
@@ -204,11 +194,11 @@ mod tests {
 		client.pause_after(2).await;
 		let (manager, mut event_stream) = Manager::new(client.clone(), &config);
 
-		let commitment1 = Commitment::new(1, Default::default(), CommitmentValue::new([1; 32]));
+		let commitment1 = Commitment::new(1, Default::default(), Vote::new([1; 32]));
 		manager.post_commitment(commitment1.clone()).await?;
-		let commitment2 = Commitment::new(2, Default::default(), CommitmentValue::new([2; 32]));
+		let commitment2 = Commitment::new(2, Default::default(), Vote::new([2; 32]));
 		manager.post_commitment(commitment2.clone()).await?;
-		let commitment3 = Commitment::new(3, Default::default(), CommitmentValue::new([3; 32]));
+		let commitment3 = Commitment::new(3, Default::default(), Vote::new([3; 32]));
 		manager.post_commitment(commitment3.clone()).await?;
 
 		let event = event_stream.next().await.expect("stream has ended")?;
@@ -225,9 +215,9 @@ mod tests {
 		// Unblock the client, allowing processing of commitments to resume.
 		client.resume().await;
 
-		let commitment4 = Commitment::new(4, Default::default(), CommitmentValue::new([4; 32]));
+		let commitment4 = Commitment::new(4, Default::default(), Vote::new([4; 32]));
 		manager.post_commitment(commitment4).await?;
-		let commitment5 = Commitment::new(5, Default::default(), CommitmentValue::new([5; 32]));
+		let commitment5 = Commitment::new(5, Default::default(), Vote::new([5; 32]));
 		manager.post_commitment(commitment5).await?;
 
 		let event = event_stream.next().await.expect("stream has ended")?;
@@ -243,9 +233,9 @@ mod tests {
 		let client = Client::new();
 		let (manager, mut event_stream) = Manager::new(client.clone(), &config);
 
-		let commitment1 = Commitment::new(1, Default::default(), CommitmentValue::new([1; 32]));
+		let commitment1 = Commitment::new(1, Default::default(), Vote::new([1; 32]));
 		manager.post_commitment(commitment1.clone()).await?;
-		let commitment2 = Commitment::new(2, Default::default(), CommitmentValue::new([2; 32]));
+		let commitment2 = Commitment::new(2, Default::default(), Vote::new([2; 32]));
 		manager.post_commitment(commitment2.clone()).await?;
 
 		let item = time::timeout(Duration::from_secs(2), event_stream.next())
@@ -256,7 +246,7 @@ mod tests {
 		let event = event_stream.next().await.expect("stream has ended")?;
 		assert_eq!(event, CommitmentEvent::Accepted(commitment2.clone()));
 
-		let commitment3 = Commitment::new(3, Default::default(), CommitmentValue::new([3; 32]));
+		let commitment3 = Commitment::new(3, Default::default(), Vote::new([3; 32]));
 		manager.post_commitment(commitment3.clone()).await?;
 
 		let item = time::timeout(Duration::from_secs(2), event_stream.next())

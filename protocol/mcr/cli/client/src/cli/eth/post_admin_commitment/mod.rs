@@ -1,7 +1,7 @@
 use clap::Parser;
 use mcr_protocol_client_core_util::McrClientOperations;
 use mcr_protocol_client_eth_core::config::Config;
-use mcr_types::commitment::{Commitment, CommitmentValue, CommitmentId};
+use mcr_types::commitment::{Commitment, Id, Vote};
 use serde::{Deserialize, Serialize};
 
 #[derive(Parser, Serialize, Deserialize, Debug, Clone)]
@@ -15,10 +15,10 @@ pub struct PostAdminCommitment {
 	height: Option<u64>,
 	/// The commitment id to commit
 	#[clap(long)]
-	commitment_id: CommitmentId,
+	id: Id,
 	/// The commitment value to commit
 	#[clap(long)]
-	commitment_value: CommitmentValue,
+	vote: Vote,
 }
 
 impl PostAdminCommitment {
@@ -31,8 +31,7 @@ impl PostAdminCommitment {
 			None => client.get_max_tolerable_commitment_height().await?,
 		};
 
-		let commitment =
-			Commitment::new(height, self.commitment_id.clone(), self.commitment_value.clone());
+		let commitment = Commitment::new(height, self.id.clone(), self.vote.clone());
 
 		client.force_commitment(commitment).await?;
 

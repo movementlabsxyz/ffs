@@ -7,7 +7,7 @@ use alloy_primitives::U256;
 use alloy_sol_types::sol;
 use anyhow::Context;
 use pcp_protocol_client_core_util::{CommitmentStream, PcpClientError, PcpClientOperations};
-use pcp_types::commitment::{Commitment, CommitmentValue, CommitmentId};
+use pcp_types::commitment::{Commitment, Id, Vote};
 use serde_json::Value as JsonValue;
 use std::array::TryFromSliceError;
 use std::fs;
@@ -54,19 +54,14 @@ where
 	R: Provider + Clone,
 	W: Provider + Clone,
 {
-	async fn post_commitment(
-		&self,
-		commitment: Commitment,
-	) -> Result<(), PcpClientError> {
+	async fn post_commitment(&self, commitment: Commitment) -> Result<(), PcpClientError> {
 		let contract = PCP::new(self.contract_address, &self.rpc_provider);
 
 		let eth_commitment = PCPStorage::Commitment {
 			// Currently, to simplify the API, we'll say 0 is uncommitted all other numbers are legitimate heights
 			height: U256::from(commitment.height()),
-			commitmentValue: alloy_primitives::FixedBytes(
-				commitment.commitment_value().as_bytes().clone(),
-			),
-			commitmentId: alloy_primitives::FixedBytes(commitment.commitment_id().as_bytes().clone()),
+			vote: alloy_primitives::FixedBytes(commitment.vote().as_bytes().clone()),
+			id: alloy_primitives::FixedBytes(commitment.id().as_bytes().clone()),
 		};
 
 		if self.run_commitment_admin_mode {
@@ -104,12 +99,8 @@ where
 				Ok(PCPStorage::Commitment {
 					// Currently, to simplify the API, we'll say 0 is uncommitted all other numbers are legitimate heights
 					height: U256::from(commitment.height()),
-					commitmentValue: alloy_primitives::FixedBytes(
-						commitment.commitment_value().as_bytes().clone(),
-					),
-					commitmentId: alloy_primitives::FixedBytes(
-						commitment.commitment_id().as_bytes().clone(),
-					),
+					vote: alloy_primitives::FixedBytes(commitment.vote().as_bytes().clone()),
+					id: alloy_primitives::FixedBytes(commitment.id().as_bytes().clone()),
 				})
 			})
 			.collect::<Result<Vec<_>, TryFromSliceError>>()
@@ -127,19 +118,14 @@ where
 		.await
 	}
 
-	async fn force_commitment(
-		&self,
-		commitment: Commitment,
-	) -> Result<(), PcpClientError> {
+	async fn force_commitment(&self, commitment: Commitment) -> Result<(), PcpClientError> {
 		let contract = PCP::new(self.contract_address, &self.rpc_provider);
 
 		let eth_commitment = PCPStorage::Commitment {
 			// Currently, to simplify the API, we'll say 0 is uncommitted all other numbers are legitimate heights
 			height: U256::from(commitment.height()),
-			commitmentValue: alloy_primitives::FixedBytes(
-				commitment.commitment_value().as_bytes().clone(),
-			),
-			commitmentId: alloy_primitives::FixedBytes(commitment.commitment_id().as_bytes().clone()),
+			vote: alloy_primitives::FixedBytes(commitment.vote().as_bytes().clone()),
+			id: alloy_primitives::FixedBytes(commitment.id().as_bytes().clone()),
 		};
 
 		let call_builder = contract.forceLatestCommitment(eth_commitment);
@@ -173,8 +159,8 @@ where
 					)?;
 					Ok(Commitment::new(
 						height,
-						CommitmentId::new(commitment.blockHash.0),
-						CommitmentValue::new(commitment.stateCommitment.0),
+						Id::new(commitment.blockHash.0),
+						Vote::new(commitment.stateCommitment.0),
 					))
 				})
 				.map_err(|err| PcpEthConnectorError::EventNotificationError(err).into())
@@ -205,8 +191,8 @@ where
 				.try_into()
 				.context("failed to convert the commitment height from U256 to u64")
 				.map_err(|e| PcpClientError::Internal(e.into()))?,
-			CommitmentId::new(commitment.commitmentId.into()),
-			CommitmentValue::new(commitment.commitmentValue.into()),
+			Id::new(commitment.id.into()),
+			Vote::new(commitment.vote.into()),
 		)))
 	}
 
@@ -233,8 +219,8 @@ where
 				.try_into()
 				.context("failed to convert the commitment height from U256 to u64")
 				.map_err(|e| PcpClientError::Internal(e.into()))?,
-			CommitmentId::new(commitment.commitmentId.into()),
-			CommitmentValue::new(commitment.commitmentValue.into()),
+			Id::new(commitment.id.into()),
+			Vote::new(commitment.vote.into()),
 		)))
 	}
 

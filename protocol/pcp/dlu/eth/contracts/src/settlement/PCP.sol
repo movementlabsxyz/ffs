@@ -223,10 +223,10 @@ contract PCP is Initializable, BaseSettlement, PCPStorage, IPCP {
     // creates a commitment
     function createCommitment(
         uint256 height,
-        bytes32 commitmentValue,
-        bytes32 commitmentId
+        bytes32 vote,
+        bytes32 id
     ) public pure returns (Commitment memory) {
-        return Commitment(height, commitmentValue, commitmentId);
+        return Commitment(height, vote, id);
     }
 
     /// @dev submits a commitment for an attester.
@@ -257,15 +257,15 @@ contract PCP is Initializable, BaseSettlement, PCPStorage, IPCP {
         commitments[commitment.height][attester] = commitment;
         
         // Record first seen timestamp if not already set
-        TrySetCommitmentFirstSeenAt(commitment.height, commitment.commitmentValue, block.timestamp);
+        TrySetCommitmentFirstSeenAt(commitment.height, commitment.vote, block.timestamp);
 
         // increment the commitment count by stake
         uint256 attesterStakeForAcceptingEpoch = getAttesterStakeForAcceptingEpoch(attester);
-        commitmentStake[commitment.height][commitment.commitmentValue] += attesterStakeForAcceptingEpoch;
+        commitmentStake[commitment.height][commitment.vote] += attesterStakeForAcceptingEpoch;
 
         emit CommitmentSubmitted(
-            commitment.commitmentId,
-            commitment.commitmentValue,
+            commitment.id,
+            commitment.vote,
             attesterStakeForAcceptingEpoch
         );
     }
@@ -311,19 +311,19 @@ contract PCP is Initializable, BaseSettlement, PCPStorage, IPCP {
     // TODO use this to limit the postconfirmations on new commits ( we need to give time to attesters to submit their commitments )
     /// @notice get the timestamp when a commitment was first seen
     function getCommitmentFirstSeenAt(Commitment memory commitment) public view returns (uint256) {
-        return commitmentFirstSeenAt[commitment.height][commitment.commitmentValue];
+        return commitmentFirstSeenAt[commitment.height][commitment.vote];
     }
 
     /// @notice Sets the timestamp when a commitment was first seen
-    function TrySetCommitmentFirstSeenAt(uint256 height, bytes32 commitmentValue, uint256 timestamp) internal {
-        if (commitmentFirstSeenAt[height][commitmentValue] != 0) {
+    function TrySetCommitmentFirstSeenAt(uint256 height, bytes32 vote, uint256 timestamp) internal {
+        if (commitmentFirstSeenAt[height][vote] != 0) {
             // do not set if already set
             return;
         } else if (timestamp == 0) {
             // no need to set if timestamp is 0. This if may be redundant though.
             return;
         }
-        commitmentFirstSeenAt[height][commitmentValue] = timestamp;
+        commitmentFirstSeenAt[height][vote] = timestamp;
     }
 
     // ----------------------------------------------------------------
@@ -396,7 +396,7 @@ contract PCP is Initializable, BaseSettlement, PCPStorage, IPCP {
         // Record reward points for all attesters who committed to the winning commitment
         address[] memory attesters = getStakedAttestersForAcceptingEpoch();
         for (uint256 i = 0; i < attesters.length; i++) {
-            if (commitments[commitment.height][attesters[i]].commitmentValue == commitment.commitmentValue) {
+            if (commitments[commitment.height][attesters[i]].vote == commitment.vote) {
                 attesterRewardPoints[currentAcceptingEpoch][attesters[i]]++;
             }
         }
@@ -423,8 +423,8 @@ contract PCP is Initializable, BaseSettlement, PCPStorage, IPCP {
 
         // emit the commitment postconfirmed event
         emit CommitmentPostconfirmed(
-            commitment.commitmentId,
-            commitment.commitmentValue,
+            commitment.id,
+            commitment.vote,
             commitment.height
         );
     }
@@ -524,7 +524,7 @@ contract PCP is Initializable, BaseSettlement, PCPStorage, IPCP {
             if (commitment.height != commitmentHeight) continue;
 
             // check the total stake on the commitment
-            uint256 totalStakeOnCommitment = commitmentStake[commitment.height][commitment.commitmentValue];
+            uint256 totalStakeOnCommitment = commitmentStake[commitment.height][commitment.vote];
 
             if (totalStakeOnCommitment >= supermajority) {
                 // Check if enough time has passed since commitment was first seen
