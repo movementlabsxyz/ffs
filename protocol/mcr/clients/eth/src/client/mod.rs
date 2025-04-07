@@ -12,6 +12,7 @@ use std::array::TryFromSliceError;
 use std::fs;
 use std::path::Path;
 use tokio_stream::StreamExt;
+pub mod request;
 
 // Note: we prefer using the ABI because the [`sol!`](alloy_sol_types::sol) macro, when used with smart contract code directly, will not handle inheritance.
 sol!(
@@ -339,65 +340,6 @@ where
 		)
 		.await
 	}
-
-	// async fn stake(&self, amount: u64) -> Result<(), McrClientError> {
-	// 	let move_token = MOVEToken::new(self.move_token_address, &self.rpc_provider);
-	// 	let staking = MovementStaking::new(self.staking_address, &self.rpc_provider);
-
-	// 	// First check current stake
-	// 	let initial_stake = staking.getCurrentEpochStake(
-	// 		self.contract_address,  // domain
-	// 		self.move_token_address,  // custodian
-	// 		self.signer_address  // attester
-	// 	)
-	// 		.call()
-	// 		.await
-	// 		.map_err(|e| McrClientError::Internal(Box::new(e)))?;
-
-	// 	// First approve the staking contract to spend our MOVE tokens
-	// 	let approve_call = move_token.approve(self.staking_address, U256::from(amount));
-	// 	send_transaction(
-	// 		self.signer_address,
-	// 		approve_call,
-	// 		&self.send_transaction_error_rules,
-	// 		self.send_transaction_retries,
-	// 		self.gas_limit as u128,
-	// 	).await?;
-
-	// 	// Then stake the tokens
-	// 	let stake_call = staking.stake(
-	// 		self.contract_address,  // domain
-	// 		self.move_token_address,  // custodian token
-	// 		U256::from(amount)  // amount
-	// 	);
-	// 	send_transaction(
-	// 		self.signer_address,
-	// 		stake_call,
-	// 		&self.send_transaction_error_rules,
-	// 		self.send_transaction_retries,
-	// 		self.gas_limit as u128,
-	// 	).await?;
-
-	// 	// Verify the stake was successful by checking if it increased
-	// 	let final_stake = staking.getCurrentEpochStake(
-	// 		self.contract_address,  // domain
-	// 		self.move_token_address,  // custodian
-	// 		self.signer_address  // attester
-	// 	)
-	// 		.call()
-	// 		.await
-	// 		.map_err(|e| McrClientError::Internal(Box::new(e)))?;
-
-	// 	// If stake didn't increase, the staking failed
-	// 	if final_stake._0 <= initial_stake._0 {
-	// 		return Err(McrClientError::Internal(Box::new(std::io::Error::new(
-	// 			std::io::ErrorKind::Other,
-	// 			"Staking failed - stake amount did not increase"
-	// 		))))
-	// 	}
-
-	// 	Ok(())
-	// }
 
 	/// Get the current epoch stake for an attester
 	async fn get_stake(&self, custodian: String, attester: String) -> Result<u64, McrClientError> {
