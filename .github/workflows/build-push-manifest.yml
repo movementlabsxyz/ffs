@@ -45,4 +45,4 @@ jobs:
       
       - name: Build and push container tags
         run: |
-          ./scripts/docker/build-push-manifest -n ${{ inputs.container_name }}
+          ./scripts/docker/build-push-manifest.sh -n ${{ inputs.container_name }}
