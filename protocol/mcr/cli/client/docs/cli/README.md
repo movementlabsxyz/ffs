@@ -127,7 +127,7 @@ KEEP THIS UNTIL PRODUCTION-READY : Defined in: protocol/mcr/cli/client/src/cli/e
 
 Force a commitment (admin only)
 
-**Usage:** `mcr-protocol-client eth post-admin-commitment [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --signer-identifier <SIGNER_IDENTIFIER> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --commitment-lead-tolerance <COMMITMENT_LEAD_TOLERANCE> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> --commitment-id <COMMITMENT_ID> --commitment-value <COMMITMENT_VALUE>`
+**Usage:** `mcr-protocol-client eth post-admin-commitment [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --signer-identifier <SIGNER_IDENTIFIER> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --commitment-lead-tolerance <COMMITMENT_LEAD_TOLERANCE> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> --id <ID> --vote <VOTE>`
 
 ###### **Options:**
 
@@ -144,8 +144,8 @@ Force a commitment (admin only)
 * `--move-token-address <MOVE_TOKEN_ADDRESS>` — The move token address
 * `--staking-address <STAKING_ADDRESS>` — The staking address
 * `--height <HEIGHT>` — The commitment height at which to commit
-* `--commitment-id <COMMITMENT_ID>` — The commitment id to commit
-* `--commitment-value <COMMITMENT_VALUE>` — The commitment value to commit
+* `--id <ID>` — The commitment id to commit
+* `--vote <VOTE>` — The commitment value to commit
 
 
 
@@ -153,7 +153,7 @@ Force a commitment (admin only)
 
 Post a single commitment
 
-**Usage:** `mcr-protocol-client eth post-commitment [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --signer-identifier <SIGNER_IDENTIFIER> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --commitment-lead-tolerance <COMMITMENT_LEAD_TOLERANCE> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> --height <HEIGHT> --commitment-id <COMMITMENT_ID> --commitment-value <COMMITMENT_VALUE>`
+**Usage:** `mcr-protocol-client eth post-commitment [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --signer-identifier <SIGNER_IDENTIFIER> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --commitment-lead-tolerance <COMMITMENT_LEAD_TOLERANCE> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> --height <HEIGHT> --id <ID> --vote <VOTE>`
 
 ###### **Options:**
 
@@ -170,8 +170,8 @@ Post a single commitment
 * `--move-token-address <MOVE_TOKEN_ADDRESS>` — The move token address
 * `--staking-address <STAKING_ADDRESS>` — The staking address
 * `--height <HEIGHT>` — The height of the commitment block at which to commit
-* `--commitment-id <COMMITMENT_ID>` — The id of the commitment block at which to commit
-* `--commitment-value <COMMITMENT_VALUE>` — The commitment value to commit
+* `--id <ID>` — The id of the commitment block at which to commit
+* `--vote <VOTE>` — The commitment value to commit
 
 
 
@@ -179,7 +179,7 @@ Post a single commitment
 
 Post a batch of commitments
 
-**Usage:** `mcr-protocol-client eth post-commitment-batch [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --signer-identifier <SIGNER_IDENTIFIER> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --commitment-lead-tolerance <COMMITMENT_LEAD_TOLERANCE> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> --height <HEIGHT> --commitment-id <COMMITMENT_ID> --commitment-value <COMMITMENT_VALUE>`
+**Usage:** `mcr-protocol-client eth post-commitment-batch [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --signer-identifier <SIGNER_IDENTIFIER> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --commitment-lead-tolerance <COMMITMENT_LEAD_TOLERANCE> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> --height <HEIGHT> --id <ID> --vote <VOTE>`
 
 ###### **Options:**
 
@@ -196,8 +196,8 @@ Post a batch of commitments
 * `--move-token-address <MOVE_TOKEN_ADDRESS>` — The move token address
 * `--staking-address <STAKING_ADDRESS>` — The staking address
 * `--height <HEIGHT>` — The height of the block to commit
-* `--commitment-id <COMMITMENT_ID>` — The id of the block to commit
-* `--commitment-value <COMMITMENT_VALUE>` — The commitment value to commit
+* `--id <ID>` — The id of the block to commit
+* `--vote <VOTE>` — The commitment value to commit
 
 
 

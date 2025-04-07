@@ -179,7 +179,7 @@ contract McrAROTest is Test {
         MCR.Commitment memory commitment1 = mcr.createCommitment(
             1, // height
             keccak256("block1"), // commitment
-            keccak256("commitmentId1") // commitmentId
+            keccak256("id1") // id
         );
         
         // Submit the commitment
@@ -195,7 +195,7 @@ contract McrAROTest is Test {
         MCR.Commitment memory commitment2 = mcr.createCommitment(
             2, // height
             keccak256("block2"), // commitment
-            keccak256("commitmentId2") // commitmentId
+            keccak256("id2") // id
         );
         
         // Skip a short time to ensure speed bonus
@@ -223,7 +223,7 @@ contract McrAROTest is Test {
             MCR.Commitment memory commitment = mcr.createCommitment(
                 i, // height
                 keccak256(abi.encodePacked("block", i)), // commitment 
-                keccak256(abi.encodePacked("commitmentId", i)) // commitmentId
+                keccak256(abi.encodePacked("id", i)) // id
             );
             
             vm.prank(attester1);
@@ -249,7 +249,7 @@ contract McrAROTest is Test {
         MCR.Commitment memory rolloverCommitment = mcr.createCommitment(
             6, // height
             keccak256("block6"), // commitment
-            keccak256("commitmentId6") // commitmentId
+            keccak256("id6") // id
         );
         
         vm.prank(attester1);
@@ -287,7 +287,7 @@ contract McrAROTest is Test {
             MCR.Commitment memory commitment = mcr.createCommitment(
                 i, // height
                 keccak256(abi.encodePacked("block", i)), // commitment 
-                keccak256(abi.encodePacked("commitmentId", i)) // commitmentId
+                keccak256(abi.encodePacked("id", i)) // id
             );
             
             vm.prank(attester1);
@@ -348,7 +348,7 @@ contract McrAROTest is Test {
         MCR.Commitment memory commitment = mcr.createCommitment(
             10, // height (new height to avoid conflicts)
             keccak256("block10"), // commitment
-            keccak256("commitmentId10") // commitmentId
+            keccak256("id10") // id
         );
         
         vm.prank(attester1);
