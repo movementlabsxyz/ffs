@@ -5688,6 +5688,31 @@ dependencies = [
 ]
 
 [[package]]
+name = "test-test2-mcr-network-anvil-component-core"
+version = "0.0.1"
+dependencies = [
+ "anyhow",
+ "async-stream",
+ "async-trait",
+ "futures",
+ "kestrel",
+ "mcr-config",
+ "mcr-network-anvil-component-core",
+ "mcr-protocol-client-core-mock",
+ "mcr-protocol-client-core-util",
+ "mcr-protocol-client-eth-core",
+ "mcr-protocol-deployer-eth-core",
+ "mcr-types",
+ "network-anvil-component-core",
+ "secure-signer",
+ "secure-signer-loader",
+ "serde_json",
+ "strip-ansi-escapes",
+ "tokio",
+ "tokio-stream",
+]
+
+[[package]]
 name = "thiserror"
 version = "1.0.69"
 source = "registry+https://github.com/rust-lang/crates.io-index"
