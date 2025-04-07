@@ -8,8 +8,6 @@ on:
         description: The name of the container to build
         required: true
     secrets:
-      GITHUB_TOKEN:
-        required: true
       DOCKER_HUB_USERNAME:
         required: true
       DOCKER_HUB_TOKEN:
