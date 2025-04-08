@@ -11,9 +11,7 @@ use bytes::BytesMut;
 use alloy_network::TxSigner;
 use url::Url;
 use hex;
-use alloy_primitives::Bytes;
 use std::borrow::Cow;
-// use alloy_rpc_types_eth::request::CallRequest;
 
 #[derive(Debug, Clone)]
 pub enum Act {
@@ -128,11 +126,19 @@ impl Client {
         let url = Url::parse("http://localhost:8545")?;
         let provider = ProviderBuilder::new().on_http(url);
         let token: Address = token_address.parse()?;
-        let balance = self.handle_get_token_balance(&token_address, &address_sender).await?;
-        println!("[handle_transfer_tokens] balance: {:?}", balance);
-        // if the balance is 0, then there is an error. exit.
-        if balance == U256::ZERO {
-            return Err(anyhow::anyhow!("balance is 0"));
+
+        
+        let move_balance = self.handle_get_token_balance(&token_address, &address_sender).await?;
+        println!("[handle_transfer_tokens] MOVE balance: {:?}", move_balance);
+        if move_balance == U256::ZERO {
+            return Err(anyhow::anyhow!("insufficient MOVE token balance"));
+        }
+        
+        let sender_address: Address = address_sender.parse()?;
+        let eth_balance = provider.get_balance(sender_address).await?;
+        println!("[handle_transfer_tokens] ETH balance: {:?}", eth_balance);
+        if eth_balance == U256::ZERO {
+            return Err(anyhow::anyhow!("insufficient ETH balance to cover gas"));
         }
 
         let url = Url::parse("http://localhost:8545")?;
