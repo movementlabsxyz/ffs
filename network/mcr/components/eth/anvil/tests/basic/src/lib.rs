@@ -91,5 +91,3 @@ impl Basic {
         Ok(())
     }
 }
-
-// ... rest of the code from basic/mod.rs ...
