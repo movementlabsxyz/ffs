@@ -1,6 +1,5 @@
 use super::{Client, MCRStorage, MOVEToken, MCR};
 use alloy::providers::Provider;
-use alloy_contract::Event;
 use alloy_network::{Ethereum, Network};
 use alloy_primitives::Address;
 use alloy_rpc_types::Filter;
