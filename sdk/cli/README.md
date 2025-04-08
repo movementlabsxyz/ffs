@@ -36,13 +36,6 @@ The commands are composed as follows:
   -- <any anvil data> // any anvil data to pass to anvil
 ```
 
-**CLI supported protocols**
-The following protocols are supported:
-
-- `mcr` (Multi-Commit Rollup Protocol)
-- `pcp` (Postconfirmation Protocol)
-
-
 ## CLI Conventions
 
 This section outlines the conventions used across FFS CLIs. Following these conventions ensures consistent user experience across all FFS CLIs and prevents namespace conflicts between protocols.
@@ -65,10 +58,47 @@ Modules are implemented as subdirectories in the `cli` directory of a given prot
 cli/
   mod.rs           # Main CLI structure
   post_commitment/ # Specific subcommand
-  eth/
+      mod.rs       # Subcommand structure
 ```
 
 This structure keeps related code together and makes it easy to add new commands without duplicating code.
+
+We can view the CLI as a tree structure (from the point of view of the user). In contrast, for the developer it is organized such that code is not minimally duplicated. The following diagram shows the difference:
+
+<div style="display: flex; gap: 2rem; align-items: flex-start;">
+
+<div style="flex: 1; text-align: center;">
+    
+```mermaid
+graph TD
+    ffs-dev --> protocol1
+    protocol1 --> C_1
+    C_1 --> D_1
+    ffs-dev --> protocol2
+    protocol2 --> F
+    protocol2 --> C_2
+    C_2 --> D_2
+```
+
+<p><strong>Figure 1:</strong> The flow when using the CLI.</p>
+</div>
+
+<div style="flex: 1; text-align: center;">
+    
+```mermaid
+graph TD
+    ffs-dev' --> protocol1' 
+    protocol1' --> protocol/path/to/C
+    protocol/path/to/C --> protocol/path/to/D
+    ffs-dev' --> protocol2'
+    protocol2' --> F'
+    protocol2' --> protocol/path/to/C
+```
+
+<p><strong>Figure 2:</strong> The flow when developing the CLI.</p>
+</div>
+
+</div>
 
 ### Testing
 
