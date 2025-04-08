@@ -5823,6 +5823,70 @@ dependencies = [
 ]
 
 [[package]]
+name = "mcr-node-eth-emln-core"
+version = "0.0.1"
+dependencies = [
+ "alloy 0.12.6",
+ "alloy-contract",
+ "alloy-network 0.12.6",
+ "alloy-primitives 0.8.23",
+ "alloy-provider 0.12.6",
+ "alloy-rpc-types 0.12.6",
+ "alloy-signer 0.12.6",
+ "alloy-sol-types",
+ "alloy-transport 0.12.6",
+ "alloy-transport-ws",
+ "anyhow",
+ "async-stream",
+ "async-trait",
+ "clap",
+ "futures",
+ "helios",
+ "hex",
+ "mcr-protocol-client-core-util",
+ "mcr-protocol-client-eth-core",
+ "mcr-types",
+ "secure-signer",
+ "secure-signer-eth",
+ "secure-signer-loader",
+ "serde",
+ "serde_json",
+ "thiserror 1.0.69",
+ "tokio",
+ "tokio-stream",
+ "tracing",
+ "tracing-subscriber",
+]
+
+[[package]]
+name = "mcr-node-eth-exln-core"
+version = "0.0.1"
+dependencies = [
+ "anyhow",
+ "async-stream",
+ "async-trait",
+ "clap",
+ "futures",
+ "helios",
+ "hex",
+ "mcr-light-node-proto",
+ "mcr-protocol-client-core-util",
+ "mcr-protocol-client-eth-core",
+ "mcr-types",
+ "secure-signer",
+ "secure-signer-eth",
+ "secure-signer-loader",
+ "serde",
+ "serde_json",
+ "thiserror 1.0.69",
+ "tokio",
+ "tokio-stream",
+ "tonic",
+ "tracing",
+ "tracing-subscriber",
+]
+
+[[package]]
 name = "mcr-protocol"
 version = "0.0.1"
 dependencies = [

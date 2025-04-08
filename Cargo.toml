@@ -17,6 +17,7 @@ members = [
   "protocol/mcr/actors/*",
   "protocol/mcr/cli/*",
   "protocol/mcr/dlu/eth/deployer",
+  "node/mcr/node/light/eth/*",
   "network/mcr/cli/*",
   "network/mcr/cli/coordinator/tests/*",
   "network/mcr/components/eth/*",

@@ -57,7 +57,7 @@ impl McrClientOperations for Client {
 	}
 
 	async fn force_commitment(&self, commitment: Commitment) -> Result<(), McrClientError> {
-		let request = PostCommitmentRequest::try_from(commitment)
+		let request = ForceCommitmentRequest::try_from(commitment)
 			.map_err(|e| McrClientError::AdminFunction(Box::new(e)))?;
 
 		self.client
@@ -70,11 +70,10 @@ impl McrClientOperations for Client {
 	}
 
 	async fn stream_commitments(&self) -> Result<CommitmentStream, McrClientError> {
-		let request = tonic::Request::new(());
 		let mut stream = self
 			.client
 			.clone()
-			.stream_commitments(request)
+			.stream_commitments(StreamCommitmentsRequest {})
 			.await
 			.map_err(|e| McrClientError::StreamCommitments(Box::new(e)))?
 			.into_inner();
@@ -92,7 +91,7 @@ impl McrClientOperations for Client {
 		&self,
 		height: u64,
 	) -> Result<Option<Commitment>, McrClientError> {
-		let request = GetCommitmentAtHeightRequest { height };
+		let request = GetAcceptedCommitmentAtHeightRequest { height };
 		let response = self
 			.client
 			.clone()
@@ -110,7 +109,7 @@ impl McrClientOperations for Client {
 		&self,
 		height: u64,
 	) -> Result<Option<Commitment>, McrClientError> {
-		let request = GetCommitmentAtHeightRequest { height };
+		let request = GetPostedCommitmentAtHeightRequest { height };
 		let response = self
 			.client
 			.clone()
@@ -128,7 +127,7 @@ impl McrClientOperations for Client {
 		let response = self
 			.client
 			.clone()
-			.get_max_tolerable_commitment_height(())
+			.get_max_tolerable_commitment_height(GetMaxTolerableCommitmentHeightRequest {})
 			.await
 			.map_err(|e| McrClientError::Internal(Box::new(e)))?;
 
@@ -143,7 +142,7 @@ impl McrClientOperations for Client {
 		height: u64,
 		attester: String,
 	) -> Result<Option<Commitment>, McrClientError> {
-		let request = GetValidatorCommitmentRequest { height, attester };
+		let request = GetValidatorCommitmentAtHeightRequest { height, attester };
 		let response = self
 			.client
 			.clone()
@@ -178,7 +177,7 @@ impl McrClientOperations for Client {
 		let response = self
 			.client
 			.clone()
-			.get_last_accepted_block_height(())
+			.get_last_accepted_block_height(GetLastAcceptedBlockHeightRequest {})
 			.await
 			.map_err(|e| McrClientError::Internal(Box::new(e)))?;
 
@@ -192,7 +191,7 @@ impl McrClientOperations for Client {
 		let response = self
 			.client
 			.clone()
-			.get_leading_commitment_tolerance(())
+			.get_leading_commitment_tolerance(GetLeadingCommitmentToleranceRequest {})
 			.await
 			.map_err(|e| McrClientError::Internal(Box::new(e)))?;
 

@@ -60,7 +60,7 @@ impl FromStr for Id {
 	type Err = anyhow::Error;
 
 	fn from_str(s: &str) -> Result<Self, Self::Err> {
-		let bytes = hex::decode(s)?;
+		let bytes = hex::decode(s).map_err(|_| anyhow::anyhow!("invalid id: {}", s))?;
 		Ok(Self::new(bytes.try_into().map_err(|_| anyhow::anyhow!("invalid id: {}", s))?))
 	}
 }
@@ -73,7 +73,8 @@ impl FromStr for Vote {
 	type Err = anyhow::Error;
 
 	fn from_str(s: &str) -> Result<Self, Self::Err> {
-		let bytes = hex::decode(s)?;
+		let bytes =
+			hex::decode(s).map_err(|_| anyhow::anyhow!("invalid commitment value: {}", s))?;
 		Ok(Self::new(
 			bytes
 				.try_into()

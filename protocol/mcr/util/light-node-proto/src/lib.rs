@@ -73,6 +73,28 @@ impl TryFrom<mcr_types::commitment::Commitment> for PostCommitmentRequest {
 	}
 }
 
+// Convert ForceCommitmentRequest
+impl TryFrom<ForceCommitmentRequest> for mcr_types::commitment::Commitment {
+	type Error = McrLightNodeProtoError;
+	fn try_from(value: ForceCommitmentRequest) -> Result<Self, Self::Error> {
+		value
+			.commitment
+			.ok_or_else(|| {
+				McrLightNodeProtoError::ConvertToDomain(
+					"missing commitment in ForceCommitmentRequest".into(),
+				)
+			})?
+			.try_into()
+	}
+}
+
+impl TryFrom<mcr_types::commitment::Commitment> for ForceCommitmentRequest {
+	type Error = McrLightNodeProtoError;
+	fn try_from(value: mcr_types::commitment::Commitment) -> Result<Self, Self::Error> {
+		Ok(ForceCommitmentRequest { commitment: Some(value.try_into()?) })
+	}
+}
+
 // Convert PostCommitmentBatchRequest
 impl TryFrom<PostCommitmentBatchRequest> for Vec<mcr_types::commitment::Commitment> {
 	type Error = McrLightNodeProtoError;
@@ -90,42 +112,101 @@ impl TryFrom<Vec<mcr_types::commitment::Commitment>> for PostCommitmentBatchRequ
 	}
 }
 
-// Convert GetCommitmentResponse
-impl TryFrom<GetCommitmentResponse> for Option<mcr_types::commitment::Commitment> {
+// Convert StreamCommitmentsResponse
+impl TryFrom<StreamCommitmentsResponse> for mcr_types::commitment::Commitment {
 	type Error = McrLightNodeProtoError;
-	fn try_from(value: GetCommitmentResponse) -> Result<Self, Self::Error> {
-		Ok(value.commitment.map(|c| c.try_into()).transpose()?)
-	}
-}
-
-impl TryFrom<Option<mcr_types::commitment::Commitment>> for GetCommitmentResponse {
-	type Error = McrLightNodeProtoError;
-	fn try_from(value: Option<mcr_types::commitment::Commitment>) -> Result<Self, Self::Error> {
-		Ok(GetCommitmentResponse { commitment: value.map(|c| c.try_into()).transpose()? })
-	}
-}
-
-// Convert CommitmentStreamResponse
-impl TryFrom<CommitmentStreamResponse> for mcr_types::commitment::Commitment {
-	type Error = McrLightNodeProtoError;
-	fn try_from(value: CommitmentStreamResponse) -> Result<Self, Self::Error> {
+	fn try_from(value: StreamCommitmentsResponse) -> Result<Self, Self::Error> {
 		value
 			.commitment
 			.ok_or_else(|| {
 				McrLightNodeProtoError::ConvertToDomain(
-					"missing commitment in CommitmentStreamResponse".into(),
+					"missing commitment in StreamCommitmentsResponse".into(),
 				)
 			})?
 			.try_into()
 	}
 }
 
-impl TryFrom<mcr_types::commitment::Commitment> for CommitmentStreamResponse {
+impl TryFrom<mcr_types::commitment::Commitment> for StreamCommitmentsResponse {
 	type Error = McrLightNodeProtoError;
 	fn try_from(value: mcr_types::commitment::Commitment) -> Result<Self, Self::Error> {
-		Ok(CommitmentStreamResponse { commitment: Some(value.try_into()?) })
+		Ok(StreamCommitmentsResponse { commitment: Some(value.try_into()?) })
 	}
 }
+
+// Convert GetAcceptedCommitmentAtHeightResponse
+impl TryFrom<GetAcceptedCommitmentAtHeightResponse> for Option<mcr_types::commitment::Commitment> {
+	type Error = McrLightNodeProtoError;
+	fn try_from(value: GetAcceptedCommitmentAtHeightResponse) -> Result<Self, Self::Error> {
+		Ok(value.commitment.map(|c| c.try_into()).transpose()?)
+	}
+}
+
+impl TryFrom<Option<mcr_types::commitment::Commitment>> for GetAcceptedCommitmentAtHeightResponse {
+	type Error = McrLightNodeProtoError;
+	fn try_from(value: Option<mcr_types::commitment::Commitment>) -> Result<Self, Self::Error> {
+		Ok(GetAcceptedCommitmentAtHeightResponse {
+			commitment: value.map(|c| c.try_into()).transpose()?,
+		})
+	}
+}
+
+// Convert GetPostedCommitmentAtHeightResponse
+impl TryFrom<GetPostedCommitmentAtHeightResponse> for Option<mcr_types::commitment::Commitment> {
+	type Error = McrLightNodeProtoError;
+	fn try_from(value: GetPostedCommitmentAtHeightResponse) -> Result<Self, Self::Error> {
+		Ok(value.commitment.map(|c| c.try_into()).transpose()?)
+	}
+}
+
+impl TryFrom<Option<mcr_types::commitment::Commitment>> for GetPostedCommitmentAtHeightResponse {
+	type Error = McrLightNodeProtoError;
+	fn try_from(value: Option<mcr_types::commitment::Commitment>) -> Result<Self, Self::Error> {
+		Ok(GetPostedCommitmentAtHeightResponse {
+			commitment: value.map(|c| c.try_into()).transpose()?,
+		})
+	}
+}
+
+// Convert GetValidatorCommitmentAtHeightResponse
+impl TryFrom<GetValidatorCommitmentAtHeightResponse> for Option<mcr_types::commitment::Commitment> {
+	type Error = McrLightNodeProtoError;
+	fn try_from(value: GetValidatorCommitmentAtHeightResponse) -> Result<Self, Self::Error> {
+		Ok(value.commitment.map(|c| c.try_into()).transpose()?)
+	}
+}
+
+impl TryFrom<Option<mcr_types::commitment::Commitment>> for GetValidatorCommitmentAtHeightResponse {
+	type Error = McrLightNodeProtoError;
+	fn try_from(value: Option<mcr_types::commitment::Commitment>) -> Result<Self, Self::Error> {
+		Ok(GetValidatorCommitmentAtHeightResponse {
+			commitment: value.map(|c| c.try_into()).transpose()?,
+		})
+	}
+}
+
+// Convert height responses
+macro_rules! impl_height_response {
+	($type:ty) => {
+		impl TryFrom<$type> for u64 {
+			type Error = McrLightNodeProtoError;
+			fn try_from(value: $type) -> Result<Self, Self::Error> {
+				Ok(value.height)
+			}
+		}
+
+		impl TryFrom<u64> for $type {
+			type Error = McrLightNodeProtoError;
+			fn try_from(value: u64) -> Result<Self, Self::Error> {
+				Ok(Self { height: value })
+			}
+		}
+	};
+}
+
+impl_height_response!(GetMaxTolerableCommitmentHeightResponse);
+impl_height_response!(GetLastAcceptedBlockHeightResponse);
+impl_height_response!(GetLeadingCommitmentToleranceResponse);
 
 // Convert StakeRequest/UnstakeRequest
 impl TryFrom<StakeRequest> for alloy_primitives::U256 {
@@ -184,36 +265,6 @@ impl TryFrom<u64> for GetStakeResponse {
 	type Error = McrLightNodeProtoError;
 	fn try_from(value: u64) -> Result<Self, Self::Error> {
 		Ok(GetStakeResponse { stake: value })
-	}
-}
-
-// Convert GetHeightResponse
-impl TryFrom<GetHeightResponse> for u64 {
-	type Error = McrLightNodeProtoError;
-	fn try_from(value: GetHeightResponse) -> Result<Self, Self::Error> {
-		Ok(value.height)
-	}
-}
-
-impl TryFrom<u64> for GetHeightResponse {
-	type Error = McrLightNodeProtoError;
-	fn try_from(value: u64) -> Result<Self, Self::Error> {
-		Ok(GetHeightResponse { height: value })
-	}
-}
-
-// Convert GetValidatorCommitmentRequest
-impl TryFrom<GetValidatorCommitmentRequest> for (u64, String) {
-	type Error = McrLightNodeProtoError;
-	fn try_from(value: GetValidatorCommitmentRequest) -> Result<Self, Self::Error> {
-		Ok((value.height, value.attester))
-	}
-}
-
-impl TryFrom<(u64, String)> for GetValidatorCommitmentRequest {
-	type Error = McrLightNodeProtoError;
-	fn try_from(value: (u64, String)) -> Result<Self, Self::Error> {
-		Ok(GetValidatorCommitmentRequest { height: value.0, attester: value.1 })
 	}
 }
 

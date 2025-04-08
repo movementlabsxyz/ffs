@@ -9,26 +9,6 @@ publish = { workspace = true }
 rust-version = { workspace = true }
 
 [dependencies]
-alloy = { workspace = true, features = [
-    "node-bindings",
-    "rpc-types-trace",
-    "json-rpc",
-    "rpc-client",
-    "signers",
-    "signer-yubihsm",
-    "pubsub",
-    "providers",
-    "eips",
-] }
-alloy-contract = { workspace = true }
-alloy-network = { workspace = true }
-alloy-primitives = { workspace = true }
-alloy-provider = { workspace = true, features = [] }
-alloy-signer = { workspace = true }
-alloy-sol-types = { workspace = true }
-alloy-transport = { workspace = true }
-alloy-transport-ws = { workspace = true }
-
 anyhow = { workspace = true }
 async-stream = { workspace = true }
 async-trait = { workspace = true }
@@ -41,7 +21,6 @@ tracing = { workspace = true }
 serde = { workspace = true }
 hex = { workspace = true }
 
-alloy-rpc-types = { workspace = true }
 futures = { workspace = true }
 tracing-subscriber = { workspace = true }
 mcr-types = { workspace = true }
@@ -52,6 +31,8 @@ secure-signer-eth = { workspace = true }
 helios = { workspace = true }
 
 mcr-protocol-client-eth-core = { workspace = true }
+mcr-light-node-proto = { workspace = true, features = ["server"]}
+tonic = { workspace = true }
 
 [lints]
 workspace = true
