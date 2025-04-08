@@ -38,7 +38,11 @@ sol!(
 	"abis/MOVEToken.json"
 );
 
-pub struct Client<R, W> {
+pub struct Client<R, W>
+where
+	R: Provider + Clone,
+	W: Provider + Clone,
+{
 	pub(crate) run_commitment_admin_mode: bool,
 	pub(crate) rpc_provider: R,
 	pub(crate) ws_provider: W,
