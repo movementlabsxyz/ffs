@@ -118,7 +118,8 @@ impl Test {
             token_address: move_token,
             to: recipient,
             amount: U256::from(1000),
-            private_key: up_state.anvil_data.private_keys[1].clone(),
+            private_key_sender: up_state.anvil_data.private_keys[1].clone(),
+            address_sender: up_state.anvil_data.signers[1].clone(),
         }).await?;
 
         // // Post a commitment

@@ -26,7 +26,8 @@ pub enum Act {
         token_address: String,
         to: String,
         amount: U256,
-        private_key: String,
+        private_key_sender: String,
+        address_sender: String,
     },
 }
 
@@ -39,19 +40,25 @@ impl Client {
         Self { mcr_protocol_client }
     }
 
-    pub async fn act(&self, act: Act) -> Result<(), anyhow::Error> {
+    pub async fn act(&self, act: Act) -> Result<Option<U256>, anyhow::Error> {
         match act {
-            Act::PostCommitment(commitment) => self.handle_post_commitment(commitment).await,
+            Act::PostCommitment(commitment) => {
+                self.handle_post_commitment(commitment).await?;
+                Ok(None)
+            },
             Act::GetTokenBalance { token_address, address } => {
-                self.handle_get_token_balance(token_address, address).await
+                let balance = self.handle_get_token_balance(&token_address, &address).await?;
+                Ok(Some(balance))
             }
             Act::TransferTokens {
                 token_address,
                 to,
                 amount,
-                private_key,
+                private_key_sender,
+                address_sender,
             } => {
-                Self::handle_transfer_tokens(token_address, to, amount, private_key).await
+                self.handle_transfer_tokens(token_address, to, amount, private_key_sender, address_sender).await?;
+                Ok(None)
             }
         }
     }
@@ -64,9 +71,9 @@ impl Client {
 
     async fn handle_get_token_balance(
         &self,
-        token_address: String,
-        address: String,
-    ) -> Result<(), anyhow::Error> {
+        token_address: &str,
+        address: &str,
+    ) -> Result<U256, anyhow::Error> {
         use serde_json::json;
 
         let url = Url::parse("http://localhost:8545")?;
@@ -98,27 +105,30 @@ impl Client {
                 .map_err(|_| anyhow::anyhow!("Expected 32 bytes for U256"))?,
         );
         println!("[handle_get_token_balance] token balance: {}", balance);
-        Ok(())
+        Ok(balance)
     }
 
 
     // transfer move tokens
     async fn handle_transfer_tokens(
+        &self,
         token_address: String,
         to: String,
         amount: U256,
-        private_key: String,
+        private_key_sender: String,
+        address_sender: String,
     ) -> Result<(), anyhow::Error> {
         println!("[handle_transfer_tokens] token_address: {:?}", token_address);
         println!("[handle_transfer_tokens] to: {:?}", to);
         println!("[handle_transfer_tokens] amount: {:?}", amount);
-        println!("[handle_transfer_tokens] private_key: {:?}", private_key);
+        println!("[handle_transfer_tokens] private_key_sender: {:?}", private_key_sender);
+        println!("[handle_transfer_tokens] address_sender: {:?}", address_sender);
 
-        // get the balance of the token
+        // get the balance of the token using handle_get_token_balance
         let url = Url::parse("http://localhost:8545")?;
         let provider = ProviderBuilder::new().on_http(url);
         let token: Address = token_address.parse()?;
-        let balance = provider.get_balance(token).await?;
+        let balance = self.handle_get_token_balance(&token_address, &address_sender).await?;
         println!("[handle_transfer_tokens] balance: {:?}", balance);
         // if the balance is 0, then there is an error. exit.
         if balance == U256::ZERO {
@@ -139,7 +149,7 @@ impl Client {
         data.extend_from_slice(&amount.to_be_bytes::<32>());
     
         // Use alloy_signers instead of raw k256
-        let key_bytes = hex::decode(private_key.strip_prefix("0x").unwrap_or(&private_key))?;
+        let key_bytes = hex::decode(private_key_sender.strip_prefix("0x").unwrap_or(&private_key_sender))?;
         let key_array: [u8; 32] = key_bytes
             .as_slice()
             .try_into()
