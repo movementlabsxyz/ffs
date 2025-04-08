@@ -65,8 +65,8 @@ alloy = { git = "https://github.com/alloy-rs/alloy.git", package = "alloy", rev 
   "pubsub",
   "providers",
 ] }
-# alloy-rpc-types-eth  = "0.13.0"
-alloy-rpc-types-eth  = { git = "https://github.com/alloy-rs/alloy.git", rev = "bc190c61f1bee74271a29ea6275ab674fcfe73d5" }
+alloy-rpc-types-eth  = "0.12"
+# alloy-rpc-types-eth  = { git = "https://github.com/alloy-rs/alloy.git", rev = "bc190c61f1bee74271a29ea6275ab674fcfe73d5" }
 alloy-eips = { git = "https://github.com/alloy-rs/alloy.git", rev = "bc190c61f1bee74271a29ea6275ab674fcfe73d5" }
 alloy-contract = { git = "https://github.com/alloy-rs/alloy.git", rev = "bc190c61f1bee74271a29ea6275ab674fcfe73d5" }
 alloy-network = { git = "https://github.com/alloy-rs/alloy.git", rev = "bc190c61f1bee74271a29ea6275ab674fcfe73d5" }
@@ -117,7 +117,6 @@ ignore = "0.4.20"
 convert_case = "0.8.0"
 url = "2.4.1"
 bytes = "1.6.0"
-k256 = "0.14.0-pre.2"
 
 # model checking and verification
 

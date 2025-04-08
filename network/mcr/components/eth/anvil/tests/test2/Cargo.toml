@@ -46,7 +46,6 @@ alloy-rlp = { workspace = true }
 hex = { workspace = true }
 alloy-consensus = { workspace = true }
 bytes = { workspace = true }
-k256 = "0.13.3"
 
 [dev-dependencies]
 mcr-protocol-client-core-mock = { workspace = true }
