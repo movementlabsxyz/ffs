@@ -1,5 +1,5 @@
 [package]
-name = "mcr-protocol-client-eth-eln-core"
+name = "mcr-node-eth-exln-core"
 version = { workspace = true }
 edition = { workspace = true }
 license = { workspace = true }

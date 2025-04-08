@@ -25,25 +25,26 @@ use secure_signer_loader::{identifiers::SignerIdentifier /*Load*/};
 use serde::{Deserialize, Serialize};
 // use tracing::info;
 
-pub type StandardClient = Client<
-	FillProvider<
-		JoinFill<
-			JoinFill<
-				alloy::providers::Identity,
-				JoinFill<GasFiller, JoinFill<BlobGasFiller, JoinFill<NonceFiller, ChainIdFiller>>>,
-			>,
-			WalletFiller<EthereumWallet>,
-		>,
-		RootProvider,
-	>,
-	FillProvider<
+pub type StandardRpcProvider = FillProvider<
+	JoinFill<
 		JoinFill<
 			alloy::providers::Identity,
 			JoinFill<GasFiller, JoinFill<BlobGasFiller, JoinFill<NonceFiller, ChainIdFiller>>>,
 		>,
-		RootProvider,
+		WalletFiller<EthereumWallet>,
 	>,
+	RootProvider,
 >;
+
+pub type StandardWsProvider = FillProvider<
+	JoinFill<
+		alloy::providers::Identity,
+		JoinFill<GasFiller, JoinFill<BlobGasFiller, JoinFill<NonceFiller, ChainIdFiller>>>,
+	>,
+	RootProvider,
+>;
+
+pub type StandardClient = Client<StandardRpcProvider, StandardWsProvider>;
 
 #[derive(Parser, Debug, Serialize, Deserialize, Clone)]
 #[clap(help_expected = true)]
@@ -120,7 +121,7 @@ impl Config {
 	}
 
 	/// Builds the MCR client.
-	pub async fn build(self) -> Result<StandardClient, anyhow::Error> {
+	pub async fn build(&self) -> Result<StandardClient, anyhow::Error> {
 		let raw_key = self.signer_identifier.try_raw_private_key().context("failed to get the raw private key from the signer identifier; only local signers are currently supported")?;
 		// add the 0x
 		let raw_key_string = format!("0x{}", hex::encode(raw_key));
@@ -148,7 +149,7 @@ impl Config {
 			.context("failed to create the RPC provider for the MCR settlement client")?;
 
 		// Build the ws provider
-		let ws = WsConnect::new(self.ws_url);
+		let ws = WsConnect::new(self.ws_url.clone());
 		let ws_provider = ProviderBuilder::new()
 			.on_ws(ws)
 			.await
