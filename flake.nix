@@ -26,6 +26,7 @@
 
         # An LLVM build environment
         buildDependencies = with pkgs; [
+          perl
           llvmPackages.bintools
           openssl
           openssl.dev
