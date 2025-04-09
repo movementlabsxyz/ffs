@@ -48,6 +48,7 @@ pub type StandardClient = Client<StandardRpcProvider, StandardWsProvider>;
 
 #[derive(Parser, Debug, Serialize, Deserialize, Clone)]
 #[clap(help_expected = true)]
+#[group(skip)]
 pub struct Config {
 	/// The address of the MCR settlement contract.
 	#[arg(long)]

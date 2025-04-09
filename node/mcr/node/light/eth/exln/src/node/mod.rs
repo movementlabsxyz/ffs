@@ -1,5 +1,7 @@
 use futures::StreamExt;
-use mcr_light_node_proto::mcr_light_node_service_server::McrLightNodeService;
+use mcr_light_node_proto::mcr_light_node_service_server::{
+	McrLightNodeService, McrLightNodeServiceServer,
+};
 use mcr_light_node_proto::{
 	ForceCommitmentRequest, ForceCommitmentResponse, GetAcceptedCommitmentAtHeightRequest,
 	GetAcceptedCommitmentAtHeightResponse, GetBalanceRequest, GetBalanceResponse,
@@ -19,10 +21,12 @@ use mcr_protocol_client_eth_core::config::StandardClient;
 use mcr_types::commitment::Commitment;
 use std::pin::Pin;
 use tokio_stream::Stream;
+use tonic::transport::Server;
 use tonic::{Request, Response, Status};
 
 pub struct Node {
-	client: StandardClient,
+	pub(crate) client: StandardClient,
+	pub(crate) address: String,
 }
 
 #[tonic::async_trait]
@@ -267,5 +271,24 @@ impl McrLightNodeService for Node {
 			.map_err(|e: McrLightNodeProtoError| Status::internal(e.to_string()))?;
 		self.client.unstake(amount).await.map_err(|e| Status::internal(e.to_string()))?;
 		Ok(Response::new(UnstakeResponse {}))
+	}
+}
+
+impl Node {
+	pub async fn run(self) -> Result<(), anyhow::Error> {
+		let reflection = tonic_reflection::server::Builder::configure()
+			.register_encoded_file_descriptor_set(mcr_light_node_proto::FILE_DESCRIPTOR_SET)
+			.build_v1()?;
+		let address = self.address.clone();
+
+		Server::builder()
+			.max_frame_size(1024 * 1024 * 16 - 1)
+			.accept_http1(true)
+			.add_service(McrLightNodeServiceServer::new(self))
+			.add_service(reflection)
+			.serve(address.parse()?)
+			.await?;
+
+		Ok(())
 	}
 }

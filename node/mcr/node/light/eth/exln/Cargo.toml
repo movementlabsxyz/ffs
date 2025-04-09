@@ -1,5 +1,5 @@
 [package]
-name = "mcr-node-eth-exln-core"
+name = "mcr-light-node-eth-exln-core"
 version = { workspace = true }
 edition = { workspace = true }
 license = { workspace = true }
@@ -33,6 +33,7 @@ helios = { workspace = true }
 mcr-protocol-client-eth-core = { workspace = true }
 mcr-light-node-proto = { workspace = true, features = ["server"]}
 tonic = { workspace = true }
+tonic-reflection = { workspace = true }
 
 [lints]
 workspace = true

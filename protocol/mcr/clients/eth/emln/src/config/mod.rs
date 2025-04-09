@@ -48,6 +48,7 @@ impl From<Finality> for BlockTag {
 
 #[derive(Parser, Debug, Serialize, Deserialize, Clone)]
 #[clap(help_expected = true)]
+#[group(skip)]
 pub struct Config {
 	#[clap(flatten)]
 	pub core: CoreConfig,

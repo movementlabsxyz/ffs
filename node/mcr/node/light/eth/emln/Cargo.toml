@@ -1,5 +1,5 @@
 [package]
-name = "mcr-node-eth-emln-core"
+name = "mcr-light-node-eth-emln-core"
 version = { workspace = true }
 edition = { workspace = true }
 license = { workspace = true }
@@ -51,7 +51,10 @@ secure-signer-loader = { workspace = true }
 secure-signer-eth = { workspace = true }
 helios = { workspace = true }
 
-mcr-protocol-client-eth-core = { workspace = true }
+mcr-protocol-client-eth-emln-core = { workspace = true }
+mcr-light-node-proto = { workspace = true, features = ["server"]}
+tonic = { workspace = true }
+tonic-reflection = { workspace = true }
 
 [lints]
 workspace = true

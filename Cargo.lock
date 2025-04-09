@@ -2899,7 +2899,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "18e4fdb82bd54a12e42fb58a800dcae6b9e13982238ce2296dc3570b92148e1f"
 dependencies = [
  "data-encoding",
- "syn 1.0.109",
+ "syn 2.0.100",
 ]
 
 [[package]]
@@ -5723,6 +5723,90 @@ dependencies = [
 ]
 
 [[package]]
+name = "mcr-light-node-eth"
+version = "0.0.1"
+dependencies = [
+ "anyhow",
+ "clap",
+ "clap-markdown-ext",
+ "dotenv",
+ "jsonlvar",
+ "mcr-light-node-eth-emln-core",
+ "mcr-light-node-eth-exln-core",
+ "orfile",
+ "serde",
+ "tokio",
+]
+
+[[package]]
+name = "mcr-light-node-eth-emln-core"
+version = "0.0.1"
+dependencies = [
+ "alloy 0.12.6",
+ "alloy-contract",
+ "alloy-network 0.12.6",
+ "alloy-primitives 0.8.23",
+ "alloy-provider 0.12.6",
+ "alloy-rpc-types 0.12.6",
+ "alloy-signer 0.12.6",
+ "alloy-sol-types",
+ "alloy-transport 0.12.6",
+ "alloy-transport-ws",
+ "anyhow",
+ "async-stream",
+ "async-trait",
+ "clap",
+ "futures",
+ "helios",
+ "hex",
+ "mcr-light-node-proto",
+ "mcr-protocol-client-core-util",
+ "mcr-protocol-client-eth-emln-core",
+ "mcr-types",
+ "secure-signer",
+ "secure-signer-eth",
+ "secure-signer-loader",
+ "serde",
+ "serde_json",
+ "thiserror 1.0.69",
+ "tokio",
+ "tokio-stream",
+ "tonic",
+ "tonic-reflection",
+ "tracing",
+ "tracing-subscriber",
+]
+
+[[package]]
+name = "mcr-light-node-eth-exln-core"
+version = "0.0.1"
+dependencies = [
+ "anyhow",
+ "async-stream",
+ "async-trait",
+ "clap",
+ "futures",
+ "helios",
+ "hex",
+ "mcr-light-node-proto",
+ "mcr-protocol-client-core-util",
+ "mcr-protocol-client-eth-core",
+ "mcr-types",
+ "secure-signer",
+ "secure-signer-eth",
+ "secure-signer-loader",
+ "serde",
+ "serde_json",
+ "thiserror 1.0.69",
+ "tokio",
+ "tokio-stream",
+ "tonic",
+ "tonic-reflection",
+ "tracing",
+ "tracing-subscriber",
+]
+
+[[package]]
 name = "mcr-light-node-proto"
 version = "0.0.1"
 dependencies = [
@@ -5820,70 +5904,6 @@ dependencies = [
  "serde_json",
  "tokio",
  "tokio-stream",
-]
-
-[[package]]
-name = "mcr-node-eth-emln-core"
-version = "0.0.1"
-dependencies = [
- "alloy 0.12.6",
- "alloy-contract",
- "alloy-network 0.12.6",
- "alloy-primitives 0.8.23",
- "alloy-provider 0.12.6",
- "alloy-rpc-types 0.12.6",
- "alloy-signer 0.12.6",
- "alloy-sol-types",
- "alloy-transport 0.12.6",
- "alloy-transport-ws",
- "anyhow",
- "async-stream",
- "async-trait",
- "clap",
- "futures",
- "helios",
- "hex",
- "mcr-protocol-client-core-util",
- "mcr-protocol-client-eth-core",
- "mcr-types",
- "secure-signer",
- "secure-signer-eth",
- "secure-signer-loader",
- "serde",
- "serde_json",
- "thiserror 1.0.69",
- "tokio",
- "tokio-stream",
- "tracing",
- "tracing-subscriber",
-]
-
-[[package]]
-name = "mcr-node-eth-exln-core"
-version = "0.0.1"
-dependencies = [
- "anyhow",
- "async-stream",
- "async-trait",
- "clap",
- "futures",
- "helios",
- "hex",
- "mcr-light-node-proto",
- "mcr-protocol-client-core-util",
- "mcr-protocol-client-eth-core",
- "mcr-types",
- "secure-signer",
- "secure-signer-eth",
- "secure-signer-loader",
- "serde",
- "serde_json",
- "thiserror 1.0.69",
- "tokio",
- "tokio-stream",
- "tonic",
- "tracing",
- "tracing-subscriber",
 ]
 
 [[package]]
@@ -9209,6 +9229,19 @@ dependencies = [
  "prost-types",
  "quote",
  "syn 2.0.100",
+]
+
+[[package]]
+name = "tonic-reflection"
+version = "0.12.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "878d81f52e7fcfd80026b7fdb6a9b578b3c3653ba987f87f0dce4b64043cba27"
+dependencies = [
+ "prost",
+ "prost-types",
+ "tokio",
+ "tokio-stream",
+ "tonic",
 ]
 
 [[package]]

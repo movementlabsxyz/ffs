@@ -18,6 +18,7 @@ members = [
   "protocol/mcr/cli/*",
   "protocol/mcr/dlu/eth/deployer",
   "node/mcr/node/light/eth/*",
+  "node/mcr/cli/service/light/*",
   "network/mcr/cli/*",
   "network/mcr/cli/coordinator/tests/*",
   "network/mcr/components/eth/*",
@@ -169,11 +170,15 @@ mcr-light-node-proto = { path = "protocol/mcr/util/light-node-proto" }
 mcr-config = { path = "protocol/mcr/util/config" }
 mcr-protocol-client-core-util = { path = "protocol/mcr/clients/util" }
 mcr-protocol-client-eth-core = { path = "protocol/mcr/clients/eth/core" }
+mcr-protocol-client-eth-emln-core = { path = "protocol/mcr/clients/eth/emln" }
 mcr-protocol-client-core-mock = { path = "protocol/mcr/clients/mock" }
 mcr-protocol = { path = "protocol/mcr/cli/protocol"}
 mcr-protocol-client = { path = "protocol/mcr/cli/client" }
 mcr-protocol-deployer = { path = "protocol/mcr/cli/deployer" }
 mcr-protocol-deployer-eth-core = { path = "protocol/mcr/dlu/eth/deployer" }
+### node
+mcr-light-node-eth-emln-core = { path = "node/mcr/node/light/eth/emln" }
+mcr-light-node-eth-exln-core = { path = "node/mcr/node/light/eth/exln" }
 ### network
 mcr-network-client = { path = "network/mcr/cli/client" }
 mcr-network-coordinator = { path = "network/mcr/cli/coordinator" }

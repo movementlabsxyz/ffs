@@ -1,5 +1,5 @@
 [package]
-name = "mcr-node-service"
+name = "mcr-light-node-eth"
 version = { workspace = true }
 edition = { workspace = true }
 license = { workspace = true }
@@ -12,8 +12,13 @@ rust-version = { workspace = true }
 tokio = { workspace = true }
 serde = { workspace = true, features = ["derive"] }
 clap = { workspace = true}
+clap-markdown-ext = { workspace = true }
 dotenv = { workspace = true }
 anyhow = { workspace = true }
+mcr-light-node-eth-emln-core = { workspace = true }
+mcr-light-node-eth-exln-core = { workspace = true }
+orfile = { workspace = true }
+jsonlvar = { workspace = true }
 
 [lints]
 workspace = true
