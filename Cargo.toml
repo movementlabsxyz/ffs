@@ -170,6 +170,7 @@ mcr-light-node-proto = { path = "protocol/mcr/util/light-node-proto" }
 mcr-config = { path = "protocol/mcr/util/config" }
 mcr-protocol-client-core-util = { path = "protocol/mcr/clients/util" }
 mcr-protocol-client-eth-core = { path = "protocol/mcr/clients/eth/core" }
+mcr-protocol-client-light-node-proto-core = { path = "protocol/mcr/clients/light-node-proto" }
 mcr-protocol-client-eth-emln-core = { path = "protocol/mcr/clients/eth/emln" }
 mcr-protocol-client-core-mock = { path = "protocol/mcr/clients/mock" }
 mcr-protocol = { path = "protocol/mcr/cli/protocol"}

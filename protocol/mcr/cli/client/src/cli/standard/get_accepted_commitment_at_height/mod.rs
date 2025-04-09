@@ -44,9 +44,6 @@ macro_rules! mcr_get_accepted_commitment_at_height {
 			GetAcceptedCommitmentAtHeightArgs, GetAcceptedCommitmentAtHeightHelper,
 		};
 		use clap::Parser;
-		use mcr_protocol_client_core_util::{
-			McrClientOperations, McrConfigOperations, McrViewOperations,
-		};
 		use orfile::Orfile;
 		use serde::{Deserialize, Serialize};
 

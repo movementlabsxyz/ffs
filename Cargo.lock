@@ -5931,6 +5931,7 @@ dependencies = [
  "hex",
  "mcr-protocol-client-core-util",
  "mcr-protocol-client-eth-core",
+ "mcr-protocol-client-light-node-proto-core",
  "mcr-protocol-deployer-eth-core",
  "mcr-types",
  "orfile",

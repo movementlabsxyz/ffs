@@ -1,4 +1,5 @@
 pub mod eth;
+pub mod light_node_proto;
 pub mod standard;
 use clap::{Parser, Subcommand};
 use clap_markdown_ext::Markdown;

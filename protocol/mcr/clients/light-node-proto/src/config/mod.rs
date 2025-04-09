@@ -2,6 +2,7 @@ use crate::client::Client;
 use clap::Parser;
 use mcr_light_node_proto::mcr_light_node_service_client::McrLightNodeServiceClient;
 use mcr_protocol_client_core_util::McrClientError;
+use mcr_protocol_client_core_util::{McrConfigOperations, McrViewOperations};
 use serde::{Deserialize, Serialize};
 use std::time::Duration;
 
@@ -17,9 +18,11 @@ pub struct Config {
 	pub timeout_ms: u64,
 }
 
-impl Config {
+impl McrConfigOperations for Config {
+	type Client = Client;
+
 	/// Builds a new client from the configuration
-	pub async fn build(&self) -> Result<Client, McrClientError> {
+	async fn build(&self) -> Result<Self::Client, McrClientError> {
 		let mut endpoint = tonic::transport::Endpoint::from_shared(self.endpoint.clone())
 			.map_err(|e| McrClientError::Internal(Box::new(e)))?;
 
@@ -43,5 +46,13 @@ impl Config {
 				.await
 				.map_err(|e| McrClientError::Internal(Box::new(e)))?,
 		})
+	}
+}
+
+impl McrViewOperations for Config {
+	type Config = Config;
+
+	fn try_into_config(self) -> Result<Self::Config, McrClientError> {
+		Ok(self)
 	}
 }

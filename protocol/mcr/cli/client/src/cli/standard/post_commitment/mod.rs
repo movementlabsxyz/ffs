@@ -11,8 +11,11 @@ macro_rules! mcr_post_commitment {
 		#[derive(Parser, Serialize, Deserialize, Debug, Clone, Orfile)]
 		#[clap(help_expected = true)]
 		pub struct PostCommitment {
+			/// Path to the configuration file
+			#[orfile(config)]
+			/// The config to use (this requires a specific account).
 			#[clap(flatten)]
-			config: $config,
+			pub config: $config,
 
 			/// The commitment height at which to commit
 			#[clap(long)]
