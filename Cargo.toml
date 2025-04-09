@@ -10,10 +10,15 @@ members = [
 
   # mcr
   "protocol/mcr/util/*",
-  "protocol/mcr/clients/*",
-  "protocol/mcr/manager",
+  "protocol/mcr/clients/eth/*",
+  "protocol/mcr/clients/light-node-proto",
+  "protocol/mcr/clients/mock",
+  "protocol/mcr/clients/util",
+  "protocol/mcr/actors/*",
   "protocol/mcr/cli/*",
   "protocol/mcr/dlu/eth/deployer",
+  "node/mcr/node/light/eth/*",
+  "node/mcr/cli/service/light/*",
   "network/mcr/cli/*",
   "network/mcr/cli/coordinator/tests/*",
   "network/mcr/components/eth/*",
@@ -41,6 +46,7 @@ members = [
   "util/signing/eth",
   "util/environment",
   "util/include-dir",
+  "util/buildtime/*"
 ]
 
 [workspace.package]
@@ -114,6 +120,14 @@ strip-ansi-escapes = "0.2.1"
 cargo_metadata = "0.19.2"
 ignore = "0.4.20"
 convert_case = "0.8.0"
+toml = "0.8.20"
+tonic = "0.12.3"
+tonic-build = { version = "0.12.3", features = ["prost"] }
+tonic-reflection = "0.12.3"
+tonic-web = "0.12.3"
+prost = "0.13.3"
+
+helios = { git = "https://github.com/movementlabsxyz/helios.git", rev = "7a5fc8af548e8e93863d942f333008e4da5f937c"}
 
 # model checking and verification
 
@@ -152,14 +166,20 @@ network-anvil-component-core = { path = "network/common/components/anvil" }
 ## mcr
 ### protocol
 mcr-types = { path = "protocol/mcr/util/types" }
+mcr-light-node-proto = { path = "protocol/mcr/util/light-node-proto" }
 mcr-config = { path = "protocol/mcr/util/config" }
 mcr-protocol-client-core-util = { path = "protocol/mcr/clients/util" }
-mcr-protocol-client-eth-core = { path = "protocol/mcr/clients/eth" }
+mcr-protocol-client-eth-core = { path = "protocol/mcr/clients/eth/core" }
+mcr-protocol-client-light-node-proto-core = { path = "protocol/mcr/clients/light-node-proto" }
+mcr-protocol-client-eth-emln-core = { path = "protocol/mcr/clients/eth/emln" }
 mcr-protocol-client-core-mock = { path = "protocol/mcr/clients/mock" }
 mcr-protocol = { path = "protocol/mcr/cli/protocol"}
 mcr-protocol-client = { path = "protocol/mcr/cli/client" }
 mcr-protocol-deployer = { path = "protocol/mcr/cli/deployer" }
 mcr-protocol-deployer-eth-core = { path = "protocol/mcr/dlu/eth/deployer" }
+### node
+mcr-light-node-eth-emln-core = { path = "node/mcr/node/light/eth/emln" }
+mcr-light-node-eth-exln-core = { path = "node/mcr/node/light/eth/exln" }
 ### network
 mcr-network-client = { path = "network/mcr/cli/client" }
 mcr-network-coordinator = { path = "network/mcr/cli/coordinator" }
@@ -191,6 +211,9 @@ ffs-dev = { path = "sdk/cli/ffs-dev" }
 secure-signer-eth = { path = "util/signing/eth" }
 ffs-environment = { path = "util/environment" }
 include-dir = { path = "util/include-dir" }
+buildtime = { path = "util/buildtime/buildtime"}
+buildtime-macros = { path = "util/buildtime/buildtime-macros"}
+buildtime-helpers = { path = "util/buildtime/buildtime-helpers"}
 
 
 [workspace.lints.clippy]

@@ -16,13 +16,15 @@ dotenv = { workspace = true }
 anyhow = { workspace = true }
 mcr-protocol-client-core-util = { workspace = true }
 mcr-protocol-client-eth-core = { workspace = true }
-mcr-protocol-deployer-eth-core = { workspace = true }
+mcr-protocol-client-eth-emln-core = { workspace = true }
+mcr-protocol-client-light-node-proto-core = { workspace = true }
 mcr-types = { workspace = true }
 hex = { workspace = true }
 sha3 = "0.10.0"
 secure-signer-loader = { workspace = true }
 tokio-stream = { workspace = true }
 clap-markdown-ext = { workspace = true }
+orfile = { workspace = true }
 
 [lints]
 workspace = true

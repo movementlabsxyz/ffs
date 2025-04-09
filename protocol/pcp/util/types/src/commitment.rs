@@ -4,9 +4,9 @@ use std::fmt;
 #[derive(
 	Serialize, Deserialize, Clone, Copy, Default, Debug, PartialEq, Eq, Hash, PartialOrd, Ord,
 )]
-pub struct CommitmentId([u8; 32]);
+pub struct Id([u8; 32]);
 
-impl CommitmentId {
+impl Id {
 	pub fn new(data: [u8; 32]) -> Self {
 		Self(data)
 	}
@@ -28,13 +28,13 @@ impl CommitmentId {
 	}
 }
 
-impl AsRef<[u8]> for CommitmentId {
+impl AsRef<[u8]> for Id {
 	fn as_ref(&self) -> &[u8] {
 		&self.0
 	}
 }
 
-impl fmt::Display for CommitmentId {
+impl fmt::Display for Id {
 	fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
 		for byte in &self.0 {
 			write!(f, "{:02x}", byte)?;
@@ -46,9 +46,9 @@ impl fmt::Display for CommitmentId {
 #[derive(
 	Serialize, Deserialize, Clone, Copy, Default, Debug, PartialEq, Eq, Hash, PartialOrd, Ord,
 )]
-pub struct CommitmentValue([u8; 32]);
+pub struct Vote([u8; 32]);
 
-impl CommitmentValue {
+impl Vote {
 	pub fn new(data: [u8; 32]) -> Self {
 		Self(data)
 	}
@@ -62,7 +62,7 @@ impl CommitmentValue {
 	}
 }
 
-impl fmt::Display for CommitmentValue {
+impl fmt::Display for Vote {
 	fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
 		for byte in &self.0 {
 			write!(f, "{:02x}", byte)?;
@@ -71,14 +71,14 @@ impl fmt::Display for CommitmentValue {
 	}
 }
 
-impl From<CommitmentValue> for [u8; 32] {
-	fn from(commitment: CommitmentValue) -> [u8; 32] {
+impl From<Vote> for [u8; 32] {
+	fn from(commitment: Vote) -> [u8; 32] {
 		commitment.0
 	}
 }
 
-impl From<CommitmentValue> for Vec<u8> {
-	fn from(commitment: CommitmentValue) -> Vec<u8> {
+impl From<Vote> for Vec<u8> {
+	fn from(commitment: Vote) -> Vec<u8> {
 		commitment.0.into()
 	}
 }
@@ -86,29 +86,29 @@ impl From<CommitmentValue> for Vec<u8> {
 #[derive(Serialize, Deserialize, Clone, Default, Debug, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub struct Commitment {
 	height: u64,
-	commitment_id: CommitmentId,
-	commitment_value: CommitmentValue,
+	id: Id,
+	vote: Vote,
 }
 
 impl Commitment {
-	pub fn new(height: u64, commitment_id: CommitmentId, commitment_value: CommitmentValue) -> Self {
-		Self { height, commitment_id, commitment_value }
+	pub fn new(height: u64, id: Id, vote: Vote) -> Self {
+		Self { height, id, vote }
 	}
 
 	pub fn height(&self) -> u64 {
 		self.height
 	}
 
-	pub fn commitment_id(&self) -> &CommitmentId {
-		&self.commitment_id
+	pub fn id(&self) -> &Id {
+		&self.id
 	}
 
-	pub fn commitment_value(&self) -> CommitmentValue {
-		self.commitment_value
+	pub fn vote(&self) -> Vote {
+		self.vote
 	}
 
 	pub fn test() -> Self {
-		Self::new(0, CommitmentId::test(), CommitmentValue::test())
+		Self::new(0, Id::test(), Vote::test())
 	}
 }
 
@@ -116,16 +116,16 @@ impl fmt::Display for Commitment {
 	fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
 		write!(
 			f,
-			"Commitment {{ height: {}, commitment_id: {}, commitment_value: {} }}",
-			self.height, self.commitment_id, self.commitment_value
+			"Commitment {{ height: {}, id: {}, vote: {} }}",
+			self.height, self.id, self.vote
 		)
 	}
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub enum CommitmentRejectionReason {
-	InvalidCommitmentId,
-	InvalidCommitmentValue,
+	InvalidId,
+	InvalidVote,
 	InvalidHeight,
 	ContractError,
 }

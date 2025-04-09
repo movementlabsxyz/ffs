@@ -17,18 +17,117 @@ This document contains the help content for the `mcr-protocol` command-line prog
 * [`mcr-protocol client markdown print`↴](#mcr-protocol-client-markdown-print)
 * [`mcr-protocol client markdown workspace`↴](#mcr-protocol-client-markdown-workspace)
 * [`mcr-protocol client eth`↴](#mcr-protocol-client-eth)
-* [`mcr-protocol client eth post-admin-commitment`↴](#mcr-protocol-client-eth-post-admin-commitment)
-* [`mcr-protocol client eth post-commitment`↴](#mcr-protocol-client-eth-post-commitment)
-* [`mcr-protocol client eth post-commitment-batch`↴](#mcr-protocol-client-eth-post-commitment-batch)
-* [`mcr-protocol client eth stream-commitments`↴](#mcr-protocol-client-eth-stream-commitments)
-* [`mcr-protocol client eth get-commitment`↴](#mcr-protocol-client-eth-get-commitment)
-* [`mcr-protocol client eth get-accepted-commitment-at-height`↴](#mcr-protocol-client-eth-get-accepted-commitment-at-height)
-* [`mcr-protocol client eth get-posted-commitment-at-height`↴](#mcr-protocol-client-eth-get-posted-commitment-at-height)
-* [`mcr-protocol client eth get-max-tolerable-commitment-height`↴](#mcr-protocol-client-eth-get-max-tolerable-commitment-height)
-* [`mcr-protocol client eth stake`↴](#mcr-protocol-client-eth-stake)
-* [`mcr-protocol client eth get-stake`↴](#mcr-protocol-client-eth-get-stake)
-* [`mcr-protocol client eth unstake`↴](#mcr-protocol-client-eth-unstake)
-* [`mcr-protocol client eth grant-trusted-attester`↴](#mcr-protocol-client-eth-grant-trusted-attester)
+* [`mcr-protocol client eth exln`↴](#mcr-protocol-client-eth-exln)
+* [`mcr-protocol client eth exln post-admin-commitment`↴](#mcr-protocol-client-eth-exln-post-admin-commitment)
+* [`mcr-protocol client eth exln post-admin-commitment where`↴](#mcr-protocol-client-eth-exln-post-admin-commitment-where)
+* [`mcr-protocol client eth exln post-admin-commitment using`↴](#mcr-protocol-client-eth-exln-post-admin-commitment-using)
+* [`mcr-protocol client eth exln post-commitment`↴](#mcr-protocol-client-eth-exln-post-commitment)
+* [`mcr-protocol client eth exln post-commitment where`↴](#mcr-protocol-client-eth-exln-post-commitment-where)
+* [`mcr-protocol client eth exln post-commitment using`↴](#mcr-protocol-client-eth-exln-post-commitment-using)
+* [`mcr-protocol client eth exln post-commitment-batch`↴](#mcr-protocol-client-eth-exln-post-commitment-batch)
+* [`mcr-protocol client eth exln post-commitment-batch where`↴](#mcr-protocol-client-eth-exln-post-commitment-batch-where)
+* [`mcr-protocol client eth exln post-commitment-batch using`↴](#mcr-protocol-client-eth-exln-post-commitment-batch-using)
+* [`mcr-protocol client eth exln stream-commitments`↴](#mcr-protocol-client-eth-exln-stream-commitments)
+* [`mcr-protocol client eth exln stream-commitments where`↴](#mcr-protocol-client-eth-exln-stream-commitments-where)
+* [`mcr-protocol client eth exln stream-commitments using`↴](#mcr-protocol-client-eth-exln-stream-commitments-using)
+* [`mcr-protocol client eth exln get-commitment`↴](#mcr-protocol-client-eth-exln-get-commitment)
+* [`mcr-protocol client eth exln get-commitment where`↴](#mcr-protocol-client-eth-exln-get-commitment-where)
+* [`mcr-protocol client eth exln get-commitment using`↴](#mcr-protocol-client-eth-exln-get-commitment-using)
+* [`mcr-protocol client eth exln get-accepted-commitment-at-height`↴](#mcr-protocol-client-eth-exln-get-accepted-commitment-at-height)
+* [`mcr-protocol client eth exln get-accepted-commitment-at-height where`↴](#mcr-protocol-client-eth-exln-get-accepted-commitment-at-height-where)
+* [`mcr-protocol client eth exln get-accepted-commitment-at-height using`↴](#mcr-protocol-client-eth-exln-get-accepted-commitment-at-height-using)
+* [`mcr-protocol client eth exln get-posted-commitment-at-height`↴](#mcr-protocol-client-eth-exln-get-posted-commitment-at-height)
+* [`mcr-protocol client eth exln get-posted-commitment-at-height where`↴](#mcr-protocol-client-eth-exln-get-posted-commitment-at-height-where)
+* [`mcr-protocol client eth exln get-posted-commitment-at-height using`↴](#mcr-protocol-client-eth-exln-get-posted-commitment-at-height-using)
+* [`mcr-protocol client eth exln get-max-tolerable-commitment-height`↴](#mcr-protocol-client-eth-exln-get-max-tolerable-commitment-height)
+* [`mcr-protocol client eth exln get-max-tolerable-commitment-height where`↴](#mcr-protocol-client-eth-exln-get-max-tolerable-commitment-height-where)
+* [`mcr-protocol client eth exln get-max-tolerable-commitment-height using`↴](#mcr-protocol-client-eth-exln-get-max-tolerable-commitment-height-using)
+* [`mcr-protocol client eth exln stake`↴](#mcr-protocol-client-eth-exln-stake)
+* [`mcr-protocol client eth exln stake where`↴](#mcr-protocol-client-eth-exln-stake-where)
+* [`mcr-protocol client eth exln stake using`↴](#mcr-protocol-client-eth-exln-stake-using)
+* [`mcr-protocol client eth exln get-stake`↴](#mcr-protocol-client-eth-exln-get-stake)
+* [`mcr-protocol client eth exln get-stake where`↴](#mcr-protocol-client-eth-exln-get-stake-where)
+* [`mcr-protocol client eth exln get-stake using`↴](#mcr-protocol-client-eth-exln-get-stake-using)
+* [`mcr-protocol client eth exln unstake`↴](#mcr-protocol-client-eth-exln-unstake)
+* [`mcr-protocol client eth exln unstake where`↴](#mcr-protocol-client-eth-exln-unstake-where)
+* [`mcr-protocol client eth exln unstake using`↴](#mcr-protocol-client-eth-exln-unstake-using)
+* [`mcr-protocol client eth exln grant-trusted-attester`↴](#mcr-protocol-client-eth-exln-grant-trusted-attester)
+* [`mcr-protocol client eth exln grant-trusted-attester where`↴](#mcr-protocol-client-eth-exln-grant-trusted-attester-where)
+* [`mcr-protocol client eth exln grant-trusted-attester using`↴](#mcr-protocol-client-eth-exln-grant-trusted-attester-using)
+* [`mcr-protocol client eth emln`↴](#mcr-protocol-client-eth-emln)
+* [`mcr-protocol client eth emln post-admin-commitment`↴](#mcr-protocol-client-eth-emln-post-admin-commitment)
+* [`mcr-protocol client eth emln post-admin-commitment where`↴](#mcr-protocol-client-eth-emln-post-admin-commitment-where)
+* [`mcr-protocol client eth emln post-admin-commitment using`↴](#mcr-protocol-client-eth-emln-post-admin-commitment-using)
+* [`mcr-protocol client eth emln post-commitment`↴](#mcr-protocol-client-eth-emln-post-commitment)
+* [`mcr-protocol client eth emln post-commitment where`↴](#mcr-protocol-client-eth-emln-post-commitment-where)
+* [`mcr-protocol client eth emln post-commitment using`↴](#mcr-protocol-client-eth-emln-post-commitment-using)
+* [`mcr-protocol client eth emln post-commitment-batch`↴](#mcr-protocol-client-eth-emln-post-commitment-batch)
+* [`mcr-protocol client eth emln post-commitment-batch where`↴](#mcr-protocol-client-eth-emln-post-commitment-batch-where)
+* [`mcr-protocol client eth emln post-commitment-batch using`↴](#mcr-protocol-client-eth-emln-post-commitment-batch-using)
+* [`mcr-protocol client eth emln stream-commitments`↴](#mcr-protocol-client-eth-emln-stream-commitments)
+* [`mcr-protocol client eth emln stream-commitments where`↴](#mcr-protocol-client-eth-emln-stream-commitments-where)
+* [`mcr-protocol client eth emln stream-commitments using`↴](#mcr-protocol-client-eth-emln-stream-commitments-using)
+* [`mcr-protocol client eth emln get-commitment`↴](#mcr-protocol-client-eth-emln-get-commitment)
+* [`mcr-protocol client eth emln get-commitment where`↴](#mcr-protocol-client-eth-emln-get-commitment-where)
+* [`mcr-protocol client eth emln get-commitment using`↴](#mcr-protocol-client-eth-emln-get-commitment-using)
+* [`mcr-protocol client eth emln get-accepted-commitment-at-height`↴](#mcr-protocol-client-eth-emln-get-accepted-commitment-at-height)
+* [`mcr-protocol client eth emln get-accepted-commitment-at-height where`↴](#mcr-protocol-client-eth-emln-get-accepted-commitment-at-height-where)
+* [`mcr-protocol client eth emln get-accepted-commitment-at-height using`↴](#mcr-protocol-client-eth-emln-get-accepted-commitment-at-height-using)
+* [`mcr-protocol client eth emln get-posted-commitment-at-height`↴](#mcr-protocol-client-eth-emln-get-posted-commitment-at-height)
+* [`mcr-protocol client eth emln get-posted-commitment-at-height where`↴](#mcr-protocol-client-eth-emln-get-posted-commitment-at-height-where)
+* [`mcr-protocol client eth emln get-posted-commitment-at-height using`↴](#mcr-protocol-client-eth-emln-get-posted-commitment-at-height-using)
+* [`mcr-protocol client eth emln get-max-tolerable-commitment-height`↴](#mcr-protocol-client-eth-emln-get-max-tolerable-commitment-height)
+* [`mcr-protocol client eth emln get-max-tolerable-commitment-height where`↴](#mcr-protocol-client-eth-emln-get-max-tolerable-commitment-height-where)
+* [`mcr-protocol client eth emln get-max-tolerable-commitment-height using`↴](#mcr-protocol-client-eth-emln-get-max-tolerable-commitment-height-using)
+* [`mcr-protocol client eth emln stake`↴](#mcr-protocol-client-eth-emln-stake)
+* [`mcr-protocol client eth emln stake where`↴](#mcr-protocol-client-eth-emln-stake-where)
+* [`mcr-protocol client eth emln stake using`↴](#mcr-protocol-client-eth-emln-stake-using)
+* [`mcr-protocol client eth emln get-stake`↴](#mcr-protocol-client-eth-emln-get-stake)
+* [`mcr-protocol client eth emln get-stake where`↴](#mcr-protocol-client-eth-emln-get-stake-where)
+* [`mcr-protocol client eth emln get-stake using`↴](#mcr-protocol-client-eth-emln-get-stake-using)
+* [`mcr-protocol client eth emln unstake`↴](#mcr-protocol-client-eth-emln-unstake)
+* [`mcr-protocol client eth emln unstake where`↴](#mcr-protocol-client-eth-emln-unstake-where)
+* [`mcr-protocol client eth emln unstake using`↴](#mcr-protocol-client-eth-emln-unstake-using)
+* [`mcr-protocol client eth emln grant-trusted-attester`↴](#mcr-protocol-client-eth-emln-grant-trusted-attester)
+* [`mcr-protocol client eth emln grant-trusted-attester where`↴](#mcr-protocol-client-eth-emln-grant-trusted-attester-where)
+* [`mcr-protocol client eth emln grant-trusted-attester using`↴](#mcr-protocol-client-eth-emln-grant-trusted-attester-using)
+* [`mcr-protocol client light-node-proto`↴](#mcr-protocol-client-light-node-proto)
+* [`mcr-protocol client light-node-proto post-admin-commitment`↴](#mcr-protocol-client-light-node-proto-post-admin-commitment)
+* [`mcr-protocol client light-node-proto post-admin-commitment where`↴](#mcr-protocol-client-light-node-proto-post-admin-commitment-where)
+* [`mcr-protocol client light-node-proto post-admin-commitment using`↴](#mcr-protocol-client-light-node-proto-post-admin-commitment-using)
+* [`mcr-protocol client light-node-proto post-commitment`↴](#mcr-protocol-client-light-node-proto-post-commitment)
+* [`mcr-protocol client light-node-proto post-commitment where`↴](#mcr-protocol-client-light-node-proto-post-commitment-where)
+* [`mcr-protocol client light-node-proto post-commitment using`↴](#mcr-protocol-client-light-node-proto-post-commitment-using)
+* [`mcr-protocol client light-node-proto post-commitment-batch`↴](#mcr-protocol-client-light-node-proto-post-commitment-batch)
+* [`mcr-protocol client light-node-proto post-commitment-batch where`↴](#mcr-protocol-client-light-node-proto-post-commitment-batch-where)
+* [`mcr-protocol client light-node-proto post-commitment-batch using`↴](#mcr-protocol-client-light-node-proto-post-commitment-batch-using)
+* [`mcr-protocol client light-node-proto stream-commitments`↴](#mcr-protocol-client-light-node-proto-stream-commitments)
+* [`mcr-protocol client light-node-proto stream-commitments where`↴](#mcr-protocol-client-light-node-proto-stream-commitments-where)
+* [`mcr-protocol client light-node-proto stream-commitments using`↴](#mcr-protocol-client-light-node-proto-stream-commitments-using)
+* [`mcr-protocol client light-node-proto get-commitment`↴](#mcr-protocol-client-light-node-proto-get-commitment)
+* [`mcr-protocol client light-node-proto get-commitment where`↴](#mcr-protocol-client-light-node-proto-get-commitment-where)
+* [`mcr-protocol client light-node-proto get-commitment using`↴](#mcr-protocol-client-light-node-proto-get-commitment-using)
+* [`mcr-protocol client light-node-proto get-accepted-commitment-at-height`↴](#mcr-protocol-client-light-node-proto-get-accepted-commitment-at-height)
+* [`mcr-protocol client light-node-proto get-accepted-commitment-at-height where`↴](#mcr-protocol-client-light-node-proto-get-accepted-commitment-at-height-where)
+* [`mcr-protocol client light-node-proto get-accepted-commitment-at-height using`↴](#mcr-protocol-client-light-node-proto-get-accepted-commitment-at-height-using)
+* [`mcr-protocol client light-node-proto get-posted-commitment-at-height`↴](#mcr-protocol-client-light-node-proto-get-posted-commitment-at-height)
+* [`mcr-protocol client light-node-proto get-posted-commitment-at-height where`↴](#mcr-protocol-client-light-node-proto-get-posted-commitment-at-height-where)
+* [`mcr-protocol client light-node-proto get-posted-commitment-at-height using`↴](#mcr-protocol-client-light-node-proto-get-posted-commitment-at-height-using)
+* [`mcr-protocol client light-node-proto get-max-tolerable-commitment-height`↴](#mcr-protocol-client-light-node-proto-get-max-tolerable-commitment-height)
+* [`mcr-protocol client light-node-proto get-max-tolerable-commitment-height where`↴](#mcr-protocol-client-light-node-proto-get-max-tolerable-commitment-height-where)
+* [`mcr-protocol client light-node-proto get-max-tolerable-commitment-height using`↴](#mcr-protocol-client-light-node-proto-get-max-tolerable-commitment-height-using)
+* [`mcr-protocol client light-node-proto stake`↴](#mcr-protocol-client-light-node-proto-stake)
+* [`mcr-protocol client light-node-proto stake where`↴](#mcr-protocol-client-light-node-proto-stake-where)
+* [`mcr-protocol client light-node-proto stake using`↴](#mcr-protocol-client-light-node-proto-stake-using)
+* [`mcr-protocol client light-node-proto get-stake`↴](#mcr-protocol-client-light-node-proto-get-stake)
+* [`mcr-protocol client light-node-proto get-stake where`↴](#mcr-protocol-client-light-node-proto-get-stake-where)
+* [`mcr-protocol client light-node-proto get-stake using`↴](#mcr-protocol-client-light-node-proto-get-stake-using)
+* [`mcr-protocol client light-node-proto unstake`↴](#mcr-protocol-client-light-node-proto-unstake)
+* [`mcr-protocol client light-node-proto unstake where`↴](#mcr-protocol-client-light-node-proto-unstake-where)
+* [`mcr-protocol client light-node-proto unstake using`↴](#mcr-protocol-client-light-node-proto-unstake-using)
+* [`mcr-protocol client light-node-proto grant-trusted-attester`↴](#mcr-protocol-client-light-node-proto-grant-trusted-attester)
+* [`mcr-protocol client light-node-proto grant-trusted-attester where`↴](#mcr-protocol-client-light-node-proto-grant-trusted-attester-where)
+* [`mcr-protocol client light-node-proto grant-trusted-attester using`↴](#mcr-protocol-client-light-node-proto-grant-trusted-attester-using)
 * [`mcr-protocol deployer`↴](#mcr-protocol-deployer)
 * [`mcr-protocol deployer markdown`↴](#mcr-protocol-deployer-markdown)
 * [`mcr-protocol deployer markdown generate`↴](#mcr-protocol-deployer-markdown-generate)
@@ -126,6 +225,7 @@ KEEP THIS UNTIL PRODUCTION-READY : Defined in: protocol/mcr/cli/client/src/cli/m
 
 * `markdown` — Generates markdown for the CLI
 * `eth` — Ethereum-specific commands of the protocol, such as staking and committing
+* `light-node-proto` — Light node protocol commands, such as staking and committing
 
 
 
@@ -194,7 +294,20 @@ Ethereum-specific commands of the protocol, such as staking and committing
 
 **Usage:** `mcr-protocol client eth <COMMAND>`
 
-KEEP THIS UNTIL PRODUCTION-READY : Defined in: protocol/mcr/cli/client/src/cli/eth/mod.rs
+###### **Subcommands:**
+
+* `exln` — Ethereum-specific commands of the protocol wherein light node assumptions are assumed to be externalized
+* `emln` — Ethereum-specific commands of the protocol wherein light node assumptions are assumed to be internalized
+
+
+
+## `mcr-protocol client eth exln`
+
+Ethereum-specific commands of the protocol wherein light node assumptions are assumed to be externalized
+
+**Usage:** `mcr-protocol client eth exln <COMMAND>`
+
+KEEP THIS UNTIL PRODUCTION-READY : Defined in: protocol/mcr/cli/client/src/cli/eth/exln/mod.rs
 
 ###### **Subcommands:**
 
@@ -213,11 +326,24 @@ KEEP THIS UNTIL PRODUCTION-READY : Defined in: protocol/mcr/cli/client/src/cli/e
 
 
 
-## `mcr-protocol client eth post-admin-commitment`
+## `mcr-protocol client eth exln post-admin-commitment`
 
 Force a commitment (admin only)
 
-**Usage:** `mcr-protocol client eth post-admin-commitment [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --signer-identifier <SIGNER_IDENTIFIER> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --commitment-lead-tolerance <COMMITMENT_LEAD_TOLERANCE> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> --commitment-id <COMMITMENT_ID> --commitment-value <COMMITMENT_VALUE>`
+**Usage:** `mcr-protocol client eth exln post-admin-commitment <COMMAND>`
+
+###### **Subcommands:**
+
+* `where` — Run postadmincommitment with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+* `using` — Run postadmincommitment with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+
+
+## `mcr-protocol client eth exln post-admin-commitment where`
+
+Run postadmincommitment with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `mcr-protocol client eth exln post-admin-commitment where [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> --signer-identifier <SIGNER_IDENTIFIER> --id <ID> --vote <VOTE>`
 
 ###### **Options:**
 
@@ -225,25 +351,66 @@ Force a commitment (admin only)
 * `--rpc-url <RPC_URL>` — The Ethereum RPC connection URL
 * `--ws-url <WS_URL>` — The Ethereum WebSocket connection URL
 * `--chain-id <CHAIN_ID>` — The Ethereum chain ID
-* `--signer-identifier <SIGNER_IDENTIFIER>` — The signer identifier
 * `--run-commitment-admin-mode` — Whether to run in settlement admin mode
 * `--gas-limit <GAS_LIMIT>` — The gas limit for transactions
 * `--transaction-send-retries <TRANSACTION_SEND_RETRIES>` — The number of retries for sending transactions
 * `--mcr-address <MCR_ADDRESS>` — The MCR address
-* `--commitment-lead-tolerance <COMMITMENT_LEAD_TOLERANCE>` — The block lead tolerance
 * `--move-token-address <MOVE_TOKEN_ADDRESS>` — The move token address
 * `--staking-address <STAKING_ADDRESS>` — The staking address
+* `--signer-identifier <SIGNER_IDENTIFIER>` — The signer identifier
 * `--height <HEIGHT>` — The commitment height at which to commit
-* `--commitment-id <COMMITMENT_ID>` — The commitment id to commit
-* `--commitment-value <COMMITMENT_VALUE>` — The commitment value to commit
+* `--id <ID>` — The commitment id to commit
+* `--vote <VOTE>` — The commitment value to commit
 
 
 
-## `mcr-protocol client eth post-commitment`
+## `mcr-protocol client eth exln post-admin-commitment using`
+
+Run postadmincommitment with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `mcr-protocol client eth exln post-admin-commitment using [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> --signer-identifier <SIGNER_IDENTIFIER> --id <ID> --vote <VOTE> [EXTRA_ARGS]...`
+
+###### **Arguments:**
+
+* `<EXTRA_ARGS>` — Extra arguments to be passed to the CLI
+
+###### **Options:**
+
+* `--mcr-contract-address <MCR_CONTRACT_ADDRESS>` — The address of the MCR settlement contract
+* `--rpc-url <RPC_URL>` — The Ethereum RPC connection URL
+* `--ws-url <WS_URL>` — The Ethereum WebSocket connection URL
+* `--chain-id <CHAIN_ID>` — The Ethereum chain ID
+* `--run-commitment-admin-mode` — Whether to run in settlement admin mode
+* `--gas-limit <GAS_LIMIT>` — The gas limit for transactions
+* `--transaction-send-retries <TRANSACTION_SEND_RETRIES>` — The number of retries for sending transactions
+* `--mcr-address <MCR_ADDRESS>` — The MCR address
+* `--move-token-address <MOVE_TOKEN_ADDRESS>` — The move token address
+* `--staking-address <STAKING_ADDRESS>` — The staking address
+* `--signer-identifier <SIGNER_IDENTIFIER>` — The signer identifier
+* `--height <HEIGHT>` — The commitment height at which to commit
+* `--id <ID>` — The commitment id to commit
+* `--vote <VOTE>` — The commitment value to commit
+
+
+
+## `mcr-protocol client eth exln post-commitment`
 
 Post a single commitment
 
-**Usage:** `mcr-protocol client eth post-commitment [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --signer-identifier <SIGNER_IDENTIFIER> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --commitment-lead-tolerance <COMMITMENT_LEAD_TOLERANCE> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> --height <HEIGHT> --commitment-id <COMMITMENT_ID> --commitment-value <COMMITMENT_VALUE>`
+**Usage:** `mcr-protocol client eth exln post-commitment <COMMAND>`
+
+###### **Subcommands:**
+
+* `where` — Run postcommitment with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+* `using` — Run postcommitment with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+
+
+## `mcr-protocol client eth exln post-commitment where`
+
+Run postcommitment with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `mcr-protocol client eth exln post-commitment where [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> --signer-identifier <SIGNER_IDENTIFIER> --id <ID> --vote <VOTE>`
 
 ###### **Options:**
 
@@ -251,25 +418,56 @@ Post a single commitment
 * `--rpc-url <RPC_URL>` — The Ethereum RPC connection URL
 * `--ws-url <WS_URL>` — The Ethereum WebSocket connection URL
 * `--chain-id <CHAIN_ID>` — The Ethereum chain ID
-* `--signer-identifier <SIGNER_IDENTIFIER>` — The signer identifier
 * `--run-commitment-admin-mode` — Whether to run in settlement admin mode
 * `--gas-limit <GAS_LIMIT>` — The gas limit for transactions
 * `--transaction-send-retries <TRANSACTION_SEND_RETRIES>` — The number of retries for sending transactions
 * `--mcr-address <MCR_ADDRESS>` — The MCR address
-* `--commitment-lead-tolerance <COMMITMENT_LEAD_TOLERANCE>` — The block lead tolerance
 * `--move-token-address <MOVE_TOKEN_ADDRESS>` — The move token address
 * `--staking-address <STAKING_ADDRESS>` — The staking address
-* `--height <HEIGHT>` — The height of the commitment block at which to commit
-* `--commitment-id <COMMITMENT_ID>` — The id of the commitment block at which to commit
-* `--commitment-value <COMMITMENT_VALUE>` — The commitment value to commit
+* `--signer-identifier <SIGNER_IDENTIFIER>` — The signer identifier
+* `--height <HEIGHT>` — The commitment height at which to commit
+* `--id <ID>` — The commitment id to commit
+* `--vote <VOTE>` — The commitment value to commit
 
 
 
-## `mcr-protocol client eth post-commitment-batch`
+## `mcr-protocol client eth exln post-commitment using`
+
+Run postcommitment with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `mcr-protocol client eth exln post-commitment using [OPTIONS] --id <ID> --vote <VOTE> [EXTRA_ARGS]...`
+
+###### **Arguments:**
+
+* `<EXTRA_ARGS>` — Extra arguments to be passed to the CLI
+
+###### **Options:**
+
+* `--config-path <CONFIG_PATH>`
+* `--height <HEIGHT>` — The commitment height at which to commit
+* `--id <ID>` — The commitment id to commit
+* `--vote <VOTE>` — The commitment value to commit
+
+
+
+## `mcr-protocol client eth exln post-commitment-batch`
 
 Post a batch of commitments
 
-**Usage:** `mcr-protocol client eth post-commitment-batch [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --signer-identifier <SIGNER_IDENTIFIER> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --commitment-lead-tolerance <COMMITMENT_LEAD_TOLERANCE> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> --height <HEIGHT> --commitment-id <COMMITMENT_ID> --commitment-value <COMMITMENT_VALUE>`
+**Usage:** `mcr-protocol client eth exln post-commitment-batch <COMMAND>`
+
+###### **Subcommands:**
+
+* `where` — Run postcommitmentbatch with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+* `using` — Run postcommitmentbatch with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+
+
+## `mcr-protocol client eth exln post-commitment-batch where`
+
+Run postcommitmentbatch with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `mcr-protocol client eth exln post-commitment-batch where [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> --signer-identifier <SIGNER_IDENTIFIER> --id <ID> --vote <VOTE>`
 
 ###### **Options:**
 
@@ -277,25 +475,56 @@ Post a batch of commitments
 * `--rpc-url <RPC_URL>` — The Ethereum RPC connection URL
 * `--ws-url <WS_URL>` — The Ethereum WebSocket connection URL
 * `--chain-id <CHAIN_ID>` — The Ethereum chain ID
-* `--signer-identifier <SIGNER_IDENTIFIER>` — The signer identifier
 * `--run-commitment-admin-mode` — Whether to run in settlement admin mode
 * `--gas-limit <GAS_LIMIT>` — The gas limit for transactions
 * `--transaction-send-retries <TRANSACTION_SEND_RETRIES>` — The number of retries for sending transactions
 * `--mcr-address <MCR_ADDRESS>` — The MCR address
-* `--commitment-lead-tolerance <COMMITMENT_LEAD_TOLERANCE>` — The block lead tolerance
 * `--move-token-address <MOVE_TOKEN_ADDRESS>` — The move token address
 * `--staking-address <STAKING_ADDRESS>` — The staking address
-* `--height <HEIGHT>` — The height of the block to commit
-* `--commitment-id <COMMITMENT_ID>` — The id of the block to commit
-* `--commitment-value <COMMITMENT_VALUE>` — The commitment value to commit
+* `--signer-identifier <SIGNER_IDENTIFIER>` — The signer identifier
+* `--height <HEIGHT>` — The commitment height at which to commit
+* `--id <ID>` — The commitment id to commit
+* `--vote <VOTE>` — The commitment value to commit
 
 
 
-## `mcr-protocol client eth stream-commitments`
+## `mcr-protocol client eth exln post-commitment-batch using`
+
+Run postcommitmentbatch with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `mcr-protocol client eth exln post-commitment-batch using [OPTIONS] --id <ID> --vote <VOTE> [EXTRA_ARGS]...`
+
+###### **Arguments:**
+
+* `<EXTRA_ARGS>` — Extra arguments to be passed to the CLI
+
+###### **Options:**
+
+* `--config-path <CONFIG_PATH>`
+* `--height <HEIGHT>` — The commitment height at which to commit
+* `--id <ID>` — The commitment id to commit
+* `--vote <VOTE>` — The commitment value to commit
+
+
+
+## `mcr-protocol client eth exln stream-commitments`
 
 Stream commitments
 
-**Usage:** `mcr-protocol client eth stream-commitments [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --signer-identifier <SIGNER_IDENTIFIER> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --commitment-lead-tolerance <COMMITMENT_LEAD_TOLERANCE> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS>`
+**Usage:** `mcr-protocol client eth exln stream-commitments <COMMAND>`
+
+###### **Subcommands:**
+
+* `where` — Run streamcommitments with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+* `using` — Run streamcommitments with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+
+
+## `mcr-protocol client eth exln stream-commitments where`
+
+Run streamcommitments with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `mcr-protocol client eth exln stream-commitments where [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS>`
 
 ###### **Options:**
 
@@ -303,40 +532,103 @@ Stream commitments
 * `--rpc-url <RPC_URL>` — The Ethereum RPC connection URL
 * `--ws-url <WS_URL>` — The Ethereum WebSocket connection URL
 * `--chain-id <CHAIN_ID>` — The Ethereum chain ID
-* `--signer-identifier <SIGNER_IDENTIFIER>` — The signer identifier
 * `--run-commitment-admin-mode` — Whether to run in settlement admin mode
 * `--gas-limit <GAS_LIMIT>` — The gas limit for transactions
 * `--transaction-send-retries <TRANSACTION_SEND_RETRIES>` — The number of retries for sending transactions
 * `--mcr-address <MCR_ADDRESS>` — The MCR address
-* `--commitment-lead-tolerance <COMMITMENT_LEAD_TOLERANCE>` — The block lead tolerance
 * `--move-token-address <MOVE_TOKEN_ADDRESS>` — The move token address
 * `--staking-address <STAKING_ADDRESS>` — The staking address
 
 
 
-## `mcr-protocol client eth get-commitment`
+## `mcr-protocol client eth exln stream-commitments using`
+
+Run streamcommitments with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `mcr-protocol client eth exln stream-commitments using [OPTIONS] [EXTRA_ARGS]...`
+
+###### **Arguments:**
+
+* `<EXTRA_ARGS>` — Extra arguments to be passed to the CLI
+
+###### **Options:**
+
+* `--view-config-path <VIEW_CONFIG_PATH>`
+
+
+
+## `mcr-protocol client eth exln get-commitment`
 
 Get a commitment for a given height and attester
 
-**Usage:** `mcr-protocol client eth get-commitment [OPTIONS] --height <HEIGHT> --attester <ATTESTER> --mcr-address <MCR_ADDRESS>`
+**Usage:** `mcr-protocol client eth exln get-commitment <COMMAND>`
+
+###### **Subcommands:**
+
+* `where` — Run getcommitment with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+* `using` — Run getcommitment with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+
+
+## `mcr-protocol client eth exln get-commitment where`
+
+Run getcommitment with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `mcr-protocol client eth exln get-commitment where [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> --height <HEIGHT> --attester <ATTESTER>`
 
 ###### **Options:**
 
-* `--height <HEIGHT>` — Block height to check commitment for
-* `--attester <ATTESTER>` — Attester address to check commitment for
-* `--mcr-address <MCR_ADDRESS>` — MCR contract address
-* `--rpc-url <RPC_URL>` — RPC URL (optional, defaults to http://localhost:8545)
+* `--mcr-contract-address <MCR_CONTRACT_ADDRESS>` — The address of the MCR settlement contract
+* `--rpc-url <RPC_URL>` — The Ethereum RPC connection URL
+* `--ws-url <WS_URL>` — The Ethereum WebSocket connection URL
+* `--chain-id <CHAIN_ID>` — The Ethereum chain ID
+* `--run-commitment-admin-mode` — Whether to run in settlement admin mode
+* `--gas-limit <GAS_LIMIT>` — The gas limit for transactions
+* `--transaction-send-retries <TRANSACTION_SEND_RETRIES>` — The number of retries for sending transactions
+* `--mcr-address <MCR_ADDRESS>` — The MCR address
+* `--move-token-address <MOVE_TOKEN_ADDRESS>` — The move token address
+* `--staking-address <STAKING_ADDRESS>` — The staking address
+* `--height <HEIGHT>` — The height to get the commitment for
+* `--attester <ATTESTER>` — The attester address
 
-  Default value: `http://localhost:8545`
-* `--private-key <PRIVATE_KEY>` — Private key for signing transactions (optional)
+
+
+## `mcr-protocol client eth exln get-commitment using`
+
+Run getcommitment with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `mcr-protocol client eth exln get-commitment using [OPTIONS] --height <HEIGHT> --attester <ATTESTER> [EXTRA_ARGS]...`
+
+###### **Arguments:**
+
+* `<EXTRA_ARGS>` — Extra arguments to be passed to the CLI
+
+###### **Options:**
+
+* `--view-config-path <VIEW_CONFIG_PATH>`
+* `--height <HEIGHT>` — The height to get the commitment for
+* `--attester <ATTESTER>` — The attester address
 
 
 
-## `mcr-protocol client eth get-accepted-commitment-at-height`
+## `mcr-protocol client eth exln get-accepted-commitment-at-height`
 
 Get accepted commitment at a specific height
 
-**Usage:** `mcr-protocol client eth get-accepted-commitment-at-height [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --signer-identifier <SIGNER_IDENTIFIER> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --commitment-lead-tolerance <COMMITMENT_LEAD_TOLERANCE> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> --height <HEIGHT>`
+**Usage:** `mcr-protocol client eth exln get-accepted-commitment-at-height <COMMAND>`
+
+###### **Subcommands:**
+
+* `where` — Run getacceptedcommitmentatheight with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+* `using` — Run getacceptedcommitmentatheight with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+
+
+## `mcr-protocol client eth exln get-accepted-commitment-at-height where`
+
+Run getacceptedcommitmentatheight with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `mcr-protocol client eth exln get-accepted-commitment-at-height where [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> --height <HEIGHT>`
 
 ###### **Options:**
 
@@ -344,23 +636,51 @@ Get accepted commitment at a specific height
 * `--rpc-url <RPC_URL>` — The Ethereum RPC connection URL
 * `--ws-url <WS_URL>` — The Ethereum WebSocket connection URL
 * `--chain-id <CHAIN_ID>` — The Ethereum chain ID
-* `--signer-identifier <SIGNER_IDENTIFIER>` — The signer identifier
 * `--run-commitment-admin-mode` — Whether to run in settlement admin mode
 * `--gas-limit <GAS_LIMIT>` — The gas limit for transactions
 * `--transaction-send-retries <TRANSACTION_SEND_RETRIES>` — The number of retries for sending transactions
 * `--mcr-address <MCR_ADDRESS>` — The MCR address
-* `--commitment-lead-tolerance <COMMITMENT_LEAD_TOLERANCE>` — The block lead tolerance
 * `--move-token-address <MOVE_TOKEN_ADDRESS>` — The move token address
 * `--staking-address <STAKING_ADDRESS>` — The staking address
 * `--height <HEIGHT>` — The height to get the commitment for
 
 
 
-## `mcr-protocol client eth get-posted-commitment-at-height`
+## `mcr-protocol client eth exln get-accepted-commitment-at-height using`
+
+Run getacceptedcommitmentatheight with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `mcr-protocol client eth exln get-accepted-commitment-at-height using [OPTIONS] --height <HEIGHT> [EXTRA_ARGS]...`
+
+###### **Arguments:**
+
+* `<EXTRA_ARGS>` — Extra arguments to be passed to the CLI
+
+###### **Options:**
+
+* `--view-config-path <VIEW_CONFIG_PATH>`
+* `--height <HEIGHT>` — The height to get the commitment for
+
+
+
+## `mcr-protocol client eth exln get-posted-commitment-at-height`
 
 Get posted commitment at a specific height
 
-**Usage:** `mcr-protocol client eth get-posted-commitment-at-height [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --signer-identifier <SIGNER_IDENTIFIER> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --commitment-lead-tolerance <COMMITMENT_LEAD_TOLERANCE> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> --height <HEIGHT>`
+**Usage:** `mcr-protocol client eth exln get-posted-commitment-at-height <COMMAND>`
+
+###### **Subcommands:**
+
+* `where` — Run getpostedcommitmentatheight with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+* `using` — Run getpostedcommitmentatheight with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+
+
+## `mcr-protocol client eth exln get-posted-commitment-at-height where`
+
+Run getpostedcommitmentatheight with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `mcr-protocol client eth exln get-posted-commitment-at-height where [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> --signer-identifier <SIGNER_IDENTIFIER> --height <HEIGHT>`
 
 ###### **Options:**
 
@@ -368,23 +688,52 @@ Get posted commitment at a specific height
 * `--rpc-url <RPC_URL>` — The Ethereum RPC connection URL
 * `--ws-url <WS_URL>` — The Ethereum WebSocket connection URL
 * `--chain-id <CHAIN_ID>` — The Ethereum chain ID
-* `--signer-identifier <SIGNER_IDENTIFIER>` — The signer identifier
 * `--run-commitment-admin-mode` — Whether to run in settlement admin mode
 * `--gas-limit <GAS_LIMIT>` — The gas limit for transactions
 * `--transaction-send-retries <TRANSACTION_SEND_RETRIES>` — The number of retries for sending transactions
 * `--mcr-address <MCR_ADDRESS>` — The MCR address
-* `--commitment-lead-tolerance <COMMITMENT_LEAD_TOLERANCE>` — The block lead tolerance
 * `--move-token-address <MOVE_TOKEN_ADDRESS>` — The move token address
 * `--staking-address <STAKING_ADDRESS>` — The staking address
+* `--signer-identifier <SIGNER_IDENTIFIER>` — The signer identifier
 * `--height <HEIGHT>` — The height to get the commitment for
 
 
 
-## `mcr-protocol client eth get-max-tolerable-commitment-height`
+## `mcr-protocol client eth exln get-posted-commitment-at-height using`
+
+Run getpostedcommitmentatheight with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `mcr-protocol client eth exln get-posted-commitment-at-height using [OPTIONS] --height <HEIGHT> [EXTRA_ARGS]...`
+
+###### **Arguments:**
+
+* `<EXTRA_ARGS>` — Extra arguments to be passed to the CLI
+
+###### **Options:**
+
+* `--view-config-path <VIEW_CONFIG_PATH>`
+* `--height <HEIGHT>` — The height to get the commitment for
+
+
+
+## `mcr-protocol client eth exln get-max-tolerable-commitment-height`
 
 Get max tolerable commitment height
 
-**Usage:** `mcr-protocol client eth get-max-tolerable-commitment-height [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --signer-identifier <SIGNER_IDENTIFIER> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --commitment-lead-tolerance <COMMITMENT_LEAD_TOLERANCE> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS>`
+**Usage:** `mcr-protocol client eth exln get-max-tolerable-commitment-height <COMMAND>`
+
+###### **Subcommands:**
+
+* `where` — Run getmaxtolerablecommitmentheight with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+* `using` — Run getmaxtolerablecommitmentheight with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+
+
+## `mcr-protocol client eth exln get-max-tolerable-commitment-height where`
+
+Run getmaxtolerablecommitmentheight with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `mcr-protocol client eth exln get-max-tolerable-commitment-height where [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS>`
 
 ###### **Options:**
 
@@ -392,22 +741,49 @@ Get max tolerable commitment height
 * `--rpc-url <RPC_URL>` — The Ethereum RPC connection URL
 * `--ws-url <WS_URL>` — The Ethereum WebSocket connection URL
 * `--chain-id <CHAIN_ID>` — The Ethereum chain ID
-* `--signer-identifier <SIGNER_IDENTIFIER>` — The signer identifier
 * `--run-commitment-admin-mode` — Whether to run in settlement admin mode
 * `--gas-limit <GAS_LIMIT>` — The gas limit for transactions
 * `--transaction-send-retries <TRANSACTION_SEND_RETRIES>` — The number of retries for sending transactions
 * `--mcr-address <MCR_ADDRESS>` — The MCR address
-* `--commitment-lead-tolerance <COMMITMENT_LEAD_TOLERANCE>` — The block lead tolerance
 * `--move-token-address <MOVE_TOKEN_ADDRESS>` — The move token address
 * `--staking-address <STAKING_ADDRESS>` — The staking address
 
 
 
-## `mcr-protocol client eth stake`
+## `mcr-protocol client eth exln get-max-tolerable-commitment-height using`
+
+Run getmaxtolerablecommitmentheight with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `mcr-protocol client eth exln get-max-tolerable-commitment-height using [OPTIONS] [EXTRA_ARGS]...`
+
+###### **Arguments:**
+
+* `<EXTRA_ARGS>` — Extra arguments to be passed to the CLI
+
+###### **Options:**
+
+* `--view-config-path <VIEW_CONFIG_PATH>`
+
+
+
+## `mcr-protocol client eth exln stake`
 
 Stake tokens for the MCR domain
 
-**Usage:** `mcr-protocol client eth stake [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --signer-identifier <SIGNER_IDENTIFIER> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --commitment-lead-tolerance <COMMITMENT_LEAD_TOLERANCE> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> --amount <AMOUNT>`
+**Usage:** `mcr-protocol client eth exln stake <COMMAND>`
+
+###### **Subcommands:**
+
+* `where` — Run stake with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+* `using` — Run stake with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+
+
+## `mcr-protocol client eth exln stake where`
+
+Run stake with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `mcr-protocol client eth exln stake where [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> --signer-identifier <SIGNER_IDENTIFIER> --amount <AMOUNT>`
 
 ###### **Options:**
 
@@ -415,43 +791,52 @@ Stake tokens for the MCR domain
 * `--rpc-url <RPC_URL>` — The Ethereum RPC connection URL
 * `--ws-url <WS_URL>` — The Ethereum WebSocket connection URL
 * `--chain-id <CHAIN_ID>` — The Ethereum chain ID
-* `--signer-identifier <SIGNER_IDENTIFIER>` — The signer identifier
 * `--run-commitment-admin-mode` — Whether to run in settlement admin mode
 * `--gas-limit <GAS_LIMIT>` — The gas limit for transactions
 * `--transaction-send-retries <TRANSACTION_SEND_RETRIES>` — The number of retries for sending transactions
 * `--mcr-address <MCR_ADDRESS>` — The MCR address
-* `--commitment-lead-tolerance <COMMITMENT_LEAD_TOLERANCE>` — The block lead tolerance
 * `--move-token-address <MOVE_TOKEN_ADDRESS>` — The move token address
 * `--staking-address <STAKING_ADDRESS>` — The staking address
+* `--signer-identifier <SIGNER_IDENTIFIER>` — The signer identifier
 * `--amount <AMOUNT>` — Amount to stake
 
 
 
-## `mcr-protocol client eth get-stake`
+## `mcr-protocol client eth exln stake using`
 
-Get the current epoch stake for an attester
+Run stake with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
 
-**Usage:** `mcr-protocol client eth get-stake [OPTIONS] --attester <ATTESTER> --custodian <CUSTODIAN> --mcr-address <MCR_ADDRESS>`
+**Usage:** `mcr-protocol client eth exln stake using [OPTIONS] --amount <AMOUNT> [EXTRA_ARGS]...`
+
+###### **Arguments:**
+
+* `<EXTRA_ARGS>` — Extra arguments to be passed to the CLI
 
 ###### **Options:**
 
-* `--private-key <PRIVATE_KEY>` — Private key for signing transactions (optional)
-
-  Default value: `0x1111111111111111111111111111111111111111111111111111111111111111`
-* `--rpc-url <RPC_URL>` — RPC URL (optional, defaults to http://localhost:8545)
-
-  Default value: `http://localhost:8545`
-* `--attester <ATTESTER>` — The attester address
-* `--custodian <CUSTODIAN>` — The custodian (MOVE token) address
-* `--mcr-address <MCR_ADDRESS>` — The MCR contract address
+* `--config-path <CONFIG_PATH>`
+* `--amount <AMOUNT>` — Amount to stake
 
 
 
-## `mcr-protocol client eth unstake`
+## `mcr-protocol client eth exln get-stake`
 
-Unstake tokens from the MCR domain
+Get the current epoch stake for an attester
 
-**Usage:** `mcr-protocol client eth unstake [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --signer-identifier <SIGNER_IDENTIFIER> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --commitment-lead-tolerance <COMMITMENT_LEAD_TOLERANCE> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> --amount <AMOUNT>`
+**Usage:** `mcr-protocol client eth exln get-stake <COMMAND>`
+
+###### **Subcommands:**
+
+* `where` — Run getstake with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+* `using` — Run getstake with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+
+
+## `mcr-protocol client eth exln get-stake where`
+
+Run getstake with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `mcr-protocol client eth exln get-stake where [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> --custodian <CUSTODIAN> --attester <ATTESTER>`
 
 ###### **Options:**
 
@@ -459,29 +844,1486 @@ Unstake tokens from the MCR domain
 * `--rpc-url <RPC_URL>` — The Ethereum RPC connection URL
 * `--ws-url <WS_URL>` — The Ethereum WebSocket connection URL
 * `--chain-id <CHAIN_ID>` — The Ethereum chain ID
-* `--signer-identifier <SIGNER_IDENTIFIER>` — The signer identifier
 * `--run-commitment-admin-mode` — Whether to run in settlement admin mode
 * `--gas-limit <GAS_LIMIT>` — The gas limit for transactions
 * `--transaction-send-retries <TRANSACTION_SEND_RETRIES>` — The number of retries for sending transactions
 * `--mcr-address <MCR_ADDRESS>` — The MCR address
-* `--commitment-lead-tolerance <COMMITMENT_LEAD_TOLERANCE>` — The block lead tolerance
 * `--move-token-address <MOVE_TOKEN_ADDRESS>` — The move token address
 * `--staking-address <STAKING_ADDRESS>` — The staking address
+* `--custodian <CUSTODIAN>` — The custodian address
+* `--attester <ATTESTER>` — The attester address
+
+
+
+## `mcr-protocol client eth exln get-stake using`
+
+Run getstake with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `mcr-protocol client eth exln get-stake using [OPTIONS] --custodian <CUSTODIAN> --attester <ATTESTER> [EXTRA_ARGS]...`
+
+###### **Arguments:**
+
+* `<EXTRA_ARGS>` — Extra arguments to be passed to the CLI
+
+###### **Options:**
+
+* `--view-config-path <VIEW_CONFIG_PATH>`
+* `--custodian <CUSTODIAN>` — The custodian address
+* `--attester <ATTESTER>` — The attester address
+
+
+
+## `mcr-protocol client eth exln unstake`
+
+Unstake tokens from the MCR domain
+
+**Usage:** `mcr-protocol client eth exln unstake <COMMAND>`
+
+###### **Subcommands:**
+
+* `where` — Run unstake with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+* `using` — Run unstake with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+
+
+## `mcr-protocol client eth exln unstake where`
+
+Run unstake with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `mcr-protocol client eth exln unstake where [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> --signer-identifier <SIGNER_IDENTIFIER> --amount <AMOUNT>`
+
+###### **Options:**
+
+* `--mcr-contract-address <MCR_CONTRACT_ADDRESS>` — The address of the MCR settlement contract
+* `--rpc-url <RPC_URL>` — The Ethereum RPC connection URL
+* `--ws-url <WS_URL>` — The Ethereum WebSocket connection URL
+* `--chain-id <CHAIN_ID>` — The Ethereum chain ID
+* `--run-commitment-admin-mode` — Whether to run in settlement admin mode
+* `--gas-limit <GAS_LIMIT>` — The gas limit for transactions
+* `--transaction-send-retries <TRANSACTION_SEND_RETRIES>` — The number of retries for sending transactions
+* `--mcr-address <MCR_ADDRESS>` — The MCR address
+* `--move-token-address <MOVE_TOKEN_ADDRESS>` — The move token address
+* `--staking-address <STAKING_ADDRESS>` — The staking address
+* `--signer-identifier <SIGNER_IDENTIFIER>` — The signer identifier
 * `--amount <AMOUNT>` — Amount to unstake
 
 
 
-## `mcr-protocol client eth grant-trusted-attester`
+## `mcr-protocol client eth exln unstake using`
 
-Grant TRUSTED_ATTESTER role to an attester
+Run unstake with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
 
-**Usage:** `mcr-protocol client eth grant-trusted-attester --attester <ATTESTER> --mcr-address <MCR_ADDRESS> --private-key <PRIVATE_KEY>`
+**Usage:** `mcr-protocol client eth exln unstake using [OPTIONS] --amount <AMOUNT> [EXTRA_ARGS]...`
+
+###### **Arguments:**
+
+* `<EXTRA_ARGS>` — Extra arguments to be passed to the CLI
 
 ###### **Options:**
 
-* `--attester <ATTESTER>` — The address to grant TRUSTED_ATTESTER role to
-* `--mcr-address <MCR_ADDRESS>` — The MCR contract address
-* `--private-key <PRIVATE_KEY>` — The private key to use for signing transactions
+* `--config-path <CONFIG_PATH>`
+* `--amount <AMOUNT>` — Amount to unstake
+
+
+
+## `mcr-protocol client eth exln grant-trusted-attester`
+
+Grant TRUSTED_ATTESTER role to an attester
+
+**Usage:** `mcr-protocol client eth exln grant-trusted-attester <COMMAND>`
+
+###### **Subcommands:**
+
+* `where` — Run granttrustedattester with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+* `using` — Run granttrustedattester with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+
+
+## `mcr-protocol client eth exln grant-trusted-attester where`
+
+Run granttrustedattester with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `mcr-protocol client eth exln grant-trusted-attester where [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> --signer-identifier <SIGNER_IDENTIFIER> --attester <ATTESTER>`
+
+###### **Options:**
+
+* `--mcr-contract-address <MCR_CONTRACT_ADDRESS>` — The address of the MCR settlement contract
+* `--rpc-url <RPC_URL>` — The Ethereum RPC connection URL
+* `--ws-url <WS_URL>` — The Ethereum WebSocket connection URL
+* `--chain-id <CHAIN_ID>` — The Ethereum chain ID
+* `--run-commitment-admin-mode` — Whether to run in settlement admin mode
+* `--gas-limit <GAS_LIMIT>` — The gas limit for transactions
+* `--transaction-send-retries <TRANSACTION_SEND_RETRIES>` — The number of retries for sending transactions
+* `--mcr-address <MCR_ADDRESS>` — The MCR address
+* `--move-token-address <MOVE_TOKEN_ADDRESS>` — The move token address
+* `--staking-address <STAKING_ADDRESS>` — The staking address
+* `--signer-identifier <SIGNER_IDENTIFIER>` — The signer identifier
+* `--attester <ATTESTER>` — The attester address to grant the role to
+
+
+
+## `mcr-protocol client eth exln grant-trusted-attester using`
+
+Run granttrustedattester with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `mcr-protocol client eth exln grant-trusted-attester using [OPTIONS] --attester <ATTESTER> [EXTRA_ARGS]...`
+
+###### **Arguments:**
+
+* `<EXTRA_ARGS>` — Extra arguments to be passed to the CLI
+
+###### **Options:**
+
+* `--config-path <CONFIG_PATH>`
+* `--attester <ATTESTER>` — The attester address to grant the role to
+
+
+
+## `mcr-protocol client eth emln`
+
+Ethereum-specific commands of the protocol wherein light node assumptions are assumed to be internalized
+
+**Usage:** `mcr-protocol client eth emln <COMMAND>`
+
+KEEP THIS UNTIL PRODUCTION-READY : Defined in: protocol/mcr/cli/client/src/cli/eth/emln/mod.rs
+
+###### **Subcommands:**
+
+* `post-admin-commitment` — Force a commitment (admin only)
+* `post-commitment` — Post a single commitment
+* `post-commitment-batch` — Post a batch of commitments
+* `stream-commitments` — Stream commitments
+* `get-commitment` — Get a commitment for a given height and attester
+* `get-accepted-commitment-at-height` — Get accepted commitment at a specific height
+* `get-posted-commitment-at-height` — Get posted commitment at a specific height
+* `get-max-tolerable-commitment-height` — Get max tolerable commitment height
+* `stake` — Stake tokens for the MCR domain
+* `get-stake` — Get the current epoch stake for an attester
+* `unstake` — Unstake tokens from the MCR domain
+* `grant-trusted-attester` — Grant TRUSTED_ATTESTER role to an attester
+
+
+
+## `mcr-protocol client eth emln post-admin-commitment`
+
+Force a commitment (admin only)
+
+**Usage:** `mcr-protocol client eth emln post-admin-commitment <COMMAND>`
+
+###### **Subcommands:**
+
+* `where` — Run postadmincommitment with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+* `using` — Run postadmincommitment with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+
+
+## `mcr-protocol client eth emln post-admin-commitment where`
+
+Run postadmincommitment with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `mcr-protocol client eth emln post-admin-commitment where [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> --signer-identifier <SIGNER_IDENTIFIER> --light-node-data-dir <LIGHT_NODE_DATA_DIR> --consensus-rpc-url <CONSENSUS_RPC_URL> --finality <FINALITY> --id <ID> --vote <VOTE>`
+
+###### **Options:**
+
+* `--mcr-contract-address <MCR_CONTRACT_ADDRESS>` — The address of the MCR settlement contract
+* `--rpc-url <RPC_URL>` — The Ethereum RPC connection URL
+* `--ws-url <WS_URL>` — The Ethereum WebSocket connection URL
+* `--chain-id <CHAIN_ID>` — The Ethereum chain ID
+* `--run-commitment-admin-mode` — Whether to run in settlement admin mode
+* `--gas-limit <GAS_LIMIT>` — The gas limit for transactions
+* `--transaction-send-retries <TRANSACTION_SEND_RETRIES>` — The number of retries for sending transactions
+* `--mcr-address <MCR_ADDRESS>` — The MCR address
+* `--move-token-address <MOVE_TOKEN_ADDRESS>` — The move token address
+* `--staking-address <STAKING_ADDRESS>` — The staking address
+* `--signer-identifier <SIGNER_IDENTIFIER>` — The signer identifier
+* `--light-node-data-dir <LIGHT_NODE_DATA_DIR>` — The directory to store the light node data
+* `--light-node-network <LIGHT_NODE_NETWORK>` — The Ethereum network type to use for light node consensus parameterizaton
+
+  Default value: `mainnet`
+* `--consensus-rpc-url <CONSENSUS_RPC_URL>` — The consensus RPC for the light node to use
+* `--finality <FINALITY>` — The finality configuration for the light node
+* `--height <HEIGHT>` — The commitment height at which to commit
+* `--id <ID>` — The commitment id to commit
+* `--vote <VOTE>` — The commitment value to commit
+
+
+
+## `mcr-protocol client eth emln post-admin-commitment using`
+
+Run postadmincommitment with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `mcr-protocol client eth emln post-admin-commitment using [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> --signer-identifier <SIGNER_IDENTIFIER> --light-node-data-dir <LIGHT_NODE_DATA_DIR> --consensus-rpc-url <CONSENSUS_RPC_URL> --finality <FINALITY> --id <ID> --vote <VOTE> [EXTRA_ARGS]...`
+
+###### **Arguments:**
+
+* `<EXTRA_ARGS>` — Extra arguments to be passed to the CLI
+
+###### **Options:**
+
+* `--mcr-contract-address <MCR_CONTRACT_ADDRESS>` — The address of the MCR settlement contract
+* `--rpc-url <RPC_URL>` — The Ethereum RPC connection URL
+* `--ws-url <WS_URL>` — The Ethereum WebSocket connection URL
+* `--chain-id <CHAIN_ID>` — The Ethereum chain ID
+* `--run-commitment-admin-mode` — Whether to run in settlement admin mode
+* `--gas-limit <GAS_LIMIT>` — The gas limit for transactions
+* `--transaction-send-retries <TRANSACTION_SEND_RETRIES>` — The number of retries for sending transactions
+* `--mcr-address <MCR_ADDRESS>` — The MCR address
+* `--move-token-address <MOVE_TOKEN_ADDRESS>` — The move token address
+* `--staking-address <STAKING_ADDRESS>` — The staking address
+* `--signer-identifier <SIGNER_IDENTIFIER>` — The signer identifier
+* `--light-node-data-dir <LIGHT_NODE_DATA_DIR>` — The directory to store the light node data
+* `--light-node-network <LIGHT_NODE_NETWORK>` — The Ethereum network type to use for light node consensus parameterizaton
+
+  Default value: `mainnet`
+* `--consensus-rpc-url <CONSENSUS_RPC_URL>` — The consensus RPC for the light node to use
+* `--finality <FINALITY>` — The finality configuration for the light node
+* `--height <HEIGHT>` — The commitment height at which to commit
+* `--id <ID>` — The commitment id to commit
+* `--vote <VOTE>` — The commitment value to commit
+
+
+
+## `mcr-protocol client eth emln post-commitment`
+
+Post a single commitment
+
+**Usage:** `mcr-protocol client eth emln post-commitment <COMMAND>`
+
+###### **Subcommands:**
+
+* `where` — Run postcommitment with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+* `using` — Run postcommitment with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+
+
+## `mcr-protocol client eth emln post-commitment where`
+
+Run postcommitment with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `mcr-protocol client eth emln post-commitment where [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> --signer-identifier <SIGNER_IDENTIFIER> --light-node-data-dir <LIGHT_NODE_DATA_DIR> --consensus-rpc-url <CONSENSUS_RPC_URL> --finality <FINALITY> --id <ID> --vote <VOTE>`
+
+###### **Options:**
+
+* `--mcr-contract-address <MCR_CONTRACT_ADDRESS>` — The address of the MCR settlement contract
+* `--rpc-url <RPC_URL>` — The Ethereum RPC connection URL
+* `--ws-url <WS_URL>` — The Ethereum WebSocket connection URL
+* `--chain-id <CHAIN_ID>` — The Ethereum chain ID
+* `--run-commitment-admin-mode` — Whether to run in settlement admin mode
+* `--gas-limit <GAS_LIMIT>` — The gas limit for transactions
+* `--transaction-send-retries <TRANSACTION_SEND_RETRIES>` — The number of retries for sending transactions
+* `--mcr-address <MCR_ADDRESS>` — The MCR address
+* `--move-token-address <MOVE_TOKEN_ADDRESS>` — The move token address
+* `--staking-address <STAKING_ADDRESS>` — The staking address
+* `--signer-identifier <SIGNER_IDENTIFIER>` — The signer identifier
+* `--light-node-data-dir <LIGHT_NODE_DATA_DIR>` — The directory to store the light node data
+* `--light-node-network <LIGHT_NODE_NETWORK>` — The Ethereum network type to use for light node consensus parameterizaton
+
+  Default value: `mainnet`
+* `--consensus-rpc-url <CONSENSUS_RPC_URL>` — The consensus RPC for the light node to use
+* `--finality <FINALITY>` — The finality configuration for the light node
+* `--height <HEIGHT>` — The commitment height at which to commit
+* `--id <ID>` — The commitment id to commit
+* `--vote <VOTE>` — The commitment value to commit
+
+
+
+## `mcr-protocol client eth emln post-commitment using`
+
+Run postcommitment with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `mcr-protocol client eth emln post-commitment using [OPTIONS] --id <ID> --vote <VOTE> [EXTRA_ARGS]...`
+
+###### **Arguments:**
+
+* `<EXTRA_ARGS>` — Extra arguments to be passed to the CLI
+
+###### **Options:**
+
+* `--config-path <CONFIG_PATH>`
+* `--height <HEIGHT>` — The commitment height at which to commit
+* `--id <ID>` — The commitment id to commit
+* `--vote <VOTE>` — The commitment value to commit
+
+
+
+## `mcr-protocol client eth emln post-commitment-batch`
+
+Post a batch of commitments
+
+**Usage:** `mcr-protocol client eth emln post-commitment-batch <COMMAND>`
+
+###### **Subcommands:**
+
+* `where` — Run postcommitmentbatch with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+* `using` — Run postcommitmentbatch with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+
+
+## `mcr-protocol client eth emln post-commitment-batch where`
+
+Run postcommitmentbatch with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `mcr-protocol client eth emln post-commitment-batch where [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> --signer-identifier <SIGNER_IDENTIFIER> --light-node-data-dir <LIGHT_NODE_DATA_DIR> --consensus-rpc-url <CONSENSUS_RPC_URL> --finality <FINALITY> --id <ID> --vote <VOTE>`
+
+###### **Options:**
+
+* `--mcr-contract-address <MCR_CONTRACT_ADDRESS>` — The address of the MCR settlement contract
+* `--rpc-url <RPC_URL>` — The Ethereum RPC connection URL
+* `--ws-url <WS_URL>` — The Ethereum WebSocket connection URL
+* `--chain-id <CHAIN_ID>` — The Ethereum chain ID
+* `--run-commitment-admin-mode` — Whether to run in settlement admin mode
+* `--gas-limit <GAS_LIMIT>` — The gas limit for transactions
+* `--transaction-send-retries <TRANSACTION_SEND_RETRIES>` — The number of retries for sending transactions
+* `--mcr-address <MCR_ADDRESS>` — The MCR address
+* `--move-token-address <MOVE_TOKEN_ADDRESS>` — The move token address
+* `--staking-address <STAKING_ADDRESS>` — The staking address
+* `--signer-identifier <SIGNER_IDENTIFIER>` — The signer identifier
+* `--light-node-data-dir <LIGHT_NODE_DATA_DIR>` — The directory to store the light node data
+* `--light-node-network <LIGHT_NODE_NETWORK>` — The Ethereum network type to use for light node consensus parameterizaton
+
+  Default value: `mainnet`
+* `--consensus-rpc-url <CONSENSUS_RPC_URL>` — The consensus RPC for the light node to use
+* `--finality <FINALITY>` — The finality configuration for the light node
+* `--height <HEIGHT>` — The commitment height at which to commit
+* `--id <ID>` — The commitment id to commit
+* `--vote <VOTE>` — The commitment value to commit
+
+
+
+## `mcr-protocol client eth emln post-commitment-batch using`
+
+Run postcommitmentbatch with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `mcr-protocol client eth emln post-commitment-batch using [OPTIONS] --id <ID> --vote <VOTE> [EXTRA_ARGS]...`
+
+###### **Arguments:**
+
+* `<EXTRA_ARGS>` — Extra arguments to be passed to the CLI
+
+###### **Options:**
+
+* `--config-path <CONFIG_PATH>`
+* `--height <HEIGHT>` — The commitment height at which to commit
+* `--id <ID>` — The commitment id to commit
+* `--vote <VOTE>` — The commitment value to commit
+
+
+
+## `mcr-protocol client eth emln stream-commitments`
+
+Stream commitments
+
+**Usage:** `mcr-protocol client eth emln stream-commitments <COMMAND>`
+
+###### **Subcommands:**
+
+* `where` — Run streamcommitments with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+* `using` — Run streamcommitments with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+
+
+## `mcr-protocol client eth emln stream-commitments where`
+
+Run streamcommitments with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `mcr-protocol client eth emln stream-commitments where [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> --light-node-data-dir <LIGHT_NODE_DATA_DIR> --consensus-rpc-url <CONSENSUS_RPC_URL> --finality <FINALITY>`
+
+###### **Options:**
+
+* `--mcr-contract-address <MCR_CONTRACT_ADDRESS>` — The address of the MCR settlement contract
+* `--rpc-url <RPC_URL>` — The Ethereum RPC connection URL
+* `--ws-url <WS_URL>` — The Ethereum WebSocket connection URL
+* `--chain-id <CHAIN_ID>` — The Ethereum chain ID
+* `--run-commitment-admin-mode` — Whether to run in settlement admin mode
+* `--gas-limit <GAS_LIMIT>` — The gas limit for transactions
+* `--transaction-send-retries <TRANSACTION_SEND_RETRIES>` — The number of retries for sending transactions
+* `--mcr-address <MCR_ADDRESS>` — The MCR address
+* `--move-token-address <MOVE_TOKEN_ADDRESS>` — The move token address
+* `--staking-address <STAKING_ADDRESS>` — The staking address
+* `--light-node-data-dir <LIGHT_NODE_DATA_DIR>` — The directory to store the light node data
+* `--light-node-network <LIGHT_NODE_NETWORK>` — The Ethereum network type to use for light node consensus parameterizaton
+
+  Default value: `mainnet`
+* `--consensus-rpc-url <CONSENSUS_RPC_URL>` — The consensus RPC for the light node to use
+* `--finality <FINALITY>` — The finality configuration for the light node
+
+
+
+## `mcr-protocol client eth emln stream-commitments using`
+
+Run streamcommitments with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `mcr-protocol client eth emln stream-commitments using [OPTIONS] [EXTRA_ARGS]...`
+
+###### **Arguments:**
+
+* `<EXTRA_ARGS>` — Extra arguments to be passed to the CLI
+
+###### **Options:**
+
+* `--view-config-path <VIEW_CONFIG_PATH>`
+
+
+
+## `mcr-protocol client eth emln get-commitment`
+
+Get a commitment for a given height and attester
+
+**Usage:** `mcr-protocol client eth emln get-commitment <COMMAND>`
+
+###### **Subcommands:**
+
+* `where` — Run getcommitment with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+* `using` — Run getcommitment with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+
+
+## `mcr-protocol client eth emln get-commitment where`
+
+Run getcommitment with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `mcr-protocol client eth emln get-commitment where [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> --light-node-data-dir <LIGHT_NODE_DATA_DIR> --consensus-rpc-url <CONSENSUS_RPC_URL> --finality <FINALITY> --height <HEIGHT> --attester <ATTESTER>`
+
+###### **Options:**
+
+* `--mcr-contract-address <MCR_CONTRACT_ADDRESS>` — The address of the MCR settlement contract
+* `--rpc-url <RPC_URL>` — The Ethereum RPC connection URL
+* `--ws-url <WS_URL>` — The Ethereum WebSocket connection URL
+* `--chain-id <CHAIN_ID>` — The Ethereum chain ID
+* `--run-commitment-admin-mode` — Whether to run in settlement admin mode
+* `--gas-limit <GAS_LIMIT>` — The gas limit for transactions
+* `--transaction-send-retries <TRANSACTION_SEND_RETRIES>` — The number of retries for sending transactions
+* `--mcr-address <MCR_ADDRESS>` — The MCR address
+* `--move-token-address <MOVE_TOKEN_ADDRESS>` — The move token address
+* `--staking-address <STAKING_ADDRESS>` — The staking address
+* `--light-node-data-dir <LIGHT_NODE_DATA_DIR>` — The directory to store the light node data
+* `--light-node-network <LIGHT_NODE_NETWORK>` — The Ethereum network type to use for light node consensus parameterizaton
+
+  Default value: `mainnet`
+* `--consensus-rpc-url <CONSENSUS_RPC_URL>` — The consensus RPC for the light node to use
+* `--finality <FINALITY>` — The finality configuration for the light node
+* `--height <HEIGHT>` — The height to get the commitment for
+* `--attester <ATTESTER>` — The attester address
+
+
+
+## `mcr-protocol client eth emln get-commitment using`
+
+Run getcommitment with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `mcr-protocol client eth emln get-commitment using [OPTIONS] --height <HEIGHT> --attester <ATTESTER> [EXTRA_ARGS]...`
+
+###### **Arguments:**
+
+* `<EXTRA_ARGS>` — Extra arguments to be passed to the CLI
+
+###### **Options:**
+
+* `--view-config-path <VIEW_CONFIG_PATH>`
+* `--height <HEIGHT>` — The height to get the commitment for
+* `--attester <ATTESTER>` — The attester address
+
+
+
+## `mcr-protocol client eth emln get-accepted-commitment-at-height`
+
+Get accepted commitment at a specific height
+
+**Usage:** `mcr-protocol client eth emln get-accepted-commitment-at-height <COMMAND>`
+
+###### **Subcommands:**
+
+* `where` — Run getacceptedcommitmentatheight with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+* `using` — Run getacceptedcommitmentatheight with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+
+
+## `mcr-protocol client eth emln get-accepted-commitment-at-height where`
+
+Run getacceptedcommitmentatheight with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `mcr-protocol client eth emln get-accepted-commitment-at-height where [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> --light-node-data-dir <LIGHT_NODE_DATA_DIR> --consensus-rpc-url <CONSENSUS_RPC_URL> --finality <FINALITY> --height <HEIGHT>`
+
+###### **Options:**
+
+* `--mcr-contract-address <MCR_CONTRACT_ADDRESS>` — The address of the MCR settlement contract
+* `--rpc-url <RPC_URL>` — The Ethereum RPC connection URL
+* `--ws-url <WS_URL>` — The Ethereum WebSocket connection URL
+* `--chain-id <CHAIN_ID>` — The Ethereum chain ID
+* `--run-commitment-admin-mode` — Whether to run in settlement admin mode
+* `--gas-limit <GAS_LIMIT>` — The gas limit for transactions
+* `--transaction-send-retries <TRANSACTION_SEND_RETRIES>` — The number of retries for sending transactions
+* `--mcr-address <MCR_ADDRESS>` — The MCR address
+* `--move-token-address <MOVE_TOKEN_ADDRESS>` — The move token address
+* `--staking-address <STAKING_ADDRESS>` — The staking address
+* `--light-node-data-dir <LIGHT_NODE_DATA_DIR>` — The directory to store the light node data
+* `--light-node-network <LIGHT_NODE_NETWORK>` — The Ethereum network type to use for light node consensus parameterizaton
+
+  Default value: `mainnet`
+* `--consensus-rpc-url <CONSENSUS_RPC_URL>` — The consensus RPC for the light node to use
+* `--finality <FINALITY>` — The finality configuration for the light node
+* `--height <HEIGHT>` — The height to get the commitment for
+
+
+
+## `mcr-protocol client eth emln get-accepted-commitment-at-height using`
+
+Run getacceptedcommitmentatheight with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `mcr-protocol client eth emln get-accepted-commitment-at-height using [OPTIONS] --height <HEIGHT> [EXTRA_ARGS]...`
+
+###### **Arguments:**
+
+* `<EXTRA_ARGS>` — Extra arguments to be passed to the CLI
+
+###### **Options:**
+
+* `--view-config-path <VIEW_CONFIG_PATH>`
+* `--height <HEIGHT>` — The height to get the commitment for
+
+
+
+## `mcr-protocol client eth emln get-posted-commitment-at-height`
+
+Get posted commitment at a specific height
+
+**Usage:** `mcr-protocol client eth emln get-posted-commitment-at-height <COMMAND>`
+
+###### **Subcommands:**
+
+* `where` — Run getpostedcommitmentatheight with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+* `using` — Run getpostedcommitmentatheight with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+
+
+## `mcr-protocol client eth emln get-posted-commitment-at-height where`
+
+Run getpostedcommitmentatheight with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `mcr-protocol client eth emln get-posted-commitment-at-height where [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> --signer-identifier <SIGNER_IDENTIFIER> --light-node-data-dir <LIGHT_NODE_DATA_DIR> --consensus-rpc-url <CONSENSUS_RPC_URL> --finality <FINALITY> --height <HEIGHT>`
+
+###### **Options:**
+
+* `--mcr-contract-address <MCR_CONTRACT_ADDRESS>` — The address of the MCR settlement contract
+* `--rpc-url <RPC_URL>` — The Ethereum RPC connection URL
+* `--ws-url <WS_URL>` — The Ethereum WebSocket connection URL
+* `--chain-id <CHAIN_ID>` — The Ethereum chain ID
+* `--run-commitment-admin-mode` — Whether to run in settlement admin mode
+* `--gas-limit <GAS_LIMIT>` — The gas limit for transactions
+* `--transaction-send-retries <TRANSACTION_SEND_RETRIES>` — The number of retries for sending transactions
+* `--mcr-address <MCR_ADDRESS>` — The MCR address
+* `--move-token-address <MOVE_TOKEN_ADDRESS>` — The move token address
+* `--staking-address <STAKING_ADDRESS>` — The staking address
+* `--signer-identifier <SIGNER_IDENTIFIER>` — The signer identifier
+* `--light-node-data-dir <LIGHT_NODE_DATA_DIR>` — The directory to store the light node data
+* `--light-node-network <LIGHT_NODE_NETWORK>` — The Ethereum network type to use for light node consensus parameterizaton
+
+  Default value: `mainnet`
+* `--consensus-rpc-url <CONSENSUS_RPC_URL>` — The consensus RPC for the light node to use
+* `--finality <FINALITY>` — The finality configuration for the light node
+* `--height <HEIGHT>` — The height to get the commitment for
+
+
+
+## `mcr-protocol client eth emln get-posted-commitment-at-height using`
+
+Run getpostedcommitmentatheight with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `mcr-protocol client eth emln get-posted-commitment-at-height using [OPTIONS] --height <HEIGHT> [EXTRA_ARGS]...`
+
+###### **Arguments:**
+
+* `<EXTRA_ARGS>` — Extra arguments to be passed to the CLI
+
+###### **Options:**
+
+* `--view-config-path <VIEW_CONFIG_PATH>`
+* `--height <HEIGHT>` — The height to get the commitment for
+
+
+
+## `mcr-protocol client eth emln get-max-tolerable-commitment-height`
+
+Get max tolerable commitment height
+
+**Usage:** `mcr-protocol client eth emln get-max-tolerable-commitment-height <COMMAND>`
+
+###### **Subcommands:**
+
+* `where` — Run getmaxtolerablecommitmentheight with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+* `using` — Run getmaxtolerablecommitmentheight with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+
+
+## `mcr-protocol client eth emln get-max-tolerable-commitment-height where`
+
+Run getmaxtolerablecommitmentheight with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `mcr-protocol client eth emln get-max-tolerable-commitment-height where [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> --light-node-data-dir <LIGHT_NODE_DATA_DIR> --consensus-rpc-url <CONSENSUS_RPC_URL> --finality <FINALITY>`
+
+###### **Options:**
+
+* `--mcr-contract-address <MCR_CONTRACT_ADDRESS>` — The address of the MCR settlement contract
+* `--rpc-url <RPC_URL>` — The Ethereum RPC connection URL
+* `--ws-url <WS_URL>` — The Ethereum WebSocket connection URL
+* `--chain-id <CHAIN_ID>` — The Ethereum chain ID
+* `--run-commitment-admin-mode` — Whether to run in settlement admin mode
+* `--gas-limit <GAS_LIMIT>` — The gas limit for transactions
+* `--transaction-send-retries <TRANSACTION_SEND_RETRIES>` — The number of retries for sending transactions
+* `--mcr-address <MCR_ADDRESS>` — The MCR address
+* `--move-token-address <MOVE_TOKEN_ADDRESS>` — The move token address
+* `--staking-address <STAKING_ADDRESS>` — The staking address
+* `--light-node-data-dir <LIGHT_NODE_DATA_DIR>` — The directory to store the light node data
+* `--light-node-network <LIGHT_NODE_NETWORK>` — The Ethereum network type to use for light node consensus parameterizaton
+
+  Default value: `mainnet`
+* `--consensus-rpc-url <CONSENSUS_RPC_URL>` — The consensus RPC for the light node to use
+* `--finality <FINALITY>` — The finality configuration for the light node
+
+
+
+## `mcr-protocol client eth emln get-max-tolerable-commitment-height using`
+
+Run getmaxtolerablecommitmentheight with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `mcr-protocol client eth emln get-max-tolerable-commitment-height using [OPTIONS] [EXTRA_ARGS]...`
+
+###### **Arguments:**
+
+* `<EXTRA_ARGS>` — Extra arguments to be passed to the CLI
+
+###### **Options:**
+
+* `--view-config-path <VIEW_CONFIG_PATH>`
+
+
+
+## `mcr-protocol client eth emln stake`
+
+Stake tokens for the MCR domain
+
+**Usage:** `mcr-protocol client eth emln stake <COMMAND>`
+
+###### **Subcommands:**
+
+* `where` — Run stake with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+* `using` — Run stake with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+
+
+## `mcr-protocol client eth emln stake where`
+
+Run stake with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `mcr-protocol client eth emln stake where [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> --signer-identifier <SIGNER_IDENTIFIER> --light-node-data-dir <LIGHT_NODE_DATA_DIR> --consensus-rpc-url <CONSENSUS_RPC_URL> --finality <FINALITY> --amount <AMOUNT>`
+
+###### **Options:**
+
+* `--mcr-contract-address <MCR_CONTRACT_ADDRESS>` — The address of the MCR settlement contract
+* `--rpc-url <RPC_URL>` — The Ethereum RPC connection URL
+* `--ws-url <WS_URL>` — The Ethereum WebSocket connection URL
+* `--chain-id <CHAIN_ID>` — The Ethereum chain ID
+* `--run-commitment-admin-mode` — Whether to run in settlement admin mode
+* `--gas-limit <GAS_LIMIT>` — The gas limit for transactions
+* `--transaction-send-retries <TRANSACTION_SEND_RETRIES>` — The number of retries for sending transactions
+* `--mcr-address <MCR_ADDRESS>` — The MCR address
+* `--move-token-address <MOVE_TOKEN_ADDRESS>` — The move token address
+* `--staking-address <STAKING_ADDRESS>` — The staking address
+* `--signer-identifier <SIGNER_IDENTIFIER>` — The signer identifier
+* `--light-node-data-dir <LIGHT_NODE_DATA_DIR>` — The directory to store the light node data
+* `--light-node-network <LIGHT_NODE_NETWORK>` — The Ethereum network type to use for light node consensus parameterizaton
+
+  Default value: `mainnet`
+* `--consensus-rpc-url <CONSENSUS_RPC_URL>` — The consensus RPC for the light node to use
+* `--finality <FINALITY>` — The finality configuration for the light node
+* `--amount <AMOUNT>` — Amount to stake
+
+
+
+## `mcr-protocol client eth emln stake using`
+
+Run stake with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `mcr-protocol client eth emln stake using [OPTIONS] --amount <AMOUNT> [EXTRA_ARGS]...`
+
+###### **Arguments:**
+
+* `<EXTRA_ARGS>` — Extra arguments to be passed to the CLI
+
+###### **Options:**
+
+* `--config-path <CONFIG_PATH>`
+* `--amount <AMOUNT>` — Amount to stake
+
+
+
+## `mcr-protocol client eth emln get-stake`
+
+Get the current epoch stake for an attester
+
+**Usage:** `mcr-protocol client eth emln get-stake <COMMAND>`
+
+###### **Subcommands:**
+
+* `where` — Run getstake with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+* `using` — Run getstake with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+
+
+## `mcr-protocol client eth emln get-stake where`
+
+Run getstake with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `mcr-protocol client eth emln get-stake where [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> --light-node-data-dir <LIGHT_NODE_DATA_DIR> --consensus-rpc-url <CONSENSUS_RPC_URL> --finality <FINALITY> --custodian <CUSTODIAN> --attester <ATTESTER>`
+
+###### **Options:**
+
+* `--mcr-contract-address <MCR_CONTRACT_ADDRESS>` — The address of the MCR settlement contract
+* `--rpc-url <RPC_URL>` — The Ethereum RPC connection URL
+* `--ws-url <WS_URL>` — The Ethereum WebSocket connection URL
+* `--chain-id <CHAIN_ID>` — The Ethereum chain ID
+* `--run-commitment-admin-mode` — Whether to run in settlement admin mode
+* `--gas-limit <GAS_LIMIT>` — The gas limit for transactions
+* `--transaction-send-retries <TRANSACTION_SEND_RETRIES>` — The number of retries for sending transactions
+* `--mcr-address <MCR_ADDRESS>` — The MCR address
+* `--move-token-address <MOVE_TOKEN_ADDRESS>` — The move token address
+* `--staking-address <STAKING_ADDRESS>` — The staking address
+* `--light-node-data-dir <LIGHT_NODE_DATA_DIR>` — The directory to store the light node data
+* `--light-node-network <LIGHT_NODE_NETWORK>` — The Ethereum network type to use for light node consensus parameterizaton
+
+  Default value: `mainnet`
+* `--consensus-rpc-url <CONSENSUS_RPC_URL>` — The consensus RPC for the light node to use
+* `--finality <FINALITY>` — The finality configuration for the light node
+* `--custodian <CUSTODIAN>` — The custodian address
+* `--attester <ATTESTER>` — The attester address
+
+
+
+## `mcr-protocol client eth emln get-stake using`
+
+Run getstake with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `mcr-protocol client eth emln get-stake using [OPTIONS] --custodian <CUSTODIAN> --attester <ATTESTER> [EXTRA_ARGS]...`
+
+###### **Arguments:**
+
+* `<EXTRA_ARGS>` — Extra arguments to be passed to the CLI
+
+###### **Options:**
+
+* `--view-config-path <VIEW_CONFIG_PATH>`
+* `--custodian <CUSTODIAN>` — The custodian address
+* `--attester <ATTESTER>` — The attester address
+
+
+
+## `mcr-protocol client eth emln unstake`
+
+Unstake tokens from the MCR domain
+
+**Usage:** `mcr-protocol client eth emln unstake <COMMAND>`
+
+###### **Subcommands:**
+
+* `where` — Run unstake with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+* `using` — Run unstake with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+
+
+## `mcr-protocol client eth emln unstake where`
+
+Run unstake with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `mcr-protocol client eth emln unstake where [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> --signer-identifier <SIGNER_IDENTIFIER> --light-node-data-dir <LIGHT_NODE_DATA_DIR> --consensus-rpc-url <CONSENSUS_RPC_URL> --finality <FINALITY> --amount <AMOUNT>`
+
+###### **Options:**
+
+* `--mcr-contract-address <MCR_CONTRACT_ADDRESS>` — The address of the MCR settlement contract
+* `--rpc-url <RPC_URL>` — The Ethereum RPC connection URL
+* `--ws-url <WS_URL>` — The Ethereum WebSocket connection URL
+* `--chain-id <CHAIN_ID>` — The Ethereum chain ID
+* `--run-commitment-admin-mode` — Whether to run in settlement admin mode
+* `--gas-limit <GAS_LIMIT>` — The gas limit for transactions
+* `--transaction-send-retries <TRANSACTION_SEND_RETRIES>` — The number of retries for sending transactions
+* `--mcr-address <MCR_ADDRESS>` — The MCR address
+* `--move-token-address <MOVE_TOKEN_ADDRESS>` — The move token address
+* `--staking-address <STAKING_ADDRESS>` — The staking address
+* `--signer-identifier <SIGNER_IDENTIFIER>` — The signer identifier
+* `--light-node-data-dir <LIGHT_NODE_DATA_DIR>` — The directory to store the light node data
+* `--light-node-network <LIGHT_NODE_NETWORK>` — The Ethereum network type to use for light node consensus parameterizaton
+
+  Default value: `mainnet`
+* `--consensus-rpc-url <CONSENSUS_RPC_URL>` — The consensus RPC for the light node to use
+* `--finality <FINALITY>` — The finality configuration for the light node
+* `--amount <AMOUNT>` — Amount to unstake
+
+
+
+## `mcr-protocol client eth emln unstake using`
+
+Run unstake with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `mcr-protocol client eth emln unstake using [OPTIONS] --amount <AMOUNT> [EXTRA_ARGS]...`
+
+###### **Arguments:**
+
+* `<EXTRA_ARGS>` — Extra arguments to be passed to the CLI
+
+###### **Options:**
+
+* `--config-path <CONFIG_PATH>`
+* `--amount <AMOUNT>` — Amount to unstake
+
+
+
+## `mcr-protocol client eth emln grant-trusted-attester`
+
+Grant TRUSTED_ATTESTER role to an attester
+
+**Usage:** `mcr-protocol client eth emln grant-trusted-attester <COMMAND>`
+
+###### **Subcommands:**
+
+* `where` — Run granttrustedattester with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+* `using` — Run granttrustedattester with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+
+
+## `mcr-protocol client eth emln grant-trusted-attester where`
+
+Run granttrustedattester with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `mcr-protocol client eth emln grant-trusted-attester where [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> --signer-identifier <SIGNER_IDENTIFIER> --light-node-data-dir <LIGHT_NODE_DATA_DIR> --consensus-rpc-url <CONSENSUS_RPC_URL> --finality <FINALITY> --attester <ATTESTER>`
+
+###### **Options:**
+
+* `--mcr-contract-address <MCR_CONTRACT_ADDRESS>` — The address of the MCR settlement contract
+* `--rpc-url <RPC_URL>` — The Ethereum RPC connection URL
+* `--ws-url <WS_URL>` — The Ethereum WebSocket connection URL
+* `--chain-id <CHAIN_ID>` — The Ethereum chain ID
+* `--run-commitment-admin-mode` — Whether to run in settlement admin mode
+* `--gas-limit <GAS_LIMIT>` — The gas limit for transactions
+* `--transaction-send-retries <TRANSACTION_SEND_RETRIES>` — The number of retries for sending transactions
+* `--mcr-address <MCR_ADDRESS>` — The MCR address
+* `--move-token-address <MOVE_TOKEN_ADDRESS>` — The move token address
+* `--staking-address <STAKING_ADDRESS>` — The staking address
+* `--signer-identifier <SIGNER_IDENTIFIER>` — The signer identifier
+* `--light-node-data-dir <LIGHT_NODE_DATA_DIR>` — The directory to store the light node data
+* `--light-node-network <LIGHT_NODE_NETWORK>` — The Ethereum network type to use for light node consensus parameterizaton
+
+  Default value: `mainnet`
+* `--consensus-rpc-url <CONSENSUS_RPC_URL>` — The consensus RPC for the light node to use
+* `--finality <FINALITY>` — The finality configuration for the light node
+* `--attester <ATTESTER>` — The attester address to grant the role to
+
+
+
+## `mcr-protocol client eth emln grant-trusted-attester using`
+
+Run granttrustedattester with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `mcr-protocol client eth emln grant-trusted-attester using [OPTIONS] --attester <ATTESTER> [EXTRA_ARGS]...`
+
+###### **Arguments:**
+
+* `<EXTRA_ARGS>` — Extra arguments to be passed to the CLI
+
+###### **Options:**
+
+* `--config-path <CONFIG_PATH>`
+* `--attester <ATTESTER>` — The attester address to grant the role to
+
+
+
+## `mcr-protocol client light-node-proto`
+
+Light node protocol commands, such as staking and committing
+
+**Usage:** `mcr-protocol client light-node-proto <COMMAND>`
+
+KEEP THIS UNTIL PRODUCTION-READY : Defined in: protocol/mcr/cli/client/src/cli/light_node_proto/mod.rs
+
+###### **Subcommands:**
+
+* `post-admin-commitment` — Force a commitment (admin only)
+* `post-commitment` — Post a single commitment
+* `post-commitment-batch` — Post a batch of commitments
+* `stream-commitments` — Stream commitments
+* `get-commitment` — Get a commitment for a given height and attester
+* `get-accepted-commitment-at-height` — Get accepted commitment at a specific height
+* `get-posted-commitment-at-height` — Get posted commitment at a specific height
+* `get-max-tolerable-commitment-height` — Get max tolerable commitment height
+* `stake` — Stake tokens for the MCR domain
+* `get-stake` — Get the current epoch stake for an attester
+* `unstake` — Unstake tokens from the MCR domain
+* `grant-trusted-attester` — Grant TRUSTED_ATTESTER role to an attester
+
+
+
+## `mcr-protocol client light-node-proto post-admin-commitment`
+
+Force a commitment (admin only)
+
+**Usage:** `mcr-protocol client light-node-proto post-admin-commitment <COMMAND>`
+
+###### **Subcommands:**
+
+* `where` — Run postadmincommitment with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+* `using` — Run postadmincommitment with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+
+
+## `mcr-protocol client light-node-proto post-admin-commitment where`
+
+Run postadmincommitment with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `mcr-protocol client light-node-proto post-admin-commitment where [OPTIONS] --endpoint <ENDPOINT> --id <ID> --vote <VOTE>`
+
+###### **Options:**
+
+* `--endpoint <ENDPOINT>` — The gRPC endpoint URL for the light node service
+* `--timeout-ms <TIMEOUT_MS>` — The timeout for gRPC requests in milliseconds
+
+  Default value: `5000`
+* `--height <HEIGHT>` — The commitment height at which to commit
+* `--id <ID>` — The commitment id to commit
+* `--vote <VOTE>` — The commitment value to commit
+
+
+
+## `mcr-protocol client light-node-proto post-admin-commitment using`
+
+Run postadmincommitment with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `mcr-protocol client light-node-proto post-admin-commitment using [OPTIONS] --endpoint <ENDPOINT> --id <ID> --vote <VOTE> [EXTRA_ARGS]...`
+
+###### **Arguments:**
+
+* `<EXTRA_ARGS>` — Extra arguments to be passed to the CLI
+
+###### **Options:**
+
+* `--endpoint <ENDPOINT>` — The gRPC endpoint URL for the light node service
+* `--timeout-ms <TIMEOUT_MS>` — The timeout for gRPC requests in milliseconds
+
+  Default value: `5000`
+* `--height <HEIGHT>` — The commitment height at which to commit
+* `--id <ID>` — The commitment id to commit
+* `--vote <VOTE>` — The commitment value to commit
+
+
+
+## `mcr-protocol client light-node-proto post-commitment`
+
+Post a single commitment
+
+**Usage:** `mcr-protocol client light-node-proto post-commitment <COMMAND>`
+
+###### **Subcommands:**
+
+* `where` — Run postcommitment with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+* `using` — Run postcommitment with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+
+
+## `mcr-protocol client light-node-proto post-commitment where`
+
+Run postcommitment with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `mcr-protocol client light-node-proto post-commitment where [OPTIONS] --endpoint <ENDPOINT> --id <ID> --vote <VOTE>`
+
+###### **Options:**
+
+* `--endpoint <ENDPOINT>` — The gRPC endpoint URL for the light node service
+* `--timeout-ms <TIMEOUT_MS>` — The timeout for gRPC requests in milliseconds
+
+  Default value: `5000`
+* `--height <HEIGHT>` — The commitment height at which to commit
+* `--id <ID>` — The commitment id to commit
+* `--vote <VOTE>` — The commitment value to commit
+
+
+
+## `mcr-protocol client light-node-proto post-commitment using`
+
+Run postcommitment with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `mcr-protocol client light-node-proto post-commitment using [OPTIONS] --id <ID> --vote <VOTE> [EXTRA_ARGS]...`
+
+###### **Arguments:**
+
+* `<EXTRA_ARGS>` — Extra arguments to be passed to the CLI
+
+###### **Options:**
+
+* `--config-path <CONFIG_PATH>`
+* `--height <HEIGHT>` — The commitment height at which to commit
+* `--id <ID>` — The commitment id to commit
+* `--vote <VOTE>` — The commitment value to commit
+
+
+
+## `mcr-protocol client light-node-proto post-commitment-batch`
+
+Post a batch of commitments
+
+**Usage:** `mcr-protocol client light-node-proto post-commitment-batch <COMMAND>`
+
+###### **Subcommands:**
+
+* `where` — Run postcommitmentbatch with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+* `using` — Run postcommitmentbatch with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+
+
+## `mcr-protocol client light-node-proto post-commitment-batch where`
+
+Run postcommitmentbatch with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `mcr-protocol client light-node-proto post-commitment-batch where [OPTIONS] --endpoint <ENDPOINT> --id <ID> --vote <VOTE>`
+
+###### **Options:**
+
+* `--endpoint <ENDPOINT>` — The gRPC endpoint URL for the light node service
+* `--timeout-ms <TIMEOUT_MS>` — The timeout for gRPC requests in milliseconds
+
+  Default value: `5000`
+* `--height <HEIGHT>` — The commitment height at which to commit
+* `--id <ID>` — The commitment id to commit
+* `--vote <VOTE>` — The commitment value to commit
+
+
+
+## `mcr-protocol client light-node-proto post-commitment-batch using`
+
+Run postcommitmentbatch with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `mcr-protocol client light-node-proto post-commitment-batch using [OPTIONS] --id <ID> --vote <VOTE> [EXTRA_ARGS]...`
+
+###### **Arguments:**
+
+* `<EXTRA_ARGS>` — Extra arguments to be passed to the CLI
+
+###### **Options:**
+
+* `--config-path <CONFIG_PATH>`
+* `--height <HEIGHT>` — The commitment height at which to commit
+* `--id <ID>` — The commitment id to commit
+* `--vote <VOTE>` — The commitment value to commit
+
+
+
+## `mcr-protocol client light-node-proto stream-commitments`
+
+Stream commitments
+
+**Usage:** `mcr-protocol client light-node-proto stream-commitments <COMMAND>`
+
+###### **Subcommands:**
+
+* `where` — Run streamcommitments with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+* `using` — Run streamcommitments with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+
+
+## `mcr-protocol client light-node-proto stream-commitments where`
+
+Run streamcommitments with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `mcr-protocol client light-node-proto stream-commitments where [OPTIONS] --endpoint <ENDPOINT>`
+
+###### **Options:**
+
+* `--endpoint <ENDPOINT>` — The gRPC endpoint URL for the light node service
+* `--timeout-ms <TIMEOUT_MS>` — The timeout for gRPC requests in milliseconds
+
+  Default value: `5000`
+
+
+
+## `mcr-protocol client light-node-proto stream-commitments using`
+
+Run streamcommitments with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `mcr-protocol client light-node-proto stream-commitments using [OPTIONS] [EXTRA_ARGS]...`
+
+###### **Arguments:**
+
+* `<EXTRA_ARGS>` — Extra arguments to be passed to the CLI
+
+###### **Options:**
+
+* `--view-config-path <VIEW_CONFIG_PATH>`
+
+
+
+## `mcr-protocol client light-node-proto get-commitment`
+
+Get a commitment for a given height and attester
+
+**Usage:** `mcr-protocol client light-node-proto get-commitment <COMMAND>`
+
+###### **Subcommands:**
+
+* `where` — Run getcommitment with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+* `using` — Run getcommitment with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+
+
+## `mcr-protocol client light-node-proto get-commitment where`
+
+Run getcommitment with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `mcr-protocol client light-node-proto get-commitment where [OPTIONS] --endpoint <ENDPOINT> --height <HEIGHT> --attester <ATTESTER>`
+
+###### **Options:**
+
+* `--endpoint <ENDPOINT>` — The gRPC endpoint URL for the light node service
+* `--timeout-ms <TIMEOUT_MS>` — The timeout for gRPC requests in milliseconds
+
+  Default value: `5000`
+* `--height <HEIGHT>` — The height to get the commitment for
+* `--attester <ATTESTER>` — The attester address
+
+
+
+## `mcr-protocol client light-node-proto get-commitment using`
+
+Run getcommitment with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `mcr-protocol client light-node-proto get-commitment using [OPTIONS] --height <HEIGHT> --attester <ATTESTER> [EXTRA_ARGS]...`
+
+###### **Arguments:**
+
+* `<EXTRA_ARGS>` — Extra arguments to be passed to the CLI
+
+###### **Options:**
+
+* `--view-config-path <VIEW_CONFIG_PATH>`
+* `--height <HEIGHT>` — The height to get the commitment for
+* `--attester <ATTESTER>` — The attester address
+
+
+
+## `mcr-protocol client light-node-proto get-accepted-commitment-at-height`
+
+Get accepted commitment at a specific height
+
+**Usage:** `mcr-protocol client light-node-proto get-accepted-commitment-at-height <COMMAND>`
+
+###### **Subcommands:**
+
+* `where` — Run getacceptedcommitmentatheight with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+* `using` — Run getacceptedcommitmentatheight with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+
+
+## `mcr-protocol client light-node-proto get-accepted-commitment-at-height where`
+
+Run getacceptedcommitmentatheight with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `mcr-protocol client light-node-proto get-accepted-commitment-at-height where [OPTIONS] --endpoint <ENDPOINT> --height <HEIGHT>`
+
+###### **Options:**
+
+* `--endpoint <ENDPOINT>` — The gRPC endpoint URL for the light node service
+* `--timeout-ms <TIMEOUT_MS>` — The timeout for gRPC requests in milliseconds
+
+  Default value: `5000`
+* `--height <HEIGHT>` — The height to get the commitment for
+
+
+
+## `mcr-protocol client light-node-proto get-accepted-commitment-at-height using`
+
+Run getacceptedcommitmentatheight with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `mcr-protocol client light-node-proto get-accepted-commitment-at-height using [OPTIONS] --height <HEIGHT> [EXTRA_ARGS]...`
+
+###### **Arguments:**
+
+* `<EXTRA_ARGS>` — Extra arguments to be passed to the CLI
+
+###### **Options:**
+
+* `--view-config-path <VIEW_CONFIG_PATH>`
+* `--height <HEIGHT>` — The height to get the commitment for
+
+
+
+## `mcr-protocol client light-node-proto get-posted-commitment-at-height`
+
+Get posted commitment at a specific height
+
+**Usage:** `mcr-protocol client light-node-proto get-posted-commitment-at-height <COMMAND>`
+
+###### **Subcommands:**
+
+* `where` — Run getpostedcommitmentatheight with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+* `using` — Run getpostedcommitmentatheight with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+
+
+## `mcr-protocol client light-node-proto get-posted-commitment-at-height where`
+
+Run getpostedcommitmentatheight with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `mcr-protocol client light-node-proto get-posted-commitment-at-height where [OPTIONS] --endpoint <ENDPOINT> --height <HEIGHT>`
+
+###### **Options:**
+
+* `--endpoint <ENDPOINT>` — The gRPC endpoint URL for the light node service
+* `--timeout-ms <TIMEOUT_MS>` — The timeout for gRPC requests in milliseconds
+
+  Default value: `5000`
+* `--height <HEIGHT>` — The height to get the commitment for
+
+
+
+## `mcr-protocol client light-node-proto get-posted-commitment-at-height using`
+
+Run getpostedcommitmentatheight with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `mcr-protocol client light-node-proto get-posted-commitment-at-height using [OPTIONS] --height <HEIGHT> [EXTRA_ARGS]...`
+
+###### **Arguments:**
+
+* `<EXTRA_ARGS>` — Extra arguments to be passed to the CLI
+
+###### **Options:**
+
+* `--view-config-path <VIEW_CONFIG_PATH>`
+* `--height <HEIGHT>` — The height to get the commitment for
+
+
+
+## `mcr-protocol client light-node-proto get-max-tolerable-commitment-height`
+
+Get max tolerable commitment height
+
+**Usage:** `mcr-protocol client light-node-proto get-max-tolerable-commitment-height <COMMAND>`
+
+###### **Subcommands:**
+
+* `where` — Run getmaxtolerablecommitmentheight with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+* `using` — Run getmaxtolerablecommitmentheight with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+
+
+## `mcr-protocol client light-node-proto get-max-tolerable-commitment-height where`
+
+Run getmaxtolerablecommitmentheight with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `mcr-protocol client light-node-proto get-max-tolerable-commitment-height where [OPTIONS] --endpoint <ENDPOINT>`
+
+###### **Options:**
+
+* `--endpoint <ENDPOINT>` — The gRPC endpoint URL for the light node service
+* `--timeout-ms <TIMEOUT_MS>` — The timeout for gRPC requests in milliseconds
+
+  Default value: `5000`
+
+
+
+## `mcr-protocol client light-node-proto get-max-tolerable-commitment-height using`
+
+Run getmaxtolerablecommitmentheight with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `mcr-protocol client light-node-proto get-max-tolerable-commitment-height using [OPTIONS] [EXTRA_ARGS]...`
+
+###### **Arguments:**
+
+* `<EXTRA_ARGS>` — Extra arguments to be passed to the CLI
+
+###### **Options:**
+
+* `--view-config-path <VIEW_CONFIG_PATH>`
+
+
+
+## `mcr-protocol client light-node-proto stake`
+
+Stake tokens for the MCR domain
+
+**Usage:** `mcr-protocol client light-node-proto stake <COMMAND>`
+
+###### **Subcommands:**
+
+* `where` — Run stake with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+* `using` — Run stake with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+
+
+## `mcr-protocol client light-node-proto stake where`
+
+Run stake with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `mcr-protocol client light-node-proto stake where [OPTIONS] --endpoint <ENDPOINT> --amount <AMOUNT>`
+
+###### **Options:**
+
+* `--endpoint <ENDPOINT>` — The gRPC endpoint URL for the light node service
+* `--timeout-ms <TIMEOUT_MS>` — The timeout for gRPC requests in milliseconds
+
+  Default value: `5000`
+* `--amount <AMOUNT>` — Amount to stake
+
+
+
+## `mcr-protocol client light-node-proto stake using`
+
+Run stake with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `mcr-protocol client light-node-proto stake using [OPTIONS] --amount <AMOUNT> [EXTRA_ARGS]...`
+
+###### **Arguments:**
+
+* `<EXTRA_ARGS>` — Extra arguments to be passed to the CLI
+
+###### **Options:**
+
+* `--config-path <CONFIG_PATH>`
+* `--amount <AMOUNT>` — Amount to stake
+
+
+
+## `mcr-protocol client light-node-proto get-stake`
+
+Get the current epoch stake for an attester
+
+**Usage:** `mcr-protocol client light-node-proto get-stake <COMMAND>`
+
+###### **Subcommands:**
+
+* `where` — Run getstake with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+* `using` — Run getstake with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+
+
+## `mcr-protocol client light-node-proto get-stake where`
+
+Run getstake with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `mcr-protocol client light-node-proto get-stake where [OPTIONS] --endpoint <ENDPOINT> --custodian <CUSTODIAN> --attester <ATTESTER>`
+
+###### **Options:**
+
+* `--endpoint <ENDPOINT>` — The gRPC endpoint URL for the light node service
+* `--timeout-ms <TIMEOUT_MS>` — The timeout for gRPC requests in milliseconds
+
+  Default value: `5000`
+* `--custodian <CUSTODIAN>` — The custodian address
+* `--attester <ATTESTER>` — The attester address
+
+
+
+## `mcr-protocol client light-node-proto get-stake using`
+
+Run getstake with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `mcr-protocol client light-node-proto get-stake using [OPTIONS] --custodian <CUSTODIAN> --attester <ATTESTER> [EXTRA_ARGS]...`
+
+###### **Arguments:**
+
+* `<EXTRA_ARGS>` — Extra arguments to be passed to the CLI
+
+###### **Options:**
+
+* `--view-config-path <VIEW_CONFIG_PATH>`
+* `--custodian <CUSTODIAN>` — The custodian address
+* `--attester <ATTESTER>` — The attester address
+
+
+
+## `mcr-protocol client light-node-proto unstake`
+
+Unstake tokens from the MCR domain
+
+**Usage:** `mcr-protocol client light-node-proto unstake <COMMAND>`
+
+###### **Subcommands:**
+
+* `where` — Run unstake with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+* `using` — Run unstake with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+
+
+## `mcr-protocol client light-node-proto unstake where`
+
+Run unstake with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `mcr-protocol client light-node-proto unstake where [OPTIONS] --endpoint <ENDPOINT> --amount <AMOUNT>`
+
+###### **Options:**
+
+* `--endpoint <ENDPOINT>` — The gRPC endpoint URL for the light node service
+* `--timeout-ms <TIMEOUT_MS>` — The timeout for gRPC requests in milliseconds
+
+  Default value: `5000`
+* `--amount <AMOUNT>` — Amount to unstake
+
+
+
+## `mcr-protocol client light-node-proto unstake using`
+
+Run unstake with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `mcr-protocol client light-node-proto unstake using [OPTIONS] --amount <AMOUNT> [EXTRA_ARGS]...`
+
+###### **Arguments:**
+
+* `<EXTRA_ARGS>` — Extra arguments to be passed to the CLI
+
+###### **Options:**
+
+* `--config-path <CONFIG_PATH>`
+* `--amount <AMOUNT>` — Amount to unstake
+
+
+
+## `mcr-protocol client light-node-proto grant-trusted-attester`
+
+Grant TRUSTED_ATTESTER role to an attester
+
+**Usage:** `mcr-protocol client light-node-proto grant-trusted-attester <COMMAND>`
+
+###### **Subcommands:**
+
+* `where` — Run granttrustedattester with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+* `using` — Run granttrustedattester with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+
+
+## `mcr-protocol client light-node-proto grant-trusted-attester where`
+
+Run granttrustedattester with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `mcr-protocol client light-node-proto grant-trusted-attester where [OPTIONS] --endpoint <ENDPOINT> --attester <ATTESTER>`
+
+###### **Options:**
+
+* `--endpoint <ENDPOINT>` — The gRPC endpoint URL for the light node service
+* `--timeout-ms <TIMEOUT_MS>` — The timeout for gRPC requests in milliseconds
+
+  Default value: `5000`
+* `--attester <ATTESTER>` — The attester address to grant the role to
+
+
+
+## `mcr-protocol client light-node-proto grant-trusted-attester using`
+
+Run granttrustedattester with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `mcr-protocol client light-node-proto grant-trusted-attester using [OPTIONS] --attester <ATTESTER> [EXTRA_ARGS]...`
+
+###### **Arguments:**
+
+* `<EXTRA_ARGS>` — Extra arguments to be passed to the CLI
+
+###### **Options:**
+
+* `--config-path <CONFIG_PATH>`
+* `--attester <ATTESTER>` — The attester address to grant the role to
 
 
 

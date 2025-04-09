@@ -1,0 +1,172 @@
+syntax = "proto3";
+
+package movementlabsxyz.ffs.mcr.light_node.v1beta1;
+
+// Commitment message represents a block commitment
+message Commitment {
+  uint64 height = 1;
+  bytes id = 2;
+  bytes vote = 3;
+}
+
+// Request and response messages for each operation
+message PostCommitmentRequest {
+  Commitment commitment = 1;
+}
+
+message PostCommitmentResponse {
+}
+
+message PostCommitmentBatchRequest {
+  repeated Commitment commitments = 1;
+}
+
+message PostCommitmentBatchResponse {
+}
+
+message ForceCommitmentRequest {
+  Commitment commitment = 1;
+}
+
+message ForceCommitmentResponse {
+}
+
+message StreamCommitmentsRequest {
+}
+
+message StreamCommitmentsResponse {
+  Commitment commitment = 1;
+}
+
+message GetAcceptedCommitmentAtHeightRequest {
+  uint64 height = 1;
+}
+
+message GetAcceptedCommitmentAtHeightResponse {
+  optional Commitment commitment = 1;
+}
+
+message GetPostedCommitmentAtHeightRequest {
+  uint64 height = 1;
+}
+
+message GetPostedCommitmentAtHeightResponse {
+  optional Commitment commitment = 1;
+}
+
+message GetMaxTolerableCommitmentHeightRequest {
+}
+
+message GetMaxTolerableCommitmentHeightResponse {
+  uint64 height = 1;
+}
+
+message GetValidatorCommitmentAtHeightRequest {
+  uint64 height = 1;
+  string attester = 2;
+}
+
+message GetValidatorCommitmentAtHeightResponse {
+  optional Commitment commitment = 1;
+}
+
+message GetBalanceRequest {
+  string address = 1;
+}
+
+message GetBalanceResponse {
+  uint64 balance = 1;
+}
+
+message GetLastAcceptedBlockHeightRequest {
+}
+
+message GetLastAcceptedBlockHeightResponse {
+  uint64 height = 1;
+}
+
+message GetLeadingCommitmentToleranceRequest {
+}
+
+message GetLeadingCommitmentToleranceResponse {
+  uint64 height = 1;
+}
+
+message GrantTrustedAttesterRequest {
+  string attester = 1;
+}
+
+message GrantTrustedAttesterResponse {
+}
+
+message StakeRequest {
+  string amount = 1; // String representation of U256
+}
+
+message StakeResponse {
+}
+
+message UnstakeRequest {
+  string amount = 1; // String representation of U256
+}
+
+message UnstakeResponse {
+}
+
+message GetStakeRequest {
+  string custodian = 1;
+  string attester = 2;
+}
+
+message GetStakeResponse {
+  uint64 stake = 1;
+}
+
+// MCR Light Node Service
+service McrLightNodeService {
+  // Posts a block commitment
+  rpc PostCommitment(PostCommitmentRequest) returns (PostCommitmentResponse) {}
+  
+  // Posts a batch of block commitments
+  rpc PostCommitmentBatch(PostCommitmentBatchRequest) returns (PostCommitmentBatchResponse) {}
+  
+  // Forces a block commitment (admin only)
+  rpc ForceCommitment(ForceCommitmentRequest) returns (ForceCommitmentResponse) {}
+  
+  // Streams block commitments
+  rpc StreamCommitments(StreamCommitmentsRequest) returns (stream StreamCommitmentsResponse) {}
+  
+  // Gets the accepted commitment at the given height
+  rpc GetAcceptedCommitmentAtHeight(GetAcceptedCommitmentAtHeightRequest) returns (GetAcceptedCommitmentAtHeightResponse) {}
+  
+  // Gets the commitment this validator has made at a given height
+  rpc GetPostedCommitmentAtHeight(GetPostedCommitmentAtHeightRequest) returns (GetPostedCommitmentAtHeightResponse) {}
+  
+  // Gets the max tolerable block height
+  rpc GetMaxTolerableCommitmentHeight(GetMaxTolerableCommitmentHeightRequest) returns (GetMaxTolerableCommitmentHeightResponse) {}
+  
+  // Gets the commitment for a specific validator at a given height
+  rpc GetValidatorCommitmentAtHeight(GetValidatorCommitmentAtHeightRequest) returns (GetValidatorCommitmentAtHeightResponse) {}
+  
+  // Get the balance of the specified address
+  rpc GetBalance(GetBalanceRequest) returns (GetBalanceResponse) {}
+  
+  // Gets the last accepted block height
+  rpc GetLastAcceptedBlockHeight(GetLastAcceptedBlockHeightRequest) returns (GetLastAcceptedBlockHeightResponse) {}
+  
+  // Gets the leading block tolerance
+  rpc GetLeadingCommitmentTolerance(GetLeadingCommitmentToleranceRequest) returns (GetLeadingCommitmentToleranceResponse) {}
+  
+  // Grants TRUSTED_ATTESTER role to the specified address
+  rpc GrantTrustedAttester(GrantTrustedAttesterRequest) returns (GrantTrustedAttesterResponse) {}
+  
+  // Stakes tokens for the domain
+  rpc Stake(StakeRequest) returns (StakeResponse) {}
+  
+  // Get the current epoch stake for an attester
+  rpc GetStake(GetStakeRequest) returns (GetStakeResponse) {}
+  
+  // Unstakes tokens from the domain
+  rpc Unstake(UnstakeRequest) returns (UnstakeResponse) {}
+}
+

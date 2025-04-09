@@ -5,13 +5,15 @@ use anyhow::Context;
 use client::{Act, Client};
 use config::Config;
 use mcr_network_anvil_component_core::dev::lifecycle::up::Up;
-use mcr_protocol_client_eth_core::config::Config as EthConfig;
+use mcr_protocol_client_core_util::McrConfigOperations;
+use mcr_protocol_client_eth_core::config::{Config as EthConfig, ViewConfig as EthViewConfig};
 use mcr_protocol_deployer_eth_core::artifacts::output::Artifacts;
 use mcr_types::commitment::Commitment;
 use network_anvil_component_core::util::parser::AnvilData;
 use secure_signer::key::TryFromCanonicalString;
 use secure_signer_loader::identifiers::SignerIdentifier;
 use tokio::time::Duration;
+
 pub struct Basic {
 	up: Up,
 }
@@ -28,7 +30,6 @@ impl UpState {
 		let rpc_url = "http://localhost:8545".to_string();
 		let ws_url = "ws://localhost:8545".to_string();
 		let chain_id = self.anvil_data.chain_id;
-		let commitment_lead_tolerance = 100;
 
 		// get the signer identifier
 		let signer_identifier_hex_key = self.anvil_data.private_keys[0].clone();
@@ -42,20 +43,20 @@ impl UpState {
 			SignerIdentifier::try_from_canonical_string(&canonical_identifier_string)
 				.map_err(|_| anyhow::anyhow!("invalid signer identifier"))?;
 
-		Ok(EthConfig {
+		let view_config = EthViewConfig {
 			mcr_contract_address: self.artifacts.mcr_proxy.clone(),
 			rpc_url: rpc_url.clone(),
 			ws_url: ws_url.clone(),
 			chain_id: chain_id,
-			signer_identifier: signer_identifier,
 			run_commitment_admin_mode: false,
 			gas_limit: 323924465909782,
 			transaction_send_retries: 3,
 			mcr_address: self.artifacts.mcr_proxy.clone(),
-			commitment_lead_tolerance: commitment_lead_tolerance,
 			move_token_address: self.artifacts.token_proxy.clone(),
 			staking_address: self.artifacts.staking_proxy.clone(),
-		})
+		};
+
+		Ok(EthConfig { view_config, signer_identifier })
 	}
 
 	pub async fn try_build_default_mcr_protocol_client(&self) -> Result<Client, anyhow::Error> {

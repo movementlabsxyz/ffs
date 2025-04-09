@@ -24,4 +24,4 @@ COPY --from=builder /tmp/runtime/nix/store /nix/store
 
 # Set the binary as the entrypoint
 ENTRYPOINT ["/app/mcr-protocol-client"]
-LABEL org.opencontainers.image.source https://github.com/movementlabsxyz/ffs
+LABEL org.opencontainers.image.source=https://github.com/movementlabsxyz/ffs

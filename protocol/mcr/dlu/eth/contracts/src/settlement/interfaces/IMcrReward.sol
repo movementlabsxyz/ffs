@@ -17,14 +17,14 @@ interface IMcrReward {
      * @dev Called during _acceptCommitment in the MCR contract
      * @param commitmentHeight The height of the accepted block
      * @param commitment The accepted block commitment hash
-     * @param commitmentId The unique identifier of the accepted block
+     * @param id The unique identifier of the accepted block
      * @param attester The attester who submitted the accepted commitment
      * @return success Whether the reward distribution was successful
      */
     function rewardCommitment(
         uint256 commitmentHeight,
         bytes32 commitment,
-        bytes32 commitmentId,
+        bytes32 id,
         address attester
     ) external returns (bool success);
 

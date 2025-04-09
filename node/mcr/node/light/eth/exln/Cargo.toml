@@ -1,0 +1,39 @@
+[package]
+name = "mcr-light-node-eth-exln-core"
+version = { workspace = true }
+edition = { workspace = true }
+license = { workspace = true }
+authors = { workspace = true }
+homepage = { workspace = true }
+publish = { workspace = true }
+rust-version = { workspace = true }
+
+[dependencies]
+anyhow = { workspace = true }
+async-stream = { workspace = true }
+async-trait = { workspace = true }
+clap = { workspace = true }
+serde_json = { workspace = true }
+thiserror = { workspace = true }
+tokio = { workspace = true }
+tokio-stream = { workspace = true }
+tracing = { workspace = true }
+serde = { workspace = true }
+hex = { workspace = true }
+
+futures = { workspace = true }
+tracing-subscriber = { workspace = true }
+mcr-types = { workspace = true }
+mcr-protocol-client-core-util = { workspace = true }
+secure-signer = { workspace = true }
+secure-signer-loader = { workspace = true }
+secure-signer-eth = { workspace = true }
+helios = { workspace = true }
+
+mcr-protocol-client-eth-core = { workspace = true }
+mcr-light-node-proto = { workspace = true, features = ["server"]}
+tonic = { workspace = true }
+tonic-reflection = { workspace = true }
+
+[lints]
+workspace = true

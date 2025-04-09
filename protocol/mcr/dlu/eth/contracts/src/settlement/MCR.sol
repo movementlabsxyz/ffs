@@ -84,16 +84,16 @@ contract MCR is Initializable, BaseSettlement, MCRStorage, IMCR {
     /**
      * @notice Creates a new block commitment structure
      * @param height Block height
-     * @param commitmentValue Commitment value (hash)
-     * @param commitmentId Unique identifier for the block
+     * @param vote Commitment value (hash)
+     * @param id Unique identifier for the block
      * @return Commitment memory
      */
     function createCommitment(
         uint256 height,
-        bytes32 commitmentValue,
-        bytes32 commitmentId
+        bytes32 vote,
+        bytes32 id
     ) public pure returns (Commitment memory) {
-        return Commitment(height, commitmentValue, commitmentId);
+        return Commitment(height, vote, id);
     }
 
     /**
@@ -391,12 +391,12 @@ contract MCR is Initializable, BaseSettlement, MCRStorage, IMCR {
         // Increment the commitment count by stake
         uint256 allCurrentEpochStake = computeAllCurrentEpochStake(attester);
         commitmentStakes[commitment.height][
-            commitment.commitmentValue
+            commitment.vote
         ] += allCurrentEpochStake;
 
         emit CommitmentSubmitted(
-            commitment.commitmentId,
-            commitment.commitmentValue,
+            commitment.id,
+            commitment.vote,
             allCurrentEpochStake
         );
 
@@ -443,7 +443,7 @@ contract MCR is Initializable, BaseSettlement, MCRStorage, IMCR {
             // Check the total stake on the commitment
             uint256 totalStakeOnCommitment = commitmentStakes[
                 commitment.height
-            ][commitment.commitmentValue];
+            ][commitment.vote];
 
             if (totalStakeOnCommitment > supermajority) {
                 // Accept the commitment (may trigger epoch rollover)
@@ -543,8 +543,8 @@ contract MCR is Initializable, BaseSettlement, MCRStorage, IMCR {
 
         // Emit the block accepted event
         emit CommitmentAccepted(
-            commitment.commitmentId,
-            commitment.commitmentValue,
+            commitment.id,
+            commitment.vote,
             commitment.height
         );
 
@@ -554,14 +554,14 @@ contract MCR is Initializable, BaseSettlement, MCRStorage, IMCR {
             address[] memory attesters = stakingContract.getAttestersByDomain(address(this));
             for (uint256 i = 0; i < attesters.length; i++) {
                 address attester = attesters[i];
-                if (commitments[commitment.height][attester].commitmentValue == commitment.commitmentValue) {
+                if (commitments[commitment.height][attester].vote == commitment.vote) {
                     // Use delegatecall to maintain MCR as msg.sender for the reward call
                     (bool _success, ) = address(rewardContract).delegatecall(
                         abi.encodeWithSelector(
                             IMcrReward.rewardCommitment.selector,
                             commitment.height,
-                            commitment.commitmentValue,
-                            commitment.commitmentId,
+                            commitment.vote,
+                            commitment.id,
                             attester
                         )
                     );
