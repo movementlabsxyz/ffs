@@ -23,6 +23,7 @@ sha3 = "0.10.0"
 secure-signer-loader = { workspace = true }
 tokio-stream = { workspace = true }
 clap-markdown-ext = { workspace = true }
+orfile = { workspace = true }
 
 [lints]
 workspace = true

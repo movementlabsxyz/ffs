@@ -50,17 +50,41 @@ This document contains the help content for the `ffs-dev` command-line program.
 * [`ffs-dev mcr protocol client markdown workspace`↴](#ffs-dev-mcr-protocol-client-markdown-workspace)
 * [`ffs-dev mcr protocol client eth`↴](#ffs-dev-mcr-protocol-client-eth)
 * [`ffs-dev mcr protocol client eth post-admin-commitment`↴](#ffs-dev-mcr-protocol-client-eth-post-admin-commitment)
+* [`ffs-dev mcr protocol client eth post-admin-commitment where`↴](#ffs-dev-mcr-protocol-client-eth-post-admin-commitment-where)
+* [`ffs-dev mcr protocol client eth post-admin-commitment using`↴](#ffs-dev-mcr-protocol-client-eth-post-admin-commitment-using)
 * [`ffs-dev mcr protocol client eth post-commitment`↴](#ffs-dev-mcr-protocol-client-eth-post-commitment)
+* [`ffs-dev mcr protocol client eth post-commitment where`↴](#ffs-dev-mcr-protocol-client-eth-post-commitment-where)
+* [`ffs-dev mcr protocol client eth post-commitment using`↴](#ffs-dev-mcr-protocol-client-eth-post-commitment-using)
 * [`ffs-dev mcr protocol client eth post-commitment-batch`↴](#ffs-dev-mcr-protocol-client-eth-post-commitment-batch)
+* [`ffs-dev mcr protocol client eth post-commitment-batch where`↴](#ffs-dev-mcr-protocol-client-eth-post-commitment-batch-where)
+* [`ffs-dev mcr protocol client eth post-commitment-batch using`↴](#ffs-dev-mcr-protocol-client-eth-post-commitment-batch-using)
 * [`ffs-dev mcr protocol client eth stream-commitments`↴](#ffs-dev-mcr-protocol-client-eth-stream-commitments)
+* [`ffs-dev mcr protocol client eth stream-commitments where`↴](#ffs-dev-mcr-protocol-client-eth-stream-commitments-where)
+* [`ffs-dev mcr protocol client eth stream-commitments using`↴](#ffs-dev-mcr-protocol-client-eth-stream-commitments-using)
 * [`ffs-dev mcr protocol client eth get-commitment`↴](#ffs-dev-mcr-protocol-client-eth-get-commitment)
+* [`ffs-dev mcr protocol client eth get-commitment where`↴](#ffs-dev-mcr-protocol-client-eth-get-commitment-where)
+* [`ffs-dev mcr protocol client eth get-commitment using`↴](#ffs-dev-mcr-protocol-client-eth-get-commitment-using)
 * [`ffs-dev mcr protocol client eth get-accepted-commitment-at-height`↴](#ffs-dev-mcr-protocol-client-eth-get-accepted-commitment-at-height)
+* [`ffs-dev mcr protocol client eth get-accepted-commitment-at-height where`↴](#ffs-dev-mcr-protocol-client-eth-get-accepted-commitment-at-height-where)
+* [`ffs-dev mcr protocol client eth get-accepted-commitment-at-height using`↴](#ffs-dev-mcr-protocol-client-eth-get-accepted-commitment-at-height-using)
 * [`ffs-dev mcr protocol client eth get-posted-commitment-at-height`↴](#ffs-dev-mcr-protocol-client-eth-get-posted-commitment-at-height)
+* [`ffs-dev mcr protocol client eth get-posted-commitment-at-height where`↴](#ffs-dev-mcr-protocol-client-eth-get-posted-commitment-at-height-where)
+* [`ffs-dev mcr protocol client eth get-posted-commitment-at-height using`↴](#ffs-dev-mcr-protocol-client-eth-get-posted-commitment-at-height-using)
 * [`ffs-dev mcr protocol client eth get-max-tolerable-commitment-height`↴](#ffs-dev-mcr-protocol-client-eth-get-max-tolerable-commitment-height)
+* [`ffs-dev mcr protocol client eth get-max-tolerable-commitment-height where`↴](#ffs-dev-mcr-protocol-client-eth-get-max-tolerable-commitment-height-where)
+* [`ffs-dev mcr protocol client eth get-max-tolerable-commitment-height using`↴](#ffs-dev-mcr-protocol-client-eth-get-max-tolerable-commitment-height-using)
 * [`ffs-dev mcr protocol client eth stake`↴](#ffs-dev-mcr-protocol-client-eth-stake)
+* [`ffs-dev mcr protocol client eth stake where`↴](#ffs-dev-mcr-protocol-client-eth-stake-where)
+* [`ffs-dev mcr protocol client eth stake using`↴](#ffs-dev-mcr-protocol-client-eth-stake-using)
 * [`ffs-dev mcr protocol client eth get-stake`↴](#ffs-dev-mcr-protocol-client-eth-get-stake)
+* [`ffs-dev mcr protocol client eth get-stake where`↴](#ffs-dev-mcr-protocol-client-eth-get-stake-where)
+* [`ffs-dev mcr protocol client eth get-stake using`↴](#ffs-dev-mcr-protocol-client-eth-get-stake-using)
 * [`ffs-dev mcr protocol client eth unstake`↴](#ffs-dev-mcr-protocol-client-eth-unstake)
+* [`ffs-dev mcr protocol client eth unstake where`↴](#ffs-dev-mcr-protocol-client-eth-unstake-where)
+* [`ffs-dev mcr protocol client eth unstake using`↴](#ffs-dev-mcr-protocol-client-eth-unstake-using)
 * [`ffs-dev mcr protocol client eth grant-trusted-attester`↴](#ffs-dev-mcr-protocol-client-eth-grant-trusted-attester)
+* [`ffs-dev mcr protocol client eth grant-trusted-attester where`↴](#ffs-dev-mcr-protocol-client-eth-grant-trusted-attester-where)
+* [`ffs-dev mcr protocol client eth grant-trusted-attester using`↴](#ffs-dev-mcr-protocol-client-eth-grant-trusted-attester-using)
 * [`ffs-dev mcr protocol deployer`↴](#ffs-dev-mcr-protocol-deployer)
 * [`ffs-dev mcr protocol deployer markdown`↴](#ffs-dev-mcr-protocol-deployer-markdown)
 * [`ffs-dev mcr protocol deployer markdown generate`↴](#ffs-dev-mcr-protocol-deployer-markdown-generate)
@@ -710,7 +734,20 @@ KEEP THIS UNTIL PRODUCTION-READY : Defined in: protocol/mcr/cli/client/src/cli/e
 
 Force a commitment (admin only)
 
-**Usage:** `ffs-dev mcr protocol client eth post-admin-commitment [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --signer-identifier <SIGNER_IDENTIFIER> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --commitment-lead-tolerance <COMMITMENT_LEAD_TOLERANCE> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> --id <ID> --vote <VOTE>`
+**Usage:** `ffs-dev mcr protocol client eth post-admin-commitment <COMMAND>`
+
+###### **Subcommands:**
+
+* `where` — Run postadmincommitment with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+* `using` — Run postadmincommitment with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+
+
+## `ffs-dev mcr protocol client eth post-admin-commitment where`
+
+Run postadmincommitment with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `ffs-dev mcr protocol client eth post-admin-commitment where [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> --signer-identifier <SIGNER_IDENTIFIER> --id <ID> --vote <VOTE>`
 
 ###### **Options:**
 
@@ -718,14 +755,42 @@ Force a commitment (admin only)
 * `--rpc-url <RPC_URL>` — The Ethereum RPC connection URL
 * `--ws-url <WS_URL>` — The Ethereum WebSocket connection URL
 * `--chain-id <CHAIN_ID>` — The Ethereum chain ID
-* `--signer-identifier <SIGNER_IDENTIFIER>` — The signer identifier
 * `--run-commitment-admin-mode` — Whether to run in settlement admin mode
 * `--gas-limit <GAS_LIMIT>` — The gas limit for transactions
 * `--transaction-send-retries <TRANSACTION_SEND_RETRIES>` — The number of retries for sending transactions
 * `--mcr-address <MCR_ADDRESS>` — The MCR address
-* `--commitment-lead-tolerance <COMMITMENT_LEAD_TOLERANCE>` — The block lead tolerance
 * `--move-token-address <MOVE_TOKEN_ADDRESS>` — The move token address
 * `--staking-address <STAKING_ADDRESS>` — The staking address
+* `--signer-identifier <SIGNER_IDENTIFIER>` — The signer identifier
+* `--height <HEIGHT>` — The commitment height at which to commit
+* `--id <ID>` — The commitment id to commit
+* `--vote <VOTE>` — The commitment value to commit
+
+
+
+## `ffs-dev mcr protocol client eth post-admin-commitment using`
+
+Run postadmincommitment with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `ffs-dev mcr protocol client eth post-admin-commitment using [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> --signer-identifier <SIGNER_IDENTIFIER> --id <ID> --vote <VOTE> [EXTRA_ARGS]...`
+
+###### **Arguments:**
+
+* `<EXTRA_ARGS>` — Extra arguments to be passed to the CLI
+
+###### **Options:**
+
+* `--mcr-contract-address <MCR_CONTRACT_ADDRESS>` — The address of the MCR settlement contract
+* `--rpc-url <RPC_URL>` — The Ethereum RPC connection URL
+* `--ws-url <WS_URL>` — The Ethereum WebSocket connection URL
+* `--chain-id <CHAIN_ID>` — The Ethereum chain ID
+* `--run-commitment-admin-mode` — Whether to run in settlement admin mode
+* `--gas-limit <GAS_LIMIT>` — The gas limit for transactions
+* `--transaction-send-retries <TRANSACTION_SEND_RETRIES>` — The number of retries for sending transactions
+* `--mcr-address <MCR_ADDRESS>` — The MCR address
+* `--move-token-address <MOVE_TOKEN_ADDRESS>` — The move token address
+* `--staking-address <STAKING_ADDRESS>` — The staking address
+* `--signer-identifier <SIGNER_IDENTIFIER>` — The signer identifier
 * `--height <HEIGHT>` — The commitment height at which to commit
 * `--id <ID>` — The commitment id to commit
 * `--vote <VOTE>` — The commitment value to commit
@@ -736,7 +801,20 @@ Force a commitment (admin only)
 
 Post a single commitment
 
-**Usage:** `ffs-dev mcr protocol client eth post-commitment [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --signer-identifier <SIGNER_IDENTIFIER> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --commitment-lead-tolerance <COMMITMENT_LEAD_TOLERANCE> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> --height <HEIGHT> --id <ID> --vote <VOTE>`
+**Usage:** `ffs-dev mcr protocol client eth post-commitment <COMMAND>`
+
+###### **Subcommands:**
+
+* `where` — Run postcommitment with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+* `using` — Run postcommitment with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+
+
+## `ffs-dev mcr protocol client eth post-commitment where`
+
+Run postcommitment with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `ffs-dev mcr protocol client eth post-commitment where [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> --signer-identifier <SIGNER_IDENTIFIER> --id <ID> --vote <VOTE>`
 
 ###### **Options:**
 
@@ -744,16 +822,44 @@ Post a single commitment
 * `--rpc-url <RPC_URL>` — The Ethereum RPC connection URL
 * `--ws-url <WS_URL>` — The Ethereum WebSocket connection URL
 * `--chain-id <CHAIN_ID>` — The Ethereum chain ID
-* `--signer-identifier <SIGNER_IDENTIFIER>` — The signer identifier
 * `--run-commitment-admin-mode` — Whether to run in settlement admin mode
 * `--gas-limit <GAS_LIMIT>` — The gas limit for transactions
 * `--transaction-send-retries <TRANSACTION_SEND_RETRIES>` — The number of retries for sending transactions
 * `--mcr-address <MCR_ADDRESS>` — The MCR address
-* `--commitment-lead-tolerance <COMMITMENT_LEAD_TOLERANCE>` — The block lead tolerance
 * `--move-token-address <MOVE_TOKEN_ADDRESS>` — The move token address
 * `--staking-address <STAKING_ADDRESS>` — The staking address
-* `--height <HEIGHT>` — The height of the commitment block at which to commit
-* `--id <ID>` — The id of the commitment block at which to commit
+* `--signer-identifier <SIGNER_IDENTIFIER>` — The signer identifier
+* `--height <HEIGHT>` — The commitment height at which to commit
+* `--id <ID>` — The commitment id to commit
+* `--vote <VOTE>` — The commitment value to commit
+
+
+
+## `ffs-dev mcr protocol client eth post-commitment using`
+
+Run postcommitment with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `ffs-dev mcr protocol client eth post-commitment using [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> --signer-identifier <SIGNER_IDENTIFIER> --id <ID> --vote <VOTE> [EXTRA_ARGS]...`
+
+###### **Arguments:**
+
+* `<EXTRA_ARGS>` — Extra arguments to be passed to the CLI
+
+###### **Options:**
+
+* `--mcr-contract-address <MCR_CONTRACT_ADDRESS>` — The address of the MCR settlement contract
+* `--rpc-url <RPC_URL>` — The Ethereum RPC connection URL
+* `--ws-url <WS_URL>` — The Ethereum WebSocket connection URL
+* `--chain-id <CHAIN_ID>` — The Ethereum chain ID
+* `--run-commitment-admin-mode` — Whether to run in settlement admin mode
+* `--gas-limit <GAS_LIMIT>` — The gas limit for transactions
+* `--transaction-send-retries <TRANSACTION_SEND_RETRIES>` — The number of retries for sending transactions
+* `--mcr-address <MCR_ADDRESS>` — The MCR address
+* `--move-token-address <MOVE_TOKEN_ADDRESS>` — The move token address
+* `--staking-address <STAKING_ADDRESS>` — The staking address
+* `--signer-identifier <SIGNER_IDENTIFIER>` — The signer identifier
+* `--height <HEIGHT>` — The commitment height at which to commit
+* `--id <ID>` — The commitment id to commit
 * `--vote <VOTE>` — The commitment value to commit
 
 
@@ -762,7 +868,20 @@ Post a single commitment
 
 Post a batch of commitments
 
-**Usage:** `ffs-dev mcr protocol client eth post-commitment-batch [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --signer-identifier <SIGNER_IDENTIFIER> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --commitment-lead-tolerance <COMMITMENT_LEAD_TOLERANCE> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> --height <HEIGHT> --id <ID> --vote <VOTE>`
+**Usage:** `ffs-dev mcr protocol client eth post-commitment-batch <COMMAND>`
+
+###### **Subcommands:**
+
+* `where` — Run postcommitmentbatch with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+* `using` — Run postcommitmentbatch with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+
+
+## `ffs-dev mcr protocol client eth post-commitment-batch where`
+
+Run postcommitmentbatch with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `ffs-dev mcr protocol client eth post-commitment-batch where [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> --signer-identifier <SIGNER_IDENTIFIER> --id <ID> --vote <VOTE>`
 
 ###### **Options:**
 
@@ -770,16 +889,44 @@ Post a batch of commitments
 * `--rpc-url <RPC_URL>` — The Ethereum RPC connection URL
 * `--ws-url <WS_URL>` — The Ethereum WebSocket connection URL
 * `--chain-id <CHAIN_ID>` — The Ethereum chain ID
-* `--signer-identifier <SIGNER_IDENTIFIER>` — The signer identifier
 * `--run-commitment-admin-mode` — Whether to run in settlement admin mode
 * `--gas-limit <GAS_LIMIT>` — The gas limit for transactions
 * `--transaction-send-retries <TRANSACTION_SEND_RETRIES>` — The number of retries for sending transactions
 * `--mcr-address <MCR_ADDRESS>` — The MCR address
-* `--commitment-lead-tolerance <COMMITMENT_LEAD_TOLERANCE>` — The block lead tolerance
 * `--move-token-address <MOVE_TOKEN_ADDRESS>` — The move token address
 * `--staking-address <STAKING_ADDRESS>` — The staking address
-* `--height <HEIGHT>` — The height of the block to commit
-* `--id <ID>` — The id of the block to commit
+* `--signer-identifier <SIGNER_IDENTIFIER>` — The signer identifier
+* `--height <HEIGHT>` — The commitment height at which to commit
+* `--id <ID>` — The commitment id to commit
+* `--vote <VOTE>` — The commitment value to commit
+
+
+
+## `ffs-dev mcr protocol client eth post-commitment-batch using`
+
+Run postcommitmentbatch with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `ffs-dev mcr protocol client eth post-commitment-batch using [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> --signer-identifier <SIGNER_IDENTIFIER> --id <ID> --vote <VOTE> [EXTRA_ARGS]...`
+
+###### **Arguments:**
+
+* `<EXTRA_ARGS>` — Extra arguments to be passed to the CLI
+
+###### **Options:**
+
+* `--mcr-contract-address <MCR_CONTRACT_ADDRESS>` — The address of the MCR settlement contract
+* `--rpc-url <RPC_URL>` — The Ethereum RPC connection URL
+* `--ws-url <WS_URL>` — The Ethereum WebSocket connection URL
+* `--chain-id <CHAIN_ID>` — The Ethereum chain ID
+* `--run-commitment-admin-mode` — Whether to run in settlement admin mode
+* `--gas-limit <GAS_LIMIT>` — The gas limit for transactions
+* `--transaction-send-retries <TRANSACTION_SEND_RETRIES>` — The number of retries for sending transactions
+* `--mcr-address <MCR_ADDRESS>` — The MCR address
+* `--move-token-address <MOVE_TOKEN_ADDRESS>` — The move token address
+* `--staking-address <STAKING_ADDRESS>` — The staking address
+* `--signer-identifier <SIGNER_IDENTIFIER>` — The signer identifier
+* `--height <HEIGHT>` — The commitment height at which to commit
+* `--id <ID>` — The commitment id to commit
 * `--vote <VOTE>` — The commitment value to commit
 
 
@@ -788,7 +935,20 @@ Post a batch of commitments
 
 Stream commitments
 
-**Usage:** `ffs-dev mcr protocol client eth stream-commitments [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --signer-identifier <SIGNER_IDENTIFIER> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --commitment-lead-tolerance <COMMITMENT_LEAD_TOLERANCE> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS>`
+**Usage:** `ffs-dev mcr protocol client eth stream-commitments <COMMAND>`
+
+###### **Subcommands:**
+
+* `where` — Run streamcommitments with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+* `using` — Run streamcommitments with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+
+
+## `ffs-dev mcr protocol client eth stream-commitments where`
+
+Run streamcommitments with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `ffs-dev mcr protocol client eth stream-commitments where [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS>`
 
 ###### **Options:**
 
@@ -796,12 +956,35 @@ Stream commitments
 * `--rpc-url <RPC_URL>` — The Ethereum RPC connection URL
 * `--ws-url <WS_URL>` — The Ethereum WebSocket connection URL
 * `--chain-id <CHAIN_ID>` — The Ethereum chain ID
-* `--signer-identifier <SIGNER_IDENTIFIER>` — The signer identifier
 * `--run-commitment-admin-mode` — Whether to run in settlement admin mode
 * `--gas-limit <GAS_LIMIT>` — The gas limit for transactions
 * `--transaction-send-retries <TRANSACTION_SEND_RETRIES>` — The number of retries for sending transactions
 * `--mcr-address <MCR_ADDRESS>` — The MCR address
-* `--commitment-lead-tolerance <COMMITMENT_LEAD_TOLERANCE>` — The block lead tolerance
+* `--move-token-address <MOVE_TOKEN_ADDRESS>` — The move token address
+* `--staking-address <STAKING_ADDRESS>` — The staking address
+
+
+
+## `ffs-dev mcr protocol client eth stream-commitments using`
+
+Run streamcommitments with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `ffs-dev mcr protocol client eth stream-commitments using [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> [EXTRA_ARGS]...`
+
+###### **Arguments:**
+
+* `<EXTRA_ARGS>` — Extra arguments to be passed to the CLI
+
+###### **Options:**
+
+* `--mcr-contract-address <MCR_CONTRACT_ADDRESS>` — The address of the MCR settlement contract
+* `--rpc-url <RPC_URL>` — The Ethereum RPC connection URL
+* `--ws-url <WS_URL>` — The Ethereum WebSocket connection URL
+* `--chain-id <CHAIN_ID>` — The Ethereum chain ID
+* `--run-commitment-admin-mode` — Whether to run in settlement admin mode
+* `--gas-limit <GAS_LIMIT>` — The gas limit for transactions
+* `--transaction-send-retries <TRANSACTION_SEND_RETRIES>` — The number of retries for sending transactions
+* `--mcr-address <MCR_ADDRESS>` — The MCR address
 * `--move-token-address <MOVE_TOKEN_ADDRESS>` — The move token address
 * `--staking-address <STAKING_ADDRESS>` — The staking address
 
@@ -811,25 +994,20 @@ Stream commitments
 
 Get a commitment for a given height and attester
 
-**Usage:** `ffs-dev mcr protocol client eth get-commitment [OPTIONS] --height <HEIGHT> --attester <ATTESTER> --mcr-address <MCR_ADDRESS>`
+**Usage:** `ffs-dev mcr protocol client eth get-commitment <COMMAND>`
 
-###### **Options:**
+###### **Subcommands:**
 
-* `--height <HEIGHT>` — Block height to check commitment for
-* `--attester <ATTESTER>` — Attester address to check commitment for
-* `--mcr-address <MCR_ADDRESS>` — MCR contract address
-* `--rpc-url <RPC_URL>` — RPC URL (optional, defaults to http://localhost:8545)
-
-  Default value: `http://localhost:8545`
-* `--private-key <PRIVATE_KEY>` — Private key for signing transactions (optional)
+* `where` — Run getcommitment with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+* `using` — Run getcommitment with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
 
 
 
-## `ffs-dev mcr protocol client eth get-accepted-commitment-at-height`
+## `ffs-dev mcr protocol client eth get-commitment where`
 
-Get accepted commitment at a specific height
+Run getcommitment with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
 
-**Usage:** `ffs-dev mcr protocol client eth get-accepted-commitment-at-height [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --signer-identifier <SIGNER_IDENTIFIER> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --commitment-lead-tolerance <COMMITMENT_LEAD_TOLERANCE> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> --height <HEIGHT>`
+**Usage:** `ffs-dev mcr protocol client eth get-commitment where [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> --height <HEIGHT> --attester <ATTESTER>`
 
 ###### **Options:**
 
@@ -837,14 +1015,83 @@ Get accepted commitment at a specific height
 * `--rpc-url <RPC_URL>` — The Ethereum RPC connection URL
 * `--ws-url <WS_URL>` — The Ethereum WebSocket connection URL
 * `--chain-id <CHAIN_ID>` — The Ethereum chain ID
-* `--signer-identifier <SIGNER_IDENTIFIER>` — The signer identifier
 * `--run-commitment-admin-mode` — Whether to run in settlement admin mode
 * `--gas-limit <GAS_LIMIT>` — The gas limit for transactions
 * `--transaction-send-retries <TRANSACTION_SEND_RETRIES>` — The number of retries for sending transactions
 * `--mcr-address <MCR_ADDRESS>` — The MCR address
-* `--commitment-lead-tolerance <COMMITMENT_LEAD_TOLERANCE>` — The block lead tolerance
 * `--move-token-address <MOVE_TOKEN_ADDRESS>` — The move token address
 * `--staking-address <STAKING_ADDRESS>` — The staking address
+* `--height <HEIGHT>` — Block height to check commitment for
+* `--attester <ATTESTER>` — Attester address to check commitment for
+
+
+
+## `ffs-dev mcr protocol client eth get-commitment using`
+
+Run getcommitment with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `ffs-dev mcr protocol client eth get-commitment using [OPTIONS] --height <HEIGHT> --attester <ATTESTER> [EXTRA_ARGS]...`
+
+###### **Arguments:**
+
+* `<EXTRA_ARGS>` — Extra arguments to be passed to the CLI
+
+###### **Options:**
+
+* `--view-config-path <VIEW_CONFIG_PATH>`
+* `--height <HEIGHT>` — Block height to check commitment for
+* `--attester <ATTESTER>` — Attester address to check commitment for
+
+
+
+## `ffs-dev mcr protocol client eth get-accepted-commitment-at-height`
+
+Get accepted commitment at a specific height
+
+**Usage:** `ffs-dev mcr protocol client eth get-accepted-commitment-at-height <COMMAND>`
+
+###### **Subcommands:**
+
+* `where` — Run getacceptedcommitmentatheight with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+* `using` — Run getacceptedcommitmentatheight with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+
+
+## `ffs-dev mcr protocol client eth get-accepted-commitment-at-height where`
+
+Run getacceptedcommitmentatheight with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `ffs-dev mcr protocol client eth get-accepted-commitment-at-height where [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> --height <HEIGHT>`
+
+###### **Options:**
+
+* `--mcr-contract-address <MCR_CONTRACT_ADDRESS>` — The address of the MCR settlement contract
+* `--rpc-url <RPC_URL>` — The Ethereum RPC connection URL
+* `--ws-url <WS_URL>` — The Ethereum WebSocket connection URL
+* `--chain-id <CHAIN_ID>` — The Ethereum chain ID
+* `--run-commitment-admin-mode` — Whether to run in settlement admin mode
+* `--gas-limit <GAS_LIMIT>` — The gas limit for transactions
+* `--transaction-send-retries <TRANSACTION_SEND_RETRIES>` — The number of retries for sending transactions
+* `--mcr-address <MCR_ADDRESS>` — The MCR address
+* `--move-token-address <MOVE_TOKEN_ADDRESS>` — The move token address
+* `--staking-address <STAKING_ADDRESS>` — The staking address
+* `--height <HEIGHT>` — The height to get the commitment for
+
+
+
+## `ffs-dev mcr protocol client eth get-accepted-commitment-at-height using`
+
+Run getacceptedcommitmentatheight with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `ffs-dev mcr protocol client eth get-accepted-commitment-at-height using [OPTIONS] --height <HEIGHT> [EXTRA_ARGS]...`
+
+###### **Arguments:**
+
+* `<EXTRA_ARGS>` — Extra arguments to be passed to the CLI
+
+###### **Options:**
+
+* `--view-config-path <VIEW_CONFIG_PATH>`
 * `--height <HEIGHT>` — The height to get the commitment for
 
 
@@ -853,7 +1100,20 @@ Get accepted commitment at a specific height
 
 Get posted commitment at a specific height
 
-**Usage:** `ffs-dev mcr protocol client eth get-posted-commitment-at-height [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --signer-identifier <SIGNER_IDENTIFIER> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --commitment-lead-tolerance <COMMITMENT_LEAD_TOLERANCE> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> --height <HEIGHT>`
+**Usage:** `ffs-dev mcr protocol client eth get-posted-commitment-at-height <COMMAND>`
+
+###### **Subcommands:**
+
+* `where` — Run getpostedcommitmentatheight with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+* `using` — Run getpostedcommitmentatheight with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+
+
+## `ffs-dev mcr protocol client eth get-posted-commitment-at-height where`
+
+Run getpostedcommitmentatheight with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `ffs-dev mcr protocol client eth get-posted-commitment-at-height where [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> --signer-identifier <SIGNER_IDENTIFIER> --height <HEIGHT>`
 
 ###### **Options:**
 
@@ -861,14 +1121,40 @@ Get posted commitment at a specific height
 * `--rpc-url <RPC_URL>` — The Ethereum RPC connection URL
 * `--ws-url <WS_URL>` — The Ethereum WebSocket connection URL
 * `--chain-id <CHAIN_ID>` — The Ethereum chain ID
-* `--signer-identifier <SIGNER_IDENTIFIER>` — The signer identifier
 * `--run-commitment-admin-mode` — Whether to run in settlement admin mode
 * `--gas-limit <GAS_LIMIT>` — The gas limit for transactions
 * `--transaction-send-retries <TRANSACTION_SEND_RETRIES>` — The number of retries for sending transactions
 * `--mcr-address <MCR_ADDRESS>` — The MCR address
-* `--commitment-lead-tolerance <COMMITMENT_LEAD_TOLERANCE>` — The block lead tolerance
 * `--move-token-address <MOVE_TOKEN_ADDRESS>` — The move token address
 * `--staking-address <STAKING_ADDRESS>` — The staking address
+* `--signer-identifier <SIGNER_IDENTIFIER>` — The signer identifier
+* `--height <HEIGHT>` — The height to get the commitment for
+
+
+
+## `ffs-dev mcr protocol client eth get-posted-commitment-at-height using`
+
+Run getpostedcommitmentatheight with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `ffs-dev mcr protocol client eth get-posted-commitment-at-height using [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> --signer-identifier <SIGNER_IDENTIFIER> --height <HEIGHT> [EXTRA_ARGS]...`
+
+###### **Arguments:**
+
+* `<EXTRA_ARGS>` — Extra arguments to be passed to the CLI
+
+###### **Options:**
+
+* `--mcr-contract-address <MCR_CONTRACT_ADDRESS>` — The address of the MCR settlement contract
+* `--rpc-url <RPC_URL>` — The Ethereum RPC connection URL
+* `--ws-url <WS_URL>` — The Ethereum WebSocket connection URL
+* `--chain-id <CHAIN_ID>` — The Ethereum chain ID
+* `--run-commitment-admin-mode` — Whether to run in settlement admin mode
+* `--gas-limit <GAS_LIMIT>` — The gas limit for transactions
+* `--transaction-send-retries <TRANSACTION_SEND_RETRIES>` — The number of retries for sending transactions
+* `--mcr-address <MCR_ADDRESS>` — The MCR address
+* `--move-token-address <MOVE_TOKEN_ADDRESS>` — The move token address
+* `--staking-address <STAKING_ADDRESS>` — The staking address
+* `--signer-identifier <SIGNER_IDENTIFIER>` — The signer identifier
 * `--height <HEIGHT>` — The height to get the commitment for
 
 
@@ -877,7 +1163,20 @@ Get posted commitment at a specific height
 
 Get max tolerable commitment height
 
-**Usage:** `ffs-dev mcr protocol client eth get-max-tolerable-commitment-height [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --signer-identifier <SIGNER_IDENTIFIER> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --commitment-lead-tolerance <COMMITMENT_LEAD_TOLERANCE> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS>`
+**Usage:** `ffs-dev mcr protocol client eth get-max-tolerable-commitment-height <COMMAND>`
+
+###### **Subcommands:**
+
+* `where` — Run getmaxtolerablecommitmentheight with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+* `using` — Run getmaxtolerablecommitmentheight with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+
+
+## `ffs-dev mcr protocol client eth get-max-tolerable-commitment-height where`
+
+Run getmaxtolerablecommitmentheight with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `ffs-dev mcr protocol client eth get-max-tolerable-commitment-height where [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS>`
 
 ###### **Options:**
 
@@ -885,12 +1184,35 @@ Get max tolerable commitment height
 * `--rpc-url <RPC_URL>` — The Ethereum RPC connection URL
 * `--ws-url <WS_URL>` — The Ethereum WebSocket connection URL
 * `--chain-id <CHAIN_ID>` — The Ethereum chain ID
-* `--signer-identifier <SIGNER_IDENTIFIER>` — The signer identifier
 * `--run-commitment-admin-mode` — Whether to run in settlement admin mode
 * `--gas-limit <GAS_LIMIT>` — The gas limit for transactions
 * `--transaction-send-retries <TRANSACTION_SEND_RETRIES>` — The number of retries for sending transactions
 * `--mcr-address <MCR_ADDRESS>` — The MCR address
-* `--commitment-lead-tolerance <COMMITMENT_LEAD_TOLERANCE>` — The block lead tolerance
+* `--move-token-address <MOVE_TOKEN_ADDRESS>` — The move token address
+* `--staking-address <STAKING_ADDRESS>` — The staking address
+
+
+
+## `ffs-dev mcr protocol client eth get-max-tolerable-commitment-height using`
+
+Run getmaxtolerablecommitmentheight with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `ffs-dev mcr protocol client eth get-max-tolerable-commitment-height using [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> [EXTRA_ARGS]...`
+
+###### **Arguments:**
+
+* `<EXTRA_ARGS>` — Extra arguments to be passed to the CLI
+
+###### **Options:**
+
+* `--mcr-contract-address <MCR_CONTRACT_ADDRESS>` — The address of the MCR settlement contract
+* `--rpc-url <RPC_URL>` — The Ethereum RPC connection URL
+* `--ws-url <WS_URL>` — The Ethereum WebSocket connection URL
+* `--chain-id <CHAIN_ID>` — The Ethereum chain ID
+* `--run-commitment-admin-mode` — Whether to run in settlement admin mode
+* `--gas-limit <GAS_LIMIT>` — The gas limit for transactions
+* `--transaction-send-retries <TRANSACTION_SEND_RETRIES>` — The number of retries for sending transactions
+* `--mcr-address <MCR_ADDRESS>` — The MCR address
 * `--move-token-address <MOVE_TOKEN_ADDRESS>` — The move token address
 * `--staking-address <STAKING_ADDRESS>` — The staking address
 
@@ -900,7 +1222,20 @@ Get max tolerable commitment height
 
 Stake tokens for the MCR domain
 
-**Usage:** `ffs-dev mcr protocol client eth stake [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --signer-identifier <SIGNER_IDENTIFIER> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --commitment-lead-tolerance <COMMITMENT_LEAD_TOLERANCE> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> --amount <AMOUNT>`
+**Usage:** `ffs-dev mcr protocol client eth stake <COMMAND>`
+
+###### **Subcommands:**
+
+* `where` — Run stake with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+* `using` — Run stake with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+
+
+## `ffs-dev mcr protocol client eth stake where`
+
+Run stake with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `ffs-dev mcr protocol client eth stake where [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> --signer-identifier <SIGNER_IDENTIFIER> --amount <AMOUNT>`
 
 ###### **Options:**
 
@@ -908,14 +1243,30 @@ Stake tokens for the MCR domain
 * `--rpc-url <RPC_URL>` — The Ethereum RPC connection URL
 * `--ws-url <WS_URL>` — The Ethereum WebSocket connection URL
 * `--chain-id <CHAIN_ID>` — The Ethereum chain ID
-* `--signer-identifier <SIGNER_IDENTIFIER>` — The signer identifier
 * `--run-commitment-admin-mode` — Whether to run in settlement admin mode
 * `--gas-limit <GAS_LIMIT>` — The gas limit for transactions
 * `--transaction-send-retries <TRANSACTION_SEND_RETRIES>` — The number of retries for sending transactions
 * `--mcr-address <MCR_ADDRESS>` — The MCR address
-* `--commitment-lead-tolerance <COMMITMENT_LEAD_TOLERANCE>` — The block lead tolerance
 * `--move-token-address <MOVE_TOKEN_ADDRESS>` — The move token address
 * `--staking-address <STAKING_ADDRESS>` — The staking address
+* `--signer-identifier <SIGNER_IDENTIFIER>` — The signer identifier
+* `--amount <AMOUNT>` — Amount to stake
+
+
+
+## `ffs-dev mcr protocol client eth stake using`
+
+Run stake with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `ffs-dev mcr protocol client eth stake using [OPTIONS] --amount <AMOUNT> [EXTRA_ARGS]...`
+
+###### **Arguments:**
+
+* `<EXTRA_ARGS>` — Extra arguments to be passed to the CLI
+
+###### **Options:**
+
+* `--config-path <CONFIG_PATH>`
 * `--amount <AMOUNT>` — Amount to stake
 
 
@@ -924,27 +1275,20 @@ Stake tokens for the MCR domain
 
 Get the current epoch stake for an attester
 
-**Usage:** `ffs-dev mcr protocol client eth get-stake [OPTIONS] --attester <ATTESTER> --custodian <CUSTODIAN> --mcr-address <MCR_ADDRESS>`
+**Usage:** `ffs-dev mcr protocol client eth get-stake <COMMAND>`
 
-###### **Options:**
+###### **Subcommands:**
 
-* `--private-key <PRIVATE_KEY>` — Private key for signing transactions (optional)
-
-  Default value: `0x1111111111111111111111111111111111111111111111111111111111111111`
-* `--rpc-url <RPC_URL>` — RPC URL (optional, defaults to http://localhost:8545)
-
-  Default value: `http://localhost:8545`
-* `--attester <ATTESTER>` — The attester address
-* `--custodian <CUSTODIAN>` — The custodian (MOVE token) address
-* `--mcr-address <MCR_ADDRESS>` — The MCR contract address
+* `where` — Run getstake with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+* `using` — Run getstake with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
 
 
 
-## `ffs-dev mcr protocol client eth unstake`
+## `ffs-dev mcr protocol client eth get-stake where`
 
-Unstake tokens from the MCR domain
+Run getstake with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
 
-**Usage:** `ffs-dev mcr protocol client eth unstake [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --signer-identifier <SIGNER_IDENTIFIER> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --commitment-lead-tolerance <COMMITMENT_LEAD_TOLERANCE> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> --amount <AMOUNT>`
+**Usage:** `ffs-dev mcr protocol client eth get-stake where [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> --custodian <CUSTODIAN> --attester <ATTESTER>`
 
 ###### **Options:**
 
@@ -952,14 +1296,103 @@ Unstake tokens from the MCR domain
 * `--rpc-url <RPC_URL>` — The Ethereum RPC connection URL
 * `--ws-url <WS_URL>` — The Ethereum WebSocket connection URL
 * `--chain-id <CHAIN_ID>` — The Ethereum chain ID
-* `--signer-identifier <SIGNER_IDENTIFIER>` — The signer identifier
 * `--run-commitment-admin-mode` — Whether to run in settlement admin mode
 * `--gas-limit <GAS_LIMIT>` — The gas limit for transactions
 * `--transaction-send-retries <TRANSACTION_SEND_RETRIES>` — The number of retries for sending transactions
 * `--mcr-address <MCR_ADDRESS>` — The MCR address
-* `--commitment-lead-tolerance <COMMITMENT_LEAD_TOLERANCE>` — The block lead tolerance
 * `--move-token-address <MOVE_TOKEN_ADDRESS>` — The move token address
 * `--staking-address <STAKING_ADDRESS>` — The staking address
+* `--custodian <CUSTODIAN>` — The custodian address
+* `--attester <ATTESTER>` — The attester address
+
+
+
+## `ffs-dev mcr protocol client eth get-stake using`
+
+Run getstake with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `ffs-dev mcr protocol client eth get-stake using [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> --custodian <CUSTODIAN> --attester <ATTESTER> [EXTRA_ARGS]...`
+
+###### **Arguments:**
+
+* `<EXTRA_ARGS>` — Extra arguments to be passed to the CLI
+
+###### **Options:**
+
+* `--mcr-contract-address <MCR_CONTRACT_ADDRESS>` — The address of the MCR settlement contract
+* `--rpc-url <RPC_URL>` — The Ethereum RPC connection URL
+* `--ws-url <WS_URL>` — The Ethereum WebSocket connection URL
+* `--chain-id <CHAIN_ID>` — The Ethereum chain ID
+* `--run-commitment-admin-mode` — Whether to run in settlement admin mode
+* `--gas-limit <GAS_LIMIT>` — The gas limit for transactions
+* `--transaction-send-retries <TRANSACTION_SEND_RETRIES>` — The number of retries for sending transactions
+* `--mcr-address <MCR_ADDRESS>` — The MCR address
+* `--move-token-address <MOVE_TOKEN_ADDRESS>` — The move token address
+* `--staking-address <STAKING_ADDRESS>` — The staking address
+* `--custodian <CUSTODIAN>` — The custodian address
+* `--attester <ATTESTER>` — The attester address
+
+
+
+## `ffs-dev mcr protocol client eth unstake`
+
+Unstake tokens from the MCR domain
+
+**Usage:** `ffs-dev mcr protocol client eth unstake <COMMAND>`
+
+###### **Subcommands:**
+
+* `where` — Run unstake with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+* `using` — Run unstake with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+
+
+## `ffs-dev mcr protocol client eth unstake where`
+
+Run unstake with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `ffs-dev mcr protocol client eth unstake where [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> --signer-identifier <SIGNER_IDENTIFIER> --amount <AMOUNT>`
+
+###### **Options:**
+
+* `--mcr-contract-address <MCR_CONTRACT_ADDRESS>` — The address of the MCR settlement contract
+* `--rpc-url <RPC_URL>` — The Ethereum RPC connection URL
+* `--ws-url <WS_URL>` — The Ethereum WebSocket connection URL
+* `--chain-id <CHAIN_ID>` — The Ethereum chain ID
+* `--run-commitment-admin-mode` — Whether to run in settlement admin mode
+* `--gas-limit <GAS_LIMIT>` — The gas limit for transactions
+* `--transaction-send-retries <TRANSACTION_SEND_RETRIES>` — The number of retries for sending transactions
+* `--mcr-address <MCR_ADDRESS>` — The MCR address
+* `--move-token-address <MOVE_TOKEN_ADDRESS>` — The move token address
+* `--staking-address <STAKING_ADDRESS>` — The staking address
+* `--signer-identifier <SIGNER_IDENTIFIER>` — The signer identifier
+* `--amount <AMOUNT>` — Amount to unstake
+
+
+
+## `ffs-dev mcr protocol client eth unstake using`
+
+Run unstake with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `ffs-dev mcr protocol client eth unstake using [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> --signer-identifier <SIGNER_IDENTIFIER> --amount <AMOUNT> [EXTRA_ARGS]...`
+
+###### **Arguments:**
+
+* `<EXTRA_ARGS>` — Extra arguments to be passed to the CLI
+
+###### **Options:**
+
+* `--mcr-contract-address <MCR_CONTRACT_ADDRESS>` — The address of the MCR settlement contract
+* `--rpc-url <RPC_URL>` — The Ethereum RPC connection URL
+* `--ws-url <WS_URL>` — The Ethereum WebSocket connection URL
+* `--chain-id <CHAIN_ID>` — The Ethereum chain ID
+* `--run-commitment-admin-mode` — Whether to run in settlement admin mode
+* `--gas-limit <GAS_LIMIT>` — The gas limit for transactions
+* `--transaction-send-retries <TRANSACTION_SEND_RETRIES>` — The number of retries for sending transactions
+* `--mcr-address <MCR_ADDRESS>` — The MCR address
+* `--move-token-address <MOVE_TOKEN_ADDRESS>` — The move token address
+* `--staking-address <STAKING_ADDRESS>` — The staking address
+* `--signer-identifier <SIGNER_IDENTIFIER>` — The signer identifier
 * `--amount <AMOUNT>` — Amount to unstake
 
 
@@ -968,13 +1401,62 @@ Unstake tokens from the MCR domain
 
 Grant TRUSTED_ATTESTER role to an attester
 
-**Usage:** `ffs-dev mcr protocol client eth grant-trusted-attester --attester <ATTESTER> --mcr-address <MCR_ADDRESS> --private-key <PRIVATE_KEY>`
+**Usage:** `ffs-dev mcr protocol client eth grant-trusted-attester <COMMAND>`
+
+###### **Subcommands:**
+
+* `where` — Run granttrustedattester with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+* `using` — Run granttrustedattester with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+
+
+## `ffs-dev mcr protocol client eth grant-trusted-attester where`
+
+Run granttrustedattester with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `ffs-dev mcr protocol client eth grant-trusted-attester where [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> --signer-identifier <SIGNER_IDENTIFIER> --attester <ATTESTER>`
 
 ###### **Options:**
 
+* `--mcr-contract-address <MCR_CONTRACT_ADDRESS>` — The address of the MCR settlement contract
+* `--rpc-url <RPC_URL>` — The Ethereum RPC connection URL
+* `--ws-url <WS_URL>` — The Ethereum WebSocket connection URL
+* `--chain-id <CHAIN_ID>` — The Ethereum chain ID
+* `--run-commitment-admin-mode` — Whether to run in settlement admin mode
+* `--gas-limit <GAS_LIMIT>` — The gas limit for transactions
+* `--transaction-send-retries <TRANSACTION_SEND_RETRIES>` — The number of retries for sending transactions
+* `--mcr-address <MCR_ADDRESS>` — The MCR address
+* `--move-token-address <MOVE_TOKEN_ADDRESS>` — The move token address
+* `--staking-address <STAKING_ADDRESS>` — The staking address
+* `--signer-identifier <SIGNER_IDENTIFIER>` — The signer identifier
 * `--attester <ATTESTER>` — The address to grant TRUSTED_ATTESTER role to
-* `--mcr-address <MCR_ADDRESS>` — The MCR contract address
-* `--private-key <PRIVATE_KEY>` — The private key to use for signing transactions
+
+
+
+## `ffs-dev mcr protocol client eth grant-trusted-attester using`
+
+Run granttrustedattester with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+
+**Usage:** `ffs-dev mcr protocol client eth grant-trusted-attester using [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> --signer-identifier <SIGNER_IDENTIFIER> --attester <ATTESTER> [EXTRA_ARGS]...`
+
+###### **Arguments:**
+
+* `<EXTRA_ARGS>` — Extra arguments to be passed to the CLI
+
+###### **Options:**
+
+* `--mcr-contract-address <MCR_CONTRACT_ADDRESS>` — The address of the MCR settlement contract
+* `--rpc-url <RPC_URL>` — The Ethereum RPC connection URL
+* `--ws-url <WS_URL>` — The Ethereum WebSocket connection URL
+* `--chain-id <CHAIN_ID>` — The Ethereum chain ID
+* `--run-commitment-admin-mode` — Whether to run in settlement admin mode
+* `--gas-limit <GAS_LIMIT>` — The gas limit for transactions
+* `--transaction-send-retries <TRANSACTION_SEND_RETRIES>` — The number of retries for sending transactions
+* `--mcr-address <MCR_ADDRESS>` — The MCR address
+* `--move-token-address <MOVE_TOKEN_ADDRESS>` — The move token address
+* `--staking-address <STAKING_ADDRESS>` — The staking address
+* `--signer-identifier <SIGNER_IDENTIFIER>` — The signer identifier
+* `--attester <ATTESTER>` — The address to grant TRUSTED_ATTESTER role to
 
 
 

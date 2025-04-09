@@ -7,6 +7,7 @@ use helios::common::types::BlockTag;
 use helios::ethereum::{
 	config::networks::Network, database::FileDB, EthereumClient, EthereumClientBuilder,
 };
+use mcr_protocol_client_core_util::McrConfigOperations;
 use mcr_protocol_client_eth_core::config::{
 	Config as CoreConfig, StandardRpcProvider, StandardWsProvider,
 };
@@ -87,7 +88,7 @@ impl Config {
 			.network(self.light_node_network)
 			.data_dir(self.light_node_data_dir.clone().into())
 			.consensus_rpc(&self.consensus_rpc_url)
-			.execution_rpc(&self.core.rpc_url)
+			.execution_rpc(&self.core.view_config.rpc_url)
 			.load_external_fallback()
 			.build()
 			.map_err(|e| anyhow::anyhow!("failed to build the light node client: {}", e))?;

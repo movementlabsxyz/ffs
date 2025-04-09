@@ -92,12 +92,9 @@ pub trait McrClientOperations {
 		&self,
 		attester: String,
 	) -> impl Future<Output = Result<(), McrClientError>> + Send;
-	
+
 	/// Stakes tokens for the domain
-	fn stake(
-		&self, 
-		amount: U256
-	) -> impl Future<Output = Result<(), McrClientError>> + Send;
+	fn stake(&self, amount: U256) -> impl Future<Output = Result<(), McrClientError>> + Send;
 
 	/// Get the current epoch stake for an attester
 	fn get_stake(
@@ -107,8 +104,17 @@ pub trait McrClientOperations {
 	) -> impl Future<Output = Result<u64, McrClientError>> + Send;
 
 	/// Unstakes tokens from the domain
-	fn unstake(
-		&self, 
-		amount: U256
-	) -> impl Future<Output = Result<(), McrClientError>> + Send;
+	fn unstake(&self, amount: U256) -> impl Future<Output = Result<(), McrClientError>> + Send;
+}
+
+pub trait McrConfigOperations {
+	type Client: McrClientOperations;
+
+	fn build(&self) -> impl Future<Output = Result<Self::Client, McrClientError>> + Send;
+}
+
+pub trait McrViewOperations {
+	type Config: McrConfigOperations;
+
+	fn try_into_config(self) -> Result<Self::Config, McrClientError>;
 }

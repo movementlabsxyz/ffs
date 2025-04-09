@@ -107,7 +107,7 @@ Runs the embedded Ethereum MCR light node
 
 Run emln with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
 
-**Usage:** `mcr-light-node-eth emln where [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --signer-identifier <SIGNER_IDENTIFIER> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --commitment-lead-tolerance <COMMITMENT_LEAD_TOLERANCE> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> --light-node-data-dir <LIGHT_NODE_DATA_DIR> --consensus-rpc-url <CONSENSUS_RPC_URL> --finality <FINALITY>`
+**Usage:** `mcr-light-node-eth emln where [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> --signer-identifier <SIGNER_IDENTIFIER> --light-node-data-dir <LIGHT_NODE_DATA_DIR> --consensus-rpc-url <CONSENSUS_RPC_URL> --finality <FINALITY>`
 
 ###### **Options:**
 
@@ -115,14 +115,13 @@ Run emln with all parameters passed explicitly as CLI flags. See Orfile document
 * `--rpc-url <RPC_URL>` — The Ethereum RPC connection URL
 * `--ws-url <WS_URL>` — The Ethereum WebSocket connection URL
 * `--chain-id <CHAIN_ID>` — The Ethereum chain ID
-* `--signer-identifier <SIGNER_IDENTIFIER>` — The signer identifier
 * `--run-commitment-admin-mode` — Whether to run in settlement admin mode
 * `--gas-limit <GAS_LIMIT>` — The gas limit for transactions
 * `--transaction-send-retries <TRANSACTION_SEND_RETRIES>` — The number of retries for sending transactions
 * `--mcr-address <MCR_ADDRESS>` — The MCR address
-* `--commitment-lead-tolerance <COMMITMENT_LEAD_TOLERANCE>` — The block lead tolerance
 * `--move-token-address <MOVE_TOKEN_ADDRESS>` — The move token address
 * `--staking-address <STAKING_ADDRESS>` — The staking address
+* `--signer-identifier <SIGNER_IDENTIFIER>` — The signer identifier
 * `--light-node-data-dir <LIGHT_NODE_DATA_DIR>` — The directory to store the light node data
 * `--light-node-network <LIGHT_NODE_NETWORK>` — The Ethereum network type to use for light node consensus parameterizaton
 
@@ -168,7 +167,7 @@ Runs the externalized Ethereum MCR light node
 
 Run exln with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
 
-**Usage:** `mcr-light-node-eth exln where [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --signer-identifier <SIGNER_IDENTIFIER> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --commitment-lead-tolerance <COMMITMENT_LEAD_TOLERANCE> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS>`
+**Usage:** `mcr-light-node-eth exln where [OPTIONS] --mcr-contract-address <MCR_CONTRACT_ADDRESS> --rpc-url <RPC_URL> --ws-url <WS_URL> --chain-id <CHAIN_ID> --gas-limit <GAS_LIMIT> --transaction-send-retries <TRANSACTION_SEND_RETRIES> --mcr-address <MCR_ADDRESS> --move-token-address <MOVE_TOKEN_ADDRESS> --staking-address <STAKING_ADDRESS> --signer-identifier <SIGNER_IDENTIFIER>`
 
 ###### **Options:**
 
@@ -176,14 +175,13 @@ Run exln with all parameters passed explicitly as CLI flags. See Orfile document
 * `--rpc-url <RPC_URL>` — The Ethereum RPC connection URL
 * `--ws-url <WS_URL>` — The Ethereum WebSocket connection URL
 * `--chain-id <CHAIN_ID>` — The Ethereum chain ID
-* `--signer-identifier <SIGNER_IDENTIFIER>` — The signer identifier
 * `--run-commitment-admin-mode` — Whether to run in settlement admin mode
 * `--gas-limit <GAS_LIMIT>` — The gas limit for transactions
 * `--transaction-send-retries <TRANSACTION_SEND_RETRIES>` — The number of retries for sending transactions
 * `--mcr-address <MCR_ADDRESS>` — The MCR address
-* `--commitment-lead-tolerance <COMMITMENT_LEAD_TOLERANCE>` — The block lead tolerance
 * `--move-token-address <MOVE_TOKEN_ADDRESS>` — The move token address
 * `--staking-address <STAKING_ADDRESS>` — The staking address
+* `--signer-identifier <SIGNER_IDENTIFIER>` — The signer identifier
 * `--address <ADDRESS>` — The address to listen on
 
   Default value: `0.0.0.0:44513`

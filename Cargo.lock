@@ -5933,6 +5933,7 @@ dependencies = [
  "mcr-protocol-client-eth-core",
  "mcr-protocol-deployer-eth-core",
  "mcr-types",
+ "orfile",
  "secure-signer-loader",
  "serde",
  "sha3",
