@@ -80,7 +80,7 @@ graph TD
     C_2 --> D_2
 ```
 
-<p><strong>Figure 1:</strong> The flow when using the CLI.</p>
+<p><strong>Figure 1:</strong> The flow when using the CLI.  D_1 and D_2 appear duplicated.</p>
 </div>
 
 <div style="flex: 1; text-align: center;">
@@ -95,7 +95,7 @@ graph TD
     protocol2' --> protocol/path/to/C
 ```
 
-<p><strong>Figure 2:</strong> The flow when developing the CLI.</p>
+<p><strong>Figure 2:</strong> The flow when developing the CLI.  D_1 and D_2 that appear duplicated from the CLI view, are the same in code.</p>
 </div>
 
 </div>
