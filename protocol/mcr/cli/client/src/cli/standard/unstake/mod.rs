@@ -32,7 +32,6 @@ macro_rules! mcr_unstake {
 	($config:ty) => {
 		use crate::cli::standard::unstake::{UnstakeArgs, UnstakeHelper};
 		use clap::Parser;
-		use mcr_protocol_client_core_util::{McrClientOperations, McrConfigOperations};
 		use orfile::Orfile;
 		use serde::{Deserialize, Serialize};
 

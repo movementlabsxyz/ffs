@@ -1,5 +1,5 @@
 use clap::Parser;
-use mcr_protocol_client_core_util::{McrClientOperations, McrConfigOperations, McrViewOperations};
+use mcr_protocol_client_core_util::{McrClientOperations, McrConfigOperations};
 use serde::{Deserialize, Serialize};
 
 #[derive(Parser, Serialize, Deserialize, Debug, Clone)]

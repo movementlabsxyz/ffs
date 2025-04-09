@@ -23,6 +23,9 @@ pub enum McrProtocolClientSubcommand {
 	/// Ethereum-specific commands of the protocol, such as staking and committing
 	#[clap(subcommand)]
 	Eth(eth::Eth),
+	/// Light node protocol commands, such as staking and committing
+	#[clap(subcommand)]
+	LightNodeProto(light_node_proto::LightNodeProto),
 }
 
 /// Implement the `From` trait for `McrProtocolClient` to convert it into a `McrProtocolClientSubcommand`.
@@ -51,6 +54,9 @@ impl McrProtocolClientSubcommand {
 				markdown.execute::<McrProtocolClient>().await?;
 			}
 			McrProtocolClientSubcommand::Eth(eth) => eth.execute().await?,
+			McrProtocolClientSubcommand::LightNodeProto(light_node_proto) => {
+				light_node_proto.execute().await?
+			}
 		}
 		Ok(())
 	}

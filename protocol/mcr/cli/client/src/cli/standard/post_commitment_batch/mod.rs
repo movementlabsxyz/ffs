@@ -48,8 +48,6 @@ macro_rules! mcr_post_commitment_batch {
 			PostCommitmentBatchArgs, PostCommitmentBatchHelper,
 		};
 		use clap::Parser;
-		use mcr_protocol_client_core_util::{McrClientOperations, McrConfigOperations};
-		use mcr_types::commitment::{Commitment, Id, Vote};
 		use orfile::Orfile;
 		use serde::{Deserialize, Serialize};
 

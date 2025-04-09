@@ -32,7 +32,6 @@ macro_rules! mcr_stake {
 	($config:ty) => {
 		use crate::cli::standard::stake::{StakeArgs, StakeHelper};
 		use clap::Parser;
-		use mcr_protocol_client_core_util::{McrClientOperations, McrConfigOperations};
 		use orfile::Orfile;
 		use serde::{Deserialize, Serialize};
 

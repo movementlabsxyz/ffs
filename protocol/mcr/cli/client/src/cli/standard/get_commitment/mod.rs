@@ -48,7 +48,6 @@ macro_rules! mcr_get_commitment {
 	($view_config:ty) => {
 		use crate::cli::standard::get_commitment::{GetCommitmentArgs, GetCommitmentHelper};
 		use clap::Parser;
-		use mcr_protocol_client_core_util::{McrClientOperations, McrViewOperations};
 		use orfile::Orfile;
 		use serde::{Deserialize, Serialize};
 

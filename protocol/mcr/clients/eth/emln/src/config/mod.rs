@@ -7,9 +7,9 @@ use helios::common::types::BlockTag;
 use helios::ethereum::{
 	config::networks::Network, database::FileDB, EthereumClient, EthereumClientBuilder,
 };
-use mcr_protocol_client_core_util::McrConfigOperations;
+use mcr_protocol_client_core_util::{McrClientError, McrConfigOperations, McrViewOperations};
 use mcr_protocol_client_eth_core::config::{
-	Config as CoreConfig, StandardRpcProvider, StandardWsProvider,
+	Config as CoreConfig, StandardRpcProvider, StandardWsProvider, ViewConfig as CoreViewConfig,
 };
 use serde::{Deserialize, Serialize};
 use std::str::FromStr;
@@ -50,10 +50,7 @@ impl From<Finality> for BlockTag {
 #[derive(Parser, Debug, Serialize, Deserialize, Clone)]
 #[clap(help_expected = true)]
 #[group(skip)]
-pub struct Config {
-	#[clap(flatten)]
-	pub core: CoreConfig,
-
+pub struct LightNodeConfig {
 	/// The directory to store the light node data.
 	#[clap(long)]
 	pub light_node_data_dir: String,
@@ -71,13 +68,29 @@ pub struct Config {
 	pub finality: Finality,
 }
 
-impl Config {
-	pub async fn build(&self) -> Result<StandardClient, anyhow::Error> {
+#[derive(Parser, Debug, Serialize, Deserialize, Clone)]
+#[clap(help_expected = true)]
+#[group(skip)]
+pub struct Config {
+	#[clap(flatten)]
+	pub core: CoreConfig,
+
+	#[clap(flatten)]
+	pub light_node_config: LightNodeConfig,
+}
+
+impl McrConfigOperations for Config {
+	type Client = StandardClient;
+
+	async fn build(&self) -> Result<StandardClient, McrClientError> {
 		// build the signer
-		let raw_key = self.core.signer_identifier.try_raw_private_key().context("failed to get the raw private key from the signer identifier; only local signers are currently supported")?;
+		let raw_key = self.core.signer_identifier.try_raw_private_key().context("failed to get the raw private key from the signer identifier; only local signers are currently supported").map_err(|e| McrClientError::Internal(e.into()))?;
 		// add the 0x
 		let raw_key_string = format!("0x{}", hex::encode(raw_key));
-		let private_key_signer: PrivateKeySigner = raw_key_string.parse()?;
+		let private_key_signer: PrivateKeySigner = raw_key_string
+			.parse()
+			.context("failed to parse the raw private key as a PrivateKeySigner")
+			.map_err(|e| McrClientError::Internal(e.into()))?;
 		let signer = EthereumWallet::new(private_key_signer);
 
 		// build the core client
@@ -85,19 +98,20 @@ impl Config {
 
 		// build the light node client
 		let mut light_node: EthereumClient<FileDB> = EthereumClientBuilder::new()
-			.network(self.light_node_network)
-			.data_dir(self.light_node_data_dir.clone().into())
-			.consensus_rpc(&self.consensus_rpc_url)
+			.network(self.light_node_config.light_node_network)
+			.data_dir(self.light_node_config.light_node_data_dir.clone().into())
+			.consensus_rpc(&self.light_node_config.consensus_rpc_url)
 			.execution_rpc(&self.core.view_config.rpc_url)
 			.load_external_fallback()
 			.build()
-			.map_err(|e| anyhow::anyhow!("failed to build the light node client: {}", e))?;
+			.map_err(|e| McrClientError::Internal(e.into()))?;
 
 		// Wait for the light node to sync
 		light_node
 			.start()
 			.await
-			.map_err(|e| anyhow::anyhow!("failed to start the light node client: {}", e))?;
+			.map_err(|e| anyhow::anyhow!("failed to start the light node client: {}", e))
+			.map_err(|e| McrClientError::Internal(e.into()))?;
 		light_node.wait_synced().await;
 
 		Ok(Client {
@@ -105,7 +119,28 @@ impl Config {
 			core_client,
 			eth_client: Arc::new(light_node),
 			polling_parameters: PollingParameters::default(),
-			block_finality: self.finality.clone().into(),
+			block_finality: self.light_node_config.finality.clone().into(),
 		})
+	}
+}
+
+#[derive(Parser, Debug, Serialize, Deserialize, Clone)]
+#[clap(help_expected = true)]
+#[group(skip)]
+pub struct ViewConfig {
+	/// The core configuration for the view.
+	#[clap(flatten)]
+	pub core: CoreViewConfig,
+
+	/// The light node configuration for the view.
+	#[clap(flatten)]
+	pub light_node_config: LightNodeConfig,
+}
+
+impl McrViewOperations for ViewConfig {
+	type Config = Config;
+
+	fn try_into_config(self) -> Result<Self::Config, McrClientError> {
+		Ok(Config { core: self.core.try_into_config()?, light_node_config: self.light_node_config })
 	}
 }
