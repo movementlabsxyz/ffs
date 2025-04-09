@@ -1,0 +1,55 @@
+[package]
+name = "test-test2-mcr-network-anvil-component-core"
+version = { workspace = true }
+edition  = { workspace = true }
+license  = { workspace = true }
+authors = { workspace = true }
+repository = { workspace = true }
+homepage = { workspace = true }
+publish = { workspace = true }
+rust-version = { workspace = true }
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+mcr-protocol-client-core-util = { workspace = true }
+
+anyhow = { workspace = true }
+async-stream = { workspace = true }
+async-trait = { workspace = true }
+futures = { workspace = true }
+tokio = { workspace = true }
+tokio-stream = { workspace = true }
+serde_json = { workspace = true }
+mcr-types = { workspace = true }
+mcr-config = { workspace = true }
+kestrel = { workspace = true }
+mcr-protocol-client-eth-core = { workspace = true }
+mcr-protocol-deployer-eth-core = { workspace = true }
+mcr-network-anvil-component-core = { workspace = true }
+strip-ansi-escapes = { workspace = true }
+network-anvil-component-core = { workspace = true }
+secure-signer = { workspace = true }
+secure-signer-loader = { workspace = true }
+alloy = { workspace = true }
+alloy-provider = { workspace = true }
+alloy-primitives = { workspace = true }
+alloy-sol-types = { workspace = true }
+alloy-rpc-types = { workspace = true }
+alloy-rpc-types-eth = { workspace = true }
+alloy-network = { workspace = true }
+alloy-signer = { workspace = true }
+alloy-transport = { workspace = true }
+alloy-transport-http = { workspace = true }
+url = { workspace = true }
+alloy-rlp = { workspace = true }
+hex = { workspace = true }
+alloy-consensus = { workspace = true }
+bytes = { workspace = true }
+
+[dev-dependencies]
+mcr-protocol-client-core-mock = { workspace = true }
+
+
+[lints]
+workspace = true

@@ -15,10 +15,11 @@ f ------ | 5e771e3e47 |
 Movement Labs' Fast Finality Settlement is a proof of stake settlement system.
 
 ## Getting started
+
 To get started using `ffs` we recommending reviewing our CLI documentation:
 
 - [The SDK CLI Guide](sdk/cli/README.md) provides a general introduction to the CLI.
-- [The CLI Docs](docs/cli/README.md) provide subcommand level documentation of the CLIs. 
+- [The CLI Docs](docs/cli/README.md) provide subcommand level documentation of the CLIs.
 
 If you are interested in lower-level programmatic usage, we recommend reading through the crate docs:
 
@@ -26,9 +27,15 @@ If you are interested in lower-level programmatic usage, we recommend reading th
 cargo doc --open --no-deps
 ```
 
-To develop a better sense of the protocol, please review the associated MIPs, beginning with [MIP-34](https://github.com/movementlabsxyz/MIP/pull/34). 
+To develop a better sense of the protocol, please review the associated MIPs, beginning with [MIP-34](https://github.com/movementlabsxyz/MIP/pull/34).
 
-If you are considering using `ffs` in production, jump to [Production](#production). 
+If you are considering using `ffs` in production, jump to [Production](#production).
+
+### Testing and simulation
+
+To check out testing, see the [tests](./network/mcr/components/eth/anvil/tests/README.md) directory.
+
+To check out simulation, see the [simulations](./network/mcr/components/eth/anvil/simulations/README.md) directory.
 
 ## Contributing
 

@@ -8,13 +8,14 @@ use anyhow::Context;
 use mcr_network_anvil_component_core::dev::lifecycle::up::Up;
 use mcr_protocol_client_eth_core::config::Config as EthConfig;
 use mcr_protocol_deployer_eth_core::artifacts::output::Artifacts;
-use mcr_types::commitment::Commitment;
 use network_anvil_component_core::util::parser::AnvilData;
 use secure_signer::key::TryFromCanonicalString;
 use secure_signer_loader::identifiers::SignerIdentifier;
 use tokio::time::Duration;
+use mcr_protocol_client_core_util::U256;
 
-pub struct Basic {
+
+pub struct Test {
     up: Up,
 }
 
@@ -64,9 +65,9 @@ impl UpState {
     }
 }
 
-impl Basic {
+impl Test {
     pub fn new(config: Config) -> Self {
-        Basic { up: Up::new(config.up) }
+        Test { up: Up::new(config.up) }
     }
 
     pub async fn run(self) -> Result<(), anyhow::Error> {
@@ -84,7 +85,45 @@ impl Basic {
 
         let mcr_protocol_client = up_state.try_build_default_mcr_protocol_client().await?;
 
-        mcr_protocol_client.act(Act::PostCommitment(Commitment::default())).await?;
+        // Get the second account from anvil data to transfer to
+        // print all fields of anvil data
+        println!("------------------------------------------------------");
+        println!("anvil data: {:?}", up_state.anvil_data);
+        println!("------------------------------------------------------");
+        println!("artifacts: {:?}", up_state.artifacts);
+        println!("------------------------------------------------------");
+
+        // println!("transferring tokens to {:?}", up_state.anvil_data.addresses[1]);
+
+        let recipient = up_state.anvil_data.signers[1].clone();
+        let move_token = up_state.artifacts.token_proxy;
+
+        println!("......................................................");
+        println!("recipient: {:?}", recipient);
+        println!("move token: {:?}", move_token);
+        println!("transferring tokens to {:?}", recipient);
+        println!("......................................................");
+
+        // for each account, check the balance of the move token
+        for i in 0..up_state.anvil_data.signers.len() {
+            let balance = mcr_protocol_client.act(Act::GetTokenBalance {
+                token_address: move_token.clone(),
+                address: up_state.anvil_data.signers[i].clone(),
+            }).await?;
+            println!("balance of account {:?}: {:?}", up_state.anvil_data.signers[i], balance);
+        }
+
+        // Transfer 1000 tokens to the second account
+        mcr_protocol_client.act(Act::TransferTokens {
+            token_address: move_token,
+            to: recipient,
+            amount: U256::from(1000),
+            private_key_sender: up_state.anvil_data.private_keys[1].clone(),
+            address_sender: up_state.anvil_data.signers[1].clone(),
+        }).await?;
+
+        // // Post a commitment
+        // mcr_protocol_client.act(Act::PostCommitment(Commitment::default())).await?;
 
         kestrel::end!(up_task)?;
 
