@@ -73,7 +73,9 @@ impl Basic {
 
 	pub async fn run(self) -> Result<(), anyhow::Error> {
 		// clone the anvil data and artifacts from up
+		// We need the data from anvil...
 		let anvil_data = self.up.anvil_data().clone();
+		// ...and the artifacts from the eth deployment
 		let artifacts = self.up.artifacts().clone();
 
 		let up_task = kestrel::task(async move { self.up.run().await });

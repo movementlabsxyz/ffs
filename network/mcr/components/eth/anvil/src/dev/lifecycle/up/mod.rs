@@ -27,7 +27,7 @@ impl Up {
 		let anvil_data = self.anvil_deploy.anvil_data().clone();
 
 		// Start the Anvil deployment process.
-		let deployer_future = kestrel::task(async move { self.anvil_deploy.run().await });
+		let anvil_task = kestrel::task(async move { self.anvil_deploy.run().await });
 
 		// Wait on the anvil data
 		let anvil_data = anvil_data.read().wait_forever().await;
@@ -57,7 +57,7 @@ impl Up {
 		self.artifacts.write().set(artifacts).await;
 
 		// Wait for the anvil deployer to finish
-		deployer_future.await??;
+		anvil_task.await??;
 
 		Ok(())
 	}
