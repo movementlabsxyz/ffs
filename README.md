@@ -12,7 +12,7 @@ f ------ | 5e771e3e47 |
 
 > FFS, just take a vote.
 
-Movement Labs' Fast Finality Settlement is a proof of stake settlement system.
+The Fast Finality Settlement is a proof of stake settlement system for Movement Network.
 
 ## Getting started
 To get started using `ffs` we recommending reviewing our CLI documentation:
